@@ -1,0 +1,278 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum TenderStatus {
+  DRAFT
+  ACTIVE
+  REVIEW
+  AWARDED
+  COMPLETED
+  CANCELLED
+}
+
+enum BidStatus {
+  PENDING
+  SHORTLISTED
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum TransactionType {
+  DEPOSIT
+  BID_FEE
+  SUBSCRIPTION
+  REFUND
+  ADJUSTMENT
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+enum VerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum UserRole {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+model User {
+  id                String              @id @default(cuid())
+  name              String?
+  email             String              @unique
+  emailVerified     DateTime?
+  phone             String?             @unique
+  passwordHash      String?
+  image             String?
+  role              UserRole            @default(USER)
+  telegramChatId    String?             @unique
+  telegramVerifiedAt DateTime?
+  telegramLinkToken String?             @unique
+  telegramLinkTokenExpiresAt DateTime?
+  walletBalance     Decimal             @default(0) @db.Decimal(12, 2)
+  isVerified        Boolean             @default(false)
+  isBlocked         Boolean             @default(false)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  accounts          Account[]
+  sessions          Session[]
+  tenders           Tender[]            @relation("ClientTenders")
+  bids              Bid[]               @relation("ProviderBids")
+  transactions      Transaction[]
+  subscriptions     Subscription[]
+  reviewsGiven      Review[]            @relation("ReviewsGiven")
+  reviewsReceived   Review[]            @relation("ReviewsReceived")
+  verificationRequests VerificationRequest[]
+  interests         UserInterest[]
+
+  @@index([email])
+  @@index([phone])
+  @@index([telegramLinkToken])
+}
+
+model UserInterest {
+  id        String   @id @default(cuid())
+  userId    String
+  category  String
+  service   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, category, service])
+  @@index([category, service])
+  @@index([userId])
+}
+
+model VerificationRequest {
+  id             String             @id @default(cuid())
+  userId         String
+  status         VerificationStatus @default(PENDING)
+  selfieUrl      String
+  documentUrl    String
+  moderationNote String?            @db.Text
+  submittedAt    DateTime           @default(now())
+  reviewedAt     DateTime?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, submittedAt])
+  @@index([status, submittedAt])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Tender {
+  id             String       @id @default(cuid())
+  clientId       String
+  title          String
+  description    String       @db.Text
+  category       String
+  service        String
+  city           String?
+  address        String?
+  budgetMin      Decimal?     @db.Decimal(12, 2)
+  budgetMax      Decimal?     @db.Decimal(12, 2)
+  status         TenderStatus @default(DRAFT)
+  isBlindBidding Boolean      @default(true)
+  startsAt       DateTime?
+  endsAt         DateTime?
+  awardedBidId   String?      @unique
+  completedAt    DateTime?
+  cancelledAt    DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  client         User         @relation("ClientTenders", fields: [clientId], references: [id], onDelete: Cascade)
+  awardedBid     Bid?         @relation("AwardedBid", fields: [awardedBidId], references: [id])
+  bids           Bid[]        @relation("TenderBids")
+  images         TenderImage[]
+  reviews        Review[]
+
+  @@index([clientId])
+  @@index([status, endsAt])
+  @@index([category, service])
+  @@index([city])
+}
+
+model TenderImage {
+  id        String   @id @default(cuid())
+  tenderId  String
+  url       String
+  alt       String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  tender    Tender   @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+
+  @@index([tenderId])
+}
+
+model Bid {
+  id             String        @id @default(cuid())
+  tenderId       String
+  providerId     String
+  price          Decimal       @db.Decimal(12, 2)
+  timelineDays   Int?
+  coverLetter    String        @db.Text
+  status         BidStatus     @default(PENDING)
+  bidFeeAmount   Decimal       @default(1000) @db.Decimal(12, 2)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  tender         Tender        @relation("TenderBids", fields: [tenderId], references: [id], onDelete: Cascade)
+  provider       User          @relation("ProviderBids", fields: [providerId], references: [id], onDelete: Cascade)
+  awardedTender  Tender?       @relation("AwardedBid")
+  transaction    Transaction?
+
+  @@unique([tenderId, providerId])
+  @@index([providerId])
+  @@index([tenderId, status])
+}
+
+model Transaction {
+  id              String            @id @default(cuid())
+  userId          String
+  bidId           String?           @unique
+  type            TransactionType
+  status          TransactionStatus @default(PENDING)
+  amount          Decimal           @db.Decimal(12, 2)
+  currency        String            @default("AMD")
+  gateway         String?
+  gatewayRef      String?
+  description     String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bid             Bid?              @relation(fields: [bidId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([type, status])
+  @@index([gateway, gatewayRef])
+}
+
+model Subscription {
+  id              String             @id @default(cuid())
+  userId          String
+  status          SubscriptionStatus @default(ACTIVE)
+  monthlyBidLimit Int                @default(30)
+  usedBidCount    Int                @default(0)
+  startsAt        DateTime           @default(now())
+  endsAt          DateTime
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([endsAt])
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  tenderId   String
+  reviewerId String
+  revieweeId String
+  rating     Int
+  comment    String?  @db.Text
+  createdAt  DateTime @default(now())
+  tender     Tender   @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+  reviewer   User     @relation("ReviewsGiven", fields: [reviewerId], references: [id], onDelete: Cascade)
+  reviewee   User     @relation("ReviewsReceived", fields: [revieweeId], references: [id], onDelete: Cascade)
+
+  @@unique([tenderId, reviewerId, revieweeId])
+  @@index([revieweeId])
+  @@index([reviewerId])
+}
