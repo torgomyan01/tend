@@ -11,7 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { serviceCategories } from "@/lib/service-categories";
+import type { ServiceCategoryWithServices } from "@/lib/services-data";
 
 export type InterestSelection = {
   category: string;
@@ -21,12 +21,8 @@ export type InterestSelection = {
 type InterestSelectorProps = {
   selected: InterestSelection[];
   onChange: (next: InterestSelection[]) => void;
+  categories: ServiceCategoryWithServices[];
 };
-
-const TOTAL_SERVICES = serviceCategories.reduce(
-  (sum, category) => sum + category.services.length,
-  0,
-);
 
 function isSameInterest(a: InterestSelection, b: InterestSelection) {
   return a.category === b.category && a.service === b.service;
@@ -43,11 +39,17 @@ function countByCategory(selected: InterestSelection[]) {
 export function InterestSelector({
   selected,
   onChange,
+  categories,
 }: InterestSelectorProps) {
   const [query, setQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const normalizedQuery = query.trim().toLowerCase();
+
+  const totalServices = useMemo(
+    () => categories.reduce((sum, category) => sum + category.services.length, 0),
+    [categories],
+  );
 
   const searchResults = useMemo(() => {
     if (!normalizedQuery) {
@@ -55,10 +57,10 @@ export function InterestSelector({
     }
 
     const results: InterestSelection[] = [];
-    for (const category of serviceCategories) {
+    for (const category of categories) {
       for (const service of category.services) {
-        if (service.toLowerCase().includes(normalizedQuery)) {
-          results.push({ category: category.title, service });
+        if (service.title.toLowerCase().includes(normalizedQuery)) {
+          results.push({ category: category.title, service: service.title });
           if (results.length >= 40) {
             return results;
           }
@@ -66,7 +68,7 @@ export function InterestSelector({
       }
     }
     return results;
-  }, [normalizedQuery]);
+  }, [normalizedQuery, categories]);
 
   function toggleService(category: string, service: string) {
     const target = { category, service };
@@ -99,8 +101,7 @@ export function InterestSelector({
               Ինչո՞վ եք հետաքրքրվում
             </p>
             <p className="mt-1 text-sm font-semibold text-amber-900/80">
-              Ընտրեք այն ծառայությունները, որոնցով հետաքրքրված եք։ Այսպես
-              կուղարկենք ձեզ ձեր ոլորտի թարմ մրցույթներ։
+              Ընտրեք այն ծառայությունները, որոնցով հետաքրքրված եք։
             </p>
           </div>
         </div>
@@ -202,7 +203,7 @@ export function InterestSelector({
       <button
         type="button"
         onClick={() => setIsModalOpen(true)}
-        className="group flex w-full items-center justify-between gap-3 rounded-3xl border-2 border-dashed border-slate-300 bg-white p-5 text-left transition hover:-translate-y-0.5 hover:border-slate-950 hover:shadow-lg"
+        className="group flex w-full cursor-pointer items-center justify-between gap-3 rounded-3xl border-2 border-dashed border-slate-300 bg-white p-5 text-left transition hover:-translate-y-0.5 hover:border-slate-950 hover:shadow-lg"
       >
         <span className="flex items-center gap-4">
           <span className="grid size-12 place-items-center rounded-2xl bg-slate-950 text-white transition group-hover:bg-amber-400 group-hover:text-slate-950">
@@ -210,10 +211,10 @@ export function InterestSelector({
           </span>
           <span>
             <span className="block text-base font-black text-slate-950">
-              Բացել կատեգորիաների ցանկը
+              Ընտրել ծառայություններ
             </span>
             <span className="block text-xs font-semibold text-slate-500">
-              {serviceCategories.length} ոլորտ ・ {TOTAL_SERVICES}+ ծառայություն
+              {categories.length} ոլորտ ・ {totalServices}+ ծառայություն
             </span>
           </span>
         </span>
@@ -223,6 +224,7 @@ export function InterestSelector({
       <InterestModal
         open={isModalOpen}
         selected={selected}
+        categories={categories}
         onClose={() => setIsModalOpen(false)}
         onConfirm={(next) => {
           onChange(next);
@@ -238,6 +240,7 @@ type InterestModalProps = {
   onClose: () => void;
   selected: InterestSelection[];
   onConfirm: (next: InterestSelection[]) => void;
+  categories: ServiceCategoryWithServices[];
 };
 
 function InterestModal({
@@ -245,10 +248,11 @@ function InterestModal({
   onClose,
   selected,
   onConfirm,
+  categories,
 }: InterestModalProps) {
   const [draft, setDraft] = useState<InterestSelection[]>(selected);
   const [activeCategoryTitle, setActiveCategoryTitle] = useState<string>(
-    serviceCategories[0].title,
+    categories[0]?.title ?? "",
   );
   const [mobileView, setMobileView] = useState<"categories" | "services">(
     "categories",
@@ -285,10 +289,9 @@ function InterestModal({
   const draftCounts = useMemo(() => countByCategory(draft), [draft]);
   const activeCategory = useMemo(
     () =>
-      serviceCategories.find(
-        (category) => category.title === activeCategoryTitle,
-      ) ?? serviceCategories[0],
-    [activeCategoryTitle],
+      categories.find((category) => category.title === activeCategoryTitle) ??
+      categories[0],
+    [activeCategoryTitle, categories],
   );
 
   function isInDraft(category: string, service: string) {
@@ -311,9 +314,12 @@ function InterestModal({
   }
 
   function selectAllInActive() {
+    if (!activeCategory) {
+      return;
+    }
     const next = [...draft];
     for (const service of activeCategory.services) {
-      const target = { category: activeCategory.title, service };
+      const target = { category: activeCategory.title, service: service.title };
       const exists = next.some((interest) => isSameInterest(interest, target));
       if (!exists) {
         next.push(target);
@@ -323,12 +329,15 @@ function InterestModal({
   }
 
   function clearActive() {
+    if (!activeCategory) {
+      return;
+    }
     setDraft(
       draft.filter((interest) => interest.category !== activeCategory.title),
     );
   }
 
-  if (!open) {
+  if (!open || !activeCategory) {
     return null;
   }
 
@@ -366,11 +375,11 @@ function InterestModal({
         >
           <div className="border-b border-slate-200 px-4 py-3 sm:px-5">
             <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500">
-              Կատեգորիաներ ({serviceCategories.length})
+              Կատեգորիաներ ({categories.length})
             </p>
           </div>
           <ul className="flex-1 overflow-y-auto p-2">
-            {serviceCategories.map((category) => {
+            {categories.map((category) => {
               const isActive = activeCategory.title === category.title;
               const count = draftCounts.get(category.title) ?? 0;
               return (
@@ -470,12 +479,14 @@ function InterestModal({
           <div className="flex-1 overflow-y-auto px-4 py-5 sm:px-6">
             <div className="flex flex-wrap gap-2">
               {activeCategory.services.map((service) => {
-                const active = isInDraft(activeCategory.title, service);
+                const active = isInDraft(activeCategory.title, service.title);
                 return (
                   <button
-                    key={service}
+                    key={service.id}
                     type="button"
-                    onClick={() => toggleDraft(activeCategory.title, service)}
+                    onClick={() =>
+                      toggleDraft(activeCategory.title, service.title)
+                    }
                     className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-2 text-xs font-bold transition sm:text-sm ${
                       active
                         ? "border-slate-950 bg-slate-950 text-white"
@@ -483,7 +494,7 @@ function InterestModal({
                     }`}
                   >
                     {active ? <Check className="size-3.5" /> : null}
-                    {service}
+                    {service.title}
                   </button>
                 );
               })}

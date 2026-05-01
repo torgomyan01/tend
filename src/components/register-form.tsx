@@ -20,6 +20,7 @@ import {
 } from "@/components/interest-selector";
 import { PhoneInput } from "@/components/phone-input";
 import { ROUTES } from "@/lib/routes";
+import type { ServiceCategoryWithServices } from "@/lib/services-data";
 
 type RegisterResponse = {
   userId: string;
@@ -29,7 +30,11 @@ type RegisterResponse = {
 
 type Step = "interests" | "info" | "telegram";
 
-export function RegisterForm() {
+type RegisterFormProps = {
+  categories: ServiceCategoryWithServices[];
+};
+
+export function RegisterForm({ categories }: RegisterFormProps) {
   const [step, setStep] = useState<Step>("interests");
   const [interests, setInterests] = useState<InterestSelection[]>([]);
   const [name, setName] = useState("");
@@ -205,6 +210,7 @@ export function RegisterForm() {
           <InterestSelector
             selected={interests}
             onChange={setInterests}
+            categories={categories}
           />
 
           <div className="flex flex-col-reverse items-stretch gap-2 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">

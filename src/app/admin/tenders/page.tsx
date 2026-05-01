@@ -5,34 +5,20 @@ import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
 import { formatAmd, formatDateTime, formatNumber } from "@/lib/format";
 import type { Prisma, TenderStatus } from "@/generated/prisma/client";
+import {
+  TENDER_STATUS_BADGE,
+  TENDER_STATUS_LABEL,
+} from "@/lib/tender-status";
 
 export const dynamic = "force-dynamic";
 
-const STATUS_LABEL: Record<string, string> = {
-  DRAFT: "Սևագիր",
-  ACTIVE: "Ակտիվ",
-  REVIEW: "Քննարկում",
-  AWARDED: "Հանձնված",
-  COMPLETED: "Ավարտված",
-  CANCELLED: "Չեղարկված",
-};
-
-const STATUS_BADGE: Record<string, string> = {
-  DRAFT: "bg-slate-100 text-slate-700",
-  ACTIVE: "bg-emerald-100 text-emerald-800",
-  REVIEW: "bg-amber-100 text-amber-800",
-  AWARDED: "bg-indigo-100 text-indigo-800",
-  COMPLETED: "bg-slate-200 text-slate-800",
-  CANCELLED: "bg-rose-100 text-rose-700",
-};
-
 const FILTERS = [
   { value: "ALL", label: "Բոլորը" },
-  { value: "ACTIVE", label: "Ակտիվ" },
-  { value: "REVIEW", label: "Քննարկում" },
-  { value: "AWARDED", label: "Հանձնված" },
-  { value: "COMPLETED", label: "Ավարտված" },
-  { value: "CANCELLED", label: "Չեղարկված" },
+  { value: "ACTIVE", label: TENDER_STATUS_LABEL.ACTIVE },
+  { value: "REVIEW", label: TENDER_STATUS_LABEL.REVIEW },
+  { value: "AWARDED", label: TENDER_STATUS_LABEL.AWARDED },
+  { value: "COMPLETED", label: TENDER_STATUS_LABEL.COMPLETED },
+  { value: "CANCELLED", label: TENDER_STATUS_LABEL.CANCELLED },
 ];
 
 export default async function AdminTendersPage({
@@ -42,7 +28,9 @@ export default async function AdminTendersPage({
 }) {
   const params = await searchParams;
   const statusFilter =
-    params.status && STATUS_LABEL[params.status] ? params.status : "ALL";
+    params.status && TENDER_STATUS_LABEL[params.status as TenderStatus]
+      ? params.status
+      : "ALL";
 
   const where: Prisma.TenderWhereInput =
     statusFilter === "ALL" ? {} : { status: statusFilter as TenderStatus };
@@ -123,9 +111,9 @@ export default async function AdminTendersPage({
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <span
-                    className={`rounded-full px-3 py-1 text-xs font-black ${STATUS_BADGE[tender.status]}`}
+                    className={`rounded-full px-3 py-1 text-xs font-black ${TENDER_STATUS_BADGE[tender.status]}`}
                   >
-                    {STATUS_LABEL[tender.status]}
+                    {TENDER_STATUS_LABEL[tender.status]}
                   </span>
                   <span className="text-xs font-black uppercase tracking-[0.18em] text-amber-700">
                     {tender.category}

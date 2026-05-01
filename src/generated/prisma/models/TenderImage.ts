@@ -432,14 +432,6 @@ export type TenderImageUncheckedUpdateManyWithoutTenderNestedInput = {
   deleteMany?: Prisma.TenderImageScalarWhereInput | Prisma.TenderImageScalarWhereInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type TenderImageCreateWithoutTenderInput = {
   id?: string
   url: string

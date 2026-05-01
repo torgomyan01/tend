@@ -4,14 +4,11 @@ import { ArrowRight, Layers3, Search } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ROUTES } from "@/lib/routes";
-import { serviceCategories } from "@/lib/service-categories";
+import type { ServiceCategoryWithServices } from "@/lib/services-data";
 
-const searchableServices = serviceCategories.flatMap((category) =>
-  category.services.map((service) => ({
-    service,
-    category: category.title,
-  })),
-);
+type ServiceSearchProps = {
+  categories: ServiceCategoryWithServices[];
+};
 
 function createTenderSearchHref(service: string) {
   if (!service.trim()) {
@@ -21,9 +18,19 @@ function createTenderSearchHref(service: string) {
   return `${ROUTES.tenders}?service=${encodeURIComponent(service.trim())}`;
 }
 
-export function ServiceSearch() {
+export function ServiceSearch({ categories }: ServiceSearchProps) {
   const [query, setQuery] = useState("");
   const normalizedQuery = query.trim().toLocaleLowerCase("hy-AM");
+  const searchableServices = useMemo(
+    () =>
+      categories.flatMap((category) =>
+        category.services.map((service) => ({
+          service: service.title,
+          category: category.title,
+        })),
+      ),
+    [categories],
+  );
   const results = useMemo(() => {
     if (!normalizedQuery) {
       return [];
@@ -36,7 +43,7 @@ export function ServiceSearch() {
         return searchText.includes(normalizedQuery);
       })
       .slice(0, 8);
-  }, [normalizedQuery]);
+  }, [normalizedQuery, searchableServices]);
   const shouldShowResults = normalizedQuery.length > 0;
 
   return (

@@ -386,12 +386,17 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   UserInterest: 'UserInterest',
+  ServiceCategory: 'ServiceCategory',
+  Service: 'Service',
   VerificationRequest: 'VerificationRequest',
   Account: 'Account',
   Session: 'Session',
   VerificationToken: 'VerificationToken',
+  Location: 'Location',
   Tender: 'Tender',
   TenderImage: 'TenderImage',
+  TenderDocument: 'TenderDocument',
+  TenderSelectedService: 'TenderSelectedService',
   Bid: 'Bid',
   Transaction: 'Transaction',
   Subscription: 'Subscription',
@@ -411,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userInterest" | "verificationRequest" | "account" | "session" | "verificationToken" | "tender" | "tenderImage" | "bid" | "transaction" | "subscription" | "review"
+    modelProps: "user" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "bid" | "transaction" | "subscription" | "review"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -544,6 +549,138 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserInterestCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserInterestCountAggregateOutputType> | number
+        }
+      }
+    }
+    ServiceCategory: {
+      payload: Prisma.$ServiceCategoryPayload<ExtArgs>
+      fields: Prisma.ServiceCategoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ServiceCategoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceCategoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ServiceCategoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceCategoryPayload>
+        }
+        findFirst: {
+          args: Prisma.ServiceCategoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceCategoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ServiceCategoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceCategoryPayload>
+        }
+        findMany: {
+          args: Prisma.ServiceCategoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceCategoryPayload>[]
+        }
+        create: {
+          args: Prisma.ServiceCategoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceCategoryPayload>
+        }
+        createMany: {
+          args: Prisma.ServiceCategoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ServiceCategoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceCategoryPayload>
+        }
+        update: {
+          args: Prisma.ServiceCategoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceCategoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.ServiceCategoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ServiceCategoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ServiceCategoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceCategoryPayload>
+        }
+        aggregate: {
+          args: Prisma.ServiceCategoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateServiceCategory>
+        }
+        groupBy: {
+          args: Prisma.ServiceCategoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ServiceCategoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ServiceCategoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ServiceCategoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    Service: {
+      payload: Prisma.$ServicePayload<ExtArgs>
+      fields: Prisma.ServiceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ServiceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ServiceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>
+        }
+        findFirst: {
+          args: Prisma.ServiceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ServiceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>
+        }
+        findMany: {
+          args: Prisma.ServiceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>[]
+        }
+        create: {
+          args: Prisma.ServiceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>
+        }
+        createMany: {
+          args: Prisma.ServiceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ServiceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>
+        }
+        update: {
+          args: Prisma.ServiceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>
+        }
+        deleteMany: {
+          args: Prisma.ServiceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ServiceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ServiceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>
+        }
+        aggregate: {
+          args: Prisma.ServiceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateService>
+        }
+        groupBy: {
+          args: Prisma.ServiceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ServiceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ServiceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ServiceCountAggregateOutputType> | number
         }
       }
     }
@@ -811,6 +948,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Location: {
+      payload: Prisma.$LocationPayload<ExtArgs>
+      fields: Prisma.LocationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LocationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LocationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocationPayload>
+        }
+        findFirst: {
+          args: Prisma.LocationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LocationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocationPayload>
+        }
+        findMany: {
+          args: Prisma.LocationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocationPayload>[]
+        }
+        create: {
+          args: Prisma.LocationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocationPayload>
+        }
+        createMany: {
+          args: Prisma.LocationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.LocationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocationPayload>
+        }
+        update: {
+          args: Prisma.LocationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocationPayload>
+        }
+        deleteMany: {
+          args: Prisma.LocationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LocationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.LocationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocationPayload>
+        }
+        aggregate: {
+          args: Prisma.LocationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLocation>
+        }
+        groupBy: {
+          args: Prisma.LocationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LocationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LocationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LocationCountAggregateOutputType> | number
+        }
+      }
+    }
     Tender: {
       payload: Prisma.$TenderPayload<ExtArgs>
       fields: Prisma.TenderFieldRefs
@@ -940,6 +1143,138 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TenderImageCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TenderImageCountAggregateOutputType> | number
+        }
+      }
+    }
+    TenderDocument: {
+      payload: Prisma.$TenderDocumentPayload<ExtArgs>
+      fields: Prisma.TenderDocumentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TenderDocumentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderDocumentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TenderDocumentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderDocumentPayload>
+        }
+        findFirst: {
+          args: Prisma.TenderDocumentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderDocumentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TenderDocumentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderDocumentPayload>
+        }
+        findMany: {
+          args: Prisma.TenderDocumentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderDocumentPayload>[]
+        }
+        create: {
+          args: Prisma.TenderDocumentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderDocumentPayload>
+        }
+        createMany: {
+          args: Prisma.TenderDocumentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TenderDocumentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderDocumentPayload>
+        }
+        update: {
+          args: Prisma.TenderDocumentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderDocumentPayload>
+        }
+        deleteMany: {
+          args: Prisma.TenderDocumentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TenderDocumentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TenderDocumentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderDocumentPayload>
+        }
+        aggregate: {
+          args: Prisma.TenderDocumentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTenderDocument>
+        }
+        groupBy: {
+          args: Prisma.TenderDocumentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderDocumentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TenderDocumentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderDocumentCountAggregateOutputType> | number
+        }
+      }
+    }
+    TenderSelectedService: {
+      payload: Prisma.$TenderSelectedServicePayload<ExtArgs>
+      fields: Prisma.TenderSelectedServiceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TenderSelectedServiceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderSelectedServicePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TenderSelectedServiceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderSelectedServicePayload>
+        }
+        findFirst: {
+          args: Prisma.TenderSelectedServiceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderSelectedServicePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TenderSelectedServiceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderSelectedServicePayload>
+        }
+        findMany: {
+          args: Prisma.TenderSelectedServiceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderSelectedServicePayload>[]
+        }
+        create: {
+          args: Prisma.TenderSelectedServiceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderSelectedServicePayload>
+        }
+        createMany: {
+          args: Prisma.TenderSelectedServiceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TenderSelectedServiceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderSelectedServicePayload>
+        }
+        update: {
+          args: Prisma.TenderSelectedServiceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderSelectedServicePayload>
+        }
+        deleteMany: {
+          args: Prisma.TenderSelectedServiceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TenderSelectedServiceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TenderSelectedServiceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderSelectedServicePayload>
+        }
+        aggregate: {
+          args: Prisma.TenderSelectedServiceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTenderSelectedService>
+        }
+        groupBy: {
+          args: Prisma.TenderSelectedServiceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderSelectedServiceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TenderSelectedServiceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderSelectedServiceCountAggregateOutputType> | number
         }
       }
     }
@@ -1280,6 +1615,32 @@ export const UserInterestScalarFieldEnum = {
 export type UserInterestScalarFieldEnum = (typeof UserInterestScalarFieldEnum)[keyof typeof UserInterestScalarFieldEnum]
 
 
+export const ServiceCategoryScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ServiceCategoryScalarFieldEnum = (typeof ServiceCategoryScalarFieldEnum)[keyof typeof ServiceCategoryScalarFieldEnum]
+
+
+export const ServiceScalarFieldEnum = {
+  id: 'id',
+  categoryId: 'categoryId',
+  title: 'title',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
+
+
 export const VerificationRequestScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -1333,6 +1694,15 @@ export const VerificationTokenScalarFieldEnum = {
 export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
 
 
+export const LocationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  parentId: 'parentId'
+} as const
+
+export type LocationScalarFieldEnum = (typeof LocationScalarFieldEnum)[keyof typeof LocationScalarFieldEnum]
+
+
 export const TenderScalarFieldEnum = {
   id: 'id',
   clientId: 'clientId',
@@ -1341,6 +1711,7 @@ export const TenderScalarFieldEnum = {
   category: 'category',
   service: 'service',
   city: 'city',
+  locationId: 'locationId',
   address: 'address',
   budgetMin: 'budgetMin',
   budgetMax: 'budgetMax',
@@ -1368,6 +1739,30 @@ export const TenderImageScalarFieldEnum = {
 } as const
 
 export type TenderImageScalarFieldEnum = (typeof TenderImageScalarFieldEnum)[keyof typeof TenderImageScalarFieldEnum]
+
+
+export const TenderDocumentScalarFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type TenderDocumentScalarFieldEnum = (typeof TenderDocumentScalarFieldEnum)[keyof typeof TenderDocumentScalarFieldEnum]
+
+
+export const TenderSelectedServiceScalarFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  category: 'category',
+  service: 'service',
+  sortOrder: 'sortOrder'
+} as const
+
+export type TenderSelectedServiceScalarFieldEnum = (typeof TenderSelectedServiceScalarFieldEnum)[keyof typeof TenderSelectedServiceScalarFieldEnum]
 
 
 export const BidScalarFieldEnum = {
@@ -1472,6 +1867,24 @@ export const UserInterestOrderByRelevanceFieldEnum = {
 export type UserInterestOrderByRelevanceFieldEnum = (typeof UserInterestOrderByRelevanceFieldEnum)[keyof typeof UserInterestOrderByRelevanceFieldEnum]
 
 
+export const ServiceCategoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description'
+} as const
+
+export type ServiceCategoryOrderByRelevanceFieldEnum = (typeof ServiceCategoryOrderByRelevanceFieldEnum)[keyof typeof ServiceCategoryOrderByRelevanceFieldEnum]
+
+
+export const ServiceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  categoryId: 'categoryId',
+  title: 'title'
+} as const
+
+export type ServiceOrderByRelevanceFieldEnum = (typeof ServiceOrderByRelevanceFieldEnum)[keyof typeof ServiceOrderByRelevanceFieldEnum]
+
+
 export const VerificationRequestOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -1517,6 +1930,13 @@ export const VerificationTokenOrderByRelevanceFieldEnum = {
 export type VerificationTokenOrderByRelevanceFieldEnum = (typeof VerificationTokenOrderByRelevanceFieldEnum)[keyof typeof VerificationTokenOrderByRelevanceFieldEnum]
 
 
+export const LocationOrderByRelevanceFieldEnum = {
+  name: 'name'
+} as const
+
+export type LocationOrderByRelevanceFieldEnum = (typeof LocationOrderByRelevanceFieldEnum)[keyof typeof LocationOrderByRelevanceFieldEnum]
+
+
 export const TenderOrderByRelevanceFieldEnum = {
   id: 'id',
   clientId: 'clientId',
@@ -1540,6 +1960,27 @@ export const TenderImageOrderByRelevanceFieldEnum = {
 } as const
 
 export type TenderImageOrderByRelevanceFieldEnum = (typeof TenderImageOrderByRelevanceFieldEnum)[keyof typeof TenderImageOrderByRelevanceFieldEnum]
+
+
+export const TenderDocumentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType'
+} as const
+
+export type TenderDocumentOrderByRelevanceFieldEnum = (typeof TenderDocumentOrderByRelevanceFieldEnum)[keyof typeof TenderDocumentOrderByRelevanceFieldEnum]
+
+
+export const TenderSelectedServiceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  category: 'category',
+  service: 'service'
+} as const
+
+export type TenderSelectedServiceOrderByRelevanceFieldEnum = (typeof TenderSelectedServiceOrderByRelevanceFieldEnum)[keyof typeof TenderSelectedServiceOrderByRelevanceFieldEnum]
 
 
 export const BidOrderByRelevanceFieldEnum = {
@@ -1626,16 +2067,16 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'VerificationStatus'
+ * Reference to a field of type 'Int'
  */
-export type EnumVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VerificationStatus'>
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
 
 
 /**
- * Reference to a field of type 'Int'
+ * Reference to a field of type 'VerificationStatus'
  */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+export type EnumVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VerificationStatus'>
     
 
 
@@ -1792,12 +2233,17 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   userInterest?: Prisma.UserInterestOmit
+  serviceCategory?: Prisma.ServiceCategoryOmit
+  service?: Prisma.ServiceOmit
   verificationRequest?: Prisma.VerificationRequestOmit
   account?: Prisma.AccountOmit
   session?: Prisma.SessionOmit
   verificationToken?: Prisma.VerificationTokenOmit
+  location?: Prisma.LocationOmit
   tender?: Prisma.TenderOmit
   tenderImage?: Prisma.TenderImageOmit
+  tenderDocument?: Prisma.TenderDocumentOmit
+  tenderSelectedService?: Prisma.TenderSelectedServiceOmit
   bid?: Prisma.BidOmit
   transaction?: Prisma.TransactionOmit
   subscription?: Prisma.SubscriptionOmit

@@ -4,6 +4,7 @@ import {
   LogIn,
 } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 import { LoginForm } from "@/components/login-form";
 import { ROUTES } from "@/lib/routes";
 
@@ -82,7 +83,9 @@ export default function LoginPage() {
               </p>
             </div>
 
-            <LoginForm />
+            <Suspense fallback={<div className="h-48 animate-pulse rounded-2xl bg-slate-100" />}>
+              <LoginForm />
+            </Suspense>
           </div>
         </section>
       </div>

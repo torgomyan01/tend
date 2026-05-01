@@ -11,6 +11,7 @@ export const ROUTES = {
   myTenders: "/tenders?scope=my",
   bidHistory: "/tenders?scope=bids",
   tenders: "/tenders",
+  tenderDetail: (id: string) => `/tenders/${id}`,
   createTender: "/tenders/new",
   admin: {
     dashboard: "/admin",
@@ -21,10 +22,11 @@ export const ROUTES = {
     transactions: "/admin/transactions",
     subscriptions: "/admin/subscriptions",
     reviews: "/admin/reviews",
+    services: "/admin/services",
   },
   sections: {
     howItWorks: "/#how-it-works",
     features: "/#features",
     providers: "/#providers",
   },
-} as const;
+};

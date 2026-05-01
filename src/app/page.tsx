@@ -15,6 +15,7 @@ import { FeaturedTenderSlider } from "@/components/featured-tender-slider";
 import { ServiceSearch } from "@/components/service-search";
 import { SiteHeader } from "@/components/site-header";
 import { ROUTES } from "@/lib/routes";
+import { getServiceCategories } from "@/lib/services-data";
 
 const stats = [
   { value: "0 ֏", label: "Առաջին 3 մրցույթի մասնակցությունը անվճար է" },
@@ -70,14 +71,15 @@ const features = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const categories = await getServiceCategories();
   return (
     <div className="min-h-screen overflow-hidden bg-[#f7f4ee] text-slate-950">
       <SiteHeader />
 
       <main>
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <ServiceSearch />
+          <ServiceSearch categories={categories} />
         </div>
 
         <section className="relative mx-auto grid w-full max-w-7xl gap-10 px-4 pb-14 pt-8 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:pb-28 lg:pt-16">

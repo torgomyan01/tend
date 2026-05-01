@@ -53,12 +53,17 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   UserInterest: 'UserInterest',
+  ServiceCategory: 'ServiceCategory',
+  Service: 'Service',
   VerificationRequest: 'VerificationRequest',
   Account: 'Account',
   Session: 'Session',
   VerificationToken: 'VerificationToken',
+  Location: 'Location',
   Tender: 'Tender',
   TenderImage: 'TenderImage',
+  TenderDocument: 'TenderDocument',
+  TenderSelectedService: 'TenderSelectedService',
   Bid: 'Bid',
   Transaction: 'Transaction',
   Subscription: 'Subscription',
@@ -115,6 +120,32 @@ export const UserInterestScalarFieldEnum = {
 export type UserInterestScalarFieldEnum = (typeof UserInterestScalarFieldEnum)[keyof typeof UserInterestScalarFieldEnum]
 
 
+export const ServiceCategoryScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ServiceCategoryScalarFieldEnum = (typeof ServiceCategoryScalarFieldEnum)[keyof typeof ServiceCategoryScalarFieldEnum]
+
+
+export const ServiceScalarFieldEnum = {
+  id: 'id',
+  categoryId: 'categoryId',
+  title: 'title',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
+
+
 export const VerificationRequestScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -168,6 +199,15 @@ export const VerificationTokenScalarFieldEnum = {
 export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
 
 
+export const LocationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  parentId: 'parentId'
+} as const
+
+export type LocationScalarFieldEnum = (typeof LocationScalarFieldEnum)[keyof typeof LocationScalarFieldEnum]
+
+
 export const TenderScalarFieldEnum = {
   id: 'id',
   clientId: 'clientId',
@@ -176,6 +216,7 @@ export const TenderScalarFieldEnum = {
   category: 'category',
   service: 'service',
   city: 'city',
+  locationId: 'locationId',
   address: 'address',
   budgetMin: 'budgetMin',
   budgetMax: 'budgetMax',
@@ -203,6 +244,30 @@ export const TenderImageScalarFieldEnum = {
 } as const
 
 export type TenderImageScalarFieldEnum = (typeof TenderImageScalarFieldEnum)[keyof typeof TenderImageScalarFieldEnum]
+
+
+export const TenderDocumentScalarFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type TenderDocumentScalarFieldEnum = (typeof TenderDocumentScalarFieldEnum)[keyof typeof TenderDocumentScalarFieldEnum]
+
+
+export const TenderSelectedServiceScalarFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  category: 'category',
+  service: 'service',
+  sortOrder: 'sortOrder'
+} as const
+
+export type TenderSelectedServiceScalarFieldEnum = (typeof TenderSelectedServiceScalarFieldEnum)[keyof typeof TenderSelectedServiceScalarFieldEnum]
 
 
 export const BidScalarFieldEnum = {
@@ -307,6 +372,24 @@ export const UserInterestOrderByRelevanceFieldEnum = {
 export type UserInterestOrderByRelevanceFieldEnum = (typeof UserInterestOrderByRelevanceFieldEnum)[keyof typeof UserInterestOrderByRelevanceFieldEnum]
 
 
+export const ServiceCategoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description'
+} as const
+
+export type ServiceCategoryOrderByRelevanceFieldEnum = (typeof ServiceCategoryOrderByRelevanceFieldEnum)[keyof typeof ServiceCategoryOrderByRelevanceFieldEnum]
+
+
+export const ServiceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  categoryId: 'categoryId',
+  title: 'title'
+} as const
+
+export type ServiceOrderByRelevanceFieldEnum = (typeof ServiceOrderByRelevanceFieldEnum)[keyof typeof ServiceOrderByRelevanceFieldEnum]
+
+
 export const VerificationRequestOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -352,6 +435,13 @@ export const VerificationTokenOrderByRelevanceFieldEnum = {
 export type VerificationTokenOrderByRelevanceFieldEnum = (typeof VerificationTokenOrderByRelevanceFieldEnum)[keyof typeof VerificationTokenOrderByRelevanceFieldEnum]
 
 
+export const LocationOrderByRelevanceFieldEnum = {
+  name: 'name'
+} as const
+
+export type LocationOrderByRelevanceFieldEnum = (typeof LocationOrderByRelevanceFieldEnum)[keyof typeof LocationOrderByRelevanceFieldEnum]
+
+
 export const TenderOrderByRelevanceFieldEnum = {
   id: 'id',
   clientId: 'clientId',
@@ -375,6 +465,27 @@ export const TenderImageOrderByRelevanceFieldEnum = {
 } as const
 
 export type TenderImageOrderByRelevanceFieldEnum = (typeof TenderImageOrderByRelevanceFieldEnum)[keyof typeof TenderImageOrderByRelevanceFieldEnum]
+
+
+export const TenderDocumentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType'
+} as const
+
+export type TenderDocumentOrderByRelevanceFieldEnum = (typeof TenderDocumentOrderByRelevanceFieldEnum)[keyof typeof TenderDocumentOrderByRelevanceFieldEnum]
+
+
+export const TenderSelectedServiceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  category: 'category',
+  service: 'service'
+} as const
+
+export type TenderSelectedServiceOrderByRelevanceFieldEnum = (typeof TenderSelectedServiceOrderByRelevanceFieldEnum)[keyof typeof TenderSelectedServiceOrderByRelevanceFieldEnum]
 
 
 export const BidOrderByRelevanceFieldEnum = {

@@ -28,6 +28,16 @@ export type User = Prisma.UserModel
  */
 export type UserInterest = Prisma.UserInterestModel
 /**
+ * Model ServiceCategory
+ * 
+ */
+export type ServiceCategory = Prisma.ServiceCategoryModel
+/**
+ * Model Service
+ * 
+ */
+export type Service = Prisma.ServiceModel
+/**
  * Model VerificationRequest
  * 
  */
@@ -48,6 +58,11 @@ export type Session = Prisma.SessionModel
  */
 export type VerificationToken = Prisma.VerificationTokenModel
 /**
+ * Model Location
+ * 
+ */
+export type Location = Prisma.LocationModel
+/**
  * Model Tender
  * 
  */
@@ -57,6 +72,16 @@ export type Tender = Prisma.TenderModel
  * 
  */
 export type TenderImage = Prisma.TenderImageModel
+/**
+ * Model TenderDocument
+ * 
+ */
+export type TenderDocument = Prisma.TenderDocumentModel
+/**
+ * Model TenderSelectedService
+ * 
+ */
+export type TenderSelectedService = Prisma.TenderSelectedServiceModel
 /**
  * Model Bid
  * 

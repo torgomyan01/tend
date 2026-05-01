@@ -3,14 +3,17 @@ import Link from "next/link";
 import { ServiceSearch } from "@/components/service-search";
 import { SiteHeader } from "@/components/site-header";
 import { ROUTES } from "@/lib/routes";
-import { serviceCategories } from "@/lib/service-categories";
+import { getServiceCategories } from "@/lib/services-data";
 
-const totalServices = serviceCategories.reduce(
-  (sum, category) => sum + category.services.length,
-  0,
-);
+export const dynamic = "force-dynamic";
 
-export default function CategoriesPage() {
+export default async function CategoriesPage() {
+  const categories = await getServiceCategories();
+  const totalServices = categories.reduce(
+    (sum, category) => sum + category.services.length,
+    0,
+  );
+
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
       <SiteHeader />
@@ -48,7 +51,7 @@ export default function CategoriesPage() {
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-3xl bg-white/10 p-5 ring-1 ring-white/10">
                 <p className="text-4xl font-black text-amber-300">
-                  {serviceCategories.length}
+                  {categories.length}
                 </p>
                 <p className="mt-2 text-sm font-bold text-slate-300">
                   խոշոր ոլորտ
@@ -67,13 +70,13 @@ export default function CategoriesPage() {
         </section>
 
         <section>
-          <ServiceSearch />
+          <ServiceSearch categories={categories} />
         </section>
 
         <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {serviceCategories.map((category) => (
+          {categories.map((category) => (
             <article
-              key={category.title}
+              key={category.id}
               className="flex flex-col rounded-4xl bg-white p-5 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-1 hover:shadow-xl sm:p-6"
             >
               <div className="flex items-start justify-between gap-4">
@@ -95,10 +98,10 @@ export default function CategoriesPage() {
               <div className="mt-6 flex flex-wrap gap-2">
                 {category.services.map((service) => (
                   <span
-                    key={service}
+                    key={service.id}
                     className="rounded-full bg-slate-50 px-3 py-2 text-xs font-bold text-slate-600 ring-1 ring-slate-200"
                   >
-                    {service}
+                    {service.title}
                   </span>
                 ))}
               </div>

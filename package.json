@@ -10,7 +10,9 @@
     "db:generate": "prisma generate",
     "db:validate": "prisma validate",
     "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "db:seed:services": "tsx scripts/seed-services.ts",
+    "db:seed:locations": "tsx scripts/seed-locations.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.2",
@@ -36,6 +38,7 @@
     "eslint-config-next": "^15.5.15",
     "prisma": "^7.8.0",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

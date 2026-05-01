@@ -104,6 +104,35 @@ model UserInterest {
   @@index([userId])
 }
 
+model ServiceCategory {
+  id          String    @id @default(cuid())
+  title       String    @unique
+  description String    @db.Text
+  sortOrder   Int       @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  services    Service[]
+
+  @@index([sortOrder])
+  @@index([isActive])
+}
+
+model Service {
+  id         String          @id @default(cuid())
+  categoryId String
+  title      String
+  sortOrder  Int             @default(0)
+  isActive   Boolean         @default(true)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  category   ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, title])
+  @@index([categoryId, sortOrder])
+  @@index([isActive])
+}
+
 model VerificationRequest {
   id             String             @id @default(cuid())
   userId         String
@@ -158,6 +187,18 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model Location {
+  id       Int        @id
+  name     String     @db.VarChar(255)
+  parentId Int?       @map("parent_id")
+  parent   Location?  @relation("LocationHierarchy", fields: [parentId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  children Location[] @relation("LocationHierarchy")
+  tenders Tender[] @relation("TenderLocality")
+
+  @@map("locations")
+  @@index([parentId])
+}
+
 model Tender {
   id             String       @id @default(cuid())
   clientId       String
@@ -166,6 +207,8 @@ model Tender {
   category       String
   service        String
   city           String?
+  locationId Int?       @map("location_id")
+  locality   Location?  @relation("TenderLocality", fields: [locationId], references: [id], onDelete: SetNull)
   address        String?
   budgetMin      Decimal?     @db.Decimal(12, 2)
   budgetMax      Decimal?     @db.Decimal(12, 2)
@@ -182,12 +225,15 @@ model Tender {
   awardedBid     Bid?         @relation("AwardedBid", fields: [awardedBidId], references: [id])
   bids           Bid[]        @relation("TenderBids")
   images         TenderImage[]
+  documents      TenderDocument[]
   reviews        Review[]
+  selectedServices TenderSelectedService[]
 
   @@index([clientId])
   @@index([status, endsAt])
   @@index([category, service])
   @@index([city])
+  @@index([locationId])
 }
 
 model TenderImage {
@@ -198,6 +244,30 @@ model TenderImage {
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())
   tender    Tender   @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+
+  @@index([tenderId])
+}
+
+model TenderDocument {
+  id               String   @id @default(cuid())
+  tenderId         String
+  url              String
+  originalFileName String   @db.VarChar(255)
+  mimeType         String?  @db.VarChar(120)
+  sortOrder        Int      @default(0)
+  createdAt        DateTime @default(now())
+  tender           Tender   @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+
+  @@index([tenderId])
+}
+
+model TenderSelectedService {
+  id        String @id @default(cuid())
+  tenderId  String
+  category  String
+  service   String
+  sortOrder Int    @default(0)
+  tender    Tender @relation(fields: [tenderId], references: [id], onDelete: Cascade)
 
   @@index([tenderId])
 }

@@ -3,13 +3,26 @@
 import { Loader2, LockKeyhole, Phone } from "lucide-react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo, useState } from "react";
 import { PhoneInput } from "@/components/phone-input";
 import { ROUTES } from "@/lib/routes";
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = useMemo(() => {
+    const raw = searchParams.get("callbackUrl");
+    if (
+      raw &&
+      raw.startsWith("/") &&
+      !raw.startsWith("//") &&
+      !raw.includes("://")
+    ) {
+      return raw;
+    }
+    return ROUTES.home;
+  }, [searchParams]);
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,7 +53,7 @@ export function LoginForm() {
       return;
     }
 
-    router.push(ROUTES.home);
+    router.push(callbackUrl);
     router.refresh();
   }
 

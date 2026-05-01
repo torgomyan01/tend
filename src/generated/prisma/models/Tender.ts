@@ -27,11 +27,13 @@ export type AggregateTender = {
 }
 
 export type TenderAvgAggregateOutputType = {
+  locationId: number | null
   budgetMin: runtime.Decimal | null
   budgetMax: runtime.Decimal | null
 }
 
 export type TenderSumAggregateOutputType = {
+  locationId: number | null
   budgetMin: runtime.Decimal | null
   budgetMax: runtime.Decimal | null
 }
@@ -44,6 +46,7 @@ export type TenderMinAggregateOutputType = {
   category: string | null
   service: string | null
   city: string | null
+  locationId: number | null
   address: string | null
   budgetMin: runtime.Decimal | null
   budgetMax: runtime.Decimal | null
@@ -66,6 +69,7 @@ export type TenderMaxAggregateOutputType = {
   category: string | null
   service: string | null
   city: string | null
+  locationId: number | null
   address: string | null
   budgetMin: runtime.Decimal | null
   budgetMax: runtime.Decimal | null
@@ -88,6 +92,7 @@ export type TenderCountAggregateOutputType = {
   category: number
   service: number
   city: number
+  locationId: number
   address: number
   budgetMin: number
   budgetMax: number
@@ -105,11 +110,13 @@ export type TenderCountAggregateOutputType = {
 
 
 export type TenderAvgAggregateInputType = {
+  locationId?: true
   budgetMin?: true
   budgetMax?: true
 }
 
 export type TenderSumAggregateInputType = {
+  locationId?: true
   budgetMin?: true
   budgetMax?: true
 }
@@ -122,6 +129,7 @@ export type TenderMinAggregateInputType = {
   category?: true
   service?: true
   city?: true
+  locationId?: true
   address?: true
   budgetMin?: true
   budgetMax?: true
@@ -144,6 +152,7 @@ export type TenderMaxAggregateInputType = {
   category?: true
   service?: true
   city?: true
+  locationId?: true
   address?: true
   budgetMin?: true
   budgetMax?: true
@@ -166,6 +175,7 @@ export type TenderCountAggregateInputType = {
   category?: true
   service?: true
   city?: true
+  locationId?: true
   address?: true
   budgetMin?: true
   budgetMax?: true
@@ -275,6 +285,7 @@ export type TenderGroupByOutputType = {
   category: string
   service: string
   city: string | null
+  locationId: number | null
   address: string | null
   budgetMin: runtime.Decimal | null
   budgetMax: runtime.Decimal | null
@@ -320,6 +331,7 @@ export type TenderWhereInput = {
   category?: Prisma.StringFilter<"Tender"> | string
   service?: Prisma.StringFilter<"Tender"> | string
   city?: Prisma.StringNullableFilter<"Tender"> | string | null
+  locationId?: Prisma.IntNullableFilter<"Tender"> | number | null
   address?: Prisma.StringNullableFilter<"Tender"> | string | null
   budgetMin?: Prisma.DecimalNullableFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.DecimalNullableFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -332,11 +344,14 @@ export type TenderWhereInput = {
   cancelledAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Tender"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Tender"> | Date | string
+  locality?: Prisma.XOR<Prisma.LocationNullableScalarRelationFilter, Prisma.LocationWhereInput> | null
   client?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   awardedBid?: Prisma.XOR<Prisma.BidNullableScalarRelationFilter, Prisma.BidWhereInput> | null
   bids?: Prisma.BidListRelationFilter
   images?: Prisma.TenderImageListRelationFilter
+  documents?: Prisma.TenderDocumentListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
+  selectedServices?: Prisma.TenderSelectedServiceListRelationFilter
 }
 
 export type TenderOrderByWithRelationInput = {
@@ -347,6 +362,7 @@ export type TenderOrderByWithRelationInput = {
   category?: Prisma.SortOrder
   service?: Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
+  locationId?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   budgetMin?: Prisma.SortOrderInput | Prisma.SortOrder
   budgetMax?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -359,11 +375,14 @@ export type TenderOrderByWithRelationInput = {
   cancelledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  locality?: Prisma.LocationOrderByWithRelationInput
   client?: Prisma.UserOrderByWithRelationInput
   awardedBid?: Prisma.BidOrderByWithRelationInput
   bids?: Prisma.BidOrderByRelationAggregateInput
   images?: Prisma.TenderImageOrderByRelationAggregateInput
+  documents?: Prisma.TenderDocumentOrderByRelationAggregateInput
   reviews?: Prisma.ReviewOrderByRelationAggregateInput
+  selectedServices?: Prisma.TenderSelectedServiceOrderByRelationAggregateInput
   _relevance?: Prisma.TenderOrderByRelevanceInput
 }
 
@@ -379,6 +398,7 @@ export type TenderWhereUniqueInput = Prisma.AtLeast<{
   category?: Prisma.StringFilter<"Tender"> | string
   service?: Prisma.StringFilter<"Tender"> | string
   city?: Prisma.StringNullableFilter<"Tender"> | string | null
+  locationId?: Prisma.IntNullableFilter<"Tender"> | number | null
   address?: Prisma.StringNullableFilter<"Tender"> | string | null
   budgetMin?: Prisma.DecimalNullableFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.DecimalNullableFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -390,11 +410,14 @@ export type TenderWhereUniqueInput = Prisma.AtLeast<{
   cancelledAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Tender"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Tender"> | Date | string
+  locality?: Prisma.XOR<Prisma.LocationNullableScalarRelationFilter, Prisma.LocationWhereInput> | null
   client?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   awardedBid?: Prisma.XOR<Prisma.BidNullableScalarRelationFilter, Prisma.BidWhereInput> | null
   bids?: Prisma.BidListRelationFilter
   images?: Prisma.TenderImageListRelationFilter
+  documents?: Prisma.TenderDocumentListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
+  selectedServices?: Prisma.TenderSelectedServiceListRelationFilter
 }, "id" | "awardedBidId">
 
 export type TenderOrderByWithAggregationInput = {
@@ -405,6 +428,7 @@ export type TenderOrderByWithAggregationInput = {
   category?: Prisma.SortOrder
   service?: Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
+  locationId?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   budgetMin?: Prisma.SortOrderInput | Prisma.SortOrder
   budgetMax?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -435,6 +459,7 @@ export type TenderScalarWhereWithAggregatesInput = {
   category?: Prisma.StringWithAggregatesFilter<"Tender"> | string
   service?: Prisma.StringWithAggregatesFilter<"Tender"> | string
   city?: Prisma.StringNullableWithAggregatesFilter<"Tender"> | string | null
+  locationId?: Prisma.IntNullableWithAggregatesFilter<"Tender"> | number | null
   address?: Prisma.StringNullableWithAggregatesFilter<"Tender"> | string | null
   budgetMin?: Prisma.DecimalNullableWithAggregatesFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.DecimalNullableWithAggregatesFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -467,11 +492,14 @@ export type TenderCreateInput = {
   cancelledAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  locality?: Prisma.LocationCreateNestedOneWithoutTendersInput
   client: Prisma.UserCreateNestedOneWithoutTendersInput
   awardedBid?: Prisma.BidCreateNestedOneWithoutAwardedTenderInput
   bids?: Prisma.BidCreateNestedManyWithoutTenderInput
   images?: Prisma.TenderImageCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentCreateNestedManyWithoutTenderInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateInput = {
@@ -482,6 +510,7 @@ export type TenderUncheckedCreateInput = {
   category: string
   service: string
   city?: string | null
+  locationId?: number | null
   address?: string | null
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -496,7 +525,9 @@ export type TenderUncheckedCreateInput = {
   updatedAt?: Date | string
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutTenderInput
   images?: Prisma.TenderImageUncheckedCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentUncheckedCreateNestedManyWithoutTenderInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUpdateInput = {
@@ -517,11 +548,14 @@ export type TenderUpdateInput = {
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  locality?: Prisma.LocationUpdateOneWithoutTendersNestedInput
   client?: Prisma.UserUpdateOneRequiredWithoutTendersNestedInput
   awardedBid?: Prisma.BidUpdateOneWithoutAwardedTenderNestedInput
   bids?: Prisma.BidUpdateManyWithoutTenderNestedInput
   images?: Prisma.TenderImageUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUpdateManyWithoutTenderNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateInput = {
@@ -532,6 +566,7 @@ export type TenderUncheckedUpdateInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   service?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -546,7 +581,9 @@ export type TenderUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bids?: Prisma.BidUncheckedUpdateManyWithoutTenderNestedInput
   images?: Prisma.TenderImageUncheckedUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUncheckedUpdateManyWithoutTenderNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderCreateManyInput = {
@@ -557,6 +594,7 @@ export type TenderCreateManyInput = {
   category: string
   service: string
   city?: string | null
+  locationId?: number | null
   address?: string | null
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -599,6 +637,7 @@ export type TenderUncheckedUpdateManyInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   service?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -637,6 +676,7 @@ export type TenderCountOrderByAggregateInput = {
   category?: Prisma.SortOrder
   service?: Prisma.SortOrder
   city?: Prisma.SortOrder
+  locationId?: Prisma.SortOrder
   address?: Prisma.SortOrder
   budgetMin?: Prisma.SortOrder
   budgetMax?: Prisma.SortOrder
@@ -652,6 +692,7 @@ export type TenderCountOrderByAggregateInput = {
 }
 
 export type TenderAvgOrderByAggregateInput = {
+  locationId?: Prisma.SortOrder
   budgetMin?: Prisma.SortOrder
   budgetMax?: Prisma.SortOrder
 }
@@ -664,6 +705,7 @@ export type TenderMaxOrderByAggregateInput = {
   category?: Prisma.SortOrder
   service?: Prisma.SortOrder
   city?: Prisma.SortOrder
+  locationId?: Prisma.SortOrder
   address?: Prisma.SortOrder
   budgetMin?: Prisma.SortOrder
   budgetMax?: Prisma.SortOrder
@@ -686,6 +728,7 @@ export type TenderMinOrderByAggregateInput = {
   category?: Prisma.SortOrder
   service?: Prisma.SortOrder
   city?: Prisma.SortOrder
+  locationId?: Prisma.SortOrder
   address?: Prisma.SortOrder
   budgetMin?: Prisma.SortOrder
   budgetMax?: Prisma.SortOrder
@@ -701,6 +744,7 @@ export type TenderMinOrderByAggregateInput = {
 }
 
 export type TenderSumOrderByAggregateInput = {
+  locationId?: Prisma.SortOrder
   budgetMin?: Prisma.SortOrder
   budgetMax?: Prisma.SortOrder
 }
@@ -757,6 +801,48 @@ export type TenderUncheckedUpdateManyWithoutClientNestedInput = {
   deleteMany?: Prisma.TenderScalarWhereInput | Prisma.TenderScalarWhereInput[]
 }
 
+export type TenderCreateNestedManyWithoutLocalityInput = {
+  create?: Prisma.XOR<Prisma.TenderCreateWithoutLocalityInput, Prisma.TenderUncheckedCreateWithoutLocalityInput> | Prisma.TenderCreateWithoutLocalityInput[] | Prisma.TenderUncheckedCreateWithoutLocalityInput[]
+  connectOrCreate?: Prisma.TenderCreateOrConnectWithoutLocalityInput | Prisma.TenderCreateOrConnectWithoutLocalityInput[]
+  createMany?: Prisma.TenderCreateManyLocalityInputEnvelope
+  connect?: Prisma.TenderWhereUniqueInput | Prisma.TenderWhereUniqueInput[]
+}
+
+export type TenderUncheckedCreateNestedManyWithoutLocalityInput = {
+  create?: Prisma.XOR<Prisma.TenderCreateWithoutLocalityInput, Prisma.TenderUncheckedCreateWithoutLocalityInput> | Prisma.TenderCreateWithoutLocalityInput[] | Prisma.TenderUncheckedCreateWithoutLocalityInput[]
+  connectOrCreate?: Prisma.TenderCreateOrConnectWithoutLocalityInput | Prisma.TenderCreateOrConnectWithoutLocalityInput[]
+  createMany?: Prisma.TenderCreateManyLocalityInputEnvelope
+  connect?: Prisma.TenderWhereUniqueInput | Prisma.TenderWhereUniqueInput[]
+}
+
+export type TenderUpdateManyWithoutLocalityNestedInput = {
+  create?: Prisma.XOR<Prisma.TenderCreateWithoutLocalityInput, Prisma.TenderUncheckedCreateWithoutLocalityInput> | Prisma.TenderCreateWithoutLocalityInput[] | Prisma.TenderUncheckedCreateWithoutLocalityInput[]
+  connectOrCreate?: Prisma.TenderCreateOrConnectWithoutLocalityInput | Prisma.TenderCreateOrConnectWithoutLocalityInput[]
+  upsert?: Prisma.TenderUpsertWithWhereUniqueWithoutLocalityInput | Prisma.TenderUpsertWithWhereUniqueWithoutLocalityInput[]
+  createMany?: Prisma.TenderCreateManyLocalityInputEnvelope
+  set?: Prisma.TenderWhereUniqueInput | Prisma.TenderWhereUniqueInput[]
+  disconnect?: Prisma.TenderWhereUniqueInput | Prisma.TenderWhereUniqueInput[]
+  delete?: Prisma.TenderWhereUniqueInput | Prisma.TenderWhereUniqueInput[]
+  connect?: Prisma.TenderWhereUniqueInput | Prisma.TenderWhereUniqueInput[]
+  update?: Prisma.TenderUpdateWithWhereUniqueWithoutLocalityInput | Prisma.TenderUpdateWithWhereUniqueWithoutLocalityInput[]
+  updateMany?: Prisma.TenderUpdateManyWithWhereWithoutLocalityInput | Prisma.TenderUpdateManyWithWhereWithoutLocalityInput[]
+  deleteMany?: Prisma.TenderScalarWhereInput | Prisma.TenderScalarWhereInput[]
+}
+
+export type TenderUncheckedUpdateManyWithoutLocalityNestedInput = {
+  create?: Prisma.XOR<Prisma.TenderCreateWithoutLocalityInput, Prisma.TenderUncheckedCreateWithoutLocalityInput> | Prisma.TenderCreateWithoutLocalityInput[] | Prisma.TenderUncheckedCreateWithoutLocalityInput[]
+  connectOrCreate?: Prisma.TenderCreateOrConnectWithoutLocalityInput | Prisma.TenderCreateOrConnectWithoutLocalityInput[]
+  upsert?: Prisma.TenderUpsertWithWhereUniqueWithoutLocalityInput | Prisma.TenderUpsertWithWhereUniqueWithoutLocalityInput[]
+  createMany?: Prisma.TenderCreateManyLocalityInputEnvelope
+  set?: Prisma.TenderWhereUniqueInput | Prisma.TenderWhereUniqueInput[]
+  disconnect?: Prisma.TenderWhereUniqueInput | Prisma.TenderWhereUniqueInput[]
+  delete?: Prisma.TenderWhereUniqueInput | Prisma.TenderWhereUniqueInput[]
+  connect?: Prisma.TenderWhereUniqueInput | Prisma.TenderWhereUniqueInput[]
+  update?: Prisma.TenderUpdateWithWhereUniqueWithoutLocalityInput | Prisma.TenderUpdateWithWhereUniqueWithoutLocalityInput[]
+  updateMany?: Prisma.TenderUpdateManyWithWhereWithoutLocalityInput | Prisma.TenderUpdateManyWithWhereWithoutLocalityInput[]
+  deleteMany?: Prisma.TenderScalarWhereInput | Prisma.TenderScalarWhereInput[]
+}
+
 export type NullableDecimalFieldUpdateOperationsInput = {
   set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -781,6 +867,34 @@ export type TenderUpdateOneRequiredWithoutImagesNestedInput = {
   upsert?: Prisma.TenderUpsertWithoutImagesInput
   connect?: Prisma.TenderWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.TenderUpdateToOneWithWhereWithoutImagesInput, Prisma.TenderUpdateWithoutImagesInput>, Prisma.TenderUncheckedUpdateWithoutImagesInput>
+}
+
+export type TenderCreateNestedOneWithoutDocumentsInput = {
+  create?: Prisma.XOR<Prisma.TenderCreateWithoutDocumentsInput, Prisma.TenderUncheckedCreateWithoutDocumentsInput>
+  connectOrCreate?: Prisma.TenderCreateOrConnectWithoutDocumentsInput
+  connect?: Prisma.TenderWhereUniqueInput
+}
+
+export type TenderUpdateOneRequiredWithoutDocumentsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenderCreateWithoutDocumentsInput, Prisma.TenderUncheckedCreateWithoutDocumentsInput>
+  connectOrCreate?: Prisma.TenderCreateOrConnectWithoutDocumentsInput
+  upsert?: Prisma.TenderUpsertWithoutDocumentsInput
+  connect?: Prisma.TenderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenderUpdateToOneWithWhereWithoutDocumentsInput, Prisma.TenderUpdateWithoutDocumentsInput>, Prisma.TenderUncheckedUpdateWithoutDocumentsInput>
+}
+
+export type TenderCreateNestedOneWithoutSelectedServicesInput = {
+  create?: Prisma.XOR<Prisma.TenderCreateWithoutSelectedServicesInput, Prisma.TenderUncheckedCreateWithoutSelectedServicesInput>
+  connectOrCreate?: Prisma.TenderCreateOrConnectWithoutSelectedServicesInput
+  connect?: Prisma.TenderWhereUniqueInput
+}
+
+export type TenderUpdateOneRequiredWithoutSelectedServicesNestedInput = {
+  create?: Prisma.XOR<Prisma.TenderCreateWithoutSelectedServicesInput, Prisma.TenderUncheckedCreateWithoutSelectedServicesInput>
+  connectOrCreate?: Prisma.TenderCreateOrConnectWithoutSelectedServicesInput
+  upsert?: Prisma.TenderUpsertWithoutSelectedServicesInput
+  connect?: Prisma.TenderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenderUpdateToOneWithWhereWithoutSelectedServicesInput, Prisma.TenderUpdateWithoutSelectedServicesInput>, Prisma.TenderUncheckedUpdateWithoutSelectedServicesInput>
 }
 
 export type TenderCreateNestedOneWithoutBidsInput = {
@@ -861,10 +975,13 @@ export type TenderCreateWithoutClientInput = {
   cancelledAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  locality?: Prisma.LocationCreateNestedOneWithoutTendersInput
   awardedBid?: Prisma.BidCreateNestedOneWithoutAwardedTenderInput
   bids?: Prisma.BidCreateNestedManyWithoutTenderInput
   images?: Prisma.TenderImageCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentCreateNestedManyWithoutTenderInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateWithoutClientInput = {
@@ -874,6 +991,7 @@ export type TenderUncheckedCreateWithoutClientInput = {
   category: string
   service: string
   city?: string | null
+  locationId?: number | null
   address?: string | null
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -888,7 +1006,9 @@ export type TenderUncheckedCreateWithoutClientInput = {
   updatedAt?: Date | string
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutTenderInput
   images?: Prisma.TenderImageUncheckedCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentUncheckedCreateNestedManyWithoutTenderInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderCreateOrConnectWithoutClientInput = {
@@ -928,6 +1048,7 @@ export type TenderScalarWhereInput = {
   category?: Prisma.StringFilter<"Tender"> | string
   service?: Prisma.StringFilter<"Tender"> | string
   city?: Prisma.StringNullableFilter<"Tender"> | string | null
+  locationId?: Prisma.IntNullableFilter<"Tender"> | number | null
   address?: Prisma.StringNullableFilter<"Tender"> | string | null
   budgetMin?: Prisma.DecimalNullableFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.DecimalNullableFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -942,7 +1063,7 @@ export type TenderScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Tender"> | Date | string
 }
 
-export type TenderCreateWithoutImagesInput = {
+export type TenderCreateWithoutLocalityInput = {
   id?: string
   title: string
   description: string
@@ -963,10 +1084,13 @@ export type TenderCreateWithoutImagesInput = {
   client: Prisma.UserCreateNestedOneWithoutTendersInput
   awardedBid?: Prisma.BidCreateNestedOneWithoutAwardedTenderInput
   bids?: Prisma.BidCreateNestedManyWithoutTenderInput
+  images?: Prisma.TenderImageCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentCreateNestedManyWithoutTenderInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
 }
 
-export type TenderUncheckedCreateWithoutImagesInput = {
+export type TenderUncheckedCreateWithoutLocalityInput = {
   id?: string
   clientId: string
   title: string
@@ -987,7 +1111,90 @@ export type TenderUncheckedCreateWithoutImagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutTenderInput
+  images?: Prisma.TenderImageUncheckedCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentUncheckedCreateNestedManyWithoutTenderInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
+}
+
+export type TenderCreateOrConnectWithoutLocalityInput = {
+  where: Prisma.TenderWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenderCreateWithoutLocalityInput, Prisma.TenderUncheckedCreateWithoutLocalityInput>
+}
+
+export type TenderCreateManyLocalityInputEnvelope = {
+  data: Prisma.TenderCreateManyLocalityInput | Prisma.TenderCreateManyLocalityInput[]
+  skipDuplicates?: boolean
+}
+
+export type TenderUpsertWithWhereUniqueWithoutLocalityInput = {
+  where: Prisma.TenderWhereUniqueInput
+  update: Prisma.XOR<Prisma.TenderUpdateWithoutLocalityInput, Prisma.TenderUncheckedUpdateWithoutLocalityInput>
+  create: Prisma.XOR<Prisma.TenderCreateWithoutLocalityInput, Prisma.TenderUncheckedCreateWithoutLocalityInput>
+}
+
+export type TenderUpdateWithWhereUniqueWithoutLocalityInput = {
+  where: Prisma.TenderWhereUniqueInput
+  data: Prisma.XOR<Prisma.TenderUpdateWithoutLocalityInput, Prisma.TenderUncheckedUpdateWithoutLocalityInput>
+}
+
+export type TenderUpdateManyWithWhereWithoutLocalityInput = {
+  where: Prisma.TenderScalarWhereInput
+  data: Prisma.XOR<Prisma.TenderUpdateManyMutationInput, Prisma.TenderUncheckedUpdateManyWithoutLocalityInput>
+}
+
+export type TenderCreateWithoutImagesInput = {
+  id?: string
+  title: string
+  description: string
+  category: string
+  service: string
+  city?: string | null
+  address?: string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.TenderStatus
+  isBlindBidding?: boolean
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  completedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  locality?: Prisma.LocationCreateNestedOneWithoutTendersInput
+  client: Prisma.UserCreateNestedOneWithoutTendersInput
+  awardedBid?: Prisma.BidCreateNestedOneWithoutAwardedTenderInput
+  bids?: Prisma.BidCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentCreateNestedManyWithoutTenderInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
+}
+
+export type TenderUncheckedCreateWithoutImagesInput = {
+  id?: string
+  clientId: string
+  title: string
+  description: string
+  category: string
+  service: string
+  city?: string | null
+  locationId?: number | null
+  address?: string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.TenderStatus
+  isBlindBidding?: boolean
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  awardedBidId?: string | null
+  completedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentUncheckedCreateNestedManyWithoutTenderInput
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderCreateOrConnectWithoutImagesInput = {
@@ -1024,10 +1231,13 @@ export type TenderUpdateWithoutImagesInput = {
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  locality?: Prisma.LocationUpdateOneWithoutTendersNestedInput
   client?: Prisma.UserUpdateOneRequiredWithoutTendersNestedInput
   awardedBid?: Prisma.BidUpdateOneWithoutAwardedTenderNestedInput
   bids?: Prisma.BidUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUpdateManyWithoutTenderNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateWithoutImagesInput = {
@@ -1038,6 +1248,7 @@ export type TenderUncheckedUpdateWithoutImagesInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   service?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1051,6 +1262,256 @@ export type TenderUncheckedUpdateWithoutImagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bids?: Prisma.BidUncheckedUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUncheckedUpdateManyWithoutTenderNestedInput
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
+}
+
+export type TenderCreateWithoutDocumentsInput = {
+  id?: string
+  title: string
+  description: string
+  category: string
+  service: string
+  city?: string | null
+  address?: string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.TenderStatus
+  isBlindBidding?: boolean
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  completedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  locality?: Prisma.LocationCreateNestedOneWithoutTendersInput
+  client: Prisma.UserCreateNestedOneWithoutTendersInput
+  awardedBid?: Prisma.BidCreateNestedOneWithoutAwardedTenderInput
+  bids?: Prisma.BidCreateNestedManyWithoutTenderInput
+  images?: Prisma.TenderImageCreateNestedManyWithoutTenderInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
+}
+
+export type TenderUncheckedCreateWithoutDocumentsInput = {
+  id?: string
+  clientId: string
+  title: string
+  description: string
+  category: string
+  service: string
+  city?: string | null
+  locationId?: number | null
+  address?: string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.TenderStatus
+  isBlindBidding?: boolean
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  awardedBidId?: string | null
+  completedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutTenderInput
+  images?: Prisma.TenderImageUncheckedCreateNestedManyWithoutTenderInput
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
+}
+
+export type TenderCreateOrConnectWithoutDocumentsInput = {
+  where: Prisma.TenderWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenderCreateWithoutDocumentsInput, Prisma.TenderUncheckedCreateWithoutDocumentsInput>
+}
+
+export type TenderUpsertWithoutDocumentsInput = {
+  update: Prisma.XOR<Prisma.TenderUpdateWithoutDocumentsInput, Prisma.TenderUncheckedUpdateWithoutDocumentsInput>
+  create: Prisma.XOR<Prisma.TenderCreateWithoutDocumentsInput, Prisma.TenderUncheckedCreateWithoutDocumentsInput>
+  where?: Prisma.TenderWhereInput
+}
+
+export type TenderUpdateToOneWithWhereWithoutDocumentsInput = {
+  where?: Prisma.TenderWhereInput
+  data: Prisma.XOR<Prisma.TenderUpdateWithoutDocumentsInput, Prisma.TenderUncheckedUpdateWithoutDocumentsInput>
+}
+
+export type TenderUpdateWithoutDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  locality?: Prisma.LocationUpdateOneWithoutTendersNestedInput
+  client?: Prisma.UserUpdateOneRequiredWithoutTendersNestedInput
+  awardedBid?: Prisma.BidUpdateOneWithoutAwardedTenderNestedInput
+  bids?: Prisma.BidUpdateManyWithoutTenderNestedInput
+  images?: Prisma.TenderImageUpdateManyWithoutTenderNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
+}
+
+export type TenderUncheckedUpdateWithoutDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bids?: Prisma.BidUncheckedUpdateManyWithoutTenderNestedInput
+  images?: Prisma.TenderImageUncheckedUpdateManyWithoutTenderNestedInput
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
+}
+
+export type TenderCreateWithoutSelectedServicesInput = {
+  id?: string
+  title: string
+  description: string
+  category: string
+  service: string
+  city?: string | null
+  address?: string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.TenderStatus
+  isBlindBidding?: boolean
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  completedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  locality?: Prisma.LocationCreateNestedOneWithoutTendersInput
+  client: Prisma.UserCreateNestedOneWithoutTendersInput
+  awardedBid?: Prisma.BidCreateNestedOneWithoutAwardedTenderInput
+  bids?: Prisma.BidCreateNestedManyWithoutTenderInput
+  images?: Prisma.TenderImageCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentCreateNestedManyWithoutTenderInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutTenderInput
+}
+
+export type TenderUncheckedCreateWithoutSelectedServicesInput = {
+  id?: string
+  clientId: string
+  title: string
+  description: string
+  category: string
+  service: string
+  city?: string | null
+  locationId?: number | null
+  address?: string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.TenderStatus
+  isBlindBidding?: boolean
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  awardedBidId?: string | null
+  completedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutTenderInput
+  images?: Prisma.TenderImageUncheckedCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentUncheckedCreateNestedManyWithoutTenderInput
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutTenderInput
+}
+
+export type TenderCreateOrConnectWithoutSelectedServicesInput = {
+  where: Prisma.TenderWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenderCreateWithoutSelectedServicesInput, Prisma.TenderUncheckedCreateWithoutSelectedServicesInput>
+}
+
+export type TenderUpsertWithoutSelectedServicesInput = {
+  update: Prisma.XOR<Prisma.TenderUpdateWithoutSelectedServicesInput, Prisma.TenderUncheckedUpdateWithoutSelectedServicesInput>
+  create: Prisma.XOR<Prisma.TenderCreateWithoutSelectedServicesInput, Prisma.TenderUncheckedCreateWithoutSelectedServicesInput>
+  where?: Prisma.TenderWhereInput
+}
+
+export type TenderUpdateToOneWithWhereWithoutSelectedServicesInput = {
+  where?: Prisma.TenderWhereInput
+  data: Prisma.XOR<Prisma.TenderUpdateWithoutSelectedServicesInput, Prisma.TenderUncheckedUpdateWithoutSelectedServicesInput>
+}
+
+export type TenderUpdateWithoutSelectedServicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  locality?: Prisma.LocationUpdateOneWithoutTendersNestedInput
+  client?: Prisma.UserUpdateOneRequiredWithoutTendersNestedInput
+  awardedBid?: Prisma.BidUpdateOneWithoutAwardedTenderNestedInput
+  bids?: Prisma.BidUpdateManyWithoutTenderNestedInput
+  images?: Prisma.TenderImageUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUpdateManyWithoutTenderNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutTenderNestedInput
+}
+
+export type TenderUncheckedUpdateWithoutSelectedServicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bids?: Prisma.BidUncheckedUpdateManyWithoutTenderNestedInput
+  images?: Prisma.TenderImageUncheckedUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUncheckedUpdateManyWithoutTenderNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutTenderNestedInput
 }
 
@@ -1072,10 +1533,13 @@ export type TenderCreateWithoutBidsInput = {
   cancelledAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  locality?: Prisma.LocationCreateNestedOneWithoutTendersInput
   client: Prisma.UserCreateNestedOneWithoutTendersInput
   awardedBid?: Prisma.BidCreateNestedOneWithoutAwardedTenderInput
   images?: Prisma.TenderImageCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentCreateNestedManyWithoutTenderInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateWithoutBidsInput = {
@@ -1086,6 +1550,7 @@ export type TenderUncheckedCreateWithoutBidsInput = {
   category: string
   service: string
   city?: string | null
+  locationId?: number | null
   address?: string | null
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1099,7 +1564,9 @@ export type TenderUncheckedCreateWithoutBidsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.TenderImageUncheckedCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentUncheckedCreateNestedManyWithoutTenderInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderCreateOrConnectWithoutBidsInput = {
@@ -1125,10 +1592,13 @@ export type TenderCreateWithoutAwardedBidInput = {
   cancelledAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  locality?: Prisma.LocationCreateNestedOneWithoutTendersInput
   client: Prisma.UserCreateNestedOneWithoutTendersInput
   bids?: Prisma.BidCreateNestedManyWithoutTenderInput
   images?: Prisma.TenderImageCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentCreateNestedManyWithoutTenderInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateWithoutAwardedBidInput = {
@@ -1139,6 +1609,7 @@ export type TenderUncheckedCreateWithoutAwardedBidInput = {
   category: string
   service: string
   city?: string | null
+  locationId?: number | null
   address?: string | null
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1152,7 +1623,9 @@ export type TenderUncheckedCreateWithoutAwardedBidInput = {
   updatedAt?: Date | string
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutTenderInput
   images?: Prisma.TenderImageUncheckedCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentUncheckedCreateNestedManyWithoutTenderInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderCreateOrConnectWithoutAwardedBidInput = {
@@ -1189,10 +1662,13 @@ export type TenderUpdateWithoutBidsInput = {
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  locality?: Prisma.LocationUpdateOneWithoutTendersNestedInput
   client?: Prisma.UserUpdateOneRequiredWithoutTendersNestedInput
   awardedBid?: Prisma.BidUpdateOneWithoutAwardedTenderNestedInput
   images?: Prisma.TenderImageUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUpdateManyWithoutTenderNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateWithoutBidsInput = {
@@ -1203,6 +1679,7 @@ export type TenderUncheckedUpdateWithoutBidsInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   service?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1216,7 +1693,9 @@ export type TenderUncheckedUpdateWithoutBidsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.TenderImageUncheckedUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUncheckedUpdateManyWithoutTenderNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUpsertWithoutAwardedBidInput = {
@@ -1248,10 +1727,13 @@ export type TenderUpdateWithoutAwardedBidInput = {
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  locality?: Prisma.LocationUpdateOneWithoutTendersNestedInput
   client?: Prisma.UserUpdateOneRequiredWithoutTendersNestedInput
   bids?: Prisma.BidUpdateManyWithoutTenderNestedInput
   images?: Prisma.TenderImageUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUpdateManyWithoutTenderNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateWithoutAwardedBidInput = {
@@ -1262,6 +1744,7 @@ export type TenderUncheckedUpdateWithoutAwardedBidInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   service?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1275,7 +1758,9 @@ export type TenderUncheckedUpdateWithoutAwardedBidInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bids?: Prisma.BidUncheckedUpdateManyWithoutTenderNestedInput
   images?: Prisma.TenderImageUncheckedUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUncheckedUpdateManyWithoutTenderNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderCreateWithoutReviewsInput = {
@@ -1296,10 +1781,13 @@ export type TenderCreateWithoutReviewsInput = {
   cancelledAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  locality?: Prisma.LocationCreateNestedOneWithoutTendersInput
   client: Prisma.UserCreateNestedOneWithoutTendersInput
   awardedBid?: Prisma.BidCreateNestedOneWithoutAwardedTenderInput
   bids?: Prisma.BidCreateNestedManyWithoutTenderInput
   images?: Prisma.TenderImageCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateWithoutReviewsInput = {
@@ -1310,6 +1798,7 @@ export type TenderUncheckedCreateWithoutReviewsInput = {
   category: string
   service: string
   city?: string | null
+  locationId?: number | null
   address?: string | null
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1324,6 +1813,8 @@ export type TenderUncheckedCreateWithoutReviewsInput = {
   updatedAt?: Date | string
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutTenderInput
   images?: Prisma.TenderImageUncheckedCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentUncheckedCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderCreateOrConnectWithoutReviewsInput = {
@@ -1360,10 +1851,13 @@ export type TenderUpdateWithoutReviewsInput = {
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  locality?: Prisma.LocationUpdateOneWithoutTendersNestedInput
   client?: Prisma.UserUpdateOneRequiredWithoutTendersNestedInput
   awardedBid?: Prisma.BidUpdateOneWithoutAwardedTenderNestedInput
   bids?: Prisma.BidUpdateManyWithoutTenderNestedInput
   images?: Prisma.TenderImageUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateWithoutReviewsInput = {
@@ -1374,6 +1868,7 @@ export type TenderUncheckedUpdateWithoutReviewsInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   service?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1388,6 +1883,8 @@ export type TenderUncheckedUpdateWithoutReviewsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bids?: Prisma.BidUncheckedUpdateManyWithoutTenderNestedInput
   images?: Prisma.TenderImageUncheckedUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUncheckedUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderCreateManyClientInput = {
@@ -1397,6 +1894,7 @@ export type TenderCreateManyClientInput = {
   category: string
   service: string
   city?: string | null
+  locationId?: number | null
   address?: string | null
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1429,14 +1927,116 @@ export type TenderUpdateWithoutClientInput = {
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  locality?: Prisma.LocationUpdateOneWithoutTendersNestedInput
   awardedBid?: Prisma.BidUpdateOneWithoutAwardedTenderNestedInput
   bids?: Prisma.BidUpdateManyWithoutTenderNestedInput
   images?: Prisma.TenderImageUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUpdateManyWithoutTenderNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateWithoutClientInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bids?: Prisma.BidUncheckedUpdateManyWithoutTenderNestedInput
+  images?: Prisma.TenderImageUncheckedUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUncheckedUpdateManyWithoutTenderNestedInput
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
+}
+
+export type TenderUncheckedUpdateManyWithoutClientInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TenderCreateManyLocalityInput = {
+  id?: string
+  clientId: string
+  title: string
+  description: string
+  category: string
+  service: string
+  city?: string | null
+  address?: string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.TenderStatus
+  isBlindBidding?: boolean
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  awardedBidId?: string | null
+  completedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TenderUpdateWithoutLocalityInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  client?: Prisma.UserUpdateOneRequiredWithoutTendersNestedInput
+  awardedBid?: Prisma.BidUpdateOneWithoutAwardedTenderNestedInput
+  bids?: Prisma.BidUpdateManyWithoutTenderNestedInput
+  images?: Prisma.TenderImageUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUpdateManyWithoutTenderNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
+}
+
+export type TenderUncheckedUpdateWithoutLocalityInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1456,11 +2056,14 @@ export type TenderUncheckedUpdateWithoutClientInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bids?: Prisma.BidUncheckedUpdateManyWithoutTenderNestedInput
   images?: Prisma.TenderImageUncheckedUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUncheckedUpdateManyWithoutTenderNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
 }
 
-export type TenderUncheckedUpdateManyWithoutClientInput = {
+export type TenderUncheckedUpdateManyWithoutLocalityInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1488,13 +2091,17 @@ export type TenderUncheckedUpdateManyWithoutClientInput = {
 export type TenderCountOutputType = {
   bids: number
   images: number
+  documents: number
   reviews: number
+  selectedServices: number
 }
 
 export type TenderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bids?: boolean | TenderCountOutputTypeCountBidsArgs
   images?: boolean | TenderCountOutputTypeCountImagesArgs
+  documents?: boolean | TenderCountOutputTypeCountDocumentsArgs
   reviews?: boolean | TenderCountOutputTypeCountReviewsArgs
+  selectedServices?: boolean | TenderCountOutputTypeCountSelectedServicesArgs
 }
 
 /**
@@ -1524,8 +2131,22 @@ export type TenderCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Types.E
 /**
  * TenderCountOutputType without action
  */
+export type TenderCountOutputTypeCountDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TenderDocumentWhereInput
+}
+
+/**
+ * TenderCountOutputType without action
+ */
 export type TenderCountOutputTypeCountReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ReviewWhereInput
+}
+
+/**
+ * TenderCountOutputType without action
+ */
+export type TenderCountOutputTypeCountSelectedServicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TenderSelectedServiceWhereInput
 }
 
 
@@ -1537,6 +2158,7 @@ export type TenderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   category?: boolean
   service?: boolean
   city?: boolean
+  locationId?: boolean
   address?: boolean
   budgetMin?: boolean
   budgetMax?: boolean
@@ -1549,11 +2171,14 @@ export type TenderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   cancelledAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  locality?: boolean | Prisma.Tender$localityArgs<ExtArgs>
   client?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   awardedBid?: boolean | Prisma.Tender$awardedBidArgs<ExtArgs>
   bids?: boolean | Prisma.Tender$bidsArgs<ExtArgs>
   images?: boolean | Prisma.Tender$imagesArgs<ExtArgs>
+  documents?: boolean | Prisma.Tender$documentsArgs<ExtArgs>
   reviews?: boolean | Prisma.Tender$reviewsArgs<ExtArgs>
+  selectedServices?: boolean | Prisma.Tender$selectedServicesArgs<ExtArgs>
   _count?: boolean | Prisma.TenderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tender"]>
 
@@ -1567,6 +2192,7 @@ export type TenderSelectScalar = {
   category?: boolean
   service?: boolean
   city?: boolean
+  locationId?: boolean
   address?: boolean
   budgetMin?: boolean
   budgetMax?: boolean
@@ -1581,24 +2207,30 @@ export type TenderSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TenderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "title" | "description" | "category" | "service" | "city" | "address" | "budgetMin" | "budgetMax" | "status" | "isBlindBidding" | "startsAt" | "endsAt" | "awardedBidId" | "completedAt" | "cancelledAt" | "createdAt" | "updatedAt", ExtArgs["result"]["tender"]>
+export type TenderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "title" | "description" | "category" | "service" | "city" | "locationId" | "address" | "budgetMin" | "budgetMax" | "status" | "isBlindBidding" | "startsAt" | "endsAt" | "awardedBidId" | "completedAt" | "cancelledAt" | "createdAt" | "updatedAt", ExtArgs["result"]["tender"]>
 export type TenderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  locality?: boolean | Prisma.Tender$localityArgs<ExtArgs>
   client?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   awardedBid?: boolean | Prisma.Tender$awardedBidArgs<ExtArgs>
   bids?: boolean | Prisma.Tender$bidsArgs<ExtArgs>
   images?: boolean | Prisma.Tender$imagesArgs<ExtArgs>
+  documents?: boolean | Prisma.Tender$documentsArgs<ExtArgs>
   reviews?: boolean | Prisma.Tender$reviewsArgs<ExtArgs>
+  selectedServices?: boolean | Prisma.Tender$selectedServicesArgs<ExtArgs>
   _count?: boolean | Prisma.TenderCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $TenderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Tender"
   objects: {
+    locality: Prisma.$LocationPayload<ExtArgs> | null
     client: Prisma.$UserPayload<ExtArgs>
     awardedBid: Prisma.$BidPayload<ExtArgs> | null
     bids: Prisma.$BidPayload<ExtArgs>[]
     images: Prisma.$TenderImagePayload<ExtArgs>[]
+    documents: Prisma.$TenderDocumentPayload<ExtArgs>[]
     reviews: Prisma.$ReviewPayload<ExtArgs>[]
+    selectedServices: Prisma.$TenderSelectedServicePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1608,6 +2240,7 @@ export type $TenderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     category: string
     service: string
     city: string | null
+    locationId: number | null
     address: string | null
     budgetMin: runtime.Decimal | null
     budgetMax: runtime.Decimal | null
@@ -1960,11 +2593,14 @@ readonly fields: TenderFieldRefs;
  */
 export interface Prisma__TenderClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  locality<T extends Prisma.Tender$localityArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tender$localityArgs<ExtArgs>>): Prisma.Prisma__LocationClient<runtime.Types.Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   client<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   awardedBid<T extends Prisma.Tender$awardedBidArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tender$awardedBidArgs<ExtArgs>>): Prisma.Prisma__BidClient<runtime.Types.Result.GetResult<Prisma.$BidPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   bids<T extends Prisma.Tender$bidsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tender$bidsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BidPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   images<T extends Prisma.Tender$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tender$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  documents<T extends Prisma.Tender$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tender$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviews<T extends Prisma.Tender$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tender$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  selectedServices<T extends Prisma.Tender$selectedServicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tender$selectedServicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderSelectedServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2001,6 +2637,7 @@ export interface TenderFieldRefs {
   readonly category: Prisma.FieldRef<"Tender", 'String'>
   readonly service: Prisma.FieldRef<"Tender", 'String'>
   readonly city: Prisma.FieldRef<"Tender", 'String'>
+  readonly locationId: Prisma.FieldRef<"Tender", 'Int'>
   readonly address: Prisma.FieldRef<"Tender", 'String'>
   readonly budgetMin: Prisma.FieldRef<"Tender", 'Decimal'>
   readonly budgetMax: Prisma.FieldRef<"Tender", 'Decimal'>
@@ -2361,6 +2998,25 @@ export type TenderDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
+ * Tender.locality
+ */
+export type Tender$localityArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Location
+   */
+  select?: Prisma.LocationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Location
+   */
+  omit?: Prisma.LocationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LocationInclude<ExtArgs> | null
+  where?: Prisma.LocationWhereInput
+}
+
+/**
  * Tender.awardedBid
  */
 export type Tender$awardedBidArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2428,6 +3084,30 @@ export type Tender$imagesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 /**
+ * Tender.documents
+ */
+export type Tender$documentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TenderDocument
+   */
+  select?: Prisma.TenderDocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TenderDocument
+   */
+  omit?: Prisma.TenderDocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TenderDocumentInclude<ExtArgs> | null
+  where?: Prisma.TenderDocumentWhereInput
+  orderBy?: Prisma.TenderDocumentOrderByWithRelationInput | Prisma.TenderDocumentOrderByWithRelationInput[]
+  cursor?: Prisma.TenderDocumentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TenderDocumentScalarFieldEnum | Prisma.TenderDocumentScalarFieldEnum[]
+}
+
+/**
  * Tender.reviews
  */
 export type Tender$reviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2449,6 +3129,30 @@ export type Tender$reviewsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.ReviewScalarFieldEnum | Prisma.ReviewScalarFieldEnum[]
+}
+
+/**
+ * Tender.selectedServices
+ */
+export type Tender$selectedServicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TenderSelectedService
+   */
+  select?: Prisma.TenderSelectedServiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TenderSelectedService
+   */
+  omit?: Prisma.TenderSelectedServiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TenderSelectedServiceInclude<ExtArgs> | null
+  where?: Prisma.TenderSelectedServiceWhereInput
+  orderBy?: Prisma.TenderSelectedServiceOrderByWithRelationInput | Prisma.TenderSelectedServiceOrderByWithRelationInput[]
+  cursor?: Prisma.TenderSelectedServiceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TenderSelectedServiceScalarFieldEnum | Prisma.TenderSelectedServiceScalarFieldEnum[]
 }
 
 /**

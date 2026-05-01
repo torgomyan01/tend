@@ -5,6 +5,7 @@ import {
 import Link from "next/link";
 import { RegisterForm } from "@/components/register-form";
 import { ROUTES } from "@/lib/routes";
+import { getServiceCategories } from "@/lib/services-data";
 
 const benefits = [
   "Մրցույթ տեղադրելն անվճար է",
@@ -12,7 +13,8 @@ const benefits = [
   "Վարկանիշներ և հաստատված մասնագետների նշաններ",
 ];
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  const categories = await getServiceCategories();
   return (
     <main className="min-h-screen bg-[#f7f4ee] px-4 py-5 text-slate-950 sm:px-6 sm:py-8 lg:px-8">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
@@ -75,7 +77,7 @@ export default function RegisterPage() {
               </p>
             </div>
 
-            <RegisterForm />
+            <RegisterForm categories={categories} />
           </div>
         </section>
       </div>
