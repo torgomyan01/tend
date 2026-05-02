@@ -18,7 +18,13 @@ export function SiteHeader() {
         <span className="text-xl font-black tracking-tight">Tend.am</span>
       </Link>
       <nav className="hidden items-center gap-8 text-sm font-semibold text-slate-600 md:flex">
-         <Link
+        <Link
+          className="transition hover:text-slate-950"
+          href={ROUTES.tenders}
+        >
+          Մրցույթներ
+        </Link>
+        <Link
           className="transition hover:text-slate-950"
           href={ROUTES.categories}
         >

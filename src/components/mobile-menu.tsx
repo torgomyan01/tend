@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ROUTES } from "@/lib/routes";
 
 const navItems = [
+  { label: "Մրցույթներ", href: ROUTES.tenders },
   { label: "Ինչպես է աշխատում", href: ROUTES.sections.howItWorks },
   { label: "Հնարավորություններ", href: ROUTES.sections.features },
   { label: "Ոլորտներ", href: ROUTES.categories },

@@ -9,10 +9,12 @@ import {
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
+import { TendersBrowseToolbar } from "@/components/tenders-browse-toolbar";
 import { authOptions } from "@/lib/auth";
 import { formatAmd, formatDateTime, formatNumber } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
+import { getServiceCategories } from "@/lib/services-data";
 import {
   BID_STATUS_BADGE,
   BID_STATUS_LABEL,
@@ -22,6 +24,8 @@ import {
 import type { Prisma, Tender, TenderStatus } from "@/generated/prisma/client";
 
 export const dynamic = "force-dynamic";
+
+const PAGE_SIZE = 24;
 
 const MY_FILTERS: { value: "ALL" | TenderStatus; label: string }[] = [
   { value: "ALL", label: "Բոլորը" },
@@ -42,10 +46,113 @@ function buildMyTendersHref(status: string) {
   return `${ROUTES.tenders}?scope=my&status=${status}`;
 }
 
+function parseBrowseParams(params: {
+  q?: string;
+  category?: string;
+  service?: string;
+  city?: string;
+  sort?: string;
+  page?: string;
+}) {
+  const q = params.q?.trim().slice(0, 200) ?? "";
+  const category = params.category?.trim().slice(0, 255) ?? "";
+  const service = params.service?.trim().slice(0, 255) ?? "";
+  const city = params.city?.trim().slice(0, 120) ?? "";
+  const sortRaw = params.sort ?? "";
+  const sort = ["ending", "budget_low", "budget_high"].includes(sortRaw)
+    ? sortRaw
+    : "";
+  const pageRaw = Number.parseInt(String(params.page ?? "1"), 10);
+  const page =
+    Number.isFinite(pageRaw) && pageRaw >= 1 ? Math.min(pageRaw, 500) : 1;
+  return { q, category, service, city, sort, page };
+}
+
+function buildPublicBrowseWhere(filters: {
+  q: string;
+  category: string;
+  service: string;
+  city: string;
+}): Prisma.TenderWhereInput {
+  const windowActive: Prisma.TenderWhereInput = {
+    status: "ACTIVE",
+    OR: [{ endsAt: null }, { endsAt: { gt: new Date() } }],
+  };
+
+  const clauses: Prisma.TenderWhereInput[] = [windowActive];
+
+  if (filters.q) {
+    clauses.push({
+      OR: [
+        { title: { contains: filters.q } },
+        { description: { contains: filters.q } },
+        { category: { contains: filters.q } },
+        { service: { contains: filters.q } },
+        { city: { contains: filters.q } },
+      ],
+    });
+  }
+
+  if (filters.category) {
+    clauses.push({ category: filters.category });
+  }
+  if (filters.service) {
+    clauses.push({ service: filters.service });
+  }
+  if (filters.city) {
+    clauses.push({ city: { contains: filters.city } });
+  }
+
+  return clauses.length === 1 ? clauses[0]! : { AND: clauses };
+}
+
+function browseOrderBy(
+  sort: string,
+): Prisma.TenderOrderByWithRelationInput[] {
+  switch (sort) {
+    case "ending":
+      return [{ endsAt: "asc" }];
+    case "budget_low":
+      return [{ budgetMin: "asc" }, { budgetMax: "asc" }];
+    case "budget_high":
+      return [{ budgetMax: "desc" }, { budgetMin: "desc" }];
+    default:
+      return [{ createdAt: "desc" }];
+  }
+}
+
+function buildTendersBrowseHref(parts: {
+  q?: string;
+  category?: string;
+  service?: string;
+  city?: string;
+  sort?: string;
+  page?: number;
+}) {
+  const sp = new URLSearchParams();
+  if (parts.q) sp.set("q", parts.q);
+  if (parts.category) sp.set("category", parts.category);
+  if (parts.service) sp.set("service", parts.service);
+  if (parts.city) sp.set("city", parts.city);
+  if (parts.sort) sp.set("sort", parts.sort);
+  if (parts.page && parts.page > 1) sp.set("page", String(parts.page));
+  const qs = sp.toString();
+  return qs ? `${ROUTES.tenders}?${qs}` : ROUTES.tenders;
+}
+
 export default async function TendersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ scope?: string; status?: string }>;
+  searchParams: Promise<{
+    scope?: string;
+    status?: string;
+    q?: string;
+    category?: string;
+    service?: string;
+    city?: string;
+    sort?: string;
+    page?: string;
+  }>;
 }) {
   const params = await searchParams;
   const scope =
@@ -81,10 +188,33 @@ export default async function TendersPage({
         }
       : { id: "__none__" };
 
-  const publicWhere: Prisma.TenderWhereInput = {
-    status: "ACTIVE",
-    OR: [{ endsAt: null }, { endsAt: { gt: new Date() } }],
+  let browseState = {
+    q: "",
+    category: "",
+    service: "",
+    city: "",
+    sort: "",
+    page: 1,
   };
+
+  let categories: Awaited<ReturnType<typeof getServiceCategories>> = [];
+  let browseCities: string[] = [];
+  let publicTotal = 0;
+  let publicTenders: Array<{
+    id: string;
+    title: string;
+    description: string;
+    category: string;
+    service: string;
+    city: string | null;
+    budgetMin: Tender["budgetMin"];
+    budgetMax: Tender["budgetMax"];
+    status: TenderStatus;
+    endsAt: Date | null;
+    createdAt: Date;
+    images: Array<{ url: string }>;
+    _count: { bids: number };
+  }> = [];
 
   let view:
     | { type: "public" }
@@ -102,60 +232,102 @@ export default async function TendersPage({
     view = { type: "bids" };
   }
 
-  const [publicTenders, myTenders, myCount, bidsList, bidCount] =
-    await Promise.all([
-      scope
-        ? []
-        : prisma.tender.findMany({
-            where: publicWhere,
-            orderBy: { createdAt: "desc" },
-            take: 80,
-            include: {
-              _count: { select: { bids: true } },
-              images: { orderBy: { sortOrder: "asc" }, take: 1 },
-            },
-          }),
-      scope === "my" && userId
-        ? prisma.tender.findMany({
-            where: myWhere,
-            orderBy: { updatedAt: "desc" },
-            take: 80,
-            include: {
-              _count: { select: { bids: true } },
-              images: { orderBy: { sortOrder: "asc" }, take: 1 },
-            },
-          })
-        : [],
-      scope === "my" && userId
-        ? prisma.tender.count({ where: { clientId: userId } })
-        : 0,
-      scope === "bids" && userId
-        ? prisma.bid.findMany({
-            where: { providerId: userId },
-            orderBy: { updatedAt: "desc" },
-            take: 80,
-            include: {
-              tender: {
-                select: {
-                  id: true,
-                  title: true,
-                  status: true,
-                  city: true,
-                  category: true,
-                  service: true,
-                  endsAt: true,
-                  budgetMin: true,
-                  budgetMax: true,
-                  _count: { select: { bids: true } },
-                },
+  if (!scope) {
+    browseState = parseBrowseParams(params);
+    const publicWhereFinal = buildPublicBrowseWhere(browseState);
+    const orderBy = browseOrderBy(browseState.sort);
+    const activeCityWhere: Prisma.TenderWhereInput = {
+      status: "ACTIVE",
+      OR: [{ endsAt: null }, { endsAt: { gt: new Date() } }],
+      city: { not: null },
+    };
+
+    const [cat, cityRows, tenders, total] = await Promise.all([
+      getServiceCategories(),
+      prisma.tender.findMany({
+        where: activeCityWhere,
+        select: { city: true },
+        distinct: ["city"],
+        orderBy: { city: "asc" },
+        take: 200,
+      }),
+      prisma.tender.findMany({
+        where: publicWhereFinal,
+        orderBy,
+        skip: (browseState.page - 1) * PAGE_SIZE,
+        take: PAGE_SIZE,
+        include: {
+          _count: { select: { bids: true } },
+          images: { orderBy: { sortOrder: "asc" }, take: 1 },
+        },
+      }),
+      prisma.tender.count({ where: publicWhereFinal }),
+    ]);
+
+    categories = cat;
+    browseCities = cityRows
+      .map((row) => row.city)
+      .filter((c): c is string => Boolean(c?.trim()));
+    publicTenders = tenders;
+    publicTotal = total;
+
+    const totalPages = Math.max(1, Math.ceil(publicTotal / PAGE_SIZE));
+    if (browseState.page > totalPages) {
+      redirect(
+        buildTendersBrowseHref({
+          q: browseState.q,
+          category: browseState.category,
+          service: browseState.service,
+          city: browseState.city,
+          sort: browseState.sort,
+          page: totalPages,
+        }),
+      );
+    }
+  }
+
+  const [myTenders, myCount, bidsList, bidCount] = await Promise.all([
+    scope === "my" && userId
+      ? prisma.tender.findMany({
+          where: myWhere,
+          orderBy: { updatedAt: "desc" },
+          take: 80,
+          include: {
+            _count: { select: { bids: true } },
+            images: { orderBy: { sortOrder: "asc" }, take: 1 },
+          },
+        })
+      : [],
+    scope === "my" && userId
+      ? prisma.tender.count({ where: { clientId: userId } })
+      : 0,
+    scope === "bids" && userId
+      ? prisma.bid.findMany({
+          where: { providerId: userId },
+          orderBy: { updatedAt: "desc" },
+          take: 80,
+          include: {
+            tender: {
+              select: {
+                id: true,
+                title: true,
+                status: true,
+                city: true,
+                category: true,
+                service: true,
+                endsAt: true,
+                budgetMin: true,
+                budgetMax: true,
+                _count: { select: { bids: true } },
               },
             },
-          })
-        : [],
-      scope === "bids" && userId
-        ? prisma.bid.count({ where: { providerId: userId } })
-        : 0,
-    ]);
+          },
+        })
+      : [],
+    scope === "bids" && userId
+      ? prisma.bid.count({ where: { providerId: userId } })
+      : 0,
+  ]);
 
   const eyebrow =
     view.type === "my"
@@ -174,14 +346,26 @@ export default async function TendersPage({
       ? "Դուք տեղադրած հայտարարությունները՝ կարգավիճակով, առաջարկների թվով և արագ հղումով մանրամասների էջ։"
       : view.type === "bids"
         ? "Ձեր ուղարկած առաջարկները՝ կապված մրցույթների հետ։"
-        : "Ակտիվ մրցույթներ, որոնցում կարող եք մասնակցել որպես մասնագետ։";
+        : "Ակտիվ մրցույթների կատալոգ՝ որոնումով, ոլորտի ու բնակավայրի ֆիլտրերով և տեսակավորմամբ։ Մասնակցեք որպես մասնագետ կամ հետևեք նոր առաջադրաններին։";
+
+  const hasBrowseFilters =
+    !!browseState.q ||
+    !!browseState.category ||
+    !!browseState.service ||
+    !!browseState.city ||
+    !!browseState.sort;
+
+  const publicTotalPages =
+    view.type === "public"
+      ? Math.max(1, Math.ceil(publicTotal / PAGE_SIZE))
+      : 1;
 
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
       <SiteHeader />
 
       <main className="px-4 pb-12 sm:px-6 lg:px-8">
-        <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
           <section className="rounded-4xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-700">
               {eyebrow}
@@ -229,6 +413,20 @@ export default async function TendersPage({
               </Link>
             </nav>
 
+            {view.type === "public" ? (
+              <TendersBrowseToolbar
+                categories={categories}
+                cities={browseCities}
+                initial={{
+                  q: browseState.q,
+                  category: browseState.category,
+                  service: browseState.service,
+                  city: browseState.city,
+                  sort: browseState.sort,
+                }}
+              />
+            ) : null}
+
             {view.type === "my" ? (
               <div className="mt-4 flex flex-wrap gap-2">
                 {MY_FILTERS.map((filter) => {
@@ -263,40 +461,119 @@ export default async function TendersPage({
           </section>
 
           {view.type === "public" ? (
-            <section className="space-y-3">
+            <section className="space-y-4">
+              {publicTotal > 0 ? (
+                <p className="text-center text-sm font-semibold text-slate-600">
+                  Գտնվել է {formatNumber(publicTotal)} մրցույթ
+                  {publicTotalPages > 1
+                    ? ` · Մեկ էջում՝ մինչև ${PAGE_SIZE} մրցույթ`
+                    : null}
+                </p>
+              ) : null}
+
               {publicTenders.length === 0 ? (
                 <EmptyState
                   icon={<BriefcaseBusiness className="mx-auto size-10 text-slate-300" />}
-                  title="Այս պահին ակտիվ մրցույթներ չկան"
-                  subtitle="Մի փոքր հետո ստուգեք նորից կամ պատվիրատու եղեք՝ սեփական մրցույթ տեղադրելու համար։"
+                  title={
+                    hasBrowseFilters
+                      ? "Այս պայմաններով մրցույթ չի գտնվել"
+                      : "Այս պահին ակտիվ մրցույթներ չկան"
+                  }
+                  subtitle={
+                    hasBrowseFilters
+                      ? "Փորձեք այլ որոնման բառ, ընդլայնեք ոլորտը կամ մաքրեք ֆիլտրերը։"
+                      : "Մի փոքր հետո ստուգեք նորից կամ պատվիրատու եղեք՝ սեփական մրցույթ տեղադրելու համար։"
+                  }
                   action={
-                    <Link
-                      href={ROUTES.createTender}
-                      className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
-                    >
-                      <PlusCircle className="size-4" />
-                      Տեղադրել մրցույթ
-                    </Link>
+                    hasBrowseFilters ? (
+                      <Link
+                        href={ROUTES.tenders}
+                        className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+                      >
+                        Մաքրել ֆիլտրերը
+                      </Link>
+                    ) : (
+                      <Link
+                        href={ROUTES.createTender}
+                        className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+                      >
+                        <PlusCircle className="size-4" />
+                        Տեղադրել մրցույթ
+                      </Link>
+                    )
                   }
                 />
               ) : (
-                publicTenders.map((tender) => (
-                  <TenderRow
-                    key={tender.id}
-                    href={ROUTES.tenderDetail(tender.id)}
-                    status={tender.status}
-                    category={tender.category}
-                    service={tender.service}
-                    title={tender.title}
-                    city={tender.city}
-                    budgetMin={tender.budgetMin}
-                    budgetMax={tender.budgetMax}
-                    bidCount={tender._count.bids}
-                    createdAt={tender.createdAt}
-                    thumbUrl={tender.images[0]?.url ?? null}
-                    endsAt={tender.endsAt}
-                  />
-                ))
+                <>
+                  <div className="space-y-3">
+                    {publicTenders.map((tender) => (
+                      <TenderRow
+                        key={tender.id}
+                        href={ROUTES.tenderDetail(tender.id)}
+                        status={tender.status}
+                        category={tender.category}
+                        service={tender.service}
+                        title={tender.title}
+                        city={tender.city}
+                        budgetMin={tender.budgetMin}
+                        budgetMax={tender.budgetMax}
+                        bidCount={tender._count.bids}
+                        createdAt={tender.createdAt}
+                        thumbUrl={tender.images[0]?.url ?? null}
+                        endsAt={tender.endsAt}
+                      />
+                    ))}
+                  </div>
+
+                  {publicTotalPages > 1 ? (
+                    <nav
+                      className="flex flex-wrap items-center justify-center gap-3 pt-2"
+                      aria-label="Էջավորում"
+                    >
+                      {browseState.page > 1 ? (
+                        <Link
+                          href={buildTendersBrowseHref({
+                            q: browseState.q,
+                            category: browseState.category,
+                            service: browseState.service,
+                            city: browseState.city,
+                            sort: browseState.sort,
+                            page: browseState.page - 1,
+                          })}
+                          className="rounded-full bg-white px-4 py-2 text-sm font-black text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-50"
+                        >
+                          ← Նախորդ
+                        </Link>
+                      ) : (
+                        <span className="rounded-full px-4 py-2 text-sm font-black text-slate-400 ring-1 ring-slate-100">
+                          ← Նախորդ
+                        </span>
+                      )}
+                      <span className="text-sm font-black text-slate-700">
+                        {browseState.page} / {publicTotalPages}
+                      </span>
+                      {browseState.page < publicTotalPages ? (
+                        <Link
+                          href={buildTendersBrowseHref({
+                            q: browseState.q,
+                            category: browseState.category,
+                            service: browseState.service,
+                            city: browseState.city,
+                            sort: browseState.sort,
+                            page: browseState.page + 1,
+                          })}
+                          className="rounded-full bg-white px-4 py-2 text-sm font-black text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-50"
+                        >
+                          Հաջորդ →
+                        </Link>
+                      ) : (
+                        <span className="rounded-full px-4 py-2 text-sm font-black text-slate-400 ring-1 ring-slate-100">
+                          Հաջորդ →
+                        </span>
+                      )}
+                    </nav>
+                  ) : null}
+                </>
               )}
             </section>
           ) : null}
