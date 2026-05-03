@@ -307,6 +307,23 @@ export type EnumTenderStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumTenderStatusFilter<$PrismaModel>
 }
 
+export type EnumTenderComplaintStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderComplaintStatus | Prisma.EnumTenderComplaintStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderComplaintStatus[]
+  notIn?: $Enums.TenderComplaintStatus[]
+  not?: Prisma.NestedEnumTenderComplaintStatusFilter<$PrismaModel> | $Enums.TenderComplaintStatus
+}
+
+export type EnumTenderComplaintStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderComplaintStatus | Prisma.EnumTenderComplaintStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderComplaintStatus[]
+  notIn?: $Enums.TenderComplaintStatus[]
+  not?: Prisma.NestedEnumTenderComplaintStatusWithAggregatesFilter<$PrismaModel> | $Enums.TenderComplaintStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTenderComplaintStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTenderComplaintStatusFilter<$PrismaModel>
+}
+
 export type EnumBidStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.BidStatus | Prisma.EnumBidStatusFieldRefInput<$PrismaModel>
   in?: $Enums.BidStatus[]
@@ -373,6 +390,23 @@ export type EnumSubscriptionStatusWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumSubscriptionStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumSubscriptionStatusFilter<$PrismaModel>
+}
+
+export type EnumReviewModerationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReviewModerationStatus | Prisma.EnumReviewModerationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ReviewModerationStatus[]
+  notIn?: $Enums.ReviewModerationStatus[]
+  not?: Prisma.NestedEnumReviewModerationStatusFilter<$PrismaModel> | $Enums.ReviewModerationStatus
+}
+
+export type EnumReviewModerationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReviewModerationStatus | Prisma.EnumReviewModerationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ReviewModerationStatus[]
+  notIn?: $Enums.ReviewModerationStatus[]
+  not?: Prisma.NestedEnumReviewModerationStatusWithAggregatesFilter<$PrismaModel> | $Enums.ReviewModerationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumReviewModerationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumReviewModerationStatusFilter<$PrismaModel>
 }
 
 export type NestedStringFilter<$PrismaModel = never> = {
@@ -685,6 +719,23 @@ export type NestedEnumTenderStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumTenderStatusFilter<$PrismaModel>
 }
 
+export type NestedEnumTenderComplaintStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderComplaintStatus | Prisma.EnumTenderComplaintStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderComplaintStatus[]
+  notIn?: $Enums.TenderComplaintStatus[]
+  not?: Prisma.NestedEnumTenderComplaintStatusFilter<$PrismaModel> | $Enums.TenderComplaintStatus
+}
+
+export type NestedEnumTenderComplaintStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderComplaintStatus | Prisma.EnumTenderComplaintStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderComplaintStatus[]
+  notIn?: $Enums.TenderComplaintStatus[]
+  not?: Prisma.NestedEnumTenderComplaintStatusWithAggregatesFilter<$PrismaModel> | $Enums.TenderComplaintStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTenderComplaintStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTenderComplaintStatusFilter<$PrismaModel>
+}
+
 export type NestedEnumBidStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.BidStatus | Prisma.EnumBidStatusFieldRefInput<$PrismaModel>
   in?: $Enums.BidStatus[]
@@ -751,6 +802,23 @@ export type NestedEnumSubscriptionStatusWithAggregatesFilter<$PrismaModel = neve
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumSubscriptionStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumSubscriptionStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumReviewModerationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReviewModerationStatus | Prisma.EnumReviewModerationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ReviewModerationStatus[]
+  notIn?: $Enums.ReviewModerationStatus[]
+  not?: Prisma.NestedEnumReviewModerationStatusFilter<$PrismaModel> | $Enums.ReviewModerationStatus
+}
+
+export type NestedEnumReviewModerationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReviewModerationStatus | Prisma.EnumReviewModerationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ReviewModerationStatus[]
+  notIn?: $Enums.ReviewModerationStatus[]
+  not?: Prisma.NestedEnumReviewModerationStatusWithAggregatesFilter<$PrismaModel> | $Enums.ReviewModerationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumReviewModerationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumReviewModerationStatusFilter<$PrismaModel>
 }
 
 

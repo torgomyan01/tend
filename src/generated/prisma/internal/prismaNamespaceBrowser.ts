@@ -64,6 +64,7 @@ export const ModelName = {
   TenderImage: 'TenderImage',
   TenderDocument: 'TenderDocument',
   TenderSelectedService: 'TenderSelectedService',
+  TenderComplaint: 'TenderComplaint',
   Bid: 'Bid',
   Transaction: 'Transaction',
   Subscription: 'Subscription',
@@ -270,6 +271,22 @@ export const TenderSelectedServiceScalarFieldEnum = {
 export type TenderSelectedServiceScalarFieldEnum = (typeof TenderSelectedServiceScalarFieldEnum)[keyof typeof TenderSelectedServiceScalarFieldEnum]
 
 
+export const TenderComplaintScalarFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  reporterId: 'reporterId',
+  reasonId: 'reasonId',
+  details: 'details',
+  status: 'status',
+  moderatorNote: 'moderatorNote',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TenderComplaintScalarFieldEnum = (typeof TenderComplaintScalarFieldEnum)[keyof typeof TenderComplaintScalarFieldEnum]
+
+
 export const BidScalarFieldEnum = {
   id: 'id',
   tenderId: 'tenderId',
@@ -279,6 +296,7 @@ export const BidScalarFieldEnum = {
   coverLetter: 'coverLetter',
   status: 'status',
   bidFeeAmount: 'bidFeeAmount',
+  ownerContactSharedAt: 'ownerContactSharedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -326,6 +344,8 @@ export const ReviewScalarFieldEnum = {
   revieweeId: 'revieweeId',
   rating: 'rating',
   comment: 'comment',
+  moderationStatus: 'moderationStatus',
+  moderatedAt: 'moderatedAt',
   createdAt: 'createdAt'
 } as const
 
@@ -486,6 +506,18 @@ export const TenderSelectedServiceOrderByRelevanceFieldEnum = {
 } as const
 
 export type TenderSelectedServiceOrderByRelevanceFieldEnum = (typeof TenderSelectedServiceOrderByRelevanceFieldEnum)[keyof typeof TenderSelectedServiceOrderByRelevanceFieldEnum]
+
+
+export const TenderComplaintOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  reporterId: 'reporterId',
+  reasonId: 'reasonId',
+  details: 'details',
+  moderatorNote: 'moderatorNote'
+} as const
+
+export type TenderComplaintOrderByRelevanceFieldEnum = (typeof TenderComplaintOrderByRelevanceFieldEnum)[keyof typeof TenderComplaintOrderByRelevanceFieldEnum]
 
 
 export const BidOrderByRelevanceFieldEnum = {

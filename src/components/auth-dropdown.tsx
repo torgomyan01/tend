@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   LogIn,
   LogOut,
+  Settings2,
   ShieldCheck,
   UserCircle2,
   UserPlus,
@@ -53,7 +54,7 @@ export function AuthDropdown() {
       {isOpen ? (
         <div
           role="menu"
-          className="absolute right-0 top-full z-20 mt-3 w-48 overflow-hidden rounded-3xl bg-white p-2 shadow-2xl shadow-slate-950/15 ring-1 ring-slate-200"
+          className="absolute right-0 top-full z-20 mt-3 min-w-52 overflow-hidden rounded-3xl bg-white p-2 shadow-2xl shadow-slate-950/15 ring-1 ring-slate-200"
         >
           {isLoggedIn ? (
             <>
@@ -65,6 +66,15 @@ export function AuthDropdown() {
               >
                 <UserCircle2 className="size-4 text-amber-700" />
                 Իմ հաշիվ
+              </Link>
+              <Link
+                role="menuitem"
+                href={ROUTES.accountSettings}
+                className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50 hover:text-slate-950"
+                onClick={() => setIsOpen(false)}
+              >
+                <Settings2 className="size-4 text-amber-700" />
+                Կարգավորումներ
               </Link>
               <Link
                 role="menuitem"

@@ -2,6 +2,7 @@
 
 import {
   ChevronDown,
+  GripVertical,
   Loader2,
   Pencil,
   Plus,
@@ -9,6 +10,28 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
+const DND_SERVICE_TYPE = "application/x-tend-service-id";
+
+function reorderIds(
+  ids: string[],
+  fromIndex: number,
+  toIndex: number,
+): string[] {
+  if (
+    fromIndex === toIndex ||
+    fromIndex < 0 ||
+    toIndex < 0 ||
+    fromIndex >= ids.length ||
+    toIndex >= ids.length
+  ) {
+    return ids;
+  }
+  const next = [...ids];
+  const [removed] = next.splice(fromIndex, 1);
+  next.splice(toIndex, 0, removed);
+  return next;
+}
 import {
   CategoryFormDialog,
   type CategoryFormCategory,
@@ -67,6 +90,16 @@ export function ServiceCatalogManager({
   const [isDeletingService, setIsDeletingService] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
+  const [draggingServiceId, setDraggingServiceId] = useState<string | null>(
+    null,
+  );
+  const [dragOverServiceId, setDragOverServiceId] = useState<string | null>(
+    null,
+  );
+  const [reorderBusyCategoryId, setReorderBusyCategoryId] = useState<
+    string | null
+  >(null);
+
   const categoryOptions = categories.map((category) => ({
     id: category.id,
     title: category.title,
@@ -89,6 +122,33 @@ export function ServiceCatalogManager({
       setDeleteError("Ցանցի սխալ։ Փորձեք կրկին։");
     } finally {
       setIsDeletingCategory(false);
+    }
+  }
+
+  async function persistServiceOrder(
+    categoryId: string,
+    orderedServiceIds: string[],
+  ) {
+    setReorderBusyCategoryId(categoryId);
+    setDeleteError(null);
+    try {
+      const response = await fetch(
+        `/api/admin/categories/${categoryId}/services/reorder`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ orderedServiceIds }),
+        },
+      );
+      if (!response.ok) {
+        setDeleteError("Չհաջողվեց պահպանել հերթականությունը։");
+        return;
+      }
+      router.refresh();
+    } catch {
+      setDeleteError("Ցանցի սխալ։ Փորձեք կրկին։");
+    } finally {
+      setReorderBusyCategoryId(null);
     }
   }
 
@@ -229,10 +289,16 @@ export function ServiceCatalogManager({
 
                 {isOpen ? (
                   <div className="border-t border-slate-100 bg-slate-50/50 px-5 py-4 sm:px-6">
-                    <div className="mb-3 flex items-center justify-between">
-                      <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">
-                        Ծառայություններ
-                      </p>
+                    <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                      <div>
+                        <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">
+                          Ծառայություններ
+                        </p>
+                        <p className="mt-1 text-[11px] font-semibold text-slate-400">
+                          Քարշեք տողը՝ կարգը փոխելու համար։ Նոր ծառայությունը
+                          ինքնաբերաբար գալիս է վերջից։
+                        </p>
+                      </div>
                       <button
                         type="button"
                         onClick={() =>
@@ -254,49 +320,144 @@ export function ServiceCatalogManager({
                         Այս ոլորտում դեռ ծառայություն չկա։
                       </p>
                     ) : (
-                      <ul className="space-y-2">
-                        {category.services.map((service) => (
-                          <li
-                            key={service.id}
-                            className="flex flex-wrap items-center gap-2 rounded-2xl bg-white px-3 py-2.5 ring-1 ring-slate-200"
-                          >
-                            <span className="flex flex-1 items-center gap-2">
-                              <span className="text-sm font-bold text-slate-900">
-                                {service.title}
-                              </span>
-                              {!service.isActive ? (
-                                <span className="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-black text-rose-700">
-                                  ԱՆԱԿՏԻՎ
-                                </span>
-                              ) : null}
+                      <ul className="relative space-y-2">
+                        {reorderBusyCategoryId === category.id ? (
+                          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-white/75 backdrop-blur-[1px]">
+                            <span className="flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-bold text-slate-600 shadow-md ring-1 ring-slate-200">
+                              <Loader2 className="size-4 animate-spin text-amber-700" />
+                              Հերթականությունը պահպանվում է…
                             </span>
-                            <span className="text-[11px] font-semibold text-slate-400">
-                              #{service.sortOrder}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setServiceDialogState({
-                                  open: true,
-                                  service,
-                                  categoryId: category.id,
-                                })
+                          </div>
+                        ) : null}
+                        {category.services.map((service) => {
+                          const isDragging = draggingServiceId === service.id;
+                          const showDropHighlight =
+                            dragOverServiceId === service.id &&
+                            draggingServiceId !== null &&
+                            draggingServiceId !== service.id;
+
+                          return (
+                            <li
+                              key={service.id}
+                              draggable={
+                                reorderBusyCategoryId !== category.id &&
+                                category.services.length > 1
                               }
-                              className="grid size-8 place-items-center rounded-xl bg-slate-100 text-slate-700 transition hover:bg-slate-200"
-                              aria-label="Խմբագրել"
+                              onDragStart={(e) => {
+                                if (category.services.length <= 1) return;
+                                setDraggingServiceId(service.id);
+                                e.dataTransfer.effectAllowed = "move";
+                                e.dataTransfer.setData(
+                                  DND_SERVICE_TYPE,
+                                  service.id,
+                                );
+                                e.dataTransfer.setData(
+                                  "text/plain",
+                                  service.id,
+                                );
+                              }}
+                              onDragEnd={() => {
+                                setDraggingServiceId(null);
+                                setDragOverServiceId(null);
+                              }}
+                              onDragOver={(e) => {
+                                e.preventDefault();
+                                e.dataTransfer.dropEffect = "move";
+                                setDragOverServiceId(service.id);
+                              }}
+                              onDragLeave={(e) => {
+                                if (!e.currentTarget.contains(e.relatedTarget as Node))
+                                  setDragOverServiceId((current) =>
+                                    current === service.id ? null : current,
+                                  );
+                              }}
+                              onDrop={(e) => {
+                                e.preventDefault();
+                                const draggedId =
+                                  e.dataTransfer.getData(DND_SERVICE_TYPE) ||
+                                  e.dataTransfer.getData("text/plain");
+                                setDragOverServiceId(null);
+                                if (
+                                  !draggedId ||
+                                  draggedId === service.id ||
+                                  reorderBusyCategoryId === category.id
+                                ) {
+                                  return;
+                                }
+                                const ids = category.services.map((s) => s.id);
+                                const from = ids.indexOf(draggedId);
+                                const to = ids.indexOf(service.id);
+                                if (from === -1 || to === -1 || from === to) {
+                                  return;
+                                }
+                                const orderedServiceIds = reorderIds(
+                                  ids,
+                                  from,
+                                  to,
+                                );
+                                void persistServiceOrder(
+                                  category.id,
+                                  orderedServiceIds,
+                                );
+                              }}
+                              className={`flex flex-wrap items-center gap-2 rounded-2xl bg-white px-3 py-2.5 ring-1 ring-slate-200 transition ${
+                                reorderBusyCategoryId === category.id
+                                  ? "pointer-events-none opacity-60"
+                                  : ""
+                              } ${
+                                isDragging ? "cursor-grabbing opacity-50" : ""
+                              } ${
+                                showDropHighlight
+                                  ? "ring-2 ring-amber-400 ring-offset-2 ring-offset-slate-50"
+                                  : ""
+                              } ${
+                                category.services.length > 1 ? "cursor-grab" : ""
+                              }`}
                             >
-                              <Pencil className="size-3.5" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setDeletingServiceId(service.id)}
-                              className="grid size-8 place-items-center rounded-xl bg-rose-50 text-rose-700 transition hover:bg-rose-100"
-                              aria-label="Ջնջել"
-                            >
-                              <Trash2 className="size-3.5" />
-                            </button>
-                          </li>
-                        ))}
+                              <span
+                                className="grid size-8 shrink-0 place-items-center text-slate-400"
+                                title="Քարշել"
+                                aria-hidden
+                              >
+                                <GripVertical className="size-4" />
+                              </span>
+                              <span className="flex min-w-0 flex-1 items-center gap-2">
+                                <span className="truncate text-sm font-bold text-slate-900">
+                                  {service.title}
+                                </span>
+                                {!service.isActive ? (
+                                  <span className="shrink-0 rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-black text-rose-700">
+                                    ԱՆԱԿՏԻՎ
+                                  </span>
+                                ) : null}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setServiceDialogState({
+                                    open: true,
+                                    service,
+                                    categoryId: category.id,
+                                  })
+                                }
+                                className="grid size-8 place-items-center rounded-xl bg-slate-100 text-slate-700 transition hover:bg-slate-200"
+                                aria-label="Խմբագրել"
+                              >
+                                <Pencil className="size-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setDeletingServiceId(service.id)
+                                }
+                                className="grid size-8 place-items-center rounded-xl bg-rose-50 text-rose-700 transition hover:bg-rose-100"
+                                aria-label="Ջնջել"
+                              >
+                                <Trash2 className="size-3.5" />
+                              </button>
+                            </li>
+                          );
+                        })}
                       </ul>
                     )}
                   </div>

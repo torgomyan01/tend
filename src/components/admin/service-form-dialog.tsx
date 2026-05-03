@@ -45,7 +45,6 @@ export function ServiceFormDialog({
 
   const [title, setTitle] = useState("");
   const [categoryId, setCategoryId] = useState("");
-  const [sortOrder, setSortOrder] = useState("0");
   const [isActive, setIsActive] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,12 +55,10 @@ export function ServiceFormDialog({
     if (service) {
       setTitle(service.title);
       setCategoryId(service.categoryId);
-      setSortOrder(String(service.sortOrder));
       setIsActive(service.isActive);
     } else {
       setTitle("");
       setCategoryId(defaultCategoryId);
-      setSortOrder("0");
       setIsActive(true);
     }
   }, [open, service, defaultCategoryId]);
@@ -82,24 +79,17 @@ export function ServiceFormDialog({
     setIsSubmitting(true);
     setError(null);
 
-    const sortOrderNumber = Number(sortOrder);
-    if (Number.isNaN(sortOrderNumber) || sortOrderNumber < 0) {
-      setError("Հերթականությունը պետք է լինի 0 կամ ավելի։");
-      setIsSubmitting(false);
-      return;
-    }
-
-    const payload = {
-      title: title.trim(),
-      categoryId,
-      sortOrder: sortOrderNumber,
-      isActive,
-    };
-
     const url = isEdit
       ? `/api/admin/services/${service!.id}`
       : "/api/admin/services";
     const method = isEdit ? "PATCH" : "POST";
+
+    /** POST-ում չենք ուղարկում sortOrder՝ սերվերը կավելացնի վերջում (max+1)։ */
+    const payload = {
+      title: title.trim(),
+      categoryId,
+      isActive,
+    };
 
     try {
       const response = await fetch(url, {
@@ -187,29 +177,22 @@ export function ServiceFormDialog({
             </select>
           </label>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            <label className="space-y-1.5">
-              <span className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
-                Հերթականություն
-              </span>
-              <input
-                type="number"
-                min={0}
-                value={sortOrder}
-                onChange={(event) => setSortOrder(event.target.value)}
-                className="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-900 outline-none transition focus:border-slate-900"
-              />
-            </label>
-            <label className="flex items-center gap-3 rounded-2xl bg-slate-50 px-3 py-2.5 ring-1 ring-slate-200">
-              <input
-                type="checkbox"
-                checked={isActive}
-                onChange={(event) => setIsActive(event.target.checked)}
-                className="size-4 rounded border-slate-300 text-slate-950 focus:ring-slate-900"
-              />
-              <span className="text-sm font-bold text-slate-700">Ակտիվ</span>
-            </label>
-          </div>
+          {!isEdit ? (
+            <p className="rounded-2xl bg-slate-50 px-3 py-2.5 text-xs font-semibold text-slate-600 ring-1 ring-slate-200">
+              Հերթականությունը կսահմանվի ինքնաբերաբար՝ ցանկի վերջում։ Փոխելու համար
+              քարշեք տողերը վար։
+            </p>
+          ) : null}
+
+          <label className="flex items-center gap-3 rounded-2xl bg-slate-50 px-3 py-2.5 ring-1 ring-slate-200">
+            <input
+              type="checkbox"
+              checked={isActive}
+              onChange={(event) => setIsActive(event.target.checked)}
+              className="size-4 rounded border-slate-300 text-slate-950 focus:ring-slate-900"
+            />
+            <span className="text-sm font-bold text-slate-700">Ակտիվ</span>
+          </label>
 
           {error ? (
             <div className="rounded-2xl bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700 ring-1 ring-rose-200">

@@ -172,6 +172,12 @@ export default async function AccountPage() {
                 >
                   Տեղադրել մրցույթ
                 </Link>
+                <Link
+                  href={ROUTES.accountSettings}
+                  className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-black text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-50"
+                >
+                  Կարգավորումներ
+                </Link>
                 <AccountSignOut />
               </div>
             </div>

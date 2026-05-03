@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AuthDropdown } from "@/components/auth-dropdown";
 import { LanguageDropdown } from "@/components/language-dropdown";
 import { MobileMenu } from "@/components/mobile-menu";
+import { WalletDropdown } from "@/components/wallet-dropdown";
 import { ROUTES } from "@/lib/routes";
 
 export function SiteHeader() {
@@ -36,12 +37,7 @@ export function SiteHeader() {
         >
           Ինչպես է աշխատում
         </a>
-        <a
-          className="transition hover:text-slate-950"
-          href={ROUTES.sections.features}
-        >
-          Հնարավորություններ
-        </a>
+      
         <a
           className="transition hover:text-slate-950"
           href={ROUTES.sections.providers}
@@ -50,6 +46,7 @@ export function SiteHeader() {
         </a>
       </nav>
       <div className="flex items-center gap-3">
+        <WalletDropdown />
         <LanguageDropdown />
         <AuthDropdown />
         <MobileMenu />

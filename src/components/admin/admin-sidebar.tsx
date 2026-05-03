@@ -4,6 +4,7 @@ import {
   BadgeCheck,
   BriefcaseBusiness,
   CreditCard,
+  Flag,
   Gauge,
   Gavel,
   Layers,
@@ -20,15 +21,24 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 import { ROUTES } from "@/lib/routes";
+import type { AdminModerationCounts } from "@/lib/admin-moderation-counts";
+
+type BadgeKey = keyof AdminModerationCounts;
+type BadgeTone = "amber" | "rose" | "emerald" | "slate";
+
+type NavItem = {
+  href: string;
+  label: string;
+  description: string;
+  icon: typeof Gauge;
+  badgeKey?: BadgeKey;
+  /** Style tone for the badge based on urgency */
+  badgeTone?: BadgeTone;
+};
 
 const NAV_GROUPS: Array<{
   title: string;
-  items: Array<{
-    href: string;
-    label: string;
-    description: string;
-    icon: typeof Gauge;
-  }>;
+  items: NavItem[];
 }> = [
   {
     title: "Ընդհանուր",
@@ -49,24 +59,40 @@ const NAV_GROUPS: Array<{
         label: "Վերիֆիկացիա",
         description: "Հաստատման հայտեր",
         icon: BadgeCheck,
+        badgeKey: "verifications",
+        badgeTone: "amber",
       },
       {
         href: ROUTES.admin.tenders,
         label: "Մրցույթներ",
         description: "Հայտարարություններ",
         icon: BriefcaseBusiness,
+        badgeKey: "tenders",
+        badgeTone: "amber",
+      },
+      {
+        href: ROUTES.admin.tenderComplaints,
+        label: "Բողոքներ",
+        description: "Մրցույթների մասին հաղորդումներ",
+        icon: Flag,
+        badgeKey: "tenderComplaints",
+        badgeTone: "rose",
       },
       {
         href: ROUTES.admin.bids,
         label: "Առաջարկներ",
         description: "Մասնագետների առաջարկներ",
         icon: Gavel,
+        badgeKey: "bids",
+        badgeTone: "amber",
       },
       {
         href: ROUTES.admin.reviews,
         label: "Կարծիքներ",
         description: "Գնահատականներ",
         icon: Star,
+        badgeKey: "reviews",
+        badgeTone: "amber",
       },
       {
         href: ROUTES.admin.services,
@@ -84,6 +110,8 @@ const NAV_GROUPS: Array<{
         label: "Օգտատերեր",
         description: "Հաճախորդներ ու մասնագետներ",
         icon: Users,
+        badgeKey: "blockedUsers",
+        badgeTone: "rose",
       },
       {
         href: ROUTES.admin.transactions,
@@ -101,17 +129,57 @@ const NAV_GROUPS: Array<{
   },
 ];
 
+const BADGE_TONE_CLASS: Record<BadgeTone, string> = {
+  amber: "bg-amber-500 text-white",
+  rose: "bg-rose-600 text-white",
+  emerald: "bg-emerald-600 text-white",
+  slate: "bg-slate-300 text-slate-900",
+};
+
+function NavBadge({
+  count,
+  active,
+  tone,
+}: {
+  count: number;
+  active: boolean;
+  tone: BadgeTone;
+}) {
+  if (count <= 0) return null;
+  const display = count > 99 ? "99+" : String(count);
+  return (
+    <span
+      className={`ml-auto inline-flex min-w-6 shrink-0 items-center justify-center rounded-full px-2 text-[10px] font-black tabular-nums ring-2 ring-white ${
+        active
+          ? "bg-amber-300 text-slate-950 ring-slate-950"
+          : BADGE_TONE_CLASS[tone]
+      }`}
+      aria-label={`${count} սպասում է ստուգման`}
+    >
+      {display}
+    </span>
+  );
+}
+
 type AdminSidebarProps = {
   user: {
     name: string;
     email: string;
     role: string;
   };
+  counts: AdminModerationCounts;
 };
 
-export function AdminSidebar({ user }: AdminSidebarProps) {
+export function AdminSidebar({ user, counts }: AdminSidebarProps) {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  const totalPending =
+    counts.verifications +
+    counts.tenders +
+    counts.bids +
+    counts.reviews +
+    counts.tenderComplaints;
 
   const sidebarBody = (
     <div className="flex h-full flex-col gap-6">
@@ -143,6 +211,26 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
         </button>
       </div>
 
+      {totalPending > 0 ? (
+        <div className="rounded-2xl bg-amber-50 px-3 py-2.5 ring-1 ring-amber-200">
+          <p className="text-[10px] font-black uppercase tracking-[0.18em] text-amber-700">
+            Մոդերացիայի հերթ
+          </p>
+          <p className="mt-0.5 text-sm font-black text-amber-950">
+            {totalPending} տարր սպասում է ստուգման
+          </p>
+        </div>
+      ) : (
+        <div className="rounded-2xl bg-emerald-50 px-3 py-2.5 ring-1 ring-emerald-200">
+          <p className="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-700">
+            Մոդերացիայի հերթ
+          </p>
+          <p className="mt-0.5 text-sm font-black text-emerald-900">
+            Չկան անավարտ ստուգումներ
+          </p>
+        </div>
+      )}
+
       <nav className="flex-1 space-y-6 overflow-y-auto pr-1">
         {NAV_GROUPS.map((group) => (
           <div key={group.title} className="space-y-1.5">
@@ -161,7 +249,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
                     <Link
                       href={item.href}
                       onClick={() => setIsMobileOpen(false)}
-                      className={`group flex items-start gap-3 rounded-2xl px-3 py-2.5 text-sm transition ${
+                      className={`group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm transition ${
                         isActive
                           ? "bg-slate-950 text-white shadow-lg shadow-slate-950/20"
                           : "text-slate-700 hover:bg-slate-100"
@@ -176,18 +264,25 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
                       >
                         <Icon className="size-4" />
                       </span>
-                      <span className="flex flex-col">
+                      <span className="flex min-w-0 flex-1 flex-col">
                         <span className="text-sm font-black leading-tight">
                           {item.label}
                         </span>
                         <span
-                          className={`text-[11px] font-semibold leading-tight ${
+                          className={`truncate text-[11px] font-semibold leading-tight ${
                             isActive ? "text-white/70" : "text-slate-500"
                           }`}
                         >
                           {item.description}
                         </span>
                       </span>
+                      {item.badgeKey ? (
+                        <NavBadge
+                          count={counts[item.badgeKey]}
+                          active={isActive}
+                          tone={item.badgeTone ?? "amber"}
+                        />
+                      ) : null}
                     </Link>
                   </li>
                 );

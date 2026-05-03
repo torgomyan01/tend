@@ -22,6 +22,11 @@ type InterestSelectorProps = {
   selected: InterestSelection[];
   onChange: (next: InterestSelection[]) => void;
   categories: ServiceCategoryWithServices[];
+  /**
+   * Կարգավորումների էջ՝ որոնում/ընտրված բլոկը չի ցուցադրվում, միայն մոդալի մուտք։
+   * Ընտրանքը ցուցադրում եք ծնող կոմպոնենտում։
+   */
+  compact?: boolean;
 };
 
 function isSameInterest(a: InterestSelection, b: InterestSelection) {
@@ -40,6 +45,7 @@ export function InterestSelector({
   selected,
   onChange,
   categories,
+  compact = false,
 }: InterestSelectorProps) {
   const [query, setQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -86,6 +92,54 @@ export function InterestSelector({
   function isSelected(category: string, service: string) {
     return selected.some((interest) =>
       isSameInterest(interest, { category, service }),
+    );
+  }
+
+  const modalTriggerButton = (
+    <button
+      type="button"
+      onClick={() => setIsModalOpen(true)}
+      className="group flex w-full cursor-pointer items-center justify-between gap-3 rounded-3xl border-2 border-dashed border-slate-300 bg-white p-5 text-left transition hover:-translate-y-0.5 hover:border-slate-950 hover:shadow-lg"
+    >
+      <span className="flex items-center gap-4">
+        <span className="grid size-12 place-items-center rounded-2xl bg-slate-950 text-white transition group-hover:bg-amber-400 group-hover:text-slate-950">
+          <Layers className="size-5" />
+        </span>
+        <span>
+          <span className="block text-base font-black text-slate-950">
+            {compact
+              ? selected.length > 0
+                ? "Ավելացնել կամ խմբագրել ոլորտները"
+                : "Ընտրել ոլորտներ"
+              : "Ընտրել ծառայություններ"}
+          </span>
+          <span className="block text-xs font-semibold text-slate-500">
+            {categories.length} ոլորտ ・ {totalServices}+ ծառայություն
+            {compact && selected.length > 0
+              ? ` · ընթացիկ՝ ${selected.length}`
+              : ""}
+          </span>
+        </span>
+      </span>
+      <ChevronRight className="size-5 text-slate-400 transition group-hover:text-slate-950" />
+    </button>
+  );
+
+  if (compact) {
+    return (
+      <div className="space-y-4">
+        {modalTriggerButton}
+        <InterestModal
+          open={isModalOpen}
+          selected={selected}
+          categories={categories}
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={(next) => {
+            onChange(next);
+            setIsModalOpen(false);
+          }}
+        />
+      </div>
     );
   }
 
@@ -200,26 +254,7 @@ export function InterestSelector({
         </div>
       ) : null}
 
-      <button
-        type="button"
-        onClick={() => setIsModalOpen(true)}
-        className="group flex w-full cursor-pointer items-center justify-between gap-3 rounded-3xl border-2 border-dashed border-slate-300 bg-white p-5 text-left transition hover:-translate-y-0.5 hover:border-slate-950 hover:shadow-lg"
-      >
-        <span className="flex items-center gap-4">
-          <span className="grid size-12 place-items-center rounded-2xl bg-slate-950 text-white transition group-hover:bg-amber-400 group-hover:text-slate-950">
-            <Layers className="size-5" />
-          </span>
-          <span>
-            <span className="block text-base font-black text-slate-950">
-              Ընտրել ծառայություններ
-            </span>
-            <span className="block text-xs font-semibold text-slate-500">
-              {categories.length} ոլորտ ・ {totalServices}+ ծառայություն
-            </span>
-          </span>
-        </span>
-        <ChevronRight className="size-5 text-slate-400 transition group-hover:text-slate-950" />
-      </button>
+      {modalTriggerButton}
 
       <InterestModal
         open={isModalOpen}
@@ -366,6 +401,32 @@ function InterestModal({
           {draft.length} ընտրված
         </span>
       </header>
+
+      {draft.length > 0 ? (
+        <div className="border-b border-slate-200 bg-amber-50/70 px-4 py-3 sm:px-6">
+          <p className="text-[10px] font-black uppercase tracking-[0.18em] text-amber-900">
+            Ձեր ընտրությունը
+          </p>
+          <div className="mt-2 flex max-h-32 flex-wrap gap-2 overflow-y-auto">
+            {draft.map((interest) => (
+              <button
+                key={`${interest.category}::${interest.service}`}
+                type="button"
+                onClick={() =>
+                  toggleDraft(interest.category, interest.service)
+                }
+                className="inline-flex max-w-full items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-left text-xs font-bold text-slate-900 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50"
+              >
+                <span className="min-w-0 truncate">{interest.service}</span>
+                <span className="hidden shrink-0 text-[10px] font-semibold text-slate-500 sm:inline">
+                  · {interest.category}
+                </span>
+                <X className="size-3.5 shrink-0 text-slate-400" />
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       <div className="flex flex-1 overflow-hidden">
         <aside

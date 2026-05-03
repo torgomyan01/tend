@@ -322,6 +322,7 @@ export type UserWhereInput = {
   reviewsReceived?: Prisma.ReviewListRelationFilter
   verificationRequests?: Prisma.VerificationRequestListRelationFilter
   interests?: Prisma.UserInterestListRelationFilter
+  tenderComplaintsFiled?: Prisma.TenderComplaintListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -352,6 +353,7 @@ export type UserOrderByWithRelationInput = {
   reviewsReceived?: Prisma.ReviewOrderByRelationAggregateInput
   verificationRequests?: Prisma.VerificationRequestOrderByRelationAggregateInput
   interests?: Prisma.UserInterestOrderByRelationAggregateInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -386,6 +388,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   reviewsReceived?: Prisma.ReviewListRelationFilter
   verificationRequests?: Prisma.VerificationRequestListRelationFilter
   interests?: Prisma.UserInterestListRelationFilter
+  tenderComplaintsFiled?: Prisma.TenderComplaintListRelationFilter
 }, "id" | "email" | "phone" | "telegramChatId" | "telegramLinkToken">
 
 export type UserOrderByWithAggregationInput = {
@@ -464,6 +467,7 @@ export type UserCreateInput = {
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -494,6 +498,7 @@ export type UserUncheckedCreateInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type UserUpdateInput = {
@@ -524,6 +529,7 @@ export type UserUpdateInput = {
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -554,6 +560,7 @@ export type UserUncheckedUpdateInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -797,6 +804,20 @@ export type UserUpdateOneRequiredWithoutTendersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTendersInput, Prisma.UserUpdateWithoutTendersInput>, Prisma.UserUncheckedUpdateWithoutTendersInput>
 }
 
+export type UserCreateNestedOneWithoutTenderComplaintsFiledInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTenderComplaintsFiledInput, Prisma.UserUncheckedCreateWithoutTenderComplaintsFiledInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTenderComplaintsFiledInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutTenderComplaintsFiledNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTenderComplaintsFiledInput, Prisma.UserUncheckedCreateWithoutTenderComplaintsFiledInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTenderComplaintsFiledInput
+  upsert?: Prisma.UserUpsertWithoutTenderComplaintsFiledInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTenderComplaintsFiledInput, Prisma.UserUpdateWithoutTenderComplaintsFiledInput>, Prisma.UserUncheckedUpdateWithoutTenderComplaintsFiledInput>
+}
+
 export type UserCreateNestedOneWithoutBidsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutBidsInput, Prisma.UserUncheckedCreateWithoutBidsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutBidsInput
@@ -894,6 +915,7 @@ export type UserCreateWithoutInterestsInput = {
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
 }
 
 export type UserUncheckedCreateWithoutInterestsInput = {
@@ -923,6 +945,7 @@ export type UserUncheckedCreateWithoutInterestsInput = {
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type UserCreateOrConnectWithoutInterestsInput = {
@@ -968,6 +991,7 @@ export type UserUpdateWithoutInterestsInput = {
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInterestsInput = {
@@ -997,6 +1021,7 @@ export type UserUncheckedUpdateWithoutInterestsInput = {
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type UserCreateWithoutVerificationRequestsInput = {
@@ -1026,6 +1051,7 @@ export type UserCreateWithoutVerificationRequestsInput = {
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
 }
 
 export type UserUncheckedCreateWithoutVerificationRequestsInput = {
@@ -1055,6 +1081,7 @@ export type UserUncheckedCreateWithoutVerificationRequestsInput = {
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type UserCreateOrConnectWithoutVerificationRequestsInput = {
@@ -1100,6 +1127,7 @@ export type UserUpdateWithoutVerificationRequestsInput = {
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVerificationRequestsInput = {
@@ -1129,6 +1157,7 @@ export type UserUncheckedUpdateWithoutVerificationRequestsInput = {
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -1158,6 +1187,7 @@ export type UserCreateWithoutAccountsInput = {
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -1187,6 +1217,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -1232,6 +1263,7 @@ export type UserUpdateWithoutAccountsInput = {
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -1261,6 +1293,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -1290,6 +1323,7 @@ export type UserCreateWithoutSessionsInput = {
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1319,6 +1353,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1364,6 +1399,7 @@ export type UserUpdateWithoutSessionsInput = {
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1393,6 +1429,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type UserCreateWithoutTendersInput = {
@@ -1422,6 +1459,7 @@ export type UserCreateWithoutTendersInput = {
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
 }
 
 export type UserUncheckedCreateWithoutTendersInput = {
@@ -1451,6 +1489,7 @@ export type UserUncheckedCreateWithoutTendersInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type UserCreateOrConnectWithoutTendersInput = {
@@ -1496,6 +1535,7 @@ export type UserUpdateWithoutTendersInput = {
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTendersInput = {
@@ -1518,6 +1558,143 @@ export type UserUncheckedUpdateWithoutTendersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+}
+
+export type UserCreateWithoutTenderComplaintsFiledInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutTenderComplaintsFiledInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderUncheckedCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutTenderComplaintsFiledInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutTenderComplaintsFiledInput, Prisma.UserUncheckedCreateWithoutTenderComplaintsFiledInput>
+}
+
+export type UserUpsertWithoutTenderComplaintsFiledInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutTenderComplaintsFiledInput, Prisma.UserUncheckedUpdateWithoutTenderComplaintsFiledInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTenderComplaintsFiledInput, Prisma.UserUncheckedCreateWithoutTenderComplaintsFiledInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutTenderComplaintsFiledInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutTenderComplaintsFiledInput, Prisma.UserUncheckedUpdateWithoutTenderComplaintsFiledInput>
+}
+
+export type UserUpdateWithoutTenderComplaintsFiledInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutTenderComplaintsFiledInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUncheckedUpdateManyWithoutClientNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutProviderNestedInput
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -1554,6 +1731,7 @@ export type UserCreateWithoutBidsInput = {
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
 }
 
 export type UserUncheckedCreateWithoutBidsInput = {
@@ -1583,6 +1761,7 @@ export type UserUncheckedCreateWithoutBidsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type UserCreateOrConnectWithoutBidsInput = {
@@ -1628,6 +1807,7 @@ export type UserUpdateWithoutBidsInput = {
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBidsInput = {
@@ -1657,6 +1837,7 @@ export type UserUncheckedUpdateWithoutBidsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type UserCreateWithoutTransactionsInput = {
@@ -1686,6 +1867,7 @@ export type UserCreateWithoutTransactionsInput = {
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -1715,6 +1897,7 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -1760,6 +1943,7 @@ export type UserUpdateWithoutTransactionsInput = {
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -1789,6 +1973,7 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type UserCreateWithoutSubscriptionsInput = {
@@ -1818,6 +2003,7 @@ export type UserCreateWithoutSubscriptionsInput = {
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
 }
 
 export type UserUncheckedCreateWithoutSubscriptionsInput = {
@@ -1847,6 +2033,7 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type UserCreateOrConnectWithoutSubscriptionsInput = {
@@ -1892,6 +2079,7 @@ export type UserUpdateWithoutSubscriptionsInput = {
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSubscriptionsInput = {
@@ -1921,6 +2109,7 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type UserCreateWithoutReviewsGivenInput = {
@@ -1950,6 +2139,7 @@ export type UserCreateWithoutReviewsGivenInput = {
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
 }
 
 export type UserUncheckedCreateWithoutReviewsGivenInput = {
@@ -1979,6 +2169,7 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type UserCreateOrConnectWithoutReviewsGivenInput = {
@@ -2013,6 +2204,7 @@ export type UserCreateWithoutReviewsReceivedInput = {
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
 }
 
 export type UserUncheckedCreateWithoutReviewsReceivedInput = {
@@ -2042,6 +2234,7 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type UserCreateOrConnectWithoutReviewsReceivedInput = {
@@ -2087,6 +2280,7 @@ export type UserUpdateWithoutReviewsGivenInput = {
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsGivenInput = {
@@ -2116,6 +2310,7 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type UserUpsertWithoutReviewsReceivedInput = {
@@ -2156,6 +2351,7 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
@@ -2185,6 +2381,7 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 
@@ -2203,6 +2400,7 @@ export type UserCountOutputType = {
   reviewsReceived: number
   verificationRequests: number
   interests: number
+  tenderComplaintsFiled: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2216,6 +2414,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   reviewsReceived?: boolean | UserCountOutputTypeCountReviewsReceivedArgs
   verificationRequests?: boolean | UserCountOutputTypeCountVerificationRequestsArgs
   interests?: boolean | UserCountOutputTypeCountInterestsArgs
+  tenderComplaintsFiled?: boolean | UserCountOutputTypeCountTenderComplaintsFiledArgs
 }
 
 /**
@@ -2298,6 +2497,13 @@ export type UserCountOutputTypeCountInterestsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.UserInterestWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTenderComplaintsFiledArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TenderComplaintWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2327,6 +2533,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   reviewsReceived?: boolean | Prisma.User$reviewsReceivedArgs<ExtArgs>
   verificationRequests?: boolean | Prisma.User$verificationRequestsArgs<ExtArgs>
   interests?: boolean | Prisma.User$interestsArgs<ExtArgs>
+  tenderComplaintsFiled?: boolean | Prisma.User$tenderComplaintsFiledArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2364,6 +2571,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   reviewsReceived?: boolean | Prisma.User$reviewsReceivedArgs<ExtArgs>
   verificationRequests?: boolean | Prisma.User$verificationRequestsArgs<ExtArgs>
   interests?: boolean | Prisma.User$interestsArgs<ExtArgs>
+  tenderComplaintsFiled?: boolean | Prisma.User$tenderComplaintsFiledArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -2380,6 +2588,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     reviewsReceived: Prisma.$ReviewPayload<ExtArgs>[]
     verificationRequests: Prisma.$VerificationRequestPayload<ExtArgs>[]
     interests: Prisma.$UserInterestPayload<ExtArgs>[]
+    tenderComplaintsFiled: Prisma.$TenderComplaintPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2749,6 +2958,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   reviewsReceived<T extends Prisma.User$reviewsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   verificationRequests<T extends Prisma.User$verificationRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$verificationRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VerificationRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   interests<T extends Prisma.User$interestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$interestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserInterestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tenderComplaintsFiled<T extends Prisma.User$tenderComplaintsFiledArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tenderComplaintsFiledArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderComplaintPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3380,6 +3590,30 @@ export type User$interestsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.UserInterestScalarFieldEnum | Prisma.UserInterestScalarFieldEnum[]
+}
+
+/**
+ * User.tenderComplaintsFiled
+ */
+export type User$tenderComplaintsFiledArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TenderComplaint
+   */
+  select?: Prisma.TenderComplaintSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TenderComplaint
+   */
+  omit?: Prisma.TenderComplaintOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TenderComplaintInclude<ExtArgs> | null
+  where?: Prisma.TenderComplaintWhereInput
+  orderBy?: Prisma.TenderComplaintOrderByWithRelationInput | Prisma.TenderComplaintOrderByWithRelationInput[]
+  cursor?: Prisma.TenderComplaintWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TenderComplaintScalarFieldEnum | Prisma.TenderComplaintScalarFieldEnum[]
 }
 
 /**

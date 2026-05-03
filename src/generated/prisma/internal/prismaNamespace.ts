@@ -397,6 +397,7 @@ export const ModelName = {
   TenderImage: 'TenderImage',
   TenderDocument: 'TenderDocument',
   TenderSelectedService: 'TenderSelectedService',
+  TenderComplaint: 'TenderComplaint',
   Bid: 'Bid',
   Transaction: 'Transaction',
   Subscription: 'Subscription',
@@ -416,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "bid" | "transaction" | "subscription" | "review"
+    modelProps: "user" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "transaction" | "subscription" | "review"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1278,6 +1279,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TenderComplaint: {
+      payload: Prisma.$TenderComplaintPayload<ExtArgs>
+      fields: Prisma.TenderComplaintFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TenderComplaintFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderComplaintPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TenderComplaintFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderComplaintPayload>
+        }
+        findFirst: {
+          args: Prisma.TenderComplaintFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderComplaintPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TenderComplaintFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderComplaintPayload>
+        }
+        findMany: {
+          args: Prisma.TenderComplaintFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderComplaintPayload>[]
+        }
+        create: {
+          args: Prisma.TenderComplaintCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderComplaintPayload>
+        }
+        createMany: {
+          args: Prisma.TenderComplaintCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TenderComplaintDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderComplaintPayload>
+        }
+        update: {
+          args: Prisma.TenderComplaintUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderComplaintPayload>
+        }
+        deleteMany: {
+          args: Prisma.TenderComplaintDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TenderComplaintUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TenderComplaintUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderComplaintPayload>
+        }
+        aggregate: {
+          args: Prisma.TenderComplaintAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTenderComplaint>
+        }
+        groupBy: {
+          args: Prisma.TenderComplaintGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderComplaintGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TenderComplaintCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderComplaintCountAggregateOutputType> | number
+        }
+      }
+    }
     Bid: {
       payload: Prisma.$BidPayload<ExtArgs>
       fields: Prisma.BidFieldRefs
@@ -1765,6 +1832,22 @@ export const TenderSelectedServiceScalarFieldEnum = {
 export type TenderSelectedServiceScalarFieldEnum = (typeof TenderSelectedServiceScalarFieldEnum)[keyof typeof TenderSelectedServiceScalarFieldEnum]
 
 
+export const TenderComplaintScalarFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  reporterId: 'reporterId',
+  reasonId: 'reasonId',
+  details: 'details',
+  status: 'status',
+  moderatorNote: 'moderatorNote',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TenderComplaintScalarFieldEnum = (typeof TenderComplaintScalarFieldEnum)[keyof typeof TenderComplaintScalarFieldEnum]
+
+
 export const BidScalarFieldEnum = {
   id: 'id',
   tenderId: 'tenderId',
@@ -1774,6 +1857,7 @@ export const BidScalarFieldEnum = {
   coverLetter: 'coverLetter',
   status: 'status',
   bidFeeAmount: 'bidFeeAmount',
+  ownerContactSharedAt: 'ownerContactSharedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1821,6 +1905,8 @@ export const ReviewScalarFieldEnum = {
   revieweeId: 'revieweeId',
   rating: 'rating',
   comment: 'comment',
+  moderationStatus: 'moderationStatus',
+  moderatedAt: 'moderatedAt',
   createdAt: 'createdAt'
 } as const
 
@@ -1983,6 +2069,18 @@ export const TenderSelectedServiceOrderByRelevanceFieldEnum = {
 export type TenderSelectedServiceOrderByRelevanceFieldEnum = (typeof TenderSelectedServiceOrderByRelevanceFieldEnum)[keyof typeof TenderSelectedServiceOrderByRelevanceFieldEnum]
 
 
+export const TenderComplaintOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  reporterId: 'reporterId',
+  reasonId: 'reasonId',
+  details: 'details',
+  moderatorNote: 'moderatorNote'
+} as const
+
+export type TenderComplaintOrderByRelevanceFieldEnum = (typeof TenderComplaintOrderByRelevanceFieldEnum)[keyof typeof TenderComplaintOrderByRelevanceFieldEnum]
+
+
 export const BidOrderByRelevanceFieldEnum = {
   id: 'id',
   tenderId: 'tenderId',
@@ -2088,6 +2186,13 @@ export type EnumTenderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
+ * Reference to a field of type 'TenderComplaintStatus'
+ */
+export type EnumTenderComplaintStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TenderComplaintStatus'>
+    
+
+
+/**
  * Reference to a field of type 'BidStatus'
  */
 export type EnumBidStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BidStatus'>
@@ -2112,6 +2217,13 @@ export type EnumTransactionStatusFieldRefInput<$PrismaModel> = FieldRefInputType
  * Reference to a field of type 'SubscriptionStatus'
  */
 export type EnumSubscriptionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SubscriptionStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ReviewModerationStatus'
+ */
+export type EnumReviewModerationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReviewModerationStatus'>
     
 
 
@@ -2244,6 +2356,7 @@ export type GlobalOmitConfig = {
   tenderImage?: Prisma.TenderImageOmit
   tenderDocument?: Prisma.TenderDocumentOmit
   tenderSelectedService?: Prisma.TenderSelectedServiceOmit
+  tenderComplaint?: Prisma.TenderComplaintOmit
   bid?: Prisma.BidOmit
   transaction?: Prisma.TransactionOmit
   subscription?: Prisma.SubscriptionOmit

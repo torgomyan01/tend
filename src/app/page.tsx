@@ -14,6 +14,7 @@ import Link from "next/link";
 import { FeaturedTenderSlider } from "@/components/featured-tender-slider";
 import { ServiceSearch } from "@/components/service-search";
 import { SiteHeader } from "@/components/site-header";
+import { getFeaturedHomeTenders } from "@/lib/home-featured-tenders";
 import { ROUTES } from "@/lib/routes";
 import { getServiceCategories } from "@/lib/services-data";
 
@@ -72,7 +73,10 @@ const features = [
 ];
 
 export default async function Home() {
-  const categories = await getServiceCategories();
+  const [categories, featuredTenders] = await Promise.all([
+    getServiceCategories(),
+    getFeaturedHomeTenders(5),
+  ]);
   return (
     <div className="min-h-screen overflow-hidden bg-[#f7f4ee] text-slate-950">
       <SiteHeader />
@@ -133,7 +137,7 @@ export default async function Home() {
 
           <div className="relative">
             <div className="absolute inset-6 -z-10 rounded-[3rem] bg-slate-950 blur-2xl opacity-10" />
-            <FeaturedTenderSlider />
+            <FeaturedTenderSlider tenders={featuredTenders} />
           </div>
         </section>
 

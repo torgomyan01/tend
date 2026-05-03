@@ -7,11 +7,14 @@ export const ROUTES = {
   terms: "/terms",
   privacy: "/privacy",
   account: "/account",
+  accountSettings: "/account/settings",
   accountVerification: "/account/verification",
   myTenders: "/tenders?scope=my",
   bidHistory: "/tenders?scope=bids",
   tenders: "/tenders",
   tenderDetail: (id: string) => `/tenders/${id}`,
+  /** Միայն COMPLETED AWARDED զույգ՝ փոխադարձ գնահատական։ */
+  tenderReview: (id: string) => `/tenders/${id}/review`,
   createTender: "/tenders/new",
   admin: {
     dashboard: "/admin",
@@ -22,6 +25,7 @@ export const ROUTES = {
     transactions: "/admin/transactions",
     subscriptions: "/admin/subscriptions",
     reviews: "/admin/reviews",
+    tenderComplaints: "/admin/tender-complaints",
     services: "/admin/services",
   },
   sections: {

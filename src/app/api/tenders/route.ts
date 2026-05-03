@@ -336,9 +336,9 @@ export async function POST(request: Request) {
         address: data.address || null,
         budgetMin: data.budgetMin ? data.budgetMin : null,
         budgetMax: data.budgetMax ? data.budgetMax : null,
-        status: data.publish ? "ACTIVE" : "DRAFT",
+        status: data.publish ? "REVIEW" : "DRAFT",
         isBlindBidding: data.isBlindBidding,
-        startsAt: data.publish ? now : null,
+        startsAt: null,
         endsAt: data.publish ? endsAt : null,
         selectedServices: {
           create: services.map((entry, index) => ({

@@ -14,14 +14,35 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
-      if (user?.id) {
+    async jwt({ token, user, trigger, session }) {
+      if (user) {
         token.sub = user.id;
+        token.role = user.role;
+        token.email = user.email;
+        token.name = user.name ?? undefined;
+        token.picture = user.image ?? undefined;
+        token.phone = user.phone ?? undefined;
       }
 
-      if (user?.role) {
-        token.role = user.role;
-      } else if (token.sub && !token.role) {
+      if (trigger === "update" && session) {
+        const patch = session as {
+          name?: string | null;
+          email?: string;
+          phone?: string | null;
+          image?: string | null;
+          removeAvatar?: boolean;
+        };
+        if ("name" in patch) token.name = patch.name ?? undefined;
+        if (patch.email !== undefined) token.email = patch.email;
+        if ("phone" in patch) token.phone = patch.phone ?? undefined;
+        if (patch.removeAvatar) {
+          token.picture = undefined;
+        } else if (patch.image !== undefined && patch.image !== null) {
+          token.picture = patch.image;
+        }
+      }
+
+      if (token.sub && !token.role) {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.sub },
           select: { role: true },
@@ -40,6 +61,14 @@ export const authOptions: NextAuthOptions = {
 
       if (session.user && token.role) {
         session.user.role = token.role;
+      }
+
+      if (session.user) {
+        session.user.email =
+          (token.email as string | undefined) ?? session.user.email;
+        session.user.name = token.name as string | null | undefined;
+        session.user.image = token.picture as string | null | undefined;
+        session.user.phone = token.phone as string | null | undefined;
       }
 
       return session;
@@ -70,6 +99,8 @@ export const authOptions: NextAuthOptions = {
             id: true,
             email: true,
             name: true,
+            phone: true,
+            image: true,
             passwordHash: true,
             isVerified: true,
             isBlocked: true,
@@ -98,6 +129,8 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           email: user.email,
           name: user.name ?? undefined,
+          phone: user.phone ?? undefined,
+          image: user.image ?? undefined,
           role: user.role,
         };
       },

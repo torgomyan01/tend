@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { requireAdmin } from "@/lib/admin";
+import { getAdminModerationCounts } from "@/lib/admin-moderation-counts";
 
 export const metadata = {
   title: "Tend.am · Կառավարման վահանակ",
@@ -12,6 +13,7 @@ export default async function AdminLayout({
   children: ReactNode;
 }) {
   const session = await requireAdmin();
+  const counts = await getAdminModerationCounts();
 
   const sidebarUser = {
     name: session.user.name ?? "",
@@ -22,7 +24,7 @@ export default async function AdminLayout({
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
       <div className="flex flex-col lg:flex-row">
-        <AdminSidebar user={sidebarUser} />
+        <AdminSidebar user={sidebarUser} counts={counts} />
         <main className="flex-1 px-4 py-6 sm:px-6 lg:px-10 lg:py-10">
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
             {children}

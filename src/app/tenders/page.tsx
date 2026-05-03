@@ -2,18 +2,29 @@ import Link from "next/link";
 import {
   ArrowRight,
   BriefcaseBusiness,
+  CalendarClock,
   ChevronRight,
+  EyeOff,
+  Layers,
   MapPin,
   PlusCircle,
+  Users,
+  Wallet,
 } from "lucide-react";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
-import { TendersBrowseToolbar } from "@/components/tenders-browse-toolbar";
+import { TendersBrowseSidebar } from "@/components/tenders-browse-sidebar";
 import { authOptions } from "@/lib/auth";
 import { formatAmd, formatDateTime, formatNumber } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
+import {
+  mergeCatalogPicksFromLegacy,
+  parseCatalogPicksParam,
+  serializeCatalogPicks,
+  type CatalogFilterSelection,
+} from "@/lib/tenders-catalog-picks";
 import { getServiceCategories } from "@/lib/services-data";
 import {
   BID_STATUS_BADGE,
@@ -46,33 +57,73 @@ function buildMyTendersHref(status: string) {
   return `${ROUTES.tenders}?scope=my&status=${status}`;
 }
 
+function parseBudgetInt(raw: string | undefined): number | undefined {
+  if (!raw?.trim()) return undefined;
+  const n = Number.parseInt(raw.replace(/\s/g, ""), 10);
+  if (!Number.isFinite(n) || n < 0) return undefined;
+  return Math.min(n, 1_000_000_000_000);
+}
+
 function parseBrowseParams(params: {
   q?: string;
+  picks?: string;
   category?: string;
   service?: string;
   city?: string;
   sort?: string;
   page?: string;
+  budgetMin?: string;
+  budgetMax?: string;
+  deadline?: string;
+  blind?: string;
 }) {
   const q = params.q?.trim().slice(0, 200) ?? "";
   const category = params.category?.trim().slice(0, 255) ?? "";
   const service = params.service?.trim().slice(0, 255) ?? "";
+  const catalogPicks = mergeCatalogPicksFromLegacy(
+    parseCatalogPicksParam(params.picks),
+    category,
+    service,
+  );
   const city = params.city?.trim().slice(0, 120) ?? "";
+  const budgetMin = params.budgetMin?.trim().slice(0, 24) ?? "";
+  const budgetMax = params.budgetMax?.trim().slice(0, 24) ?? "";
+  const deadlineRaw = params.deadline?.trim() ?? "";
+  const deadline = ["7", "14", "30"].includes(deadlineRaw)
+    ? deadlineRaw
+    : "";
+  const blindRaw = params.blind?.trim() ?? "";
+  const blind = blindRaw === "yes" || blindRaw === "no" ? blindRaw : "";
   const sortRaw = params.sort ?? "";
-  const sort = ["ending", "budget_low", "budget_high"].includes(sortRaw)
+  const sort = ["ending", "budget_low", "budget_high", "bids_most"].includes(
+    sortRaw,
+  )
     ? sortRaw
     : "";
   const pageRaw = Number.parseInt(String(params.page ?? "1"), 10);
   const page =
     Number.isFinite(pageRaw) && pageRaw >= 1 ? Math.min(pageRaw, 500) : 1;
-  return { q, category, service, city, sort, page };
+  return {
+    q,
+    catalogPicks,
+    city,
+    sort,
+    page,
+    budgetMin,
+    budgetMax,
+    deadline,
+    blind,
+  };
 }
 
 function buildPublicBrowseWhere(filters: {
   q: string;
-  category: string;
-  service: string;
+  catalogPicks: CatalogFilterSelection[];
   city: string;
+  budgetMinAm?: number;
+  budgetMaxAm?: number;
+  deadlineDays?: number;
+  blind?: "yes" | "no";
 }): Prisma.TenderWhereInput {
   const windowActive: Prisma.TenderWhereInput = {
     status: "ACTIVE",
@@ -93,14 +144,58 @@ function buildPublicBrowseWhere(filters: {
     });
   }
 
-  if (filters.category) {
-    clauses.push({ category: filters.category });
-  }
-  if (filters.service) {
-    clauses.push({ service: filters.service });
+  if (filters.catalogPicks.length > 0) {
+    clauses.push({
+      OR: filters.catalogPicks.map((p) =>
+        p.serviceTitle
+          ? {
+              AND: [
+                { category: p.categoryTitle },
+                { service: p.serviceTitle },
+              ],
+            }
+          : { category: p.categoryTitle },
+      ),
+    });
   }
   if (filters.city) {
     clauses.push({ city: { contains: filters.city } });
+  }
+
+  if (filters.blind === "yes") {
+    clauses.push({ isBlindBidding: true });
+  } else if (filters.blind === "no") {
+    clauses.push({ isBlindBidding: false });
+  }
+
+  if (filters.deadlineDays !== undefined) {
+    const now = new Date();
+    const until = new Date(now);
+    until.setDate(until.getDate() + filters.deadlineDays);
+    clauses.push({
+      endsAt: {
+        not: null,
+        gte: now,
+        lte: until,
+      },
+    });
+  }
+
+  if (filters.budgetMinAm !== undefined) {
+    clauses.push({
+      OR: [
+        { budgetMax: { gte: filters.budgetMinAm } },
+        { budgetMin: { gte: filters.budgetMinAm } },
+      ],
+    });
+  }
+  if (filters.budgetMaxAm !== undefined) {
+    clauses.push({
+      OR: [
+        { budgetMin: { lte: filters.budgetMaxAm } },
+        { budgetMax: { lte: filters.budgetMaxAm } },
+      ],
+    });
   }
 
   return clauses.length === 1 ? clauses[0]! : { AND: clauses };
@@ -116,6 +211,8 @@ function browseOrderBy(
       return [{ budgetMin: "asc" }, { budgetMax: "asc" }];
     case "budget_high":
       return [{ budgetMax: "desc" }, { budgetMin: "desc" }];
+    case "bids_most":
+      return [{ bids: { _count: "desc" } }, { createdAt: "desc" }];
     default:
       return [{ createdAt: "desc" }];
   }
@@ -123,18 +220,26 @@ function browseOrderBy(
 
 function buildTendersBrowseHref(parts: {
   q?: string;
-  category?: string;
-  service?: string;
+  catalogPicks?: CatalogFilterSelection[];
   city?: string;
   sort?: string;
   page?: number;
+  budgetMin?: string;
+  budgetMax?: string;
+  deadline?: string;
+  blind?: string;
 }) {
   const sp = new URLSearchParams();
   if (parts.q) sp.set("q", parts.q);
-  if (parts.category) sp.set("category", parts.category);
-  if (parts.service) sp.set("service", parts.service);
+  if (parts.catalogPicks && parts.catalogPicks.length > 0) {
+    sp.set("picks", serializeCatalogPicks(parts.catalogPicks));
+  }
   if (parts.city) sp.set("city", parts.city);
   if (parts.sort) sp.set("sort", parts.sort);
+  if (parts.budgetMin) sp.set("budgetMin", parts.budgetMin);
+  if (parts.budgetMax) sp.set("budgetMax", parts.budgetMax);
+  if (parts.deadline) sp.set("deadline", parts.deadline);
+  if (parts.blind) sp.set("blind", parts.blind);
   if (parts.page && parts.page > 1) sp.set("page", String(parts.page));
   const qs = sp.toString();
   return qs ? `${ROUTES.tenders}?${qs}` : ROUTES.tenders;
@@ -147,11 +252,16 @@ export default async function TendersPage({
     scope?: string;
     status?: string;
     q?: string;
+    picks?: string;
     category?: string;
     service?: string;
     city?: string;
     sort?: string;
     page?: string;
+    budgetMin?: string;
+    budgetMax?: string;
+    deadline?: string;
+    blind?: string;
   }>;
 }) {
   const params = await searchParams;
@@ -190,11 +300,14 @@ export default async function TendersPage({
 
   let browseState = {
     q: "",
-    category: "",
-    service: "",
+    catalogPicks: [] as CatalogFilterSelection[],
     city: "",
     sort: "",
     page: 1,
+    budgetMin: "",
+    budgetMax: "",
+    deadline: "",
+    blind: "",
   };
 
   let categories: Awaited<ReturnType<typeof getServiceCategories>> = [];
@@ -210,6 +323,7 @@ export default async function TendersPage({
     budgetMin: Tender["budgetMin"];
     budgetMax: Tender["budgetMax"];
     status: TenderStatus;
+    isBlindBidding: boolean;
     endsAt: Date | null;
     createdAt: Date;
     images: Array<{ url: string }>;
@@ -234,7 +348,23 @@ export default async function TendersPage({
 
   if (!scope) {
     browseState = parseBrowseParams(params);
-    const publicWhereFinal = buildPublicBrowseWhere(browseState);
+    const publicWhereFinal = buildPublicBrowseWhere({
+      q: browseState.q,
+      catalogPicks: browseState.catalogPicks,
+      city: browseState.city,
+      budgetMinAm: parseBudgetInt(browseState.budgetMin),
+      budgetMaxAm: parseBudgetInt(browseState.budgetMax),
+      deadlineDays:
+        browseState.deadline === "7" ||
+        browseState.deadline === "14" ||
+        browseState.deadline === "30"
+          ? Number(browseState.deadline)
+          : undefined,
+      blind:
+        browseState.blind === "yes" || browseState.blind === "no"
+          ? browseState.blind
+          : undefined,
+    });
     const orderBy = browseOrderBy(browseState.sort);
     const activeCityWhere: Prisma.TenderWhereInput = {
       status: "ACTIVE",
@@ -276,11 +406,14 @@ export default async function TendersPage({
       redirect(
         buildTendersBrowseHref({
           q: browseState.q,
-          category: browseState.category,
-          service: browseState.service,
+          catalogPicks: browseState.catalogPicks,
           city: browseState.city,
           sort: browseState.sort,
           page: totalPages,
+          budgetMin: browseState.budgetMin,
+          budgetMax: browseState.budgetMax,
+          deadline: browseState.deadline,
+          blind: browseState.blind,
         }),
       );
     }
@@ -350,10 +483,13 @@ export default async function TendersPage({
 
   const hasBrowseFilters =
     !!browseState.q ||
-    !!browseState.category ||
-    !!browseState.service ||
+    browseState.catalogPicks.length > 0 ||
     !!browseState.city ||
-    !!browseState.sort;
+    !!browseState.sort ||
+    !!browseState.budgetMin ||
+    !!browseState.budgetMax ||
+    !!browseState.deadline ||
+    !!browseState.blind;
 
   const publicTotalPages =
     view.type === "public"
@@ -413,20 +549,6 @@ export default async function TendersPage({
               </Link>
             </nav>
 
-            {view.type === "public" ? (
-              <TendersBrowseToolbar
-                categories={categories}
-                cities={browseCities}
-                initial={{
-                  q: browseState.q,
-                  category: browseState.category,
-                  service: browseState.service,
-                  city: browseState.city,
-                  sort: browseState.sort,
-                }}
-              />
-            ) : null}
-
             {view.type === "my" ? (
               <div className="mt-4 flex flex-wrap gap-2">
                 {MY_FILTERS.map((filter) => {
@@ -461,9 +583,26 @@ export default async function TendersPage({
           </section>
 
           {view.type === "public" ? (
-            <section className="space-y-4">
+            <div className="flex flex-col-reverse gap-8 lg:grid lg:grid-cols-[minmax(280px,340px)_minmax(0,1fr)] lg:items-start">
+              <aside className="lg:sticky lg:top-24 lg:z-10 lg:self-start">
+                <TendersBrowseSidebar
+                  categories={categories}
+                  cities={browseCities}
+                  initial={{
+                    q: browseState.q,
+                    catalogPicks: browseState.catalogPicks,
+                    city: browseState.city,
+                    sort: browseState.sort,
+                    budgetMin: browseState.budgetMin,
+                    budgetMax: browseState.budgetMax,
+                    deadline: browseState.deadline,
+                    blind: browseState.blind,
+                  }}
+                />
+              </aside>
+              <div className="min-w-0 space-y-4">
               {publicTotal > 0 ? (
-                <p className="text-center text-sm font-semibold text-slate-600">
+                <p className="text-sm font-semibold text-slate-600">
                   Գտնվել է {formatNumber(publicTotal)} մրցույթ
                   {publicTotalPages > 1
                     ? ` · Մեկ էջում՝ մինչև ${PAGE_SIZE} մրցույթ`
@@ -507,13 +646,14 @@ export default async function TendersPage({
                 <>
                   <div className="space-y-3">
                     {publicTenders.map((tender) => (
-                      <TenderRow
+                      <TenderCard
                         key={tender.id}
                         href={ROUTES.tenderDetail(tender.id)}
                         status={tender.status}
                         category={tender.category}
                         service={tender.service}
                         title={tender.title}
+                        description={tender.description}
                         city={tender.city}
                         budgetMin={tender.budgetMin}
                         budgetMax={tender.budgetMax}
@@ -521,6 +661,7 @@ export default async function TendersPage({
                         createdAt={tender.createdAt}
                         thumbUrl={tender.images[0]?.url ?? null}
                         endsAt={tender.endsAt}
+                        isBlindBidding={tender.isBlindBidding}
                       />
                     ))}
                   </div>
@@ -534,11 +675,14 @@ export default async function TendersPage({
                         <Link
                           href={buildTendersBrowseHref({
                             q: browseState.q,
-                            category: browseState.category,
-                            service: browseState.service,
+                            catalogPicks: browseState.catalogPicks,
                             city: browseState.city,
                             sort: browseState.sort,
                             page: browseState.page - 1,
+                            budgetMin: browseState.budgetMin,
+                            budgetMax: browseState.budgetMax,
+                            deadline: browseState.deadline,
+                            blind: browseState.blind,
                           })}
                           className="rounded-full bg-white px-4 py-2 text-sm font-black text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-50"
                         >
@@ -556,11 +700,14 @@ export default async function TendersPage({
                         <Link
                           href={buildTendersBrowseHref({
                             q: browseState.q,
-                            category: browseState.category,
-                            service: browseState.service,
+                            catalogPicks: browseState.catalogPicks,
                             city: browseState.city,
                             sort: browseState.sort,
                             page: browseState.page + 1,
+                            budgetMin: browseState.budgetMin,
+                            budgetMax: browseState.budgetMax,
+                            deadline: browseState.deadline,
+                            blind: browseState.blind,
                           })}
                           className="rounded-full bg-white px-4 py-2 text-sm font-black text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-50"
                         >
@@ -575,7 +722,8 @@ export default async function TendersPage({
                   ) : null}
                 </>
               )}
-            </section>
+              </div>
+            </div>
           ) : null}
 
           {view.type === "my" ? (
@@ -606,13 +754,14 @@ export default async function TendersPage({
                 />
               ) : (
                 myTenders.map((tender) => (
-                  <TenderRow
+                  <TenderCard
                     key={tender.id}
                     href={ROUTES.tenderDetail(tender.id)}
                     status={tender.status}
                     category={tender.category}
                     service={tender.service}
                     title={tender.title}
+                    description={tender.description}
                     city={tender.city}
                     budgetMin={tender.budgetMin}
                     budgetMax={tender.budgetMax}
@@ -621,6 +770,7 @@ export default async function TendersPage({
                     metaLabel="Թարմացվել է"
                     thumbUrl={tender.images[0]?.url ?? null}
                     endsAt={tender.endsAt}
+                    isBlindBidding={tender.isBlindBidding}
                   />
                 ))
               )}
@@ -741,12 +891,52 @@ function EmptyState({
   );
 }
 
-function TenderRow({
+function formatDeadlineCountdown(endsAt: Date): {
+  label: string;
+  className: string;
+} {
+  const now = new Date();
+  const diffMs = endsAt.getTime() - now.getTime();
+
+  if (diffMs <= 0) {
+    return {
+      label: "Ավարտված",
+      className: "bg-slate-200 text-slate-700",
+    };
+  }
+
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMinutes / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  let label: string;
+  if (diffDays >= 2) {
+    label = `Մնաց ${diffDays} օր`;
+  } else if (diffHours >= 1) {
+    label = `Մնաց ${diffHours} ժ.`;
+  } else {
+    label = `Մնաց ${Math.max(diffMinutes, 1)} րոպե`;
+  }
+
+  let className: string;
+  if (diffHours < 24) {
+    className = "bg-rose-100 text-rose-800 ring-1 ring-rose-200";
+  } else if (diffDays < 7) {
+    className = "bg-amber-100 text-amber-900 ring-1 ring-amber-200";
+  } else {
+    className = "bg-slate-100 text-slate-700 ring-1 ring-slate-200";
+  }
+
+  return { label, className };
+}
+
+function TenderCard({
   href,
   status,
   category,
   service,
   title,
+  description,
   city,
   budgetMin,
   budgetMax,
@@ -755,12 +945,14 @@ function TenderRow({
   metaLabel = "Ստեղծվել է",
   thumbUrl,
   endsAt,
+  isBlindBidding,
 }: {
   href: string;
   status: TenderStatus;
   category: string;
   service: string;
   title: string;
+  description?: string | null;
   city: string | null;
   budgetMin: Tender["budgetMin"];
   budgetMax: Tender["budgetMax"];
@@ -769,85 +961,124 @@ function TenderRow({
   metaLabel?: string;
   thumbUrl: string | null;
   endsAt: Date | null;
+  isBlindBidding?: boolean;
 }) {
   const budgetText =
     budgetMin || budgetMax
       ? `${formatAmd(Number(budgetMin ?? 0))} – ${formatAmd(
           Number(budgetMax ?? budgetMin ?? 0),
         )}`
-      : "—";
+      : "Չի նշված";
+
+  const countdown = endsAt ? formatDeadlineCountdown(endsAt) : null;
 
   return (
-    <article className="rounded-4xl bg-white shadow-sm ring-1 ring-slate-200 transition hover:shadow-md">
-      <Link
-        href={href}
-        className="flex flex-col gap-3 p-5 sm:p-6 lg:flex-row lg:items-center lg:gap-5"
-      >
-        {thumbUrl ? (
-          <div className="shrink-0 overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200 sm:size-28">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={thumbUrl}
-              alt=""
-              className="size-full object-cover lg:size-28"
-            />
-          </div>
-        ) : null}
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className={`rounded-full px-3 py-1 text-xs font-black ${TENDER_STATUS_BADGE[status]}`}
-            >
-              {TENDER_STATUS_LABEL[status]}
-            </span>
-            <span className="text-xs font-black uppercase tracking-[0.18em] text-amber-700">
-              {category}
-            </span>
-            <span className="text-xs font-semibold text-slate-500">
-              · {service}
-            </span>
-          </div>
-          <h3 className="mt-2 line-clamp-2 text-lg font-black text-slate-900">
-            {title}
-          </h3>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500">
-            {city ? (
-              <span className="inline-flex items-center gap-1">
-                <MapPin className="size-3 shrink-0" /> {city}
+    <article className="group relative overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-xl hover:ring-slate-300">
+      <Link href={href} className="flex flex-col" aria-label={title}>
+        <div className="flex flex-col gap-5 p-5 sm:flex-row sm:gap-6 sm:p-6">
+          <div className="relative shrink-0 overflow-hidden rounded-2xl bg-linear-to-br from-slate-100 to-slate-200 ring-1 ring-slate-200 sm:w-44 sm:self-start md:w-48">
+            {thumbUrl ? (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={thumbUrl}
+                  alt=""
+                  className="aspect-4/3 w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+                />
+              </>
+            ) : (
+              <div className="grid aspect-4/3 w-full place-items-center text-slate-400">
+                <BriefcaseBusiness className="size-10" />
+              </div>
+            )}
+            {countdown ? (
+              <span
+                className={`absolute left-3 top-3 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-black backdrop-blur-sm ${countdown.className}`}
+              >
+                <CalendarClock className="size-3 shrink-0" />
+                {countdown.label}
               </span>
             ) : null}
-            {endsAt ? (
-              <span>
-                Վերջնաժամկետ՝ {formatDateTime(endsAt)}
+          </div>
+
+          <div className="flex min-w-0 flex-1 flex-col gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span
+                className={`rounded-full px-2.5 py-0.5 text-[11px] font-black ${TENDER_STATUS_BADGE[status]}`}
+              >
+                {TENDER_STATUS_LABEL[status]}
               </span>
+              {isBlindBidding ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-slate-950 px-2.5 py-0.5 text-[11px] font-black text-amber-300">
+                  <EyeOff className="size-3 shrink-0" />
+                  Փակ առաջարկներ
+                </span>
+              ) : null}
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-black text-amber-800 ring-1 ring-amber-200">
+                <Layers className="size-3 shrink-0" />
+                {category}
+              </span>
+              <span className="text-[11px] font-bold text-slate-500">
+                · {service}
+              </span>
+            </div>
+
+            <h3 className="line-clamp-2 text-lg font-black leading-tight text-slate-950 transition group-hover:text-amber-900 sm:text-xl">
+              {title}
+            </h3>
+
+            {description ? (
+              <p className="line-clamp-2 text-sm font-medium leading-6 text-slate-600">
+                {description}
+              </p>
             ) : null}
+
+            <div className="mt-auto flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-slate-500">
+              {city ? (
+                <span className="inline-flex items-center gap-1.5">
+                  <MapPin className="size-3.5 shrink-0 text-amber-700" />
+                  {city}
+                </span>
+              ) : null}
+              <span className="inline-flex items-center gap-1.5">
+                <CalendarClock className="size-3.5 shrink-0 text-slate-400" />
+                {metaLabel}՝ {formatDateTime(createdAt)}
+              </span>
+            </div>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-3 border-t border-slate-100 pt-3 lg:flex-nowrap lg:border-0 lg:pt-0">
-          <div className="rounded-2xl bg-slate-50 px-3 py-2 text-center ring-1 ring-slate-200">
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">
-              Բյուջե
-            </p>
-            <p className="mt-0.5 text-sm font-black text-slate-900">
-              {budgetText}
-            </p>
+
+        <div className="grid grid-cols-1 items-stretch gap-3 border-t border-slate-100 bg-slate-50/60 p-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:gap-4 sm:p-5">
+          <div className="flex items-center gap-3">
+            <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-white text-amber-700 ring-1 ring-slate-200">
+              <Wallet className="size-4" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">
+                Բյուջե
+              </p>
+              <p className="truncate text-sm font-black text-slate-900">
+                {budgetText}
+              </p>
+            </div>
           </div>
-          <div className="rounded-2xl bg-slate-50 px-3 py-2 text-center ring-1 ring-slate-200">
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">
-              Առաջարկներ
-            </p>
-            <p className="mt-0.5 text-sm font-black text-slate-900">{bidCount}</p>
+
+          <div className="flex items-center gap-3">
+            <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-white text-amber-700 ring-1 ring-slate-200">
+              <Users className="size-4" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">
+                Առաջարկներ
+              </p>
+              <p className="text-sm font-black text-slate-900">
+                {formatNumber(bidCount)}
+              </p>
+            </div>
           </div>
-          <div className="rounded-2xl bg-slate-50 px-3 py-2 text-center ring-1 ring-slate-200">
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">
-              {metaLabel}
-            </p>
-            <p className="mt-0.5 text-xs font-bold text-slate-700">
-              {formatDateTime(createdAt)}
-            </p>
-          </div>
-          <span className="inline-flex items-center gap-1 text-sm font-black text-amber-800 lg:ml-2">
-            Բացել
+
+          <span className="inline-flex items-center justify-center gap-2 self-center rounded-full bg-slate-950 px-5 py-2.5 text-xs font-black text-white shadow-sm transition group-hover:bg-amber-500 group-hover:text-slate-950 sm:px-6 sm:py-3 sm:text-sm">
+            Բացել մրցույթը
             <ChevronRight className="size-4" />
           </span>
         </div>

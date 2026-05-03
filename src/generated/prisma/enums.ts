@@ -78,3 +78,20 @@ export const UserRole = {
 } as const
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
+
+export const TenderComplaintStatus = {
+  PENDING: 'PENDING',
+  REVIEWED: 'REVIEWED',
+  DISMISSED: 'DISMISSED'
+} as const
+
+export type TenderComplaintStatus = (typeof TenderComplaintStatus)[keyof typeof TenderComplaintStatus]
+
+
+export const ReviewModerationStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED'
+} as const
+
+export type ReviewModerationStatus = (typeof ReviewModerationStatus)[keyof typeof ReviewModerationStatus]

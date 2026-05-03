@@ -3,14 +3,17 @@ import {
   BadgeCheck,
   BriefcaseBusiness,
   CreditCard,
+  Flag,
   Gavel,
   Sparkles,
+  Star,
   TrendingUp,
   Users,
   Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { getAdminModerationCounts } from "@/lib/admin-moderation-counts";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
 import { formatAmd, formatDateTime, formatNumber } from "@/lib/format";
@@ -52,6 +55,7 @@ export default async function AdminDashboardPage() {
     walletAggregate,
     recentVerifications,
     recentTenders,
+    moderationCounts,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.user.count({ where: { createdAt: { gte: last7Days } } }),
@@ -90,7 +94,53 @@ export default async function AdminDashboardPage() {
         client: { select: { name: true, email: true } },
       },
     }),
+    getAdminModerationCounts(),
   ]);
+
+  const moderationQueue = [
+    {
+      label: "Վերիֆիկացիա",
+      count: moderationCounts.verifications,
+      href: ROUTES.admin.verifications,
+      icon: BadgeCheck,
+      tone: "amber" as const,
+      hint: "Հաստատման հայտեր",
+    },
+    {
+      label: "Մրցույթներ",
+      count: moderationCounts.tenders,
+      href: ROUTES.admin.tenders,
+      icon: BriefcaseBusiness,
+      tone: "amber" as const,
+      hint: "Նոր հրապարակումներ",
+    },
+    {
+      label: "Առաջարկներ",
+      count: moderationCounts.bids,
+      href: ROUTES.admin.bids,
+      icon: Gavel,
+      tone: "amber" as const,
+      hint: "Մինչ պատվիրատուն տեսնի",
+    },
+    {
+      label: "Գնահատականներ",
+      count: moderationCounts.reviews,
+      href: ROUTES.admin.reviews,
+      icon: Star,
+      tone: "amber" as const,
+      hint: "Մինչ հանրությանը երևի",
+    },
+    {
+      label: "Բողոքներ",
+      count: moderationCounts.tenderComplaints,
+      href: ROUTES.admin.tenderComplaints,
+      icon: Flag,
+      tone: "rose" as const,
+      hint: "Մրցույթների մասին հաղորդումներ",
+    },
+  ];
+
+  const totalQueue = moderationQueue.reduce((s, q) => s + q.count, 0);
 
   const stats = [
     {
@@ -174,6 +224,81 @@ export default async function AdminDashboardPage() {
           </Link>
         }
       />
+
+      <section
+        className={`rounded-4xl p-5 shadow-sm ring-1 sm:p-6 ${
+          totalQueue > 0
+            ? "bg-amber-50 ring-amber-200"
+            : "bg-emerald-50 ring-emerald-200"
+        }`}
+      >
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p
+              className={`text-[10px] font-black uppercase tracking-[0.18em] ${
+                totalQueue > 0 ? "text-amber-800" : "text-emerald-800"
+              }`}
+            >
+              Մոդերացիայի հերթ
+            </p>
+            <h2
+              className={`mt-1 text-xl font-black ${
+                totalQueue > 0 ? "text-amber-950" : "text-emerald-900"
+              }`}
+            >
+              {totalQueue > 0
+                ? `${formatNumber(totalQueue)} տարր սպասում է ստուգման`
+                : "Չկան անավարտ ստուգումներ"}
+            </h2>
+            <p className="mt-1 text-xs font-semibold text-slate-600">
+              Նոր մրցույթները, առաջարկները և բողոքները նախ անցնում են ձեր
+              ստուգման միջով, որպեսզի օգտատերերը չտեսնեն կոնտակտներ կամ
+              կանոնների խախտում։
+            </p>
+          </div>
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {moderationQueue.map((queue) => {
+            const Icon = queue.icon;
+            const dim = queue.count === 0;
+            return (
+              <Link
+                key={queue.label}
+                href={queue.href}
+                className={`group flex items-center gap-3 rounded-3xl bg-white p-3 shadow-sm ring-1 transition hover:-translate-y-0.5 hover:shadow-md ${
+                  dim ? "ring-slate-200 opacity-80" : "ring-slate-200"
+                }`}
+              >
+                <span
+                  className={`grid size-11 shrink-0 place-items-center rounded-2xl ${
+                    queue.tone === "amber"
+                      ? dim
+                        ? "bg-amber-50 text-amber-600"
+                        : "bg-amber-100 text-amber-800"
+                      : dim
+                        ? "bg-rose-50 text-rose-500"
+                        : "bg-rose-100 text-rose-700"
+                  }`}
+                >
+                  <Icon className="size-5" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">
+                    {queue.label}
+                  </p>
+                  <p className="text-2xl font-black tabular-nums text-slate-900">
+                    {formatNumber(queue.count)}
+                  </p>
+                  <p className="text-[10px] font-semibold text-slate-500">
+                    {queue.hint}
+                  </p>
+                </div>
+                <ArrowUpRight className="size-4 shrink-0 text-slate-400 group-hover:text-slate-700" />
+              </Link>
+            );
+          })}
+        </div>
+      </section>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat) => {

@@ -57,6 +57,17 @@ enum UserRole {
   ADMIN
 }
 
+enum TenderComplaintStatus {
+  PENDING
+  REVIEWED
+  DISMISSED
+}
+
+enum ReviewModerationStatus {
+  PENDING
+  APPROVED
+}
+
 model User {
   id                String              @id @default(cuid())
   name              String?
@@ -85,6 +96,7 @@ model User {
   reviewsReceived   Review[]            @relation("ReviewsReceived")
   verificationRequests VerificationRequest[]
   interests         UserInterest[]
+  tenderComplaintsFiled TenderComplaint[] @relation("TenderComplaintReporter")
 
   @@index([email])
   @@index([phone])
@@ -228,6 +240,7 @@ model Tender {
   documents      TenderDocument[]
   reviews        Review[]
   selectedServices TenderSelectedService[]
+  complaints       TenderComplaint[]
 
   @@index([clientId])
   @@index([status, endsAt])
@@ -272,17 +285,38 @@ model TenderSelectedService {
   @@index([tenderId])
 }
 
+model TenderComplaint {
+  id         String                 @id @default(cuid())
+  tenderId   String
+  reporterId String
+  reasonId   String                 @db.VarChar(64)
+  details    String                 @db.Text
+  status     TenderComplaintStatus  @default(PENDING)
+  moderatorNote String?            @db.Text
+  reviewedAt DateTime?
+  createdAt  DateTime               @default(now())
+  updatedAt  DateTime               @updatedAt
+  tender     Tender                 @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+  reporter   User                   @relation("TenderComplaintReporter", fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([tenderId, createdAt])
+  @@index([status, createdAt])
+  @@index([reporterId])
+}
+
 model Bid {
-  id             String        @id @default(cuid())
-  tenderId       String
-  providerId     String
-  price          Decimal       @db.Decimal(12, 2)
-  timelineDays   Int?
-  coverLetter    String        @db.Text
-  status         BidStatus     @default(PENDING)
-  bidFeeAmount   Decimal       @default(1000) @db.Decimal(12, 2)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id                     String        @id @default(cuid())
+  tenderId               String
+  providerId             String
+  price                  Decimal       @db.Decimal(12, 2)
+  timelineDays           Int?
+  coverLetter            String        @db.Text
+  status                 BidStatus     @default(PENDING)
+  bidFeeAmount           Decimal       @default(1000) @db.Decimal(12, 2)
+  /** Պատվիրատուն կիսվել է իր կապով այս առաջարկի հետ (դիմողը տեսնում է հեռախոսը)։ */
+  ownerContactSharedAt   DateTime?
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
   tender         Tender        @relation("TenderBids", fields: [tenderId], references: [id], onDelete: Cascade)
   provider       User          @relation("ProviderBids", fields: [providerId], references: [id], onDelete: Cascade)
   awardedTender  Tender?       @relation("AwardedBid")
@@ -331,18 +365,22 @@ model Subscription {
 }
 
 model Review {
-  id         String   @id @default(cuid())
-  tenderId   String
-  reviewerId String
-  revieweeId String
-  rating     Int
-  comment    String?  @db.Text
-  createdAt  DateTime @default(now())
-  tender     Tender   @relation(fields: [tenderId], references: [id], onDelete: Cascade)
-  reviewer   User     @relation("ReviewsGiven", fields: [reviewerId], references: [id], onDelete: Cascade)
-  reviewee   User     @relation("ReviewsReceived", fields: [revieweeId], references: [id], onDelete: Cascade)
+  id               String                 @id @default(cuid())
+  tenderId         String
+  reviewerId       String
+  revieweeId       String
+  rating           Int
+  comment          String?                @db.Text
+  /** Նոր գնահատականները սկսում են PENDING; հանրությանը երևում են միայն APPROVED։ */
+  moderationStatus ReviewModerationStatus   @default(APPROVED)
+  moderatedAt      DateTime?
+  createdAt        DateTime               @default(now())
+  tender           Tender                 @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+  reviewer         User                   @relation("ReviewsGiven", fields: [reviewerId], references: [id], onDelete: Cascade)
+  reviewee         User                   @relation("ReviewsReceived", fields: [revieweeId], references: [id], onDelete: Cascade)
 
   @@unique([tenderId, reviewerId, revieweeId])
   @@index([revieweeId])
   @@index([reviewerId])
+  @@index([moderationStatus])
 }

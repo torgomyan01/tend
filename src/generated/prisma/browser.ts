@@ -83,6 +83,11 @@ export type TenderDocument = Prisma.TenderDocumentModel
  */
 export type TenderSelectedService = Prisma.TenderSelectedServiceModel
 /**
+ * Model TenderComplaint
+ * 
+ */
+export type TenderComplaint = Prisma.TenderComplaintModel
+/**
  * Model Bid
  * 
  */
