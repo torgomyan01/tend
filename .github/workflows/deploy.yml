@@ -1,0 +1,30 @@
+name: Deploy VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-tend-am
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH deploy
+        uses: appleboy/ssh-action@v1.2.4
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            DP="${{ secrets.DEPLOY_PATH }}"
+            DB="${{ secrets.DEPLOY_BRANCH }}"
+            export DEPLOY_PATH="${DP:-/var/www/tend}"
+            export DEPLOY_BRANCH="${DB:-main}"
+            cd "$DEPLOY_PATH"
+            bash scripts/deploy.sh
