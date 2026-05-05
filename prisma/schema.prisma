@@ -57,6 +57,20 @@ enum UserRole {
   ADMIN
 }
 
+enum AccountType {
+  INDIVIDUAL
+  LEGAL_ENTITY
+}
+
+enum LegalForm {
+  SP
+  LLC
+  CJSC
+  JSC
+  NGO
+  OTHER
+}
+
 enum TenderComplaintStatus {
   PENDING
   REVIEWED
@@ -84,6 +98,14 @@ model User {
   walletBalance     Decimal             @default(0) @db.Decimal(12, 2)
   isVerified        Boolean             @default(false)
   isBlocked         Boolean             @default(false)
+  bio               String?             @db.Text
+  accountType       AccountType         @default(INDIVIDUAL)
+  companyName       String?             @db.VarChar(200)
+  legalForm         LegalForm?
+  taxId             String?             @db.VarChar(20)
+  legalAddress      String?             @db.VarChar(500)
+  directorName      String?             @db.VarChar(200)
+  companyPhone      String?             @db.VarChar(32)
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
   accounts          Account[]
@@ -97,11 +119,66 @@ model User {
   verificationRequests VerificationRequest[]
   interests         UserInterest[]
   tenderComplaintsFiled TenderComplaint[] @relation("TenderComplaintReporter")
+  credentials       UserCredential[]
+  portfolioItems    UserPortfolioItem[]
 
   @@index([email])
   @@index([phone])
   @@index([telegramLinkToken])
   @@map("user")
+}
+
+enum UserCredentialKind {
+  DIPLOMA
+  LICENSE
+  CERTIFICATE
+  OTHER
+}
+
+model UserCredential {
+  id               String             @id @default(cuid())
+  userId           String
+  kind             UserCredentialKind @default(CERTIFICATE)
+  title            String             @db.VarChar(200)
+  issuer           String?            @db.VarChar(200)
+  description      String?            @db.Text
+  fileUrl          String             @db.VarChar(500)
+  originalFileName String             @db.VarChar(255)
+  mimeType         String?            @db.VarChar(120)
+  sortOrder        Int                @default(0)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, sortOrder])
+  @@map("usercredential")
+}
+
+model UserPortfolioItem {
+  id          String                @id @default(cuid())
+  userId      String
+  title       String                @db.VarChar(200)
+  description String?               @db.Text
+  sortOrder   Int                   @default(0)
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+  user        User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  images      UserPortfolioImage[]
+
+  @@index([userId, sortOrder])
+  @@map("userportfolioitem")
+}
+
+model UserPortfolioImage {
+  id        String            @id @default(cuid())
+  itemId    String
+  url       String            @db.VarChar(500)
+  sortOrder Int               @default(0)
+  createdAt DateTime          @default(now())
+  item      UserPortfolioItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([itemId, sortOrder])
+  @@map("userportfolioimage")
 }
 
 model UserInterest {

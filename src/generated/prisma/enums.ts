@@ -80,6 +80,26 @@ export const UserRole = {
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
+export const AccountType = {
+  INDIVIDUAL: 'INDIVIDUAL',
+  LEGAL_ENTITY: 'LEGAL_ENTITY'
+} as const
+
+export type AccountType = (typeof AccountType)[keyof typeof AccountType]
+
+
+export const LegalForm = {
+  SP: 'SP',
+  LLC: 'LLC',
+  CJSC: 'CJSC',
+  JSC: 'JSC',
+  NGO: 'NGO',
+  OTHER: 'OTHER'
+} as const
+
+export type LegalForm = (typeof LegalForm)[keyof typeof LegalForm]
+
+
 export const TenderComplaintStatus = {
   PENDING: 'PENDING',
   REVIEWED: 'REVIEWED',
@@ -95,3 +115,13 @@ export const ReviewModerationStatus = {
 } as const
 
 export type ReviewModerationStatus = (typeof ReviewModerationStatus)[keyof typeof ReviewModerationStatus]
+
+
+export const UserCredentialKind = {
+  DIPLOMA: 'DIPLOMA',
+  LICENSE: 'LICENSE',
+  CERTIFICATE: 'CERTIFICATE',
+  OTHER: 'OTHER'
+} as const
+
+export type UserCredentialKind = (typeof UserCredentialKind)[keyof typeof UserCredentialKind]

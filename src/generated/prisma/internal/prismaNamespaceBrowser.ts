@@ -52,6 +52,9 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  UserCredential: 'UserCredential',
+  UserPortfolioItem: 'UserPortfolioItem',
+  UserPortfolioImage: 'UserPortfolioImage',
   UserInterest: 'UserInterest',
   ServiceCategory: 'ServiceCategory',
   Service: 'Service',
@@ -103,11 +106,61 @@ export const UserScalarFieldEnum = {
   walletBalance: 'walletBalance',
   isVerified: 'isVerified',
   isBlocked: 'isBlocked',
+  bio: 'bio',
+  accountType: 'accountType',
+  companyName: 'companyName',
+  legalForm: 'legalForm',
+  taxId: 'taxId',
+  legalAddress: 'legalAddress',
+  directorName: 'directorName',
+  companyPhone: 'companyPhone',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const UserCredentialScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  kind: 'kind',
+  title: 'title',
+  issuer: 'issuer',
+  description: 'description',
+  fileUrl: 'fileUrl',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserCredentialScalarFieldEnum = (typeof UserCredentialScalarFieldEnum)[keyof typeof UserCredentialScalarFieldEnum]
+
+
+export const UserPortfolioItemScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  description: 'description',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserPortfolioItemScalarFieldEnum = (typeof UserPortfolioItemScalarFieldEnum)[keyof typeof UserPortfolioItemScalarFieldEnum]
+
+
+export const UserPortfolioImageScalarFieldEnum = {
+  id: 'id',
+  itemId: 'itemId',
+  url: 'url',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type UserPortfolioImageScalarFieldEnum = (typeof UserPortfolioImageScalarFieldEnum)[keyof typeof UserPortfolioImageScalarFieldEnum]
 
 
 export const UserInterestScalarFieldEnum = {
@@ -376,10 +429,49 @@ export const UserOrderByRelevanceFieldEnum = {
   passwordHash: 'passwordHash',
   image: 'image',
   telegramChatId: 'telegramChatId',
-  telegramLinkToken: 'telegramLinkToken'
+  telegramLinkToken: 'telegramLinkToken',
+  bio: 'bio',
+  companyName: 'companyName',
+  taxId: 'taxId',
+  legalAddress: 'legalAddress',
+  directorName: 'directorName',
+  companyPhone: 'companyPhone'
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+export const UserCredentialOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  issuer: 'issuer',
+  description: 'description',
+  fileUrl: 'fileUrl',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType'
+} as const
+
+export type UserCredentialOrderByRelevanceFieldEnum = (typeof UserCredentialOrderByRelevanceFieldEnum)[keyof typeof UserCredentialOrderByRelevanceFieldEnum]
+
+
+export const UserPortfolioItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  description: 'description'
+} as const
+
+export type UserPortfolioItemOrderByRelevanceFieldEnum = (typeof UserPortfolioItemOrderByRelevanceFieldEnum)[keyof typeof UserPortfolioItemOrderByRelevanceFieldEnum]
+
+
+export const UserPortfolioImageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  itemId: 'itemId',
+  url: 'url'
+} as const
+
+export type UserPortfolioImageOrderByRelevanceFieldEnum = (typeof UserPortfolioImageOrderByRelevanceFieldEnum)[keyof typeof UserPortfolioImageOrderByRelevanceFieldEnum]
 
 
 export const UserInterestOrderByRelevanceFieldEnum = {

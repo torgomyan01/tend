@@ -50,6 +50,14 @@ export type UserMinAggregateOutputType = {
   walletBalance: runtime.Decimal | null
   isVerified: boolean | null
   isBlocked: boolean | null
+  bio: string | null
+  accountType: $Enums.AccountType | null
+  companyName: string | null
+  legalForm: $Enums.LegalForm | null
+  taxId: string | null
+  legalAddress: string | null
+  directorName: string | null
+  companyPhone: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -70,6 +78,14 @@ export type UserMaxAggregateOutputType = {
   walletBalance: runtime.Decimal | null
   isVerified: boolean | null
   isBlocked: boolean | null
+  bio: string | null
+  accountType: $Enums.AccountType | null
+  companyName: string | null
+  legalForm: $Enums.LegalForm | null
+  taxId: string | null
+  legalAddress: string | null
+  directorName: string | null
+  companyPhone: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -90,6 +106,14 @@ export type UserCountAggregateOutputType = {
   walletBalance: number
   isVerified: number
   isBlocked: number
+  bio: number
+  accountType: number
+  companyName: number
+  legalForm: number
+  taxId: number
+  legalAddress: number
+  directorName: number
+  companyPhone: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -120,6 +144,14 @@ export type UserMinAggregateInputType = {
   walletBalance?: true
   isVerified?: true
   isBlocked?: true
+  bio?: true
+  accountType?: true
+  companyName?: true
+  legalForm?: true
+  taxId?: true
+  legalAddress?: true
+  directorName?: true
+  companyPhone?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -140,6 +172,14 @@ export type UserMaxAggregateInputType = {
   walletBalance?: true
   isVerified?: true
   isBlocked?: true
+  bio?: true
+  accountType?: true
+  companyName?: true
+  legalForm?: true
+  taxId?: true
+  legalAddress?: true
+  directorName?: true
+  companyPhone?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -160,6 +200,14 @@ export type UserCountAggregateInputType = {
   walletBalance?: true
   isVerified?: true
   isBlocked?: true
+  bio?: true
+  accountType?: true
+  companyName?: true
+  legalForm?: true
+  taxId?: true
+  legalAddress?: true
+  directorName?: true
+  companyPhone?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -267,6 +315,14 @@ export type UserGroupByOutputType = {
   walletBalance: runtime.Decimal
   isVerified: boolean
   isBlocked: boolean
+  bio: string | null
+  accountType: $Enums.AccountType
+  companyName: string | null
+  legalForm: $Enums.LegalForm | null
+  taxId: string | null
+  legalAddress: string | null
+  directorName: string | null
+  companyPhone: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -310,6 +366,14 @@ export type UserWhereInput = {
   walletBalance?: Prisma.DecimalFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFilter<"User"> | boolean
   isBlocked?: Prisma.BoolFilter<"User"> | boolean
+  bio?: Prisma.StringNullableFilter<"User"> | string | null
+  accountType?: Prisma.EnumAccountTypeFilter<"User"> | $Enums.AccountType
+  companyName?: Prisma.StringNullableFilter<"User"> | string | null
+  legalForm?: Prisma.EnumLegalFormNullableFilter<"User"> | $Enums.LegalForm | null
+  taxId?: Prisma.StringNullableFilter<"User"> | string | null
+  legalAddress?: Prisma.StringNullableFilter<"User"> | string | null
+  directorName?: Prisma.StringNullableFilter<"User"> | string | null
+  companyPhone?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -323,6 +387,8 @@ export type UserWhereInput = {
   verificationRequests?: Prisma.VerificationRequestListRelationFilter
   interests?: Prisma.UserInterestListRelationFilter
   tenderComplaintsFiled?: Prisma.TenderComplaintListRelationFilter
+  credentials?: Prisma.UserCredentialListRelationFilter
+  portfolioItems?: Prisma.UserPortfolioItemListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -341,6 +407,14 @@ export type UserOrderByWithRelationInput = {
   walletBalance?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
+  bio?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountType?: Prisma.SortOrder
+  companyName?: Prisma.SortOrderInput | Prisma.SortOrder
+  legalForm?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxId?: Prisma.SortOrderInput | Prisma.SortOrder
+  legalAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  directorName?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   accounts?: Prisma.AccountOrderByRelationAggregateInput
@@ -354,6 +428,8 @@ export type UserOrderByWithRelationInput = {
   verificationRequests?: Prisma.VerificationRequestOrderByRelationAggregateInput
   interests?: Prisma.UserInterestOrderByRelationAggregateInput
   tenderComplaintsFiled?: Prisma.TenderComplaintOrderByRelationAggregateInput
+  credentials?: Prisma.UserCredentialOrderByRelationAggregateInput
+  portfolioItems?: Prisma.UserPortfolioItemOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -376,6 +452,14 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   walletBalance?: Prisma.DecimalFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFilter<"User"> | boolean
   isBlocked?: Prisma.BoolFilter<"User"> | boolean
+  bio?: Prisma.StringNullableFilter<"User"> | string | null
+  accountType?: Prisma.EnumAccountTypeFilter<"User"> | $Enums.AccountType
+  companyName?: Prisma.StringNullableFilter<"User"> | string | null
+  legalForm?: Prisma.EnumLegalFormNullableFilter<"User"> | $Enums.LegalForm | null
+  taxId?: Prisma.StringNullableFilter<"User"> | string | null
+  legalAddress?: Prisma.StringNullableFilter<"User"> | string | null
+  directorName?: Prisma.StringNullableFilter<"User"> | string | null
+  companyPhone?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -389,6 +473,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   verificationRequests?: Prisma.VerificationRequestListRelationFilter
   interests?: Prisma.UserInterestListRelationFilter
   tenderComplaintsFiled?: Prisma.TenderComplaintListRelationFilter
+  credentials?: Prisma.UserCredentialListRelationFilter
+  portfolioItems?: Prisma.UserPortfolioItemListRelationFilter
 }, "id" | "email" | "phone" | "telegramChatId" | "telegramLinkToken">
 
 export type UserOrderByWithAggregationInput = {
@@ -407,6 +493,14 @@ export type UserOrderByWithAggregationInput = {
   walletBalance?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
+  bio?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountType?: Prisma.SortOrder
+  companyName?: Prisma.SortOrderInput | Prisma.SortOrder
+  legalForm?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxId?: Prisma.SortOrderInput | Prisma.SortOrder
+  legalAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  directorName?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -435,6 +529,14 @@ export type UserScalarWhereWithAggregatesInput = {
   walletBalance?: Prisma.DecimalWithAggregatesFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   isBlocked?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  bio?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  accountType?: Prisma.EnumAccountTypeWithAggregatesFilter<"User"> | $Enums.AccountType
+  companyName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  legalForm?: Prisma.EnumLegalFormNullableWithAggregatesFilter<"User"> | $Enums.LegalForm | null
+  taxId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  legalAddress?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  directorName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  companyPhone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -455,6 +557,14 @@ export type UserCreateInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -468,6 +578,8 @@ export type UserCreateInput = {
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -486,6 +598,14 @@ export type UserUncheckedCreateInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -499,6 +619,8 @@ export type UserUncheckedCreateInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -517,6 +639,14 @@ export type UserUpdateInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -530,6 +660,8 @@ export type UserUpdateInput = {
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -548,6 +680,14 @@ export type UserUncheckedUpdateInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -561,6 +701,8 @@ export type UserUncheckedUpdateInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -579,6 +721,14 @@ export type UserCreateManyInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -599,6 +749,14 @@ export type UserUpdateManyMutationInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -619,6 +777,14 @@ export type UserUncheckedUpdateManyInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -645,6 +811,14 @@ export type UserCountOrderByAggregateInput = {
   walletBalance?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
+  bio?: Prisma.SortOrder
+  accountType?: Prisma.SortOrder
+  companyName?: Prisma.SortOrder
+  legalForm?: Prisma.SortOrder
+  taxId?: Prisma.SortOrder
+  legalAddress?: Prisma.SortOrder
+  directorName?: Prisma.SortOrder
+  companyPhone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -669,6 +843,14 @@ export type UserMaxOrderByAggregateInput = {
   walletBalance?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
+  bio?: Prisma.SortOrder
+  accountType?: Prisma.SortOrder
+  companyName?: Prisma.SortOrder
+  legalForm?: Prisma.SortOrder
+  taxId?: Prisma.SortOrder
+  legalAddress?: Prisma.SortOrder
+  directorName?: Prisma.SortOrder
+  companyPhone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -689,6 +871,14 @@ export type UserMinOrderByAggregateInput = {
   walletBalance?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
+  bio?: Prisma.SortOrder
+  accountType?: Prisma.SortOrder
+  companyName?: Prisma.SortOrder
+  legalForm?: Prisma.SortOrder
+  taxId?: Prisma.SortOrder
+  legalAddress?: Prisma.SortOrder
+  directorName?: Prisma.SortOrder
+  companyPhone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -730,8 +920,44 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
+export type EnumAccountTypeFieldUpdateOperationsInput = {
+  set?: $Enums.AccountType
+}
+
+export type NullableEnumLegalFormFieldUpdateOperationsInput = {
+  set?: $Enums.LegalForm | null
+}
+
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type UserCreateNestedOneWithoutCredentialsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCredentialsInput, Prisma.UserUncheckedCreateWithoutCredentialsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCredentialsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCredentialsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCredentialsInput, Prisma.UserUncheckedCreateWithoutCredentialsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCredentialsInput
+  upsert?: Prisma.UserUpsertWithoutCredentialsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCredentialsInput, Prisma.UserUpdateWithoutCredentialsInput>, Prisma.UserUncheckedUpdateWithoutCredentialsInput>
+}
+
+export type UserCreateNestedOneWithoutPortfolioItemsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPortfolioItemsInput, Prisma.UserUncheckedCreateWithoutPortfolioItemsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPortfolioItemsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPortfolioItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPortfolioItemsInput, Prisma.UserUncheckedCreateWithoutPortfolioItemsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPortfolioItemsInput
+  upsert?: Prisma.UserUpsertWithoutPortfolioItemsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPortfolioItemsInput, Prisma.UserUpdateWithoutPortfolioItemsInput>, Prisma.UserUncheckedUpdateWithoutPortfolioItemsInput>
 }
 
 export type UserCreateNestedOneWithoutInterestsInput = {
@@ -888,6 +1114,358 @@ export type UserUpdateOneRequiredWithoutReviewsReceivedNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewsReceivedInput, Prisma.UserUpdateWithoutReviewsReceivedInput>, Prisma.UserUncheckedUpdateWithoutReviewsReceivedInput>
 }
 
+export type UserCreateWithoutCredentialsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCredentialsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderUncheckedCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCredentialsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCredentialsInput, Prisma.UserUncheckedCreateWithoutCredentialsInput>
+}
+
+export type UserUpsertWithoutCredentialsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCredentialsInput, Prisma.UserUncheckedUpdateWithoutCredentialsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCredentialsInput, Prisma.UserUncheckedCreateWithoutCredentialsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCredentialsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCredentialsInput, Prisma.UserUncheckedUpdateWithoutCredentialsInput>
+}
+
+export type UserUpdateWithoutCredentialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCredentialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUncheckedUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPortfolioItemsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPortfolioItemsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderUncheckedCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPortfolioItemsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPortfolioItemsInput, Prisma.UserUncheckedCreateWithoutPortfolioItemsInput>
+}
+
+export type UserUpsertWithoutPortfolioItemsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPortfolioItemsInput, Prisma.UserUncheckedUpdateWithoutPortfolioItemsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPortfolioItemsInput, Prisma.UserUncheckedCreateWithoutPortfolioItemsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPortfolioItemsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPortfolioItemsInput, Prisma.UserUncheckedUpdateWithoutPortfolioItemsInput>
+}
+
+export type UserUpdateWithoutPortfolioItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPortfolioItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUncheckedUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutInterestsInput = {
   id?: string
   name?: string | null
@@ -904,6 +1482,14 @@ export type UserCreateWithoutInterestsInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -916,6 +1502,8 @@ export type UserCreateWithoutInterestsInput = {
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutInterestsInput = {
@@ -934,6 +1522,14 @@ export type UserUncheckedCreateWithoutInterestsInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -946,6 +1542,8 @@ export type UserUncheckedCreateWithoutInterestsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutInterestsInput = {
@@ -980,6 +1578,14 @@ export type UserUpdateWithoutInterestsInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -992,6 +1598,8 @@ export type UserUpdateWithoutInterestsInput = {
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInterestsInput = {
@@ -1010,6 +1618,14 @@ export type UserUncheckedUpdateWithoutInterestsInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1022,6 +1638,8 @@ export type UserUncheckedUpdateWithoutInterestsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVerificationRequestsInput = {
@@ -1040,6 +1658,14 @@ export type UserCreateWithoutVerificationRequestsInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1052,6 +1678,8 @@ export type UserCreateWithoutVerificationRequestsInput = {
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVerificationRequestsInput = {
@@ -1070,6 +1698,14 @@ export type UserUncheckedCreateWithoutVerificationRequestsInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1082,6 +1718,8 @@ export type UserUncheckedCreateWithoutVerificationRequestsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVerificationRequestsInput = {
@@ -1116,6 +1754,14 @@ export type UserUpdateWithoutVerificationRequestsInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1128,6 +1774,8 @@ export type UserUpdateWithoutVerificationRequestsInput = {
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVerificationRequestsInput = {
@@ -1146,6 +1794,14 @@ export type UserUncheckedUpdateWithoutVerificationRequestsInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1158,6 +1814,8 @@ export type UserUncheckedUpdateWithoutVerificationRequestsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -1176,6 +1834,14 @@ export type UserCreateWithoutAccountsInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1188,6 +1854,8 @@ export type UserCreateWithoutAccountsInput = {
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -1206,6 +1874,14 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1218,6 +1894,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -1252,6 +1930,14 @@ export type UserUpdateWithoutAccountsInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1264,6 +1950,8 @@ export type UserUpdateWithoutAccountsInput = {
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -1282,6 +1970,14 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1294,6 +1990,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -1312,6 +2010,14 @@ export type UserCreateWithoutSessionsInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1324,6 +2030,8 @@ export type UserCreateWithoutSessionsInput = {
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1342,6 +2050,14 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1354,6 +2070,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1388,6 +2106,14 @@ export type UserUpdateWithoutSessionsInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1400,6 +2126,8 @@ export type UserUpdateWithoutSessionsInput = {
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1418,6 +2146,14 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1430,6 +2166,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTendersInput = {
@@ -1448,6 +2186,14 @@ export type UserCreateWithoutTendersInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1460,6 +2206,8 @@ export type UserCreateWithoutTendersInput = {
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTendersInput = {
@@ -1478,6 +2226,14 @@ export type UserUncheckedCreateWithoutTendersInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1490,6 +2246,8 @@ export type UserUncheckedCreateWithoutTendersInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTendersInput = {
@@ -1524,6 +2282,14 @@ export type UserUpdateWithoutTendersInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1536,6 +2302,8 @@ export type UserUpdateWithoutTendersInput = {
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTendersInput = {
@@ -1554,6 +2322,14 @@ export type UserUncheckedUpdateWithoutTendersInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1566,6 +2342,8 @@ export type UserUncheckedUpdateWithoutTendersInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTenderComplaintsFiledInput = {
@@ -1584,6 +2362,14 @@ export type UserCreateWithoutTenderComplaintsFiledInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1596,6 +2382,8 @@ export type UserCreateWithoutTenderComplaintsFiledInput = {
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTenderComplaintsFiledInput = {
@@ -1614,6 +2402,14 @@ export type UserUncheckedCreateWithoutTenderComplaintsFiledInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1626,6 +2422,8 @@ export type UserUncheckedCreateWithoutTenderComplaintsFiledInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTenderComplaintsFiledInput = {
@@ -1660,6 +2458,14 @@ export type UserUpdateWithoutTenderComplaintsFiledInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1672,6 +2478,8 @@ export type UserUpdateWithoutTenderComplaintsFiledInput = {
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTenderComplaintsFiledInput = {
@@ -1690,6 +2498,14 @@ export type UserUncheckedUpdateWithoutTenderComplaintsFiledInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1702,6 +2518,8 @@ export type UserUncheckedUpdateWithoutTenderComplaintsFiledInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBidsInput = {
@@ -1720,6 +2538,14 @@ export type UserCreateWithoutBidsInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1732,6 +2558,8 @@ export type UserCreateWithoutBidsInput = {
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBidsInput = {
@@ -1750,6 +2578,14 @@ export type UserUncheckedCreateWithoutBidsInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1762,6 +2598,8 @@ export type UserUncheckedCreateWithoutBidsInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBidsInput = {
@@ -1796,6 +2634,14 @@ export type UserUpdateWithoutBidsInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1808,6 +2654,8 @@ export type UserUpdateWithoutBidsInput = {
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBidsInput = {
@@ -1826,6 +2674,14 @@ export type UserUncheckedUpdateWithoutBidsInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1838,6 +2694,8 @@ export type UserUncheckedUpdateWithoutBidsInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTransactionsInput = {
@@ -1856,6 +2714,14 @@ export type UserCreateWithoutTransactionsInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1868,6 +2734,8 @@ export type UserCreateWithoutTransactionsInput = {
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -1886,6 +2754,14 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1898,6 +2774,8 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -1932,6 +2810,14 @@ export type UserUpdateWithoutTransactionsInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1944,6 +2830,8 @@ export type UserUpdateWithoutTransactionsInput = {
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -1962,6 +2850,14 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1974,6 +2870,8 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSubscriptionsInput = {
@@ -1992,6 +2890,14 @@ export type UserCreateWithoutSubscriptionsInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -2004,6 +2910,8 @@ export type UserCreateWithoutSubscriptionsInput = {
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSubscriptionsInput = {
@@ -2022,6 +2930,14 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -2034,6 +2950,8 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSubscriptionsInput = {
@@ -2068,6 +2986,14 @@ export type UserUpdateWithoutSubscriptionsInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -2080,6 +3006,8 @@ export type UserUpdateWithoutSubscriptionsInput = {
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSubscriptionsInput = {
@@ -2098,6 +3026,14 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -2110,6 +3046,8 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReviewsGivenInput = {
@@ -2128,6 +3066,14 @@ export type UserCreateWithoutReviewsGivenInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -2140,6 +3086,8 @@ export type UserCreateWithoutReviewsGivenInput = {
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsGivenInput = {
@@ -2158,6 +3106,14 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -2170,6 +3126,8 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsGivenInput = {
@@ -2193,6 +3151,14 @@ export type UserCreateWithoutReviewsReceivedInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -2205,6 +3171,8 @@ export type UserCreateWithoutReviewsReceivedInput = {
   verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsReceivedInput = {
@@ -2223,6 +3191,14 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -2235,6 +3211,8 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsReceivedInput = {
@@ -2269,6 +3247,14 @@ export type UserUpdateWithoutReviewsGivenInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -2281,6 +3267,8 @@ export type UserUpdateWithoutReviewsGivenInput = {
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsGivenInput = {
@@ -2299,6 +3287,14 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -2311,6 +3307,8 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReviewsReceivedInput = {
@@ -2340,6 +3338,14 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -2352,6 +3358,8 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
@@ -2370,6 +3378,14 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -2382,6 +3398,8 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -2401,6 +3419,8 @@ export type UserCountOutputType = {
   verificationRequests: number
   interests: number
   tenderComplaintsFiled: number
+  credentials: number
+  portfolioItems: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2415,6 +3435,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   verificationRequests?: boolean | UserCountOutputTypeCountVerificationRequestsArgs
   interests?: boolean | UserCountOutputTypeCountInterestsArgs
   tenderComplaintsFiled?: boolean | UserCountOutputTypeCountTenderComplaintsFiledArgs
+  credentials?: boolean | UserCountOutputTypeCountCredentialsArgs
+  portfolioItems?: boolean | UserCountOutputTypeCountPortfolioItemsArgs
 }
 
 /**
@@ -2504,6 +3526,20 @@ export type UserCountOutputTypeCountTenderComplaintsFiledArgs<ExtArgs extends ru
   where?: Prisma.TenderComplaintWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCredentialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserCredentialWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPortfolioItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserPortfolioItemWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2521,6 +3557,14 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   walletBalance?: boolean
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: boolean
+  accountType?: boolean
+  companyName?: boolean
+  legalForm?: boolean
+  taxId?: boolean
+  legalAddress?: boolean
+  directorName?: boolean
+  companyPhone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -2534,6 +3578,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   verificationRequests?: boolean | Prisma.User$verificationRequestsArgs<ExtArgs>
   interests?: boolean | Prisma.User$interestsArgs<ExtArgs>
   tenderComplaintsFiled?: boolean | Prisma.User$tenderComplaintsFiledArgs<ExtArgs>
+  credentials?: boolean | Prisma.User$credentialsArgs<ExtArgs>
+  portfolioItems?: boolean | Prisma.User$portfolioItemsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2555,11 +3601,19 @@ export type UserSelectScalar = {
   walletBalance?: boolean
   isVerified?: boolean
   isBlocked?: boolean
+  bio?: boolean
+  accountType?: boolean
+  companyName?: boolean
+  legalForm?: boolean
+  taxId?: boolean
+  legalAddress?: boolean
+  directorName?: boolean
+  companyPhone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "phone" | "passwordHash" | "image" | "role" | "telegramChatId" | "telegramVerifiedAt" | "telegramLinkToken" | "telegramLinkTokenExpiresAt" | "walletBalance" | "isVerified" | "isBlocked" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "phone" | "passwordHash" | "image" | "role" | "telegramChatId" | "telegramVerifiedAt" | "telegramLinkToken" | "telegramLinkTokenExpiresAt" | "walletBalance" | "isVerified" | "isBlocked" | "bio" | "accountType" | "companyName" | "legalForm" | "taxId" | "legalAddress" | "directorName" | "companyPhone" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -2572,6 +3626,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   verificationRequests?: boolean | Prisma.User$verificationRequestsArgs<ExtArgs>
   interests?: boolean | Prisma.User$interestsArgs<ExtArgs>
   tenderComplaintsFiled?: boolean | Prisma.User$tenderComplaintsFiledArgs<ExtArgs>
+  credentials?: boolean | Prisma.User$credentialsArgs<ExtArgs>
+  portfolioItems?: boolean | Prisma.User$portfolioItemsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -2589,6 +3645,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     verificationRequests: Prisma.$VerificationRequestPayload<ExtArgs>[]
     interests: Prisma.$UserInterestPayload<ExtArgs>[]
     tenderComplaintsFiled: Prisma.$TenderComplaintPayload<ExtArgs>[]
+    credentials: Prisma.$UserCredentialPayload<ExtArgs>[]
+    portfolioItems: Prisma.$UserPortfolioItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2606,6 +3664,14 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     walletBalance: runtime.Decimal
     isVerified: boolean
     isBlocked: boolean
+    bio: string | null
+    accountType: $Enums.AccountType
+    companyName: string | null
+    legalForm: $Enums.LegalForm | null
+    taxId: string | null
+    legalAddress: string | null
+    directorName: string | null
+    companyPhone: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -2959,6 +4025,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   verificationRequests<T extends Prisma.User$verificationRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$verificationRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VerificationRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   interests<T extends Prisma.User$interestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$interestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserInterestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tenderComplaintsFiled<T extends Prisma.User$tenderComplaintsFiledArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tenderComplaintsFiledArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderComplaintPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  credentials<T extends Prisma.User$credentialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$credentialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserCredentialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  portfolioItems<T extends Prisma.User$portfolioItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$portfolioItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPortfolioItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3003,6 +4071,14 @@ export interface UserFieldRefs {
   readonly walletBalance: Prisma.FieldRef<"User", 'Decimal'>
   readonly isVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly isBlocked: Prisma.FieldRef<"User", 'Boolean'>
+  readonly bio: Prisma.FieldRef<"User", 'String'>
+  readonly accountType: Prisma.FieldRef<"User", 'AccountType'>
+  readonly companyName: Prisma.FieldRef<"User", 'String'>
+  readonly legalForm: Prisma.FieldRef<"User", 'LegalForm'>
+  readonly taxId: Prisma.FieldRef<"User", 'String'>
+  readonly legalAddress: Prisma.FieldRef<"User", 'String'>
+  readonly directorName: Prisma.FieldRef<"User", 'String'>
+  readonly companyPhone: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -3614,6 +4690,54 @@ export type User$tenderComplaintsFiledArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.TenderComplaintScalarFieldEnum | Prisma.TenderComplaintScalarFieldEnum[]
+}
+
+/**
+ * User.credentials
+ */
+export type User$credentialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserCredential
+   */
+  select?: Prisma.UserCredentialSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserCredential
+   */
+  omit?: Prisma.UserCredentialOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserCredentialInclude<ExtArgs> | null
+  where?: Prisma.UserCredentialWhereInput
+  orderBy?: Prisma.UserCredentialOrderByWithRelationInput | Prisma.UserCredentialOrderByWithRelationInput[]
+  cursor?: Prisma.UserCredentialWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserCredentialScalarFieldEnum | Prisma.UserCredentialScalarFieldEnum[]
+}
+
+/**
+ * User.portfolioItems
+ */
+export type User$portfolioItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserPortfolioItem
+   */
+  select?: Prisma.UserPortfolioItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserPortfolioItem
+   */
+  omit?: Prisma.UserPortfolioItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserPortfolioItemInclude<ExtArgs> | null
+  where?: Prisma.UserPortfolioItemWhereInput
+  orderBy?: Prisma.UserPortfolioItemOrderByWithRelationInput | Prisma.UserPortfolioItemOrderByWithRelationInput[]
+  cursor?: Prisma.UserPortfolioItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserPortfolioItemScalarFieldEnum | Prisma.UserPortfolioItemScalarFieldEnum[]
 }
 
 /**

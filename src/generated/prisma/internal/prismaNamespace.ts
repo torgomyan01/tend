@@ -385,6 +385,9 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
+  UserCredential: 'UserCredential',
+  UserPortfolioItem: 'UserPortfolioItem',
+  UserPortfolioImage: 'UserPortfolioImage',
   UserInterest: 'UserInterest',
   ServiceCategory: 'ServiceCategory',
   Service: 'Service',
@@ -417,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "transaction" | "subscription" | "review"
+    modelProps: "user" | "userCredential" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "transaction" | "subscription" | "review"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -484,6 +487,204 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    UserCredential: {
+      payload: Prisma.$UserCredentialPayload<ExtArgs>
+      fields: Prisma.UserCredentialFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserCredentialFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCredentialPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserCredentialFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCredentialPayload>
+        }
+        findFirst: {
+          args: Prisma.UserCredentialFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCredentialPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserCredentialFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCredentialPayload>
+        }
+        findMany: {
+          args: Prisma.UserCredentialFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCredentialPayload>[]
+        }
+        create: {
+          args: Prisma.UserCredentialCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCredentialPayload>
+        }
+        createMany: {
+          args: Prisma.UserCredentialCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.UserCredentialDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCredentialPayload>
+        }
+        update: {
+          args: Prisma.UserCredentialUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCredentialPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserCredentialDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserCredentialUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.UserCredentialUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCredentialPayload>
+        }
+        aggregate: {
+          args: Prisma.UserCredentialAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserCredential>
+        }
+        groupBy: {
+          args: Prisma.UserCredentialGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserCredentialGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserCredentialCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserCredentialCountAggregateOutputType> | number
+        }
+      }
+    }
+    UserPortfolioItem: {
+      payload: Prisma.$UserPortfolioItemPayload<ExtArgs>
+      fields: Prisma.UserPortfolioItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserPortfolioItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserPortfolioItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioItemPayload>
+        }
+        findFirst: {
+          args: Prisma.UserPortfolioItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserPortfolioItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioItemPayload>
+        }
+        findMany: {
+          args: Prisma.UserPortfolioItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioItemPayload>[]
+        }
+        create: {
+          args: Prisma.UserPortfolioItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioItemPayload>
+        }
+        createMany: {
+          args: Prisma.UserPortfolioItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.UserPortfolioItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioItemPayload>
+        }
+        update: {
+          args: Prisma.UserPortfolioItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserPortfolioItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserPortfolioItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.UserPortfolioItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioItemPayload>
+        }
+        aggregate: {
+          args: Prisma.UserPortfolioItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserPortfolioItem>
+        }
+        groupBy: {
+          args: Prisma.UserPortfolioItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserPortfolioItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserPortfolioItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserPortfolioItemCountAggregateOutputType> | number
+        }
+      }
+    }
+    UserPortfolioImage: {
+      payload: Prisma.$UserPortfolioImagePayload<ExtArgs>
+      fields: Prisma.UserPortfolioImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserPortfolioImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserPortfolioImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioImagePayload>
+        }
+        findFirst: {
+          args: Prisma.UserPortfolioImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserPortfolioImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioImagePayload>
+        }
+        findMany: {
+          args: Prisma.UserPortfolioImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioImagePayload>[]
+        }
+        create: {
+          args: Prisma.UserPortfolioImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioImagePayload>
+        }
+        createMany: {
+          args: Prisma.UserPortfolioImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.UserPortfolioImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioImagePayload>
+        }
+        update: {
+          args: Prisma.UserPortfolioImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.UserPortfolioImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserPortfolioImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.UserPortfolioImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPortfolioImagePayload>
+        }
+        aggregate: {
+          args: Prisma.UserPortfolioImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserPortfolioImage>
+        }
+        groupBy: {
+          args: Prisma.UserPortfolioImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserPortfolioImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserPortfolioImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserPortfolioImageCountAggregateOutputType> | number
         }
       }
     }
@@ -1664,11 +1865,61 @@ export const UserScalarFieldEnum = {
   walletBalance: 'walletBalance',
   isVerified: 'isVerified',
   isBlocked: 'isBlocked',
+  bio: 'bio',
+  accountType: 'accountType',
+  companyName: 'companyName',
+  legalForm: 'legalForm',
+  taxId: 'taxId',
+  legalAddress: 'legalAddress',
+  directorName: 'directorName',
+  companyPhone: 'companyPhone',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const UserCredentialScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  kind: 'kind',
+  title: 'title',
+  issuer: 'issuer',
+  description: 'description',
+  fileUrl: 'fileUrl',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserCredentialScalarFieldEnum = (typeof UserCredentialScalarFieldEnum)[keyof typeof UserCredentialScalarFieldEnum]
+
+
+export const UserPortfolioItemScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  description: 'description',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserPortfolioItemScalarFieldEnum = (typeof UserPortfolioItemScalarFieldEnum)[keyof typeof UserPortfolioItemScalarFieldEnum]
+
+
+export const UserPortfolioImageScalarFieldEnum = {
+  id: 'id',
+  itemId: 'itemId',
+  url: 'url',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type UserPortfolioImageScalarFieldEnum = (typeof UserPortfolioImageScalarFieldEnum)[keyof typeof UserPortfolioImageScalarFieldEnum]
 
 
 export const UserInterestScalarFieldEnum = {
@@ -1937,10 +2188,49 @@ export const UserOrderByRelevanceFieldEnum = {
   passwordHash: 'passwordHash',
   image: 'image',
   telegramChatId: 'telegramChatId',
-  telegramLinkToken: 'telegramLinkToken'
+  telegramLinkToken: 'telegramLinkToken',
+  bio: 'bio',
+  companyName: 'companyName',
+  taxId: 'taxId',
+  legalAddress: 'legalAddress',
+  directorName: 'directorName',
+  companyPhone: 'companyPhone'
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+export const UserCredentialOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  issuer: 'issuer',
+  description: 'description',
+  fileUrl: 'fileUrl',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType'
+} as const
+
+export type UserCredentialOrderByRelevanceFieldEnum = (typeof UserCredentialOrderByRelevanceFieldEnum)[keyof typeof UserCredentialOrderByRelevanceFieldEnum]
+
+
+export const UserPortfolioItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  description: 'description'
+} as const
+
+export type UserPortfolioItemOrderByRelevanceFieldEnum = (typeof UserPortfolioItemOrderByRelevanceFieldEnum)[keyof typeof UserPortfolioItemOrderByRelevanceFieldEnum]
+
+
+export const UserPortfolioImageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  itemId: 'itemId',
+  url: 'url'
+} as const
+
+export type UserPortfolioImageOrderByRelevanceFieldEnum = (typeof UserPortfolioImageOrderByRelevanceFieldEnum)[keyof typeof UserPortfolioImageOrderByRelevanceFieldEnum]
 
 
 export const UserInterestOrderByRelevanceFieldEnum = {
@@ -2165,6 +2455,27 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'AccountType'
+ */
+export type EnumAccountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccountType'>
+    
+
+
+/**
+ * Reference to a field of type 'LegalForm'
+ */
+export type EnumLegalFormFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LegalForm'>
+    
+
+
+/**
+ * Reference to a field of type 'UserCredentialKind'
+ */
+export type EnumUserCredentialKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserCredentialKind'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -2344,6 +2655,9 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
+  userCredential?: Prisma.UserCredentialOmit
+  userPortfolioItem?: Prisma.UserPortfolioItemOmit
+  userPortfolioImage?: Prisma.UserPortfolioImageOmit
   userInterest?: Prisma.UserInterestOmit
   serviceCategory?: Prisma.ServiceCategoryOmit
   service?: Prisma.ServiceOmit

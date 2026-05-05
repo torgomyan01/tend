@@ -22,7 +22,11 @@ async function removePublicFile(publicUrl: string | null | undefined) {
     return;
   }
   try {
-    const full = path.join(process.cwd(), "public", publicUrl.replace(/^\//, ""));
+    const full = path.join(
+      process.cwd(),
+      "uploads",
+      publicUrl.replace(/^\/uploads\//, ""),
+    );
     await unlink(full);
   } catch {
     /* ֆայլը արդեն հեռացված կամ չկա */
@@ -65,7 +69,7 @@ export async function POST(request: Request) {
 
   const ext = extFromMime(file.type);
   const fileName = `${me.id}-${randomUUID()}.${ext}`;
-  const dir = path.join(process.cwd(), "public", "uploads", "avatars");
+  const dir = path.join(process.cwd(), "uploads", "avatars");
   const rel = `/uploads/avatars/${fileName}`;
 
   await mkdir(dir, { recursive: true });

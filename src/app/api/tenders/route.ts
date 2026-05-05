@@ -149,7 +149,7 @@ async function saveTenderImage(file: File, tenderId: string) {
 
   const extension = sanitizeImageExtension(file.type);
   const fileName = `${tenderId}-${randomUUID()}.${extension}`;
-  const directory = path.join(process.cwd(), "public", "uploads", "tenders");
+  const directory = path.join(process.cwd(), "uploads", "tenders");
   const filePath = path.join(directory, fileName);
   const buffer = Buffer.from(await file.arrayBuffer());
 
@@ -175,7 +175,7 @@ async function saveTenderDocument(file: File, tenderId: string) {
   const safeBase = path.basename(file.name).replace(/[^\w.\u0580-\u0587\u0561-\u0587\s()-]/gi, "_");
   const truncatedName = safeBase.slice(0, 120);
   const fileName = `${tenderId}-doc-${randomUUID()}.${ext}`;
-  const directory = path.join(process.cwd(), "public", "uploads", "tender-documents");
+  const directory = path.join(process.cwd(), "uploads", "tender-documents");
   const filePath = path.join(directory, fileName);
   const buffer = Buffer.from(await file.arrayBuffer());
 

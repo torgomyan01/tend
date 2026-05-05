@@ -48,6 +48,8 @@ export async function GET(
           image: true,
           telegramVerifiedAt: true,
           isVerified: true,
+          accountType: true,
+          companyName: true,
         },
       },
     },

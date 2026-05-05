@@ -32,7 +32,14 @@ import {
   TENDER_STATUS_BADGE,
   TENDER_STATUS_LABEL,
 } from "@/lib/tender-status";
-import type { Prisma, Tender, TenderStatus } from "@/generated/prisma/client";
+import type {
+  AccountType,
+  Prisma,
+  Tender,
+  TenderStatus,
+} from "@/generated/prisma/client";
+import { AccountTypeBadge } from "@/components/account-type-badge";
+import type { AccountTypeValue } from "@/lib/account-type";
 
 export const dynamic = "force-dynamic";
 
@@ -328,6 +335,7 @@ export default async function TendersPage({
     createdAt: Date;
     images: Array<{ url: string }>;
     _count: { bids: number };
+    client: { accountType: AccountType; companyName: string | null };
   }> = [];
 
   let view:
@@ -389,6 +397,7 @@ export default async function TendersPage({
         include: {
           _count: { select: { bids: true } },
           images: { orderBy: { sortOrder: "asc" }, take: 1 },
+          client: { select: { accountType: true, companyName: true } },
         },
       }),
       prisma.tender.count({ where: publicWhereFinal }),
@@ -428,6 +437,7 @@ export default async function TendersPage({
           include: {
             _count: { select: { bids: true } },
             images: { orderBy: { sortOrder: "asc" }, take: 1 },
+            client: { select: { accountType: true, companyName: true } },
           },
         })
       : [],
@@ -452,6 +462,7 @@ export default async function TendersPage({
                 budgetMin: true,
                 budgetMax: true,
                 _count: { select: { bids: true } },
+                client: { select: { accountType: true, companyName: true } },
               },
             },
           },
@@ -662,6 +673,7 @@ export default async function TendersPage({
                         thumbUrl={tender.images[0]?.url ?? null}
                         endsAt={tender.endsAt}
                         isBlindBidding={tender.isBlindBidding}
+                        clientAccountType={tender.client.accountType}
                       />
                     ))}
                   </div>
@@ -771,6 +783,7 @@ export default async function TendersPage({
                     thumbUrl={tender.images[0]?.url ?? null}
                     endsAt={tender.endsAt}
                     isBlindBidding={tender.isBlindBidding}
+                    clientAccountType={tender.client.accountType}
                   />
                 ))
               )}
@@ -814,6 +827,11 @@ export default async function TendersPage({
                           >
                             Մրցույթ՝ {TENDER_STATUS_LABEL[t.status]}
                           </span>
+                          <AccountTypeBadge
+                            accountType={
+                              t.client.accountType as AccountTypeValue
+                            }
+                          />
                         </div>
                         <h3 className="mt-2 text-lg font-black text-slate-900">
                           <Link
@@ -946,6 +964,7 @@ function TenderCard({
   thumbUrl,
   endsAt,
   isBlindBidding,
+  clientAccountType,
 }: {
   href: string;
   status: TenderStatus;
@@ -962,6 +981,7 @@ function TenderCard({
   thumbUrl: string | null;
   endsAt: Date | null;
   isBlindBidding?: boolean;
+  clientAccountType?: AccountType | null;
 }) {
   const budgetText =
     budgetMin || budgetMax
@@ -1021,6 +1041,11 @@ function TenderCard({
               <span className="text-[11px] font-bold text-slate-500">
                 · {service}
               </span>
+              {clientAccountType ? (
+                <AccountTypeBadge
+                  accountType={clientAccountType as AccountTypeValue}
+                />
+              ) : null}
             </div>
 
             <h3 className="line-clamp-2 text-lg font-black leading-tight text-slate-950 transition group-hover:text-amber-900 sm:text-xl">

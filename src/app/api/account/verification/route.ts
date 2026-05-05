@@ -34,7 +34,6 @@ async function saveImage(file: File, prefix: string) {
   const fileName = `${prefix}-${randomUUID()}.${extension}`;
   const uploadsDirectory = path.join(
     process.cwd(),
-    "public",
     "uploads",
     "verifications",
   );

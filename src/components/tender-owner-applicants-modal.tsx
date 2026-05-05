@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
+import { AccountTypeBadge } from "@/components/account-type-badge";
+import type { AccountTypeValue } from "@/lib/account-type";
 import { formatAmd, formatDateTime } from "@/lib/format";
 import { BID_STATUS_BADGE, BID_STATUS_LABEL } from "@/lib/tender-status";
 import type { BidStatus, TenderStatus } from "@/generated/prisma/client";
@@ -31,6 +33,8 @@ type ApplicantBid = {
     image: string | null;
     telegramVerifiedAt: string | null;
     isVerified: boolean;
+    accountType: AccountTypeValue;
+    companyName: string | null;
   };
 };
 
@@ -287,13 +291,24 @@ export function TenderOwnerApplicantsModal({
                               >
                                 {BID_STATUS_LABEL[bid.status]}
                               </span>
+                              <AccountTypeBadge accountType={p.accountType} />
                               <span className="text-xs font-semibold text-slate-500">
                                 {formatDateTime(bid.createdAt)}
                               </span>
                             </div>
                             <p className="mt-1 text-base font-black text-slate-900 text-start">
-                              {p.name?.trim() || "Անուն չկա"}
+                              {p.accountType === "LEGAL_ENTITY" &&
+                              p.companyName?.trim()
+                                ? p.companyName.trim()
+                                : p.name?.trim() || "Անուն չկա"}
                             </p>
+                            {p.accountType === "LEGAL_ENTITY" &&
+                            p.companyName?.trim() &&
+                            p.name?.trim() ? (
+                              <p className="text-xs font-semibold text-slate-500">
+                                Կոնտակտ՝ {p.name.trim()}
+                              </p>
+                            ) : null}
                             <div className="mt-2 flex flex-col gap-1 text-xs font-semibold">
                               <a
                                 href={`mailto:${p.email}`}

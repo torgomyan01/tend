@@ -1,3 +1,5 @@
+import { AccountTypeBadge } from "@/components/account-type-badge";
+import type { AccountTypeValue } from "@/lib/account-type";
 import {
   coverLetterSnippet,
   initialsFromMasked,
@@ -10,6 +12,7 @@ export type TenderApplicantTeaserBid = {
   provider: {
     name: string | null;
     image: string | null;
+    accountType: AccountTypeValue;
   };
 };
 
@@ -81,9 +84,12 @@ export function TenderApplicantTeasers({ bids, totalBidCount }: Props) {
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-black text-slate-900">
-                  {masked}
-                </p>
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <p className="truncate text-sm font-black text-slate-900">
+                    {masked}
+                  </p>
+                  <AccountTypeBadge accountType={bid.provider.accountType} />
+                </div>
                 <p className="mt-1 line-clamp-2 text-xs font-semibold leading-snug text-slate-600">
                   «{snippet}»
                 </p>

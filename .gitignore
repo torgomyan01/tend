@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# uploads (persisted files; never commit)
+/uploads/
+
 # production
 /build
 

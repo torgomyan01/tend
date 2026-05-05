@@ -19,6 +19,7 @@ export type AccountProfileInitial = {
   email: string;
   phone: string | null;
   image: string | null;
+  bio: string | null;
 };
 
 type Props = {
@@ -35,6 +36,7 @@ export function AccountProfileSettings({ initialProfile }: Props) {
   const [email, setEmail] = useState(initialProfile.email);
   const [phone, setPhone] = useState(initialProfile.phone ?? "");
   const [imageUrl, setImageUrl] = useState(initialProfile.image);
+  const [bio, setBio] = useState(initialProfile.bio ?? "");
 
   const [profileSaving, setProfileSaving] = useState(false);
   const [avatarBusy, setAvatarBusy] = useState(false);
@@ -84,6 +86,7 @@ export function AccountProfileSettings({ initialProfile }: Props) {
     setEmail(p.email);
     setPhone(p.phone ?? "");
     setImageUrl(p.image);
+    setBio(p.bio ?? "");
   }, [snapshot]);
 
   const initialLetter = (
@@ -97,6 +100,7 @@ export function AccountProfileSettings({ initialProfile }: Props) {
     email: string;
     phone: string | null;
     image: string | null;
+    bio?: string | null;
   }) {
     await update({
       name: user.name,
@@ -119,6 +123,7 @@ export function AccountProfileSettings({ initialProfile }: Props) {
           name: name.trim(),
           email: email.trim(),
           phone: phone.trim(),
+          bio: bio.trim(),
         }),
       });
       const data = (await res.json().catch(() => null)) as {
@@ -144,6 +149,7 @@ export function AccountProfileSettings({ initialProfile }: Props) {
         setEmail(data.user.email);
         setPhone(data.user.phone ?? "");
         setImageUrl(data.user.image);
+        setBio(data.user.bio ?? "");
 
         if (phoneActuallyChanged) {
           await signOut({ callbackUrl: ROUTES.login });
@@ -366,6 +372,24 @@ export function AccountProfileSettings({ initialProfile }: Props) {
               <span className="mt-2 flex items-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
                 <PhoneInput value={phone} onValueChange={setPhone} required />
               </span>
+            </label>
+
+            <label className="block">
+              <span className="flex items-center justify-between gap-2">
+                <span className="text-xs font-black uppercase tracking-[0.14em] text-slate-600">
+                  Իմ մասին
+                </span>
+                <span className="text-[10px] font-bold text-slate-400">
+                  {bio.length}/2000
+                </span>
+              </span>
+              <textarea
+                value={bio}
+                onChange={(e) => setBio(e.target.value.slice(0, 2000))}
+                rows={5}
+                placeholder="Պատմեք ձեր փորձի, մասնագիտացման և մատուցվող ծառայությունների մասին։"
+                className="mt-2 w-full resize-y rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold leading-relaxed outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+              />
             </label>
 
             {profileError ? (

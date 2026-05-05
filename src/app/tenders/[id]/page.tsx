@@ -18,9 +18,11 @@ import { TenderAwardLifecyclePanel } from "@/components/tender-award-lifecycle-p
 import { TenderApplyButton } from "@/components/tender-apply-button";
 import { TenderComplaintModal } from "@/components/tender-complaint-modal";
 import { TenderOwnerApplicantsModal } from "@/components/tender-owner-applicants-modal";
+import { AccountTypeBadge } from "@/components/account-type-badge";
 import { TenderEndsCountdown } from "@/components/tender-ends-countdown";
 import { TenderLiveStats } from "@/components/tender-live-stats";
 import { SiteHeader } from "@/components/site-header";
+import type { AccountTypeValue } from "@/lib/account-type";
 import { authOptions } from "@/lib/auth";
 import { computeBidFee } from "@/lib/bid-fee";
 import { tenderApplyMockCookieName } from "@/lib/tender-apply-mock-cookie";
@@ -65,6 +67,8 @@ export default async function TenderDetailPage({ params }: Props) {
           isVerified: true,
           telegramVerifiedAt: true,
           createdAt: true,
+          accountType: true,
+          companyName: true,
           _count: {
             select: {
               tenders: true,
@@ -172,7 +176,11 @@ export default async function TenderDetailPage({ params }: Props) {
   let applicantPreviewBids: {
     id: string;
     coverLetter: string;
-    provider: { name: string | null; image: string | null };
+    provider: {
+      name: string | null;
+      image: string | null;
+      accountType: AccountTypeValue;
+    };
   }[] = [];
   let visibleApplicantCount = 0;
 
@@ -188,7 +196,9 @@ export default async function TenderDetailPage({ params }: Props) {
         select: {
           id: true,
           coverLetter: true,
-          provider: { select: { name: true, image: true } },
+          provider: {
+            select: { name: true, image: true, accountType: true },
+          },
         },
       }),
       prisma.bid.count({
@@ -198,7 +208,13 @@ export default async function TenderDetailPage({ params }: Props) {
         },
       }),
     ]);
-    applicantPreviewBids = previewRows;
+    applicantPreviewBids = previewRows.map((row) => ({
+      ...row,
+      provider: {
+        ...row.provider,
+        accountType: row.provider.accountType as AccountTypeValue,
+      },
+    }));
     visibleApplicantCount = previewCount;
   }
 
@@ -265,7 +281,10 @@ export default async function TenderDetailPage({ params }: Props) {
         ];
 
   const client = tender.client;
-  const clientDisplayName = client.name?.trim() || "Պատվիրատու";
+  const clientDisplayName =
+    client.accountType === "LEGAL_ENTITY" && client.companyName?.trim()
+      ? client.companyName.trim()
+      : client.name?.trim() || "Պատվիրատու";
   const winnerDisplayName =
     tender.awardedBid?.provider.name?.trim() ||
     tender.awardedBid?.provider.email ||
@@ -323,6 +342,10 @@ export default async function TenderDetailPage({ params }: Props) {
                   >
                     {TENDER_STATUS_LABEL[tender.status]}
                   </span>
+                  <AccountTypeBadge
+                    accountType={client.accountType as AccountTypeValue}
+                    size="md"
+                  />
                   {isOwner ? (
                     <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-black text-amber-900 ring-1 ring-amber-200">
                       Ձեր հայտարարություն

@@ -3,6 +3,7 @@
 import {
   ArrowLeft,
   ArrowRight,
+  Building2,
   CheckCircle2,
   ExternalLink,
   Loader2,
@@ -19,6 +20,11 @@ import {
   type InterestSelection,
 } from "@/components/interest-selector";
 import { PhoneInput } from "@/components/phone-input";
+import {
+  type AccountTypeValue,
+  LEGAL_FORM_LABEL,
+  type LegalFormValue,
+} from "@/lib/account-type";
 import { ROUTES } from "@/lib/routes";
 import type { ServiceCategoryWithServices } from "@/lib/services-data";
 
@@ -28,14 +34,14 @@ type RegisterResponse = {
   expiresAt: string;
 };
 
-type Step = "interests" | "info" | "telegram";
+type Step = "type" | "interests" | "info" | "telegram";
 
 type RegisterFormProps = {
   categories: ServiceCategoryWithServices[];
 };
 
 export function RegisterForm({ categories }: RegisterFormProps) {
-  const [step, setStep] = useState<Step>("interests");
+  const [step, setStep] = useState<Step>("type");
   const [interests, setInterests] = useState<InterestSelection[]>([]);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -48,6 +54,17 @@ export function RegisterForm({ categories }: RegisterFormProps) {
     null,
   );
   const [isVerified, setIsVerified] = useState(false);
+
+  const [accountType, setAccountType] =
+    useState<AccountTypeValue>("INDIVIDUAL");
+  const [companyName, setCompanyName] = useState("");
+  const [legalForm, setLegalForm] = useState<LegalFormValue | "">("");
+  const [taxId, setTaxId] = useState("");
+  const [legalAddress, setLegalAddress] = useState("");
+  const [directorName, setDirectorName] = useState("");
+  const [companyPhone, setCompanyPhone] = useState("");
+
+  const isLegal = accountType === "LEGAL_ENTITY";
 
   useEffect(() => {
     if (!verification || isVerified) {
@@ -81,6 +98,34 @@ export function RegisterForm({ categories }: RegisterFormProps) {
     setError(null);
     setIsSubmitting(true);
 
+    if (isLegal) {
+      if (companyName.trim().length < 2) {
+        setError("Ընկերության անվանումը պարտադիր է։");
+        setIsSubmitting(false);
+        return;
+      }
+      if (!legalForm) {
+        setError("Ընտրեք իրավաբանական ձևը։");
+        setIsSubmitting(false);
+        return;
+      }
+      if (taxId.trim().length === 0) {
+        setError("ՀՎՀՀ-ն պարտադիր է։");
+        setIsSubmitting(false);
+        return;
+      }
+      if (legalAddress.trim().length === 0) {
+        setError("Իրավաբանական հասցեն պարտադիր է։");
+        setIsSubmitting(false);
+        return;
+      }
+      if (directorName.trim().length === 0) {
+        setError("Տնօրենի անունը պարտադիր է։");
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
     try {
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -94,6 +139,13 @@ export function RegisterForm({ categories }: RegisterFormProps) {
           password,
           acceptedTerms,
           interests,
+          accountType,
+          companyName: isLegal ? companyName.trim() : undefined,
+          legalForm: isLegal ? legalForm : undefined,
+          taxId: isLegal ? taxId.trim() : undefined,
+          legalAddress: isLegal ? legalAddress.trim() : undefined,
+          directorName: isLegal ? directorName.trim() : undefined,
+          companyPhone: isLegal && companyPhone.trim() ? companyPhone.trim() : undefined,
         }),
       });
       const data = await response.json();
@@ -163,10 +215,12 @@ export function RegisterForm({ categories }: RegisterFormProps) {
   }
 
   const steps: Array<{ value: Step; label: string }> = [
+    { value: "type", label: "Տիպ" },
     { value: "interests", label: "Հետաքրքրություններ" },
     { value: "info", label: "Տվյալներ" },
   ];
-  const currentStepIndex = step === "interests" ? 0 : 1;
+  const currentStepIndex =
+    step === "type" ? 0 : step === "interests" ? 1 : 2;
 
   return (
     <div className="space-y-6">
@@ -205,6 +259,86 @@ export function RegisterForm({ categories }: RegisterFormProps) {
         })}
       </div>
 
+      {step === "type" ? (
+        <div className="space-y-5">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={() => setAccountType("INDIVIDUAL")}
+              className={`flex items-start gap-3 rounded-3xl p-5 text-left ring-1 transition ${
+                accountType === "INDIVIDUAL"
+                  ? "bg-slate-950 text-white ring-slate-950 shadow-xl"
+                  : "bg-white text-slate-700 ring-slate-200 hover:bg-slate-50"
+              }`}
+            >
+              <span
+                className={`grid size-11 shrink-0 place-items-center rounded-2xl ${
+                  accountType === "INDIVIDUAL"
+                    ? "bg-white/15 text-white"
+                    : "bg-slate-100 text-slate-700"
+                }`}
+              >
+                <User className="size-5" />
+              </span>
+              <span>
+                <span className="block text-base font-black">Ֆիզիկական անձ</span>
+                <span
+                  className={`mt-1 block text-xs font-semibold ${
+                    accountType === "INDIVIDUAL"
+                      ? "text-slate-300"
+                      : "text-slate-500"
+                  }`}
+                >
+                  Անձնական հաշիվ՝ առանց ընկերության տվյալների։
+                </span>
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setAccountType("LEGAL_ENTITY")}
+              className={`flex items-start gap-3 rounded-3xl p-5 text-left ring-1 transition ${
+                accountType === "LEGAL_ENTITY"
+                  ? "bg-slate-950 text-white ring-slate-950 shadow-xl"
+                  : "bg-white text-slate-700 ring-slate-200 hover:bg-slate-50"
+              }`}
+            >
+              <span
+                className={`grid size-11 shrink-0 place-items-center rounded-2xl ${
+                  accountType === "LEGAL_ENTITY"
+                    ? "bg-white/15 text-white"
+                    : "bg-amber-100 text-amber-800"
+                }`}
+              >
+                <Building2 className="size-5" />
+              </span>
+              <span>
+                <span className="block text-base font-black">Իրավաբանական անձ</span>
+                <span
+                  className={`mt-1 block text-xs font-semibold ${
+                    accountType === "LEGAL_ENTITY"
+                      ? "text-slate-300"
+                      : "text-slate-500"
+                  }`}
+                >
+                  Ընկերության, ՍՊԸ-ի, ԱՁ-ի կամ այլ կազմակերպության հաշիվ։
+                </span>
+              </span>
+            </button>
+          </div>
+
+          <div className="flex justify-end border-t border-slate-200 pt-5">
+            <button
+              type="button"
+              onClick={() => setStep("interests")}
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3.5 text-base font-black text-white shadow-2xl shadow-slate-950/20 transition hover:-translate-y-1 hover:bg-slate-800"
+            >
+              Շարունակել
+              <ArrowRight className="size-5" />
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       {step === "interests" ? (
         <div className="space-y-5">
           <InterestSelector
@@ -219,14 +353,24 @@ export function RegisterForm({ categories }: RegisterFormProps) {
                 ? "Կարող եք բաց թողնել, բայց առաջարկները ավելի թիրախային կլինեն ընտրությունից հետո։"
                 : `${interests.length} ծառայություն ընտրված է։`}
             </p>
-            <button
-              type="button"
-              onClick={() => setStep("info")}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3.5 text-base font-black text-white shadow-2xl shadow-slate-950/20 transition hover:-translate-y-1 hover:bg-slate-800"
-            >
-              Շարունակել
-              <ArrowRight className="size-5" />
-            </button>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <button
+                type="button"
+                onClick={() => setStep("type")}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-slate-700 ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:text-slate-950"
+              >
+                <ArrowLeft className="size-4" />
+                Հետ
+              </button>
+              <button
+                type="button"
+                onClick={() => setStep("info")}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3.5 text-base font-black text-white shadow-2xl shadow-slate-950/20 transition hover:-translate-y-1 hover:bg-slate-800"
+              >
+                Շարունակել
+                <ArrowRight className="size-5" />
+              </button>
+            </div>
           </div>
         </div>
       ) : null}
@@ -300,6 +444,126 @@ export function RegisterForm({ categories }: RegisterFormProps) {
               />
             </span>
           </label>
+
+          {isLegal ? (
+            <div className="space-y-4 rounded-3xl bg-amber-50/60 p-4 ring-1 ring-amber-200">
+              <div className="flex items-start gap-3">
+                <span className="grid size-9 shrink-0 place-items-center rounded-2xl bg-amber-200/70 text-amber-800">
+                  <Building2 className="size-4" />
+                </span>
+                <div>
+                  <p className="text-sm font-black text-amber-900">
+                    Ընկերության տվյալներ
+                  </p>
+                  <p className="mt-1 text-xs font-semibold text-amber-900/80">
+                    Ստորև դաշտերը պարտադիր են իրավաբանական անձի համար։
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label className="block">
+                  <span className="text-xs font-black uppercase tracking-[0.14em] text-slate-700">
+                    Ընկերության անվանումը
+                  </span>
+                  <input
+                    type="text"
+                    required
+                    value={companyName}
+                    onChange={(e) =>
+                      setCompanyName(e.target.value.slice(0, 200))
+                    }
+                    placeholder="ABC ՍՊԸ"
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-xs font-black uppercase tracking-[0.14em] text-slate-700">
+                    Իրավաբանական ձև
+                  </span>
+                  <select
+                    required
+                    value={legalForm}
+                    onChange={(e) =>
+                      setLegalForm(e.target.value as LegalFormValue | "")
+                    }
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                  >
+                    <option value="">Ընտրել…</option>
+                    {(Object.keys(LEGAL_FORM_LABEL) as LegalFormValue[]).map(
+                      (value) => (
+                        <option key={value} value={value}>
+                          {LEGAL_FORM_LABEL[value]}
+                        </option>
+                      ),
+                    )}
+                  </select>
+                </label>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label className="block">
+                  <span className="text-xs font-black uppercase tracking-[0.14em] text-slate-700">
+                    ՀՎՀՀ
+                  </span>
+                  <input
+                    type="text"
+                    required
+                    value={taxId}
+                    onChange={(e) => setTaxId(e.target.value.slice(0, 20))}
+                    placeholder="00000000"
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-xs font-black uppercase tracking-[0.14em] text-slate-700">
+                    Տնօրեն
+                  </span>
+                  <input
+                    type="text"
+                    required
+                    value={directorName}
+                    onChange={(e) =>
+                      setDirectorName(e.target.value.slice(0, 200))
+                    }
+                    placeholder="Անուն Ազգանուն"
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                  />
+                </label>
+              </div>
+
+              <label className="block">
+                <span className="text-xs font-black uppercase tracking-[0.14em] text-slate-700">
+                  Իրավաբանական հասցե
+                </span>
+                <input
+                  type="text"
+                  required
+                  value={legalAddress}
+                  onChange={(e) =>
+                    setLegalAddress(e.target.value.slice(0, 500))
+                  }
+                  placeholder="ք. Երևան, փող., տուն"
+                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-xs font-black uppercase tracking-[0.14em] text-slate-700">
+                  Ընկերության հեռախոս (պարտադիր չէ)
+                </span>
+                <input
+                  type="tel"
+                  value={companyPhone}
+                  onChange={(e) =>
+                    setCompanyPhone(e.target.value.slice(0, 32))
+                  }
+                  placeholder="+374 ..."
+                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                />
+              </label>
+            </div>
+          ) : null}
 
           <label className="flex cursor-pointer items-start gap-3 rounded-3xl bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-600 ring-1 ring-slate-200">
             <input
