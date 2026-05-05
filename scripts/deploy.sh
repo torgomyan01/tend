@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Սերվերի autodeploy — GitHub Actions-ը կանչում է այս սկրիպտը SSH-ով։
+# Սերվերի autodeploy — GitHub Webhook (tend-deploy-hook) կամ workflow_dispatch SSH Actions։
 set -euo pipefail
 
 DEPLOY_PATH="${DEPLOY_PATH:-/var/www/tend}"

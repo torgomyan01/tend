@@ -1,4 +1,4 @@
-/** PM2 — միշտ օգտագործել համակարգային Node (/usr/bin/node), ոչ Cursor/IDE binary */
+/** PM2 — Next.js միայն։ Webhook-ը առանձին է՝ /var/www/tend-deploy-hook/ecosystem.config.cjs */
 module.exports = {
   apps: [
     {

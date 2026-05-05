@@ -1,8 +1,7 @@
 name: Deploy VPS
 
+# Deploy-ը հիմնականում webhook-ով է (scripts/webhook-deploy)։ SSH միայն ձեռքով՝ Actions Run workflow։
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 concurrency:

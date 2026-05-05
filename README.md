@@ -34,3 +34,17 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## SSL (Nginx + Let's Encrypt)
+
+Production SSL and HTTP->HTTPS redirect can be configured with:
+
+```bash
+sudo bash scripts/setup-ssl-nginx.sh your-domain.com your-email@example.com
+```
+
+This script will:
+- install `nginx` and `certbot` (if missing),
+- apply `deploy/nginx/tend.conf.template` with your domain,
+- request a Let's Encrypt certificate,
+- enable automatic redirect from `http` to `https`.
