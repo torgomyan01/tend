@@ -101,6 +101,7 @@ model User {
   @@index([email])
   @@index([phone])
   @@index([telegramLinkToken])
+  @@map("user")
 }
 
 model UserInterest {
@@ -114,6 +115,7 @@ model UserInterest {
   @@unique([userId, category, service])
   @@index([category, service])
   @@index([userId])
+  @@map("userinterest")
 }
 
 model ServiceCategory {
@@ -128,6 +130,7 @@ model ServiceCategory {
 
   @@index([sortOrder])
   @@index([isActive])
+  @@map("servicecategory")
 }
 
 model Service {
@@ -143,6 +146,7 @@ model Service {
   @@unique([categoryId, title])
   @@index([categoryId, sortOrder])
   @@index([isActive])
+  @@map("service")
 }
 
 model VerificationRequest {
@@ -160,6 +164,7 @@ model VerificationRequest {
 
   @@index([userId, submittedAt])
   @@index([status, submittedAt])
+  @@map("verificationrequest")
 }
 
 model Account {
@@ -179,6 +184,7 @@ model Account {
 
   @@unique([provider, providerAccountId])
   @@index([userId])
+  @@map("account")
 }
 
 model Session {
@@ -189,6 +195,7 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@map("session")
 }
 
 model VerificationToken {
@@ -197,6 +204,7 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+  @@map("verificationtoken")
 }
 
 model Location {
@@ -247,6 +255,7 @@ model Tender {
   @@index([category, service])
   @@index([city])
   @@index([locationId])
+  @@map("tender")
 }
 
 model TenderImage {
@@ -259,6 +268,7 @@ model TenderImage {
   tender    Tender   @relation(fields: [tenderId], references: [id], onDelete: Cascade)
 
   @@index([tenderId])
+  @@map("tenderimage")
 }
 
 model TenderDocument {
@@ -272,6 +282,7 @@ model TenderDocument {
   tender           Tender   @relation(fields: [tenderId], references: [id], onDelete: Cascade)
 
   @@index([tenderId])
+  @@map("tenderdocument")
 }
 
 model TenderSelectedService {
@@ -283,6 +294,7 @@ model TenderSelectedService {
   tender    Tender @relation(fields: [tenderId], references: [id], onDelete: Cascade)
 
   @@index([tenderId])
+  @@map("tenderselectedservice")
 }
 
 model TenderComplaint {
@@ -302,6 +314,7 @@ model TenderComplaint {
   @@index([tenderId, createdAt])
   @@index([status, createdAt])
   @@index([reporterId])
+  @@map("tendercomplaint")
 }
 
 model Bid {
@@ -325,6 +338,7 @@ model Bid {
   @@unique([tenderId, providerId])
   @@index([providerId])
   @@index([tenderId, status])
+  @@map("bid")
 }
 
 model Transaction {
@@ -346,6 +360,7 @@ model Transaction {
   @@index([userId, createdAt])
   @@index([type, status])
   @@index([gateway, gatewayRef])
+  @@map("transaction")
 }
 
 model Subscription {
@@ -362,6 +377,7 @@ model Subscription {
 
   @@index([userId, status])
   @@index([endsAt])
+  @@map("subscription")
 }
 
 model Review {
@@ -383,4 +399,5 @@ model Review {
   @@index([revieweeId])
   @@index([reviewerId])
   @@index([moderationStatus])
+  @@map("review")
 }
