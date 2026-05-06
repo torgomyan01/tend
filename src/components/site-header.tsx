@@ -1,11 +1,23 @@
 import Link from "next/link";
+import { getServerSession } from "next-auth";
 import { AuthDropdown } from "@/components/auth-dropdown";
 import { LanguageDropdown } from "@/components/language-dropdown";
 import { MobileMenu } from "@/components/mobile-menu";
+import { SiteNav } from "@/components/site-nav";
 import { WalletDropdown } from "@/components/wallet-dropdown";
+import { authOptions } from "@/lib/auth";
 import { ROUTES } from "@/lib/routes";
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const session = await getServerSession(authOptions);
+  const isLoggedIn = Boolean(session?.user?.id);
+  const isAdmin =
+    session?.user?.role === "ADMIN" || session?.user?.role === "MODERATOR";
+  const authLabel =
+    session?.user?.name?.trim() ||
+    session?.user?.email?.trim() ||
+    "Մուտք եղած եք";
+
   return (
     <header className="relative mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
       <Link
@@ -18,38 +30,29 @@ export function SiteHeader() {
         </span>
         <span className="text-xl font-black tracking-tight">Tend.am</span>
       </Link>
-      <nav className="hidden items-center gap-8 text-sm font-semibold text-slate-600 md:flex">
-        <Link
-          className="transition hover:text-slate-950"
-          href={ROUTES.tenders}
-        >
-          Մրցույթներ
-        </Link>
-        <Link
-          className="transition hover:text-slate-950"
-          href={ROUTES.categories}
-        >
-          Ոլորտներ
-        </Link>
-        <a
-          className="transition hover:text-slate-950"
-          href={ROUTES.sections.howItWorks}
-        >
-          Ինչպես է աշխատում
-        </a>
-      
-        <a
-          className="transition hover:text-slate-950"
-          href={ROUTES.sections.providers}
-        >
-          Մասնագետների համար
-        </a>
-      </nav>
+      <SiteNav />
       <div className="flex items-center gap-3">
-        <WalletDropdown />
+        {isLoggedIn ? <WalletDropdown isLoggedIn={isLoggedIn} /> : null}
         <LanguageDropdown />
-        <AuthDropdown />
-        <MobileMenu />
+        {isLoggedIn ? (
+          <AuthDropdown isLoggedIn={isLoggedIn} isAdmin={isAdmin} label={authLabel} />
+        ) : (
+          <div className="hidden items-center gap-2 md:flex">
+            <Link
+              href={ROUTES.login}
+              className="inline-flex items-center justify-center rounded-full bg-white px-4 py-3 text-sm font-black text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:text-slate-950 hover:shadow-lg"
+            >
+              Մուտք
+            </Link>
+            <Link
+              href={ROUTES.register}
+              className="inline-flex items-center justify-center rounded-full bg-slate-950 px-4 py-3 text-sm font-black text-white shadow-sm ring-1 ring-slate-950 transition hover:-translate-y-0.5 hover:bg-slate-800"
+            >
+              Գրանցում
+            </Link>
+          </div>
+        )}
+        <MobileMenu isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
       </div>
     </header>
   );

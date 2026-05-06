@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 export type CredentialKind = "DIPLOMA" | "LICENSE" | "CERTIFICATE" | "OTHER";
 
@@ -70,14 +71,19 @@ export function AccountCredentialsManager({ initialCredentials }: Props) {
         method: "DELETE",
       });
       if (!res.ok) {
-        setError("Չհաջողվեց ջնջել։ Փորձեք կրկին։");
+        const msg = "Չհաջողվեց ջնջել։ Փորձեք կրկին։";
+        setError(msg);
+        toastError("Ջնջումը չհաջողվեց", msg);
         return;
       }
       setItems((prev) => prev.filter((item) => item.id !== id));
       setPendingDeleteId(null);
+      toastSuccess("Ջնջվեց", "Փաստաթուղթը հեռացվել է պրոֆիլից։");
       router.refresh();
     } catch {
-      setError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setError(msg);
+      toastError("Ցանցի խնդիր", msg);
     } finally {
       setDeletingId(null);
     }
@@ -268,11 +274,15 @@ function CredentialUploadModal({
     e.preventDefault();
     setError(null);
     if (!file) {
-      setError("Կցեք ֆայլ։");
+      const msg = "Կցեք ֆայլ։";
+      setError(msg);
+      toastError("Անփոխարինելի", msg);
       return;
     }
     if (title.trim().length < 2) {
-      setError("Անվանումը առնվազն 2 նիշ։");
+      const msg = "Անվանումը առնվազն 2 նիշ։";
+      setError(msg);
+      toastError("Սխալ անվանում", msg);
       return;
     }
     setBusy(true);
@@ -295,21 +305,34 @@ function CredentialUploadModal({
 
       if (!res.ok || !data?.credential) {
         if (data?.error === "INVALID_FILE_TYPE") {
-          setError("Թույլատրված են PDF, JPG, PNG, WebP, DOC, DOCX։");
+          const msg = "Թույլատրված են PDF, JPG, PNG, WebP, DOC, DOCX։";
+          setError(msg);
+          toastError("Ֆայլի տեսակ", msg);
         } else if (data?.error === "FILE_TOO_LARGE") {
-          setError("Ֆայլի չափը մեծ է 10 ՄԲ-ից։");
+          const msg = "Ֆայլի չափը մեծ է 10 ՄԲ-ից։";
+          setError(msg);
+          toastError("Ֆայլը մեծ է", msg);
         } else if (data?.error === "INVALID_TITLE") {
-          setError("Անվանումը սխալ է։");
+          const msg = "Անվանումը սխալ է։";
+          setError(msg);
+          toastError("Անվանում", msg);
         } else if (data?.error === "LIMIT_REACHED") {
-          setError("Հասել եք առավելագույն քանակին։");
+          const msg = "Հասել եք առավելագույն քանակին։";
+          setError(msg);
+          toastError("Սահմանափակում", msg);
         } else {
-          setError("Չհաջողվեց վերբեռնել։");
+          const msg = "Չհաջողվեց վերբեռնել։";
+          setError(msg);
+          toastError("Վերբեռնում", msg);
         }
         return;
       }
+      toastSuccess("Պահպանվեց", "Փաստաթուղթն ավելացվեց պրոֆիլում։");
       onCreated(data.credential);
     } catch {
-      setError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setError(msg);
+      toastError("Ցանցի խնդիր", msg);
     } finally {
       setBusy(false);
     }

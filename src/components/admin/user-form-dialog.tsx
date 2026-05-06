@@ -3,6 +3,7 @@
 import { Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 const ERROR_MESSAGES: Record<string, string> = {
   EMAIL_TAKEN: "Այս email-ով օգտատեր արդեն կա։",
@@ -101,7 +102,9 @@ export function UserFormDialog({ open, onClose, user }: UserFormDialogProps) {
 
     const trimmedWalletBalance = Number(walletBalance);
     if (Number.isNaN(trimmedWalletBalance) || trimmedWalletBalance < 0) {
-      setError("Դրամապանակի մնացորդը պետք է լինի 0 կամ ավելի։");
+      const msg = "Դրամապանակի մնացորդը պետք է լինի 0 կամ ավելի։";
+      setError(msg);
+      toastError("Դրամապանակ", msg);
       setIsSubmitting(false);
       return;
     }
@@ -124,7 +127,9 @@ export function UserFormDialog({ open, onClose, user }: UserFormDialogProps) {
     const method = isEdit ? "PATCH" : "POST";
 
     if (!isEdit && !password.trim()) {
-      setError("Գաղտնաբառը պարտադիր է նոր օգտատեր ստեղծելիս։");
+      const msg = "Գաղտնաբառը պարտադիր է նոր օգտատեր ստեղծելիս։";
+      setError(msg);
+      toastError("Գաղտնաբառ", msg);
       setIsSubmitting(false);
       return;
     }
@@ -142,14 +147,21 @@ export function UserFormDialog({ open, onClose, user }: UserFormDialogProps) {
           ? (ERROR_MESSAGES[data.error] ?? data.error)
           : ERROR_MESSAGES.REQUEST_FAILED;
         setError(message);
+        toastError(isEdit ? "Թարմացում չհաջողվեց" : "Ստեղծում չհաջողվեց", message);
         setIsSubmitting(false);
         return;
       }
 
+      toastSuccess(
+        isEdit ? "Օգտատերը թարմացվեց" : "Օգտատերը ստեղծվեց",
+        isEdit ? "Փոփոխությունները պահպանված են։" : "Նոր հաշիվը կարող են օգտագործել։",
+      );
       router.refresh();
       onClose();
     } catch {
-      setError("Ցանցի սխալ։ Փորձեք կրկին։");
+      const msg = "Ցանցի սխալ։ Փորձեք կրկին։";
+      setError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setIsSubmitting(false);
     }

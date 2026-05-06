@@ -3,6 +3,7 @@
 import { Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 const ERROR_MESSAGES: Record<string, string> = {
   TITLE_TAKEN: "Այս անունով ծառայություն արդեն կա այս ոլորտում։",
@@ -104,14 +105,21 @@ export function ServiceFormDialog({
           ? (ERROR_MESSAGES[data.error] ?? "Չհաջողվեց պահպանել։")
           : "Չհաջողվեց պահպանել։";
         setError(message);
+        toastError("Ծառայություն", message);
         setIsSubmitting(false);
         return;
       }
 
+      toastSuccess(
+        isEdit ? "Ծառայությունը թարմացվեց" : "Ծառայությունը ավելացվեց",
+        isEdit ? "Փոփոխությունները պահպանված են։" : "Նոր ծառայությունն ակտիվ է։",
+      );
       router.refresh();
       onClose();
     } catch {
-      setError("Ցանցի սխալ։ Փորձեք կրկին։");
+      const msg = "Ցանցի սխալ։ Փորձեք կրկին։";
+      setError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setIsSubmitting(false);
     }

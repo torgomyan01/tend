@@ -13,6 +13,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PhoneInput } from "@/components/phone-input";
 import { ROUTES } from "@/lib/routes";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 export type AccountProfileInitial = {
   name: string | null;
@@ -132,11 +133,14 @@ export function AccountProfileSettings({ initialProfile }: Props) {
       } | null;
       if (!res.ok) {
         if (data?.error === "EMAIL_OR_PHONE_TAKEN") {
-          setProfileError(
-            "Այս էլ․ փոստը կամ հեռախոսահամարը արդեն զբաղեցված է։",
-          );
+          const msg =
+            "Այս էլ․ փոստը կամ հեռախոսահամարը արդեն զբաղեցված է։";
+          setProfileError(msg);
+          toastError("Զբաղված է", msg);
         } else {
-          setProfileError("Չհաջողվեց պահպանել։ Ստուգեք դաշտերը։");
+          const msg = "Չհաջողվեց պահպանել։ Ստուգեք դաշտերը։";
+          setProfileError(msg);
+          toastError("Պահպանում չհաջողվեց", msg);
         }
         return;
       }
@@ -152,16 +156,23 @@ export function AccountProfileSettings({ initialProfile }: Props) {
         setBio(data.user.bio ?? "");
 
         if (phoneActuallyChanged) {
+          toastSuccess(
+            "Հեռախոսը թարմացվեց",
+            "Մուտք գործեք նորից՝ հաստատելու համար։",
+          );
           await signOut({ callbackUrl: ROUTES.login });
           return;
         }
 
         await syncSessionProfile(data.user);
         setProfileOk(true);
+        toastSuccess("Պահպանվեց", "Պրոֆիլի տվյալները թարմացվել են։");
         router.refresh();
       }
     } catch {
-      setProfileError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setProfileError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setProfileSaving(false);
     }
@@ -183,18 +194,22 @@ export function AccountProfileSettings({ initialProfile }: Props) {
         image?: string;
       } | null;
       if (!res.ok || !data?.image) {
-        setAvatarError(
+        const msg =
           data?.error === "INVALID_IMAGE"
             ? "Թույլատրված են JPG, PNG, WebP՝ մինչև 5 ՄԲ։"
-            : "Նկարի վերբեռնումը չհաջողվեց։",
-        );
+            : "Նկարի վերբեռնումը չհաջողվեց։";
+        setAvatarError(msg);
+        toastError("Նկար", msg);
         return;
       }
       setImageUrl(data.image);
       await update({ image: data.image });
+      toastSuccess("Նկարը թարմացվեց", "Պրոֆիլի լուսանկարը փոխվել է։");
       router.refresh();
     } catch {
-      setAvatarError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setAvatarError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setAvatarBusy(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -209,14 +224,19 @@ export function AccountProfileSettings({ initialProfile }: Props) {
         method: "DELETE",
       });
       if (!res.ok) {
-        setAvatarError("Չհաջողվեց հեռացնել նկարը։");
+        const msg = "Չհաջողվեց հեռացնել նկարը։";
+        setAvatarError(msg);
+        toastError("Նկարը չհեռացվեց", msg);
         return;
       }
       setImageUrl(null);
       await update({ removeAvatar: true });
+      toastSuccess("Նկարը հեռացվեց", "Պրոֆիլում այլևս նկար չի ցուցադրվում։");
       router.refresh();
     } catch {
-      setAvatarError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setAvatarError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setAvatarBusy(false);
     }
@@ -226,7 +246,9 @@ export function AccountProfileSettings({ initialProfile }: Props) {
     e.preventDefault();
     setPasswordError(null);
     if (newPassword !== confirmPassword) {
-      setPasswordError("Նոր գաղտնաբառերը չեն համընկնում։");
+      const msg = "Նոր գաղտնաբառերը չեն համընկնում։";
+      setPasswordError(msg);
+      toastError("Չեն համընկնում", msg);
       return;
     }
     setPasswordSaving(true);
@@ -244,15 +266,25 @@ export function AccountProfileSettings({ initialProfile }: Props) {
       } | null;
       if (!res.ok) {
         if (data?.error === "WRONG_PASSWORD") {
-          setPasswordError("Ընթացիկ գաղտնաբառը սխալ է։");
+          const msg = "Ընթացիկ գաղտնաբառը սխալ է։";
+          setPasswordError(msg);
+          toastError("Գաղտնաբառ", msg);
         } else {
-          setPasswordError("Չհաջողվեց փոխել գաղտնաբառը։");
+          const msg = "Չհաջողվեց փոխել գաղտնաբառը։";
+          setPasswordError(msg);
+          toastError("Սխալ", msg);
         }
         return;
       }
+      toastSuccess(
+        "Գաղտնաբառը փոխվեց",
+        "Անվտանգության համար մուտք գործեք նորից։",
+      );
       await signOut({ callbackUrl: ROUTES.login });
     } catch {
-      setPasswordError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setPasswordError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setPasswordSaving(false);
     }

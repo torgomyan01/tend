@@ -10,6 +10,7 @@ import {
   type AdminTenderEditDefaults,
 } from "@/components/admin/admin-tender-edit-dialog";
 import { TENDER_STATUS_LABEL } from "@/lib/tender-status";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 const QUICK_STATUSES: TenderStatus[] = [
   "DRAFT",
@@ -71,16 +72,20 @@ export function AdminTenderActions({
         const data = (await res.json().catch(() => null)) as {
           error?: string;
         } | null;
-        setError(
+        const msg =
           data?.error === "SAME_STATUS"
             ? "Կարգավիճակը նույնն է։"
-            : "Չհաջողվեց փոխել կարգավիճակը։",
-        );
+            : "Չհաջողվեց փոխել կարգավիճակը։";
+        setError(msg);
+        toastError("Կարգավիճակ", msg);
         return;
       }
+      toastSuccess("Թարմացվեց", "Մրցույթի կարգավիճակը փոխվել է։");
       router.refresh();
     } catch {
-      setError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setBusy(null);
     }
@@ -100,12 +105,17 @@ export function AdminTenderActions({
         method: "DELETE",
       });
       if (!res.ok) {
-        setError("Չհաջողվեց ջնջել։");
+        const msg = "Չհաջողվեց ջնջել։";
+        setError(msg);
+        toastError("Ջնջում", msg);
         return;
       }
+      toastSuccess("Ջնջվեց", "Մրցույթը հեռացվել է։");
       router.refresh();
     } catch {
-      setError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setBusy(null);
     }
@@ -132,16 +142,25 @@ export function AdminTenderActions({
         const data = (await res.json().catch(() => null)) as {
           error?: string;
         } | null;
-        setError(
+        const msg =
           data?.error === "CANNOT_BLOCK_SELF"
             ? "Չեք կարող արգելափակել ինքներդ ձեզ։"
-            : "Չհաջողվեց։",
-        );
+            : "Չհաջողվեց։";
+        setError(msg);
+        toastError("Գործողություն", msg);
         return;
       }
+      toastSuccess(
+        next ? "Արգելափակված" : "Ապարգելափակված",
+        next
+          ? "Հայտարարիչն արգելափակվել է։"
+          : "Հայտարարիչն ապարգելափակվել է։",
+      );
       router.refresh();
     } catch {
-      setError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setBusy(null);
     }
@@ -154,7 +173,9 @@ export function AdminTenderActions({
     }
     const trimmed = message.trim();
     if (!trimmed) {
-      setError("Հաղորդագրությունը դատարկ է։");
+      const msg = "Հաղորդագրությունը դատարկ է։";
+      setError(msg);
+      toastError("Հաղորդագրություն", msg);
       return;
     }
     setBusy("telegram");
@@ -168,20 +189,28 @@ export function AdminTenderActions({
         delivered?: boolean;
       } | null;
       if (!res.ok) {
-        setError("Չհաջողվեց ուղարկել։");
+        const msg = "Չհաջողվեց ուղարկել։";
+        setError(msg);
+        toastError("Telegram", msg);
         return;
       }
       if (!clientTelegramChatId) {
-        window.alert("Հայտարարիչը Telegram չի կապել։");
+        toastError(
+          "Telegram",
+          "Հայտարարիչը Telegram չի կապել։",
+        );
       } else if (data?.delivered === false) {
-        window.alert(
-          "Telegram bot token բացակայում է կամ ուղարկումը ձախողվեց։",
+        toastError(
+          "Telegram",
+          "Bot token-ը բացակայում է կամ ուղարկումը ձախողվեց։",
         );
       } else {
-        window.alert("Ուղարկված է։");
+        toastSuccess("Ուղարկվեց", "Հաղորդագրությունը Telegram-ով ուղարկվել է։");
       }
     } catch {
-      setError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setBusy(null);
     }

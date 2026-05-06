@@ -1,4 +1,5 @@
 import {
+  Accessibility,
   ArrowRight,
   BadgeCheck,
   Clock3,
@@ -9,6 +10,7 @@ import {
   Sparkles,
   Star,
   WalletCards,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { FeaturedTenderSlider } from "@/components/featured-tender-slider";
@@ -42,6 +44,27 @@ const steps = [
     title: "Ընտրեք վստահելի կատարողի",
     description:
       "Համեմատեք առաջարկները փակվելուց հետո, ընտրեք հաղթողին և ավարտեք գործարքը գնահատականով։",
+  },
+];
+
+const trustPoints = [
+  {
+    icon: Accessibility,
+    title: "Մատչելի համակարգ",
+    description:
+      "Պարզ քայլեր, հասկանալի կանոններ և հարթակ, որտեղ և՛ պատվիրատուն, և՛ մասնագետը արագ կողմնորսվում են։",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Վստահելի զուգակցություն",
+    description:
+      "Փակ առաջարկներ, իրական պրոֆիլներ և կարծիքներ՝ որոշում կայացնելիս ավելի քիչ ռիսկով։",
+  },
+  {
+    icon: Zap,
+    title: "Արագ արդյունք",
+    description:
+      "Հստակ վերջնաժամկետներ և կառուցվածքային առաջարկներ՝ ժամանակ չկորցնելով անընդհատ որոնումների մեջ։",
   },
 ];
 
@@ -111,7 +134,7 @@ export default async function Home() {
                 <ArrowRight className="size-5 transition group-hover:translate-x-1" />
               </Link>
               <a
-                href={ROUTES.sections.providers}
+                href={ROUTES.login}
                 className="inline-flex items-center justify-center rounded-full bg-white px-7 py-4 text-base font-bold text-slate-950 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-1 hover:shadow-xl"
               >
                 Դառնալ մասնագետ
@@ -138,6 +161,71 @@ export default async function Home() {
           <div className="relative">
             <div className="absolute inset-6 -z-10 rounded-[3rem] bg-slate-950 blur-2xl opacity-10" />
             <FeaturedTenderSlider tenders={featuredTenders} />
+          </div>
+        </section>
+
+        <section
+          id="trust"
+          aria-labelledby="trust-heading"
+          className="relative mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 sm:py-18 lg:px-8 lg:py-24"
+        >
+          <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_30%_20%,rgba(251,191,36,0.18),transparent_55%)]" />
+          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-14">
+            <div className="order-2 lg:order-1">
+              <p className="text-sm font-black uppercase tracking-[0.2em] text-amber-700">
+                Վստահություն և համագործակցություն
+              </p>
+              <h2
+                id="trust-heading"
+                className="mt-4 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl lg:text-5xl"
+              >
+                Մենք մոտ ենք քեզ՝ մատչելի, վստահելի և արագ։
+              </h2>
+              <p className="mt-5 max-w-xl text-lg leading-8 text-slate-600">
+                Tend.am-ը ցույց է տալիս, որ հարթակը կառուցված է մարդկանց միջև
+                բարեհաջող կապի շուրջ՝ պատվիրատուին և մասնագետին միասին բերելով
+                պարզ, թափանցիկ գործընթացով։
+              </p>
+              <ul className="mt-10 space-y-6">
+                {trustPoints.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <li key={item.title} className="flex gap-4">
+                      <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-amber-100 text-amber-900 ring-1 ring-amber-200/80">
+                        <Icon className="size-6" aria-hidden />
+                      </span>
+                      <div>
+                        <h3 className="text-lg font-black text-slate-950">
+                          {item.title}
+                        </h3>
+                        <p className="mt-1 text-sm font-semibold leading-relaxed text-slate-600 sm:text-base">
+                          {item.description}
+                        </p>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            <div className="order-1 lg:order-2">
+              <div className="relative overflow-hidden rounded-[2.5rem] bg-slate-950 shadow-xl shadow-slate-950/10 ring-1 ring-slate-200/80 h-[300px] sm:h-[500px]">
+                <div className="absolute inset-0 -z-10 bg-linear-to-br from-amber-50/30 via-white to-slate-50 " />
+                <div className="relative aspect-video w-full">
+                  <video
+                    className="absolute inset-0 w-full object-cover h-[300px] sm:h-[500px]"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                    aria-label="Պատվիրատու և մասնագետ՝ բարեհաջող համաձայնություն, վստահություն և ջերմ հույզեր"
+                  >
+                    <source src="/home-trust-collab.mp4" type="video/mp4" />
+                  </video>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 

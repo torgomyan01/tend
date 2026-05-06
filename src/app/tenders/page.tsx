@@ -39,6 +39,7 @@ import type {
   TenderStatus,
 } from "@/generated/prisma/client";
 import { AccountTypeBadge } from "@/components/account-type-badge";
+import { TenderLikeButton } from "@/components/tender-like-button";
 import type { AccountTypeValue } from "@/lib/account-type";
 
 export const dynamic = "force-dynamic";
@@ -273,18 +274,20 @@ export default async function TendersPage({
 }) {
   const params = await searchParams;
   const scope =
-    params.scope === "my" || params.scope === "bids"
+    params.scope === "my" || params.scope === "bids" || params.scope === "liked"
       ? params.scope
       : undefined;
 
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
 
-  if (scope === "my" || scope === "bids") {
+  if (scope === "my" || scope === "bids" || scope === "liked") {
     if (!userId) {
       const path =
         scope === "my"
           ? ROUTES.myTenders
+          : scope === "liked"
+            ? ROUTES.likedTenders
           : `${ROUTES.tenders}?scope=bids`;
       redirect(loginRedirectUrl(path));
     }
@@ -341,7 +344,8 @@ export default async function TendersPage({
   let view:
     | { type: "public" }
     | { type: "my"; statusParam: string }
-    | { type: "bids" } = { type: "public" };
+    | { type: "bids" }
+    | { type: "liked" } = { type: "public" };
   if (scope === "my") {
     view = {
       type: "my",
@@ -352,6 +356,8 @@ export default async function TendersPage({
     };
   } else if (scope === "bids") {
     view = { type: "bids" };
+  } else if (scope === "liked") {
+    view = { type: "liked" };
   }
 
   if (!scope) {
@@ -473,23 +479,80 @@ export default async function TendersPage({
       : 0,
   ]);
 
+  const [likedRows, likedCount] = await Promise.all([
+    scope === "liked" && userId
+      ? prisma.tenderLike.findMany({
+          where: { userId },
+          orderBy: { createdAt: "desc" },
+          take: 200,
+          include: {
+            tender: {
+              include: {
+                _count: { select: { bids: true } },
+                images: { orderBy: { sortOrder: "asc" }, take: 1 },
+                client: { select: { accountType: true, companyName: true } },
+              },
+            },
+          },
+        })
+      : [],
+    scope === "liked" && userId
+      ? prisma.tenderLike.count({ where: { userId } })
+      : 0,
+  ]);
+
+  const isAuthenticated = Boolean(userId);
+  const publicTenderLikedIds = userId
+    ? new Set(
+        (
+          await prisma.tenderLike.findMany({
+            where: {
+              userId,
+              tenderId: { in: publicTenders.map((t) => t.id) },
+            },
+            select: { tenderId: true },
+          })
+        ).map((r) => r.tenderId),
+      )
+    : new Set<string>();
+
+  const myTenderLikedIds = userId
+    ? new Set(
+        (
+          await prisma.tenderLike.findMany({
+            where: {
+              userId,
+              tenderId: { in: myTenders.map((t) => t.id) },
+            },
+            select: { tenderId: true },
+          })
+        ).map((r) => r.tenderId),
+      )
+    : new Set<string>();
+
   const eyebrow =
     view.type === "my"
       ? "Պատվիրատու"
       : view.type === "bids"
         ? "Մասնագետ"
+        : view.type === "liked"
+          ? "Պահված"
         : "Հարթակ";
   const title =
     view.type === "my"
       ? "Իմ մրցույթներ"
       : view.type === "bids"
         ? "Իմ առաջարկներ"
+        : view.type === "liked"
+          ? "Իմ հավանածները"
         : "Մրցույթներ";
   const description =
     view.type === "my"
       ? "Դուք տեղադրած հայտարարությունները՝ կարգավիճակով, առաջարկների թվով և արագ հղումով մանրամասների էջ։"
       : view.type === "bids"
         ? "Ձեր ուղարկած առաջարկները՝ կապված մրցույթների հետ։"
+        : view.type === "liked"
+          ? "Ձեր պահպանած (հավանած) մրցույթները՝ արագ վերադառնալու համար։"
         : "Ակտիվ մրցույթների կատալոգ՝ որոնումով, ոլորտի ու բնակավայրի ֆիլտրերով և տեսակավորմամբ։ Մասնակցեք որպես մասնագետ կամ հետևեք նոր առաջադրաններին։";
 
   const hasBrowseFilters =
@@ -558,6 +621,16 @@ export default async function TendersPage({
               >
                 Իմ առաջարկներ
               </Link>
+              <Link
+                href={ROUTES.likedTenders}
+                className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-black transition ${
+                  view.type === "liked"
+                    ? "bg-slate-950 text-white shadow-lg shadow-slate-950/20"
+                    : "bg-slate-50 text-slate-700 ring-1 ring-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                Իմ հավանածները
+              </Link>
             </nav>
 
             {view.type === "my" ? (
@@ -589,6 +662,11 @@ export default async function TendersPage({
             {view.type === "bids" ? (
               <p className="mt-4 text-xs font-semibold text-slate-500">
                 Ընդհանուր՝ {formatNumber(bidCount)} առաջարկ։
+              </p>
+            ) : null}
+            {view.type === "liked" ? (
+              <p className="mt-4 text-xs font-semibold text-slate-500">
+                Ընդհանուր՝ {formatNumber(likedCount)} հավանում։
               </p>
             ) : null}
           </section>
@@ -674,6 +752,12 @@ export default async function TendersPage({
                         endsAt={tender.endsAt}
                         isBlindBidding={tender.isBlindBidding}
                         clientAccountType={tender.client.accountType}
+                        like={{
+                          tenderId: tender.id,
+                          initialLiked: publicTenderLikedIds.has(tender.id),
+                          isAuthenticated,
+                          loginHref: loginRedirectUrl(ROUTES.tenderDetail(tender.id)),
+                        }}
                       />
                     ))}
                   </div>
@@ -784,6 +868,12 @@ export default async function TendersPage({
                     endsAt={tender.endsAt}
                     isBlindBidding={tender.isBlindBidding}
                     clientAccountType={tender.client.accountType}
+                    like={{
+                      tenderId: tender.id,
+                      initialLiked: myTenderLikedIds.has(tender.id),
+                      isAuthenticated,
+                      loginHref: loginRedirectUrl(ROUTES.tenderDetail(tender.id)),
+                    }}
                   />
                 ))
               )}
@@ -882,6 +972,57 @@ export default async function TendersPage({
               )}
             </section>
           ) : null}
+
+          {view.type === "liked" ? (
+            <section className="space-y-3">
+              {likedRows.length === 0 ? (
+                <EmptyState
+                  icon={<BriefcaseBusiness className="mx-auto size-10 text-slate-300" />}
+                  title="Դեռ հավանած մրցույթներ չկան"
+                  subtitle="Բացեք որևէ մրցույթի էջ և սեղմեք սրտիկը՝ պահպանելու համար։"
+                  action={
+                    <Link
+                      href={ROUTES.tenders}
+                      className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+                    >
+                      Դեպի մրցույթներ
+                      <ChevronRight className="size-4" />
+                    </Link>
+                  }
+                />
+              ) : (
+                likedRows.map((row) => {
+                  const tender = row.tender;
+                  return (
+                    <TenderCard
+                      key={tender.id}
+                      href={ROUTES.tenderDetail(tender.id)}
+                      status={tender.status}
+                      category={tender.category}
+                      service={tender.service}
+                      title={tender.title}
+                      description={tender.description}
+                      city={tender.city}
+                      budgetMin={tender.budgetMin}
+                      budgetMax={tender.budgetMax}
+                      bidCount={tender._count.bids}
+                      createdAt={tender.createdAt}
+                      thumbUrl={tender.images[0]?.url ?? null}
+                      endsAt={tender.endsAt}
+                      isBlindBidding={tender.isBlindBidding}
+                      clientAccountType={tender.client.accountType}
+                      like={{
+                        tenderId: tender.id,
+                        initialLiked: true,
+                        isAuthenticated: true,
+                        loginHref: ROUTES.login,
+                      }}
+                    />
+                  );
+                })
+              )}
+            </section>
+          ) : null}
         </div>
       </main>
     </div>
@@ -965,6 +1106,7 @@ function TenderCard({
   endsAt,
   isBlindBidding,
   clientAccountType,
+  like,
 }: {
   href: string;
   status: TenderStatus;
@@ -982,6 +1124,12 @@ function TenderCard({
   endsAt: Date | null;
   isBlindBidding?: boolean;
   clientAccountType?: AccountType | null;
+  like?: {
+    tenderId: string;
+    initialLiked: boolean;
+    isAuthenticated: boolean;
+    loginHref: string;
+  };
 }) {
   const budgetText =
     budgetMin || budgetMax
@@ -994,6 +1142,17 @@ function TenderCard({
 
   return (
     <article className="group relative overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-xl hover:ring-slate-300">
+      {like ? (
+        <div className="absolute right-4 top-4 z-10">
+          <TenderLikeButton
+            tenderId={like.tenderId}
+            initialLiked={like.initialLiked}
+            isAuthenticated={like.isAuthenticated}
+            loginHref={like.loginHref}
+            size="sm"
+          />
+        </div>
+      ) : null}
       <Link href={href} className="flex flex-col" aria-label={title}>
         <div className="flex flex-col gap-5 p-5 sm:flex-row sm:gap-6 sm:p-6">
           <div className="relative shrink-0 overflow-hidden rounded-2xl bg-linear-to-br from-slate-100 to-slate-200 ring-1 ring-slate-200 sm:w-44 sm:self-start md:w-48">

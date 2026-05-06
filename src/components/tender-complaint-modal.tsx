@@ -7,6 +7,7 @@ import {
   type TenderComplaintReasonId,
   TENDER_COMPLAINT_REASONS,
 } from "@/lib/tender-complaint-reasons";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 type Props = {
   tenderId: string;
@@ -111,12 +112,17 @@ export function TenderComplaintModal({
           FORBIDDEN: "Պատվիրատուն չի կարող բողոքել սեփական մրցույթից։",
           UNKNOWN: "Չհաջողվեց ուղարկել։ Կրկին փորձեք։",
         };
-        setSubmitError(messages[err] ?? messages.UNKNOWN);
+        const msg = messages[err] ?? messages.UNKNOWN;
+        setSubmitError(msg);
+        toastError("Բողոքը չուղարկվեց", msg);
         return;
       }
       setDone(true);
+      toastSuccess("Բողոքը ուղարկված է", "Մոդերացիան կդիտարկի հաղորդումը։");
     } catch {
-      setSubmitError("Ցանցի խնդիր։ Կրկին փորձեք։");
+      const msg = "Ցանցի խնդիր։ Կրկին փորձեք։";
+      setSubmitError(msg);
+      toastError("Ցանցի խնդիր", msg);
     } finally {
       setSubmitting(false);
     }

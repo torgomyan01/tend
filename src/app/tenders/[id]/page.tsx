@@ -21,6 +21,7 @@ import { TenderOwnerApplicantsModal } from "@/components/tender-owner-applicants
 import { AccountTypeBadge } from "@/components/account-type-badge";
 import { TenderEndsCountdown } from "@/components/tender-ends-countdown";
 import { TenderLiveStats } from "@/components/tender-live-stats";
+import { TenderLikeButton } from "@/components/tender-like-button";
 import { SiteHeader } from "@/components/site-header";
 import type { AccountTypeValue } from "@/lib/account-type";
 import { authOptions } from "@/lib/auth";
@@ -315,9 +316,16 @@ export default async function TenderDetailPage({ params }: Props) {
         : null,
   });
   const isAuthenticated = Boolean(session?.user?.id);
+  const viewerId = session?.user?.id ?? null;
   const loginHref = `${ROUTES.login}?callbackUrl=${encodeURIComponent(
     ROUTES.tenderDetail(tender.id),
   )}`;
+
+  const initialLiked = viewerId
+    ? (await prisma.tenderLike.count({
+        where: { userId: viewerId, tenderId: tender.id },
+      })) > 0
+    : false;
 
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
@@ -336,26 +344,37 @@ export default async function TenderDetailPage({ params }: Props) {
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(260px,320px)] lg:items-start">
             <article className="min-w-0 overflow-hidden rounded-4xl bg-white shadow-sm ring-1 ring-slate-200">
               <div className="border-b border-slate-100 p-6 sm:p-8">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span
-                    className={`rounded-full px-3 py-1 text-xs font-black ${TENDER_STATUS_BADGE[tender.status]}`}
-                  >
-                    {TENDER_STATUS_LABEL[tender.status]}
-                  </span>
-                  <AccountTypeBadge
-                    accountType={client.accountType as AccountTypeValue}
-                    size="md"
-                  />
-                  {isOwner ? (
-                    <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-black text-amber-900 ring-1 ring-amber-200">
-                      Ձեր հայտարարություն
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span
+                      className={`rounded-full px-3 py-1 text-xs font-black ${TENDER_STATUS_BADGE[tender.status]}`}
+                    >
+                      {TENDER_STATUS_LABEL[tender.status]}
                     </span>
-                  ) : null}
-                  {tender.isBlindBidding ? (
-                    <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700 ring-1 ring-slate-200">
-                      Փակ առաջարկներ
-                    </span>
-                  ) : null}
+                    <AccountTypeBadge
+                      accountType={client.accountType as AccountTypeValue}
+                      size="md"
+                    />
+                    {isOwner ? (
+                      <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-black text-amber-900 ring-1 ring-amber-200">
+                        Ձեր հայտարարություն
+                      </span>
+                    ) : null}
+                    {tender.isBlindBidding ? (
+                      <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700 ring-1 ring-slate-200">
+                        Փակ առաջարկներ
+                      </span>
+                    ) : null}
+                  </div>
+
+                  <div className="shrink-0">
+                    <TenderLikeButton
+                      tenderId={tender.id}
+                      initialLiked={initialLiked}
+                      isAuthenticated={isAuthenticated}
+                      loginHref={loginHref}
+                    />
+                  </div>
                 </div>
                 <h1 className="mt-4 text-2xl font-black leading-tight tracking-tight sm:text-3xl">
                   {tender.title}
@@ -432,9 +451,12 @@ export default async function TenderDetailPage({ params }: Props) {
                         <Trophy className="size-3.5 text-indigo-600" />
                         Վերջնական կատարող ընտրված է
                       </p>
-                      <p className="mt-1 text-lg font-black leading-tight text-slate-900">
+                      <Link
+                        href={ROUTES.userProfile(tender.awardedBid.provider.id)}
+                        className="mt-1 inline-block text-lg font-black leading-tight text-slate-900 hover:underline"
+                      >
                         {winnerDisplayName}
-                      </p>
+                      </Link>
                       <p className="mt-1 text-sm font-bold text-slate-600">
                         Առաջարկված գին՝{" "}
                         {formatAmd(Number(tender.awardedBid.price))}
@@ -588,9 +610,12 @@ export default async function TenderDetailPage({ params }: Props) {
                       </span>
                     )}
                   </div>
-                  <p className="mt-4 text-lg font-black leading-tight text-slate-900">
+                  <Link
+                    href={ROUTES.userProfile(client.id)}
+                    className="mt-4 text-lg font-black leading-tight text-slate-900 hover:underline"
+                  >
                     {clientDisplayName}
-                  </p>
+                  </Link>
 
                   <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
                     {client.isVerified ? (

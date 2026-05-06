@@ -77,34 +77,29 @@ export default async function CategoriesPage() {
           {categories.map((category) => (
             <article
               key={category.id}
-              className="flex flex-col rounded-4xl bg-white p-5 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-1 hover:shadow-xl sm:p-6"
+              className="rounded-4xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6"
             >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <div className="grid size-12 place-items-center rounded-2xl bg-amber-100 text-amber-800">
-                    <Layers3 className="size-6" />
-                  </div>
-                  <h2 className="mt-5 text-xl font-black tracking-tight sm:text-2xl">
-                    {category.title}
-                  </h2>
-                </div>
-                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-500">
-                  {category.services.length}+
-                </span>
-              </div>
-              <p className="mt-3 leading-7 text-slate-600">
-                {category.description}
-              </p>
-              <div className="mt-6 flex flex-wrap gap-2">
-                {category.services.map((service) => (
-                  <span
-                    key={service.id}
-                    className="rounded-full bg-slate-50 px-3 py-2 text-xs font-bold text-slate-600 ring-1 ring-slate-200"
-                  >
-                    {service.title}
+              <Link
+                href={ROUTES.categoryDetail(category.id)}
+                className="group flex items-center justify-between gap-3 rounded-3xl bg-slate-50 px-4 py-4 ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:bg-white hover:ring-slate-300"
+              >
+                <span className="flex min-w-0 items-center gap-3">
+                  <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-amber-100 text-amber-800 transition group-hover:bg-amber-200">
+                    <Layers3 className="size-5" />
                   </span>
-                ))}
-              </div>
+                  <span className="min-w-0">
+                    <span className="block truncate text-base font-black text-slate-950">
+                      {category.title}
+                    </span>
+                    <span className="mt-0.5 block text-xs font-semibold text-slate-500">
+                      {category.services.length} ծառայություն
+                    </span>
+                  </span>
+                </span>
+                <span className="text-sm font-black text-slate-400 transition group-hover:text-amber-700">
+                  →
+                </span>
+              </Link>
             </article>
           ))}
         </section>

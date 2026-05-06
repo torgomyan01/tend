@@ -3,6 +3,7 @@
 import { Check, Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 type Action = "APPROVE" | "REJECT";
 
@@ -39,12 +40,22 @@ export function ModerationDecisionButtons({
         }),
       });
       if (!res.ok) {
-        setError("Չհաջողվեց");
+        const msg = "Չհաջողվեց";
+        setError(msg);
+        toastError("Մոդերացիա", msg);
         return;
       }
+      toastSuccess(
+        action === "APPROVE" ? "Հաստատվեց" : "Մերժվեց",
+        action === "APPROVE"
+          ? "Հայտը հաստատվել է։"
+          : "Հայտը մերժվել է։",
+      );
       router.refresh();
     } catch {
-      setError("Ցանցի խնդիր");
+      const msg = "Ցանցի խնդիր";
+      setError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setPending(null);
     }

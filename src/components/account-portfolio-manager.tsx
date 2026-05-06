@@ -3,6 +3,7 @@
 import { ImagePlus, Loader2, Plus, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 export type AccountPortfolioImage = {
   id: string;
@@ -46,14 +47,19 @@ export function AccountPortfolioManager({ initialItems }: Props) {
         method: "DELETE",
       });
       if (!res.ok) {
-        setError("Չհաջողվեց ջնջել։");
+        const msg = "Չհաջողվեց ջնջել։";
+        setError(msg);
+        toastError("Ջնջումը չհաջողվեց", msg);
         return;
       }
       setItems((prev) => prev.filter((item) => item.id !== id));
       setPendingDeleteId(null);
+      toastSuccess("Ջնջվեց", "Աշխատանքը հեռացվել է պրոֆիլից։");
       router.refresh();
     } catch {
-      setError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setError(msg);
+      toastError("Ցանցի խնդիր", msg);
     } finally {
       setDeletingId(null);
     }
@@ -286,11 +292,15 @@ function PortfolioCreateModal({
     e.preventDefault();
     setError(null);
     if (title.trim().length < 2) {
-      setError("Անվանումը առնվազն 2 նիշ։");
+      const msg = "Անվանումը առնվազն 2 նիշ։";
+      setError(msg);
+      toastError("Սխալ անվանում", msg);
       return;
     }
     if (files.length === 0) {
-      setError("Կցեք գոնե մեկ նկար։");
+      const msg = "Կցեք գոնե մեկ նկար։";
+      setError(msg);
+      toastError("Նկարներ պետք են", msg);
       return;
     }
     setBusy(true);
@@ -311,23 +321,38 @@ function PortfolioCreateModal({
 
       if (!res.ok || !data?.item) {
         if (data?.error === "TOO_FEW_IMAGES") {
-          setError("Կցեք գոնե մեկ նկար։");
+          const msg = "Կցեք գոնե մեկ նկար։";
+          setError(msg);
+          toastError("Նկարներ", msg);
         } else if (data?.error === "TOO_MANY_IMAGES") {
-          setError(`Առավելագույնը ${MAX_IMAGES} նկար։`);
+          const msg = `Առավելագույնը ${MAX_IMAGES} նկար։`;
+          setError(msg);
+          toastError("Չափից ավելի", msg);
         } else if (data?.error === "INVALID_IMAGE") {
-          setError("Թույլատրված են JPG/PNG/WebP՝ մինչև 5 ՄԲ։");
+          const msg = "Թույլատրված են JPG/PNG/WebP՝ մինչև 5 ՄԲ։";
+          setError(msg);
+          toastError("Նկարի ֆորմատ", msg);
         } else if (data?.error === "INVALID_TITLE") {
-          setError("Անվանումը սխալ է։");
+          const msg = "Անվանումը սխալ է։";
+          setError(msg);
+          toastError("Անվանում", msg);
         } else if (data?.error === "LIMIT_REACHED") {
-          setError("Հասել եք առավելագույն աշխատանքների քանակին։");
+          const msg = "Հասել եք առավելագույն աշխատանքների քանակին։";
+          setError(msg);
+          toastError("Սահմանափակում", msg);
         } else {
-          setError("Չհաջողվեց պահպանել։");
+          const msg = "Չհաջողվեց պահպանել։";
+          setError(msg);
+          toastError("Սխալ", msg);
         }
         return;
       }
+      toastSuccess("Ավելացվեց", "Աշխատանքը պահպանվեց պորտֆոլիոյում։");
       onCreated(data.item);
     } catch {
-      setError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setError(msg);
+      toastError("Ցանցի խնդիր", msg);
     } finally {
       setBusy(false);
     }

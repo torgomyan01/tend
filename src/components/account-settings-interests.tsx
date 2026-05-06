@@ -8,6 +8,7 @@ import {
   type InterestSelection,
 } from "@/components/interest-selector";
 import type { ServiceCategoryWithServices } from "@/lib/services-data";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 type Props = {
   categories: ServiceCategoryWithServices[];
@@ -54,16 +55,24 @@ export function AccountSettingsInterests({
       } | null;
       if (!res.ok) {
         if (data?.error === "INVALID_INTERESTS") {
-          setError("Ընտրությունը չի համապատասխանում հարթակի ակտուալ ցանկին։ Թարմացրեք էջը։");
+          const msg =
+            "Ընտրությունը չի համապատասխանում հարթակի ակտուալ ցանկին։ Թարմացրեք էջը։";
+          setError(msg);
+          toastError("Չի կարող պահպանել", msg);
         } else {
-          setError("Չհաջողվեց պահպանել։ Փորձեք նորից։");
+          const msg = "Չհաջողվեց պահպանել։ Փորձեք նորից։";
+          setError(msg);
+          toastError("Սխալ", msg);
         }
         return;
       }
       setSaved(true);
+      toastSuccess("Պահպանվեց", "Ձեր ոլորտային նախընտրությունները թարմացվեցին։");
       router.refresh();
     } catch {
-      setError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setError(msg);
+      toastError("Ցանցի խնդիր", msg);
     } finally {
       setSaving(false);
     }

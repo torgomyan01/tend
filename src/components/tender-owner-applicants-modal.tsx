@@ -15,6 +15,7 @@ import type { AccountTypeValue } from "@/lib/account-type";
 import { formatAmd, formatDateTime } from "@/lib/format";
 import { BID_STATUS_BADGE, BID_STATUS_LABEL } from "@/lib/tender-status";
 import type { BidStatus, TenderStatus } from "@/generated/prisma/client";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 type ApplicantBid = {
   id: string;
@@ -77,14 +78,18 @@ export function TenderOwnerApplicantsModal({
         cache: "no-store",
       });
       if (!res.ok) {
-        setFetchError("Չհաջողվեց բեռնել դիմողներին։");
+        const msg = "Չհաջողվեց բեռնել դիմողներին։";
+        setFetchError(msg);
+        toastError("Բեռնումը չհաջողվեց", msg);
         setBids([]);
         return;
       }
       const data = (await res.json()) as { bids: ApplicantBid[] };
       setBids(data.bids ?? []);
     } catch {
-      setFetchError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setFetchError(msg);
+      toastError("Ցանցի խնդիր", msg);
       setBids([]);
     } finally {
       setLoading(false);
@@ -114,20 +119,29 @@ export function TenderOwnerApplicantsModal({
 
       if (!res.ok) {
         if (data?.error === "ALREADY_AWARDED") {
-          setAwardError("Կատարողն արդեն ընտրված է։ Թարմացրեք էջը։");
+          const msg = "Կատարողն արդեն ընտրված է։ Թարմացրեք էջը։";
+          setAwardError(msg);
+          toastError("Արդեն ընտրված է", msg);
         } else if (data?.error === "TENDER_NOT_ACTIVE") {
-          setAwardError("Մրցույթը այլևս ակտիվ չէ։");
+          const msg = "Մրցույթը այլևս ակտիվ չէ։";
+          setAwardError(msg);
+          toastError("Չի կարող ընտրել", msg);
         } else {
-          setAwardError("Չհաջողվեց ընտրել կատարողը։");
+          const msg = "Չհաջողվեց ընտրել կատարողը։";
+          setAwardError(msg);
+          toastError("Սխալ", msg);
         }
         return;
       }
 
       setAwardConfirmForId(null);
+      toastSuccess("Կատարողը ընտրված է", "Նոր կարգավիճակով մրցույթը թարմացվեց։");
       await loadBids();
       router.refresh();
     } catch {
-      setAwardError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setAwardError(msg);
+      toastError("Ցանցի խնդիր", msg);
     } finally {
       setAwardingId(null);
     }
@@ -147,19 +161,28 @@ export function TenderOwnerApplicantsModal({
 
       if (!res.ok) {
         if (data?.error === "OWNER_PHONE_MISSING") {
-          setShareError(
-            "Ձեր պրոֆիլում հեռախոսահամար չկա։ Ավելացրեք այն «Իմ հաշիվ» էջում։",
-          );
+          const msg =
+            "Ձեր պրոֆիլում հեռախոսահամար չկա։ Ավելացրեք այն «Իմ հաշիվ» էջում։";
+          setShareError(msg);
+          toastError("Հեռախոս չկա", msg);
         } else {
-          setShareError("Չհաջողվեց բացել կապը։");
+          const msg = "Չհաջողվեց բացել կապը։";
+          setShareError(msg);
+          toastError("Սխալ", msg);
         }
         return;
       }
 
+      toastSuccess(
+        "Կապը բացված է",
+        "Դիմողը կկարողանա տեսնել ձեր համարը համապատասխան փուլում։",
+      );
       await loadBids();
       router.refresh();
     } catch {
-      setShareError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setShareError(msg);
+      toastError("Ցանցի խնդիր", msg);
     } finally {
       setSharingId(null);
     }

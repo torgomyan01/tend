@@ -30,6 +30,7 @@ import {
 import type { LocationPickerOption } from "@/lib/locations-data";
 import { ROUTES } from "@/lib/routes";
 import type { ServiceCategoryWithServices } from "@/lib/services-data";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 const STEPS = [
   { id: 1 as const, title: "Ծառայություն", description: "Ի՞նչ ծառայության կարիք ունեք" },
@@ -53,7 +54,7 @@ const DURATION_PRESETS = [
 const MAX_IMAGES = 6;
 const MIN_IMAGES = 1;
 const MAX_DOCUMENTS = 5;
-const MAX_SELECTED_SERVICES = 5;
+const MAX_SELECTED_SERVICES = 10;
 const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 const MAX_DOCUMENT_SIZE_BYTES = 10 * 1024 * 1024;
 const TITLE_MIN = 10;
@@ -308,22 +309,30 @@ export function CreateTenderForm({
 
   async function handleSubmit(mode: "publish" | "draft") {
     if (services.length === 0) {
-      setError("Ընտրեք առնվազն մեկ ծառայություն։");
+      const msg = "Ընտրեք առնվազն մեկ ծառայություն։";
+      setError(msg);
+      toastError("Չի կարող ուղարկել", msg);
       setStep(1);
       return;
     }
     if (!stepValidations.stepOneValid) {
-      setError("Ստուգեք ծառայությունները և վերնագիրը։");
+      const msg = "Ստուգեք ծառայությունները և վերնագիրը։";
+      setError(msg);
+      toastError("Ստուգեք քայլ 1", msg);
       setStep(1);
       return;
     }
     if (!stepValidations.stepTwoValid) {
-      setError("Ստուգեք նկարագրությունը, լուսանկարները և փաստաթղթերը։");
+      const msg = "Ստուգեք նկարագրությունը, լուսանկարները և փաստաթղթերը։";
+      setError(msg);
+      toastError("Ստուգեք քայլ 2", msg);
       setStep(2);
       return;
     }
     if (!stepValidations.stepThreeValid) {
-      setError("Ստուգեք բյուջեն, ժամկետը և բնակավայրը։");
+      const msg = "Ստուգեք բյուջեն, ժամկետը և բնակավայրը։";
+      setError(msg);
+      toastError("Ստուգեք քայլ 3", msg);
       setStep(3);
       return;
     }
@@ -367,6 +376,12 @@ export function CreateTenderForm({
         throw new Error(message);
       }
 
+      toastSuccess(
+        mode === "publish" ? "Մրցույթը հրապարակվեց" : "Սևագիրը պահպանվեց",
+        mode === "publish"
+          ? "Մրցույթը հասանելի է հարթակում։"
+          : "Կարող եք շարունակել խմբագրումը «Իմ մրցույթներ» բաժնում։",
+      );
       router.push(ROUTES.account);
       router.refresh();
     } catch (submissionError) {
@@ -375,6 +390,7 @@ export function CreateTenderForm({
           ? submissionError.message
           : "Չհաջողվեց հրապարակել մրցույթը։";
       setError(message);
+      toastError("Չհաջողվեց", message);
       setIsSubmitting(false);
       setSubmitMode(null);
     }

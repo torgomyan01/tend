@@ -3,6 +3,7 @@
 import { Loader2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { formatAmd } from "@/lib/format";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 const PRESETS = [5000, 10_000, 25_000, 50_000] as const;
 
@@ -53,10 +54,13 @@ export function WalletDepositPanel({ onDeposited, compact }: Props) {
       if (!res.ok) {
         if (data?.error === "USER_BLOCKED") {
           setError("Հաշիվը արգելափակված է։");
+          toastError("Լիցքավորումը չհաջողվեց", "Հաշիվը արգելափակված է։");
         } else if (data?.error === "INVALID_PAYLOAD") {
           setError("Գումարի չափը սխալ է (մին․ 500 ֏)։");
+          toastError("Լիցքավորումը չհաջողվեց", "Գումարի չափը սխալ է (մին․ 500 ֏)։");
         } else {
           setError("Լիցքավորումը ձախողվեց։");
+          toastError("Լիցքավորումը չհաջողվեց", "Լիցքավորումը ձախողվեց։");
         }
         return;
       }
@@ -65,10 +69,12 @@ export function WalletDepositPanel({ onDeposited, compact }: Props) {
       setSuccess(
         bal !== null ? `Հաշվեկշիռ՝ ${formatAmd(bal)}` : "Լիցքավորված է։",
       );
+      toastSuccess("Դրամապանակը լիցքավորվեց", bal !== null ? `Հաշվեկշիռ՝ ${formatAmd(bal)}` : "Լիցքավորված է։");
       onDeposited?.();
       setAmountText("");
     } catch {
       setError("Ցանցի խնդիր։");
+      toastError("Ցանցի խնդիր", "Չհաջողվեց լիցքավորել։ Փորձեք նորից։");
     } finally {
       setPending(false);
     }
@@ -78,6 +84,7 @@ export function WalletDepositPanel({ onDeposited, compact }: Props) {
     const n = parseAmount();
     if (n === null) {
       setError("Մուտքագրեք ամբողջ թիվ՝ նվազագույնը 500 ֏։");
+      toastError("Սխալ գումար", "Մուտքագրեք ամբողջ թիվ՝ նվազագույնը 500 ֏։");
       return;
     }
     void deposit(n);

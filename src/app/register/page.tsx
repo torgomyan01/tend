@@ -16,18 +16,27 @@ const benefits = [
 export default async function RegisterPage() {
   const categories = await getServiceCategories();
   return (
-    <main className="min-h-screen bg-[#f7f4ee] px-4 py-5 text-slate-950 sm:px-6 sm:py-8 lg:px-8">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
-        <Link
-          href={ROUTES.home}
-          className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:text-slate-950 hover:shadow-lg"
-        >
-          <ArrowLeft className="size-4" />
-          Վերադառնալ գլխավոր էջ
-        </Link>
+    <main className="min-h-screen bg-[#f7f4ee] px-4 py-4 text-slate-950 sm:px-6 sm:py-8 lg:px-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 sm:gap-8">
+        <div className="flex items-center justify-between gap-3">
+          <Link
+            href={ROUTES.home}
+            className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:text-slate-950 hover:shadow-lg"
+          >
+            <ArrowLeft className="size-4" />
+            Վերադառնալ
+          </Link>
 
-        <section className="grid overflow-hidden rounded-4xl bg-white shadow-2xl shadow-slate-950/10 ring-1 ring-slate-200 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="relative overflow-hidden bg-slate-950 p-6 text-white sm:p-10 lg:p-12">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-slate-800 ring-1 ring-slate-200 lg:hidden">
+            <span className="grid size-7 place-items-center rounded-xl bg-slate-950 text-xs font-black text-white">
+              T
+            </span>
+            Tend.am
+          </span>
+        </div>
+
+        <section className="grid overflow-hidden rounded-3xl bg-white shadow-xl shadow-slate-950/10 ring-1 ring-slate-200 sm:rounded-4xl sm:shadow-2xl lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="relative hidden overflow-hidden bg-slate-950 p-6 text-white sm:p-10 lg:block lg:p-12">
             <div className="absolute -right-20 -top-20 size-72 rounded-full bg-amber-300/20 blur-3xl" />
             <div className="relative">
               <div className="flex items-center gap-3">
@@ -66,6 +75,9 @@ export default async function RegisterPage() {
 
           <div className="p-5 sm:p-8 lg:p-10">
             <div className="mb-8">
+              <p className="lg:hidden text-xs font-black uppercase tracking-[0.22em] text-amber-700">
+                Գրանցում
+              </p>
               <h2 className="text-2xl font-black tracking-tight sm:text-3xl">
                 Ստեղծել հաշիվ
               </h2>

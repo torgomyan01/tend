@@ -47,6 +47,8 @@ export type UserMinAggregateOutputType = {
   telegramVerifiedAt: Date | null
   telegramLinkToken: string | null
   telegramLinkTokenExpiresAt: Date | null
+  passwordResetToken: string | null
+  passwordResetTokenExpiresAt: Date | null
   walletBalance: runtime.Decimal | null
   isVerified: boolean | null
   isBlocked: boolean | null
@@ -75,6 +77,8 @@ export type UserMaxAggregateOutputType = {
   telegramVerifiedAt: Date | null
   telegramLinkToken: string | null
   telegramLinkTokenExpiresAt: Date | null
+  passwordResetToken: string | null
+  passwordResetTokenExpiresAt: Date | null
   walletBalance: runtime.Decimal | null
   isVerified: boolean | null
   isBlocked: boolean | null
@@ -103,6 +107,8 @@ export type UserCountAggregateOutputType = {
   telegramVerifiedAt: number
   telegramLinkToken: number
   telegramLinkTokenExpiresAt: number
+  passwordResetToken: number
+  passwordResetTokenExpiresAt: number
   walletBalance: number
   isVerified: number
   isBlocked: number
@@ -141,6 +147,8 @@ export type UserMinAggregateInputType = {
   telegramVerifiedAt?: true
   telegramLinkToken?: true
   telegramLinkTokenExpiresAt?: true
+  passwordResetToken?: true
+  passwordResetTokenExpiresAt?: true
   walletBalance?: true
   isVerified?: true
   isBlocked?: true
@@ -169,6 +177,8 @@ export type UserMaxAggregateInputType = {
   telegramVerifiedAt?: true
   telegramLinkToken?: true
   telegramLinkTokenExpiresAt?: true
+  passwordResetToken?: true
+  passwordResetTokenExpiresAt?: true
   walletBalance?: true
   isVerified?: true
   isBlocked?: true
@@ -197,6 +207,8 @@ export type UserCountAggregateInputType = {
   telegramVerifiedAt?: true
   telegramLinkToken?: true
   telegramLinkTokenExpiresAt?: true
+  passwordResetToken?: true
+  passwordResetTokenExpiresAt?: true
   walletBalance?: true
   isVerified?: true
   isBlocked?: true
@@ -312,6 +324,8 @@ export type UserGroupByOutputType = {
   telegramVerifiedAt: Date | null
   telegramLinkToken: string | null
   telegramLinkTokenExpiresAt: Date | null
+  passwordResetToken: string | null
+  passwordResetTokenExpiresAt: Date | null
   walletBalance: runtime.Decimal
   isVerified: boolean
   isBlocked: boolean
@@ -363,6 +377,8 @@ export type UserWhereInput = {
   telegramVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   telegramLinkToken?: Prisma.StringNullableFilter<"User"> | string | null
   telegramLinkTokenExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  passwordResetToken?: Prisma.StringNullableFilter<"User"> | string | null
+  passwordResetTokenExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   walletBalance?: Prisma.DecimalFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFilter<"User"> | boolean
   isBlocked?: Prisma.BoolFilter<"User"> | boolean
@@ -389,6 +405,7 @@ export type UserWhereInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintListRelationFilter
   credentials?: Prisma.UserCredentialListRelationFilter
   portfolioItems?: Prisma.UserPortfolioItemListRelationFilter
+  tenderLikes?: Prisma.TenderLikeListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -404,6 +421,8 @@ export type UserOrderByWithRelationInput = {
   telegramVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   telegramLinkToken?: Prisma.SortOrderInput | Prisma.SortOrder
   telegramLinkTokenExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  passwordResetToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  passwordResetTokenExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   walletBalance?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
@@ -430,6 +449,7 @@ export type UserOrderByWithRelationInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintOrderByRelationAggregateInput
   credentials?: Prisma.UserCredentialOrderByRelationAggregateInput
   portfolioItems?: Prisma.UserPortfolioItemOrderByRelationAggregateInput
+  tenderLikes?: Prisma.TenderLikeOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -439,6 +459,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   phone?: string
   telegramChatId?: string
   telegramLinkToken?: string
+  passwordResetToken?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
@@ -449,6 +470,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   telegramVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   telegramLinkTokenExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  passwordResetTokenExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   walletBalance?: Prisma.DecimalFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFilter<"User"> | boolean
   isBlocked?: Prisma.BoolFilter<"User"> | boolean
@@ -475,7 +497,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   tenderComplaintsFiled?: Prisma.TenderComplaintListRelationFilter
   credentials?: Prisma.UserCredentialListRelationFilter
   portfolioItems?: Prisma.UserPortfolioItemListRelationFilter
-}, "id" | "email" | "phone" | "telegramChatId" | "telegramLinkToken">
+  tenderLikes?: Prisma.TenderLikeListRelationFilter
+}, "id" | "email" | "phone" | "telegramChatId" | "telegramLinkToken" | "passwordResetToken">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -490,6 +513,8 @@ export type UserOrderByWithAggregationInput = {
   telegramVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   telegramLinkToken?: Prisma.SortOrderInput | Prisma.SortOrder
   telegramLinkTokenExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  passwordResetToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  passwordResetTokenExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   walletBalance?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
@@ -526,6 +551,8 @@ export type UserScalarWhereWithAggregatesInput = {
   telegramVerifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   telegramLinkToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   telegramLinkTokenExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  passwordResetToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  passwordResetTokenExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   walletBalance?: Prisma.DecimalWithAggregatesFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   isBlocked?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
@@ -554,6 +581,8 @@ export type UserCreateInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -580,6 +609,7 @@ export type UserCreateInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -595,6 +625,8 @@ export type UserUncheckedCreateInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -621,6 +653,7 @@ export type UserUncheckedCreateInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -636,6 +669,8 @@ export type UserUpdateInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -662,6 +697,7 @@ export type UserUpdateInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -677,6 +713,8 @@ export type UserUncheckedUpdateInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -703,6 +741,7 @@ export type UserUncheckedUpdateInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -718,6 +757,8 @@ export type UserCreateManyInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -746,6 +787,8 @@ export type UserUpdateManyMutationInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -774,6 +817,8 @@ export type UserUncheckedUpdateManyInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -808,6 +853,8 @@ export type UserCountOrderByAggregateInput = {
   telegramVerifiedAt?: Prisma.SortOrder
   telegramLinkToken?: Prisma.SortOrder
   telegramLinkTokenExpiresAt?: Prisma.SortOrder
+  passwordResetToken?: Prisma.SortOrder
+  passwordResetTokenExpiresAt?: Prisma.SortOrder
   walletBalance?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
@@ -840,6 +887,8 @@ export type UserMaxOrderByAggregateInput = {
   telegramVerifiedAt?: Prisma.SortOrder
   telegramLinkToken?: Prisma.SortOrder
   telegramLinkTokenExpiresAt?: Prisma.SortOrder
+  passwordResetToken?: Prisma.SortOrder
+  passwordResetTokenExpiresAt?: Prisma.SortOrder
   walletBalance?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
@@ -868,6 +917,8 @@ export type UserMinOrderByAggregateInput = {
   telegramVerifiedAt?: Prisma.SortOrder
   telegramLinkToken?: Prisma.SortOrder
   telegramLinkTokenExpiresAt?: Prisma.SortOrder
+  passwordResetToken?: Prisma.SortOrder
+  passwordResetTokenExpiresAt?: Prisma.SortOrder
   walletBalance?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
@@ -1030,6 +1081,20 @@ export type UserUpdateOneRequiredWithoutTendersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTendersInput, Prisma.UserUpdateWithoutTendersInput>, Prisma.UserUncheckedUpdateWithoutTendersInput>
 }
 
+export type UserCreateNestedOneWithoutTenderLikesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTenderLikesInput, Prisma.UserUncheckedCreateWithoutTenderLikesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTenderLikesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutTenderLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTenderLikesInput, Prisma.UserUncheckedCreateWithoutTenderLikesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTenderLikesInput
+  upsert?: Prisma.UserUpsertWithoutTenderLikesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTenderLikesInput, Prisma.UserUpdateWithoutTenderLikesInput>, Prisma.UserUncheckedUpdateWithoutTenderLikesInput>
+}
+
 export type UserCreateNestedOneWithoutTenderComplaintsFiledInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutTenderComplaintsFiledInput, Prisma.UserUncheckedCreateWithoutTenderComplaintsFiledInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutTenderComplaintsFiledInput
@@ -1127,6 +1192,8 @@ export type UserCreateWithoutCredentialsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -1152,6 +1219,7 @@ export type UserCreateWithoutCredentialsInput = {
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCredentialsInput = {
@@ -1167,6 +1235,8 @@ export type UserUncheckedCreateWithoutCredentialsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -1192,6 +1262,7 @@ export type UserUncheckedCreateWithoutCredentialsInput = {
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCredentialsInput = {
@@ -1223,6 +1294,8 @@ export type UserUpdateWithoutCredentialsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1248,6 +1321,7 @@ export type UserUpdateWithoutCredentialsInput = {
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCredentialsInput = {
@@ -1263,6 +1337,8 @@ export type UserUncheckedUpdateWithoutCredentialsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1288,6 +1364,7 @@ export type UserUncheckedUpdateWithoutCredentialsInput = {
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPortfolioItemsInput = {
@@ -1303,6 +1380,8 @@ export type UserCreateWithoutPortfolioItemsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -1328,6 +1407,7 @@ export type UserCreateWithoutPortfolioItemsInput = {
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPortfolioItemsInput = {
@@ -1343,6 +1423,8 @@ export type UserUncheckedCreateWithoutPortfolioItemsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -1368,6 +1450,7 @@ export type UserUncheckedCreateWithoutPortfolioItemsInput = {
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPortfolioItemsInput = {
@@ -1399,6 +1482,8 @@ export type UserUpdateWithoutPortfolioItemsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1424,6 +1509,7 @@ export type UserUpdateWithoutPortfolioItemsInput = {
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPortfolioItemsInput = {
@@ -1439,6 +1525,8 @@ export type UserUncheckedUpdateWithoutPortfolioItemsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1464,6 +1552,7 @@ export type UserUncheckedUpdateWithoutPortfolioItemsInput = {
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutInterestsInput = {
@@ -1479,6 +1568,8 @@ export type UserCreateWithoutInterestsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -1504,6 +1595,7 @@ export type UserCreateWithoutInterestsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutInterestsInput = {
@@ -1519,6 +1611,8 @@ export type UserUncheckedCreateWithoutInterestsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -1544,6 +1638,7 @@ export type UserUncheckedCreateWithoutInterestsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutInterestsInput = {
@@ -1575,6 +1670,8 @@ export type UserUpdateWithoutInterestsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1600,6 +1697,7 @@ export type UserUpdateWithoutInterestsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInterestsInput = {
@@ -1615,6 +1713,8 @@ export type UserUncheckedUpdateWithoutInterestsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1640,6 +1740,7 @@ export type UserUncheckedUpdateWithoutInterestsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVerificationRequestsInput = {
@@ -1655,6 +1756,8 @@ export type UserCreateWithoutVerificationRequestsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -1680,6 +1783,7 @@ export type UserCreateWithoutVerificationRequestsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVerificationRequestsInput = {
@@ -1695,6 +1799,8 @@ export type UserUncheckedCreateWithoutVerificationRequestsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -1720,6 +1826,7 @@ export type UserUncheckedCreateWithoutVerificationRequestsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVerificationRequestsInput = {
@@ -1751,6 +1858,8 @@ export type UserUpdateWithoutVerificationRequestsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1776,6 +1885,7 @@ export type UserUpdateWithoutVerificationRequestsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVerificationRequestsInput = {
@@ -1791,6 +1901,8 @@ export type UserUncheckedUpdateWithoutVerificationRequestsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1816,6 +1928,7 @@ export type UserUncheckedUpdateWithoutVerificationRequestsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -1831,6 +1944,8 @@ export type UserCreateWithoutAccountsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -1856,6 +1971,7 @@ export type UserCreateWithoutAccountsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -1871,6 +1987,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -1896,6 +2014,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -1927,6 +2046,8 @@ export type UserUpdateWithoutAccountsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1952,6 +2073,7 @@ export type UserUpdateWithoutAccountsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -1967,6 +2089,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1992,6 +2116,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -2007,6 +2132,8 @@ export type UserCreateWithoutSessionsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -2032,6 +2159,7 @@ export type UserCreateWithoutSessionsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -2047,6 +2175,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -2072,6 +2202,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -2103,6 +2234,8 @@ export type UserUpdateWithoutSessionsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2128,6 +2261,7 @@ export type UserUpdateWithoutSessionsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -2143,6 +2277,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2168,6 +2304,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTendersInput = {
@@ -2183,6 +2320,8 @@ export type UserCreateWithoutTendersInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -2208,6 +2347,7 @@ export type UserCreateWithoutTendersInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTendersInput = {
@@ -2223,6 +2363,8 @@ export type UserUncheckedCreateWithoutTendersInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -2248,6 +2390,7 @@ export type UserUncheckedCreateWithoutTendersInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTendersInput = {
@@ -2279,6 +2422,8 @@ export type UserUpdateWithoutTendersInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2304,6 +2449,7 @@ export type UserUpdateWithoutTendersInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTendersInput = {
@@ -2319,6 +2465,8 @@ export type UserUncheckedUpdateWithoutTendersInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2344,6 +2492,195 @@ export type UserUncheckedUpdateWithoutTendersInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutTenderLikesInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutTenderLikesInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderUncheckedCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutTenderLikesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutTenderLikesInput, Prisma.UserUncheckedCreateWithoutTenderLikesInput>
+}
+
+export type UserUpsertWithoutTenderLikesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutTenderLikesInput, Prisma.UserUncheckedUpdateWithoutTenderLikesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTenderLikesInput, Prisma.UserUncheckedCreateWithoutTenderLikesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutTenderLikesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutTenderLikesInput, Prisma.UserUncheckedUpdateWithoutTenderLikesInput>
+}
+
+export type UserUpdateWithoutTenderLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutTenderLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUncheckedUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTenderComplaintsFiledInput = {
@@ -2359,6 +2696,8 @@ export type UserCreateWithoutTenderComplaintsFiledInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -2384,6 +2723,7 @@ export type UserCreateWithoutTenderComplaintsFiledInput = {
   interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTenderComplaintsFiledInput = {
@@ -2399,6 +2739,8 @@ export type UserUncheckedCreateWithoutTenderComplaintsFiledInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -2424,6 +2766,7 @@ export type UserUncheckedCreateWithoutTenderComplaintsFiledInput = {
   interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTenderComplaintsFiledInput = {
@@ -2455,6 +2798,8 @@ export type UserUpdateWithoutTenderComplaintsFiledInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2480,6 +2825,7 @@ export type UserUpdateWithoutTenderComplaintsFiledInput = {
   interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTenderComplaintsFiledInput = {
@@ -2495,6 +2841,8 @@ export type UserUncheckedUpdateWithoutTenderComplaintsFiledInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2520,6 +2868,7 @@ export type UserUncheckedUpdateWithoutTenderComplaintsFiledInput = {
   interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBidsInput = {
@@ -2535,6 +2884,8 @@ export type UserCreateWithoutBidsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -2560,6 +2911,7 @@ export type UserCreateWithoutBidsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBidsInput = {
@@ -2575,6 +2927,8 @@ export type UserUncheckedCreateWithoutBidsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -2600,6 +2954,7 @@ export type UserUncheckedCreateWithoutBidsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBidsInput = {
@@ -2631,6 +2986,8 @@ export type UserUpdateWithoutBidsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2656,6 +3013,7 @@ export type UserUpdateWithoutBidsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBidsInput = {
@@ -2671,6 +3029,8 @@ export type UserUncheckedUpdateWithoutBidsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2696,6 +3056,7 @@ export type UserUncheckedUpdateWithoutBidsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTransactionsInput = {
@@ -2711,6 +3072,8 @@ export type UserCreateWithoutTransactionsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -2736,6 +3099,7 @@ export type UserCreateWithoutTransactionsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -2751,6 +3115,8 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -2776,6 +3142,7 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -2807,6 +3174,8 @@ export type UserUpdateWithoutTransactionsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2832,6 +3201,7 @@ export type UserUpdateWithoutTransactionsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -2847,6 +3217,8 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2872,6 +3244,7 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSubscriptionsInput = {
@@ -2887,6 +3260,8 @@ export type UserCreateWithoutSubscriptionsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -2912,6 +3287,7 @@ export type UserCreateWithoutSubscriptionsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSubscriptionsInput = {
@@ -2927,6 +3303,8 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -2952,6 +3330,7 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSubscriptionsInput = {
@@ -2983,6 +3362,8 @@ export type UserUpdateWithoutSubscriptionsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3008,6 +3389,7 @@ export type UserUpdateWithoutSubscriptionsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSubscriptionsInput = {
@@ -3023,6 +3405,8 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3048,6 +3432,7 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReviewsGivenInput = {
@@ -3063,6 +3448,8 @@ export type UserCreateWithoutReviewsGivenInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -3088,6 +3475,7 @@ export type UserCreateWithoutReviewsGivenInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsGivenInput = {
@@ -3103,6 +3491,8 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -3128,6 +3518,7 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsGivenInput = {
@@ -3148,6 +3539,8 @@ export type UserCreateWithoutReviewsReceivedInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -3173,6 +3566,7 @@ export type UserCreateWithoutReviewsReceivedInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsReceivedInput = {
@@ -3188,6 +3582,8 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   telegramVerifiedAt?: Date | string | null
   telegramLinkToken?: string | null
   telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
   walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: boolean
   isBlocked?: boolean
@@ -3213,6 +3609,7 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsReceivedInput = {
@@ -3244,6 +3641,8 @@ export type UserUpdateWithoutReviewsGivenInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3269,6 +3668,7 @@ export type UserUpdateWithoutReviewsGivenInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsGivenInput = {
@@ -3284,6 +3684,8 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3309,6 +3711,7 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReviewsReceivedInput = {
@@ -3335,6 +3738,8 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3360,6 +3765,7 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
@@ -3375,6 +3781,8 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3400,6 +3808,7 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -3421,6 +3830,7 @@ export type UserCountOutputType = {
   tenderComplaintsFiled: number
   credentials: number
   portfolioItems: number
+  tenderLikes: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3437,6 +3847,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   tenderComplaintsFiled?: boolean | UserCountOutputTypeCountTenderComplaintsFiledArgs
   credentials?: boolean | UserCountOutputTypeCountCredentialsArgs
   portfolioItems?: boolean | UserCountOutputTypeCountPortfolioItemsArgs
+  tenderLikes?: boolean | UserCountOutputTypeCountTenderLikesArgs
 }
 
 /**
@@ -3540,6 +3951,13 @@ export type UserCountOutputTypeCountPortfolioItemsArgs<ExtArgs extends runtime.T
   where?: Prisma.UserPortfolioItemWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTenderLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TenderLikeWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3554,6 +3972,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   telegramVerifiedAt?: boolean
   telegramLinkToken?: boolean
   telegramLinkTokenExpiresAt?: boolean
+  passwordResetToken?: boolean
+  passwordResetTokenExpiresAt?: boolean
   walletBalance?: boolean
   isVerified?: boolean
   isBlocked?: boolean
@@ -3580,6 +4000,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   tenderComplaintsFiled?: boolean | Prisma.User$tenderComplaintsFiledArgs<ExtArgs>
   credentials?: boolean | Prisma.User$credentialsArgs<ExtArgs>
   portfolioItems?: boolean | Prisma.User$portfolioItemsArgs<ExtArgs>
+  tenderLikes?: boolean | Prisma.User$tenderLikesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -3598,6 +4019,8 @@ export type UserSelectScalar = {
   telegramVerifiedAt?: boolean
   telegramLinkToken?: boolean
   telegramLinkTokenExpiresAt?: boolean
+  passwordResetToken?: boolean
+  passwordResetTokenExpiresAt?: boolean
   walletBalance?: boolean
   isVerified?: boolean
   isBlocked?: boolean
@@ -3613,7 +4036,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "phone" | "passwordHash" | "image" | "role" | "telegramChatId" | "telegramVerifiedAt" | "telegramLinkToken" | "telegramLinkTokenExpiresAt" | "walletBalance" | "isVerified" | "isBlocked" | "bio" | "accountType" | "companyName" | "legalForm" | "taxId" | "legalAddress" | "directorName" | "companyPhone" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "phone" | "passwordHash" | "image" | "role" | "telegramChatId" | "telegramVerifiedAt" | "telegramLinkToken" | "telegramLinkTokenExpiresAt" | "passwordResetToken" | "passwordResetTokenExpiresAt" | "walletBalance" | "isVerified" | "isBlocked" | "bio" | "accountType" | "companyName" | "legalForm" | "taxId" | "legalAddress" | "directorName" | "companyPhone" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -3628,6 +4051,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   tenderComplaintsFiled?: boolean | Prisma.User$tenderComplaintsFiledArgs<ExtArgs>
   credentials?: boolean | Prisma.User$credentialsArgs<ExtArgs>
   portfolioItems?: boolean | Prisma.User$portfolioItemsArgs<ExtArgs>
+  tenderLikes?: boolean | Prisma.User$tenderLikesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -3647,6 +4071,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     tenderComplaintsFiled: Prisma.$TenderComplaintPayload<ExtArgs>[]
     credentials: Prisma.$UserCredentialPayload<ExtArgs>[]
     portfolioItems: Prisma.$UserPortfolioItemPayload<ExtArgs>[]
+    tenderLikes: Prisma.$TenderLikePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3661,6 +4086,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     telegramVerifiedAt: Date | null
     telegramLinkToken: string | null
     telegramLinkTokenExpiresAt: Date | null
+    passwordResetToken: string | null
+    passwordResetTokenExpiresAt: Date | null
     walletBalance: runtime.Decimal
     isVerified: boolean
     isBlocked: boolean
@@ -4027,6 +4454,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   tenderComplaintsFiled<T extends Prisma.User$tenderComplaintsFiledArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tenderComplaintsFiledArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderComplaintPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   credentials<T extends Prisma.User$credentialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$credentialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserCredentialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   portfolioItems<T extends Prisma.User$portfolioItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$portfolioItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPortfolioItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tenderLikes<T extends Prisma.User$tenderLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tenderLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4068,6 +4496,8 @@ export interface UserFieldRefs {
   readonly telegramVerifiedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly telegramLinkToken: Prisma.FieldRef<"User", 'String'>
   readonly telegramLinkTokenExpiresAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly passwordResetToken: Prisma.FieldRef<"User", 'String'>
+  readonly passwordResetTokenExpiresAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly walletBalance: Prisma.FieldRef<"User", 'Decimal'>
   readonly isVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly isBlocked: Prisma.FieldRef<"User", 'Boolean'>
@@ -4738,6 +5168,30 @@ export type User$portfolioItemsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.UserPortfolioItemScalarFieldEnum | Prisma.UserPortfolioItemScalarFieldEnum[]
+}
+
+/**
+ * User.tenderLikes
+ */
+export type User$tenderLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TenderLike
+   */
+  select?: Prisma.TenderLikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TenderLike
+   */
+  omit?: Prisma.TenderLikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TenderLikeInclude<ExtArgs> | null
+  where?: Prisma.TenderLikeWhereInput
+  orderBy?: Prisma.TenderLikeOrderByWithRelationInput | Prisma.TenderLikeOrderByWithRelationInput[]
+  cursor?: Prisma.TenderLikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TenderLikeScalarFieldEnum | Prisma.TenderLikeScalarFieldEnum[]
 }
 
 /**

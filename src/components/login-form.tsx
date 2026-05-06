@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { PhoneInput } from "@/components/phone-input";
 import { ROUTES } from "@/lib/routes";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 export function LoginForm() {
   const router = useRouter();
@@ -43,16 +44,19 @@ export function LoginForm() {
 
     if (!result || result.error) {
       if (result?.error === "TELEGRAM_NOT_VERIFIED") {
-        setError(
-          "Ձեր հաշիվը դեռ Telegram-ով վերիֆիկացված չէ։ Խնդրում ենք ավարտել վերիֆիկացիան գրանցման էջից։",
-        );
+        const msg =
+          "Ձեր հաշիվը դեռ Telegram-ով վերիֆիկացված չէ։ Խնդրում ենք ավարտել վերիֆիկացիան գրանցման էջից։";
+        setError(msg);
+        toastError("Մուտքը չհաջողվեց", msg);
         return;
       }
 
       setError("Սխալ հեռախոսահամար կամ գաղտնաբառ։");
+      toastError("Մուտքը չհաջողվեց", "Սխալ հեռախոսահամար կամ գաղտնաբառ։");
       return;
     }
 
+    toastSuccess("Բարի գալուստ", "Մուտքը հաջողվեց։");
     router.push(callbackUrl);
     router.refresh();
   }

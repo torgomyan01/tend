@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { TenderStatus } from "@/generated/prisma/client";
 import { TENDER_STATUS_LABEL } from "@/lib/tender-status";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 const STATUSES: TenderStatus[] = [
   "DRAFT",
@@ -92,17 +93,23 @@ export function AdminTenderEditDialog({
 
     try {
       if (!title.trim()) {
-        setError("Վերնագիրը դատարկ է։");
+        const msg = "Վերնագիրը դատարկ է։";
+        setError(msg);
+        toastError("Լրացրեք", msg);
         setPending(false);
         return;
       }
       if (!description.trim()) {
-        setError("Նկարագրությունը դատարկ է։");
+        const msg = "Նկարագրությունը դատարկ է։";
+        setError(msg);
+        toastError("Լրացրեք", msg);
         setPending(false);
         return;
       }
       if (!category.trim() || !service.trim()) {
-        setError("Կատեգորիան և ծառայությունը պարտադիր են։");
+        const msg = "Կատեգորիան և ծառայությունը պարտադիր են։";
+        setError(msg);
+        toastError("Լրացրեք", msg);
         setPending(false);
         return;
       }
@@ -112,7 +119,9 @@ export function AdminTenderEditDialog({
       const budgetMinVal = minStr === "" ? null : parseMoney(minStr);
       const budgetMaxVal = maxStr === "" ? null : parseMoney(maxStr);
       if (budgetMinVal !== null && budgetMaxVal !== null && budgetMinVal > budgetMaxVal) {
-        setError("Բյուջեի դաշտերը սխալ են։");
+        const msg = "Բյուջեի դաշտերը սխալ են։";
+        setError(msg);
+        toastError("Բյուջե", msg);
         setPending(false);
         return;
       }
@@ -143,20 +152,29 @@ export function AdminTenderEditDialog({
           error?: string;
         } | null;
         if (err?.error === "BUDGET_INVALID") {
-          setError("Բյուջեի դաշտերը սխալ են։");
+          const msg = "Բյուջեի դաշտերը սխալ են։";
+          setError(msg);
+          toastError("Բյուջե", msg);
         } else {
-          setError("Չհաջողվեց պահպանել։");
+          const msg = "Չհաջողվեց պահպանել։";
+          setError(msg);
+          toastError("Պահպանում", msg);
         }
         return;
       }
 
+      toastSuccess("Պահպանվեց", "Մրցույթի տվյալները թարմացվել են։");
       onClose();
       router.refresh();
     } catch (e) {
       if (e instanceof Error && e.message === "BUDGET") {
-        setError("Բյուջեի ձևաչափը սխալ է։");
+        const msg = "Բյուջեի ձևաչափը սխալ է։";
+        setError(msg);
+        toastError("Բյուջե", msg);
       } else {
-        setError("Ցանցի խնդիր։");
+        const msg = "Ցանցի խնդիր։";
+        setError(msg);
+        toastError("Ցանց", msg);
       }
     } finally {
       setPending(false);

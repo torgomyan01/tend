@@ -95,6 +95,8 @@ model User {
   telegramVerifiedAt DateTime?
   telegramLinkToken String?             @unique
   telegramLinkTokenExpiresAt DateTime?
+  passwordResetToken String?            @unique
+  passwordResetTokenExpiresAt DateTime?
   walletBalance     Decimal             @default(0) @db.Decimal(12, 2)
   isVerified        Boolean             @default(false)
   isBlocked         Boolean             @default(false)
@@ -121,6 +123,7 @@ model User {
   tenderComplaintsFiled TenderComplaint[] @relation("TenderComplaintReporter")
   credentials       UserCredential[]
   portfolioItems    UserPortfolioItem[]
+  tenderLikes       TenderLike[]
 
   @@index([email])
   @@index([phone])
@@ -326,6 +329,7 @@ model Tender {
   reviews        Review[]
   selectedServices TenderSelectedService[]
   complaints       TenderComplaint[]
+  likes            TenderLike[]
 
   @@index([clientId])
   @@index([status, endsAt])
@@ -333,6 +337,21 @@ model Tender {
   @@index([city])
   @@index([locationId])
   @@map("tender")
+}
+
+model TenderLike {
+  id        String   @id @default(cuid())
+  userId    String
+  tenderId  String
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tender Tender @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tenderId])
+  @@index([userId, createdAt])
+  @@index([tenderId, createdAt])
+  @@map("tenderlike")
 }
 
 model TenderImage {

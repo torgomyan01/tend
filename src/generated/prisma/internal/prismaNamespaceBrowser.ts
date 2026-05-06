@@ -64,6 +64,7 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   Location: 'Location',
   Tender: 'Tender',
+  TenderLike: 'TenderLike',
   TenderImage: 'TenderImage',
   TenderDocument: 'TenderDocument',
   TenderSelectedService: 'TenderSelectedService',
@@ -103,6 +104,8 @@ export const UserScalarFieldEnum = {
   telegramVerifiedAt: 'telegramVerifiedAt',
   telegramLinkToken: 'telegramLinkToken',
   telegramLinkTokenExpiresAt: 'telegramLinkTokenExpiresAt',
+  passwordResetToken: 'passwordResetToken',
+  passwordResetTokenExpiresAt: 'passwordResetTokenExpiresAt',
   walletBalance: 'walletBalance',
   isVerified: 'isVerified',
   isBlocked: 'isBlocked',
@@ -288,6 +291,16 @@ export const TenderScalarFieldEnum = {
 export type TenderScalarFieldEnum = (typeof TenderScalarFieldEnum)[keyof typeof TenderScalarFieldEnum]
 
 
+export const TenderLikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tenderId: 'tenderId',
+  createdAt: 'createdAt'
+} as const
+
+export type TenderLikeScalarFieldEnum = (typeof TenderLikeScalarFieldEnum)[keyof typeof TenderLikeScalarFieldEnum]
+
+
 export const TenderImageScalarFieldEnum = {
   id: 'id',
   tenderId: 'tenderId',
@@ -430,6 +443,7 @@ export const UserOrderByRelevanceFieldEnum = {
   image: 'image',
   telegramChatId: 'telegramChatId',
   telegramLinkToken: 'telegramLinkToken',
+  passwordResetToken: 'passwordResetToken',
   bio: 'bio',
   companyName: 'companyName',
   taxId: 'taxId',
@@ -567,6 +581,15 @@ export const TenderOrderByRelevanceFieldEnum = {
 } as const
 
 export type TenderOrderByRelevanceFieldEnum = (typeof TenderOrderByRelevanceFieldEnum)[keyof typeof TenderOrderByRelevanceFieldEnum]
+
+
+export const TenderLikeOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tenderId: 'tenderId'
+} as const
+
+export type TenderLikeOrderByRelevanceFieldEnum = (typeof TenderLikeOrderByRelevanceFieldEnum)[keyof typeof TenderLikeOrderByRelevanceFieldEnum]
 
 
 export const TenderImageOrderByRelevanceFieldEnum = {

@@ -7,6 +7,7 @@ import { useState } from "react";
 import { formatDateTime } from "@/lib/format";
 import type { TenderStatus } from "@/generated/prisma/client";
 import { ROUTES } from "@/lib/routes";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 export type TenderLifecycleReview = {
   reviewerId: string;
@@ -84,12 +85,17 @@ export function TenderAwardLifecyclePanel({
         method: "POST",
       });
       if (!res.ok) {
-        setCompleteError("Չհաջողվեց փակել մրցույթը։");
+        const msg = "Չհաջողվեց փակել մրցույթը։";
+        setCompleteError(msg);
+        toastError("Մրցույթը չփակվեց", msg);
         return;
       }
+      toastSuccess("Մրցույթը փակված է", "Հիմա կարող եք փոխադարձ գնահատական թողնել։");
       router.refresh();
     } catch {
-      setCompleteError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setCompleteError(msg);
+      toastError("Ցանցի խնդիր", msg);
     } finally {
       setCompleteLoading(false);
     }
@@ -113,20 +119,28 @@ export function TenderAwardLifecyclePanel({
       } | null;
       if (!res.ok) {
         if (data?.error === "ALREADY_REVIEWED") {
-          setReviewError("Դուք արդեն գնահատել եք։");
+          const msg = "Դուք արդեն գնահատել եք։";
+          setReviewError(msg);
+          toastError("Չի կարող պահպանել", msg);
         } else if (data?.error === "REVIEW_PENDING_MODERATION") {
-          setReviewError(
-            "Ձեր գնահատականը արդեն ուղարկված է և սպասում է մոդերացիայի։",
-          );
+          const msg =
+            "Ձեր գնահատականը արդեն ուղարկված է և սպասում է մոդերացիայի։";
+          setReviewError(msg);
+          toastError("Սպասում է մոդերացիայի", msg);
         } else {
-          setReviewError("Չհաջողվեց պահպանել գնահատականը։");
+          const msg = "Չհաջողվեց պահպանել գնահատականը։";
+          setReviewError(msg);
+          toastError("Սխալ", msg);
         }
         return;
       }
       setReviewComment("");
+      toastSuccess("Գնահատականը ուղարկվեց", "Շնորհակալություն։");
       router.refresh();
     } catch {
-      setReviewError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setReviewError(msg);
+      toastError("Ցանցի խնդիր", msg);
     } finally {
       setReviewLoading(false);
     }
@@ -141,6 +155,26 @@ export function TenderAwardLifecyclePanel({
       <h2 className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">
         Կատարման փուլ
       </h2>
+
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold text-slate-600">
+        <Link
+          href={ROUTES.userProfile(clientId)}
+          className="font-black text-slate-800 hover:underline"
+        >
+          {clientDisplayName}
+        </Link>
+        {winnerProviderId ? (
+          <>
+            <span className="text-slate-300">·</span>
+            <Link
+              href={ROUTES.userProfile(winnerProviderId)}
+              className="font-black text-slate-800 hover:underline"
+            >
+              {winnerDisplayName}
+            </Link>
+          </>
+        ) : null}
+      </div>
 
       {status === "AWARDED" && isWinner ? (
         <p className="rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-indigo-900 ring-1 ring-indigo-200">

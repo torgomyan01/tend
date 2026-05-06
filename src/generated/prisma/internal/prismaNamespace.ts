@@ -397,6 +397,7 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   Location: 'Location',
   Tender: 'Tender',
+  TenderLike: 'TenderLike',
   TenderImage: 'TenderImage',
   TenderDocument: 'TenderDocument',
   TenderSelectedService: 'TenderSelectedService',
@@ -420,7 +421,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userCredential" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "transaction" | "subscription" | "review"
+    modelProps: "user" | "userCredential" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderLike" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "transaction" | "subscription" | "review"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1282,6 +1283,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TenderLike: {
+      payload: Prisma.$TenderLikePayload<ExtArgs>
+      fields: Prisma.TenderLikeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TenderLikeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderLikePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TenderLikeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderLikePayload>
+        }
+        findFirst: {
+          args: Prisma.TenderLikeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderLikePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TenderLikeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderLikePayload>
+        }
+        findMany: {
+          args: Prisma.TenderLikeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderLikePayload>[]
+        }
+        create: {
+          args: Prisma.TenderLikeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderLikePayload>
+        }
+        createMany: {
+          args: Prisma.TenderLikeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TenderLikeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderLikePayload>
+        }
+        update: {
+          args: Prisma.TenderLikeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderLikePayload>
+        }
+        deleteMany: {
+          args: Prisma.TenderLikeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TenderLikeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TenderLikeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderLikePayload>
+        }
+        aggregate: {
+          args: Prisma.TenderLikeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTenderLike>
+        }
+        groupBy: {
+          args: Prisma.TenderLikeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderLikeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TenderLikeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderLikeCountAggregateOutputType> | number
+        }
+      }
+    }
     TenderImage: {
       payload: Prisma.$TenderImagePayload<ExtArgs>
       fields: Prisma.TenderImageFieldRefs
@@ -1862,6 +1929,8 @@ export const UserScalarFieldEnum = {
   telegramVerifiedAt: 'telegramVerifiedAt',
   telegramLinkToken: 'telegramLinkToken',
   telegramLinkTokenExpiresAt: 'telegramLinkTokenExpiresAt',
+  passwordResetToken: 'passwordResetToken',
+  passwordResetTokenExpiresAt: 'passwordResetTokenExpiresAt',
   walletBalance: 'walletBalance',
   isVerified: 'isVerified',
   isBlocked: 'isBlocked',
@@ -2047,6 +2116,16 @@ export const TenderScalarFieldEnum = {
 export type TenderScalarFieldEnum = (typeof TenderScalarFieldEnum)[keyof typeof TenderScalarFieldEnum]
 
 
+export const TenderLikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tenderId: 'tenderId',
+  createdAt: 'createdAt'
+} as const
+
+export type TenderLikeScalarFieldEnum = (typeof TenderLikeScalarFieldEnum)[keyof typeof TenderLikeScalarFieldEnum]
+
+
 export const TenderImageScalarFieldEnum = {
   id: 'id',
   tenderId: 'tenderId',
@@ -2189,6 +2268,7 @@ export const UserOrderByRelevanceFieldEnum = {
   image: 'image',
   telegramChatId: 'telegramChatId',
   telegramLinkToken: 'telegramLinkToken',
+  passwordResetToken: 'passwordResetToken',
   bio: 'bio',
   companyName: 'companyName',
   taxId: 'taxId',
@@ -2326,6 +2406,15 @@ export const TenderOrderByRelevanceFieldEnum = {
 } as const
 
 export type TenderOrderByRelevanceFieldEnum = (typeof TenderOrderByRelevanceFieldEnum)[keyof typeof TenderOrderByRelevanceFieldEnum]
+
+
+export const TenderLikeOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tenderId: 'tenderId'
+} as const
+
+export type TenderLikeOrderByRelevanceFieldEnum = (typeof TenderLikeOrderByRelevanceFieldEnum)[keyof typeof TenderLikeOrderByRelevanceFieldEnum]
 
 
 export const TenderImageOrderByRelevanceFieldEnum = {
@@ -2667,6 +2756,7 @@ export type GlobalOmitConfig = {
   verificationToken?: Prisma.VerificationTokenOmit
   location?: Prisma.LocationOmit
   tender?: Prisma.TenderOmit
+  tenderLike?: Prisma.TenderLikeOmit
   tenderImage?: Prisma.TenderImageOmit
   tenderDocument?: Prisma.TenderDocumentOmit
   tenderSelectedService?: Prisma.TenderSelectedServiceOmit

@@ -2,25 +2,25 @@
 
 import { ChevronDown, Loader2, Wallet } from "lucide-react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { WalletDepositPanel } from "@/components/wallet-deposit-panel";
 import { formatAmd } from "@/lib/format";
 import { ROUTES } from "@/lib/routes";
 
-export function WalletDropdown() {
+type Props = {
+  isLoggedIn: boolean;
+};
+
+export function WalletDropdown({ isLoggedIn }: Props) {
   const router = useRouter();
-  const { data: session, status } = useSession();
   const [open, setOpen] = useState(false);
   const [balance, setBalance] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const loggedIn = status === "authenticated" && Boolean(session?.user?.id);
-
   const fetchBalance = useCallback(async () => {
-    if (!loggedIn) return;
+    if (!isLoggedIn) return;
     setLoading(true);
     try {
       const res = await fetch("/api/account/wallet", { cache: "no-store" });
@@ -35,15 +35,15 @@ export function WalletDropdown() {
     } finally {
       setLoading(false);
     }
-  }, [loggedIn]);
+  }, [isLoggedIn]);
 
   useEffect(() => {
-    if (!loggedIn) {
+    if (!isLoggedIn) {
       setBalance(null);
       return;
     }
     void fetchBalance();
-  }, [loggedIn, fetchBalance]);
+  }, [isLoggedIn, fetchBalance]);
 
   useEffect(() => {
     if (!open) return;
@@ -60,7 +60,7 @@ export function WalletDropdown() {
     return () => document.removeEventListener("pointerdown", handlePointerDown);
   }, []);
 
-  if (!loggedIn) {
+  if (!isLoggedIn) {
     return null;
   }
 

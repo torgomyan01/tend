@@ -2,6 +2,7 @@
 
 import { CheckCircle2, Loader2, UploadCloud } from "lucide-react";
 import { useRef, useState } from "react";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 type VerificationStatus = "PENDING" | "APPROVED" | "REJECTED";
 
@@ -44,43 +45,63 @@ export function AccountVerificationForm({
     setError(null);
     setIsSubmitting(true);
 
-    const formData = new FormData(event.currentTarget);
-    const response = await fetch("/api/account/verification", {
-      method: "POST",
-      body: formData,
-    });
-    const data = await response.json().catch(() => null);
-
-    setIsSubmitting(false);
-
-    if (!response.ok) {
-      if (data?.error === "PENDING_REQUEST_EXISTS") {
-        setError("Դուք արդեն ունեք սպասման մեջ գտնվող վերիֆիկացիայի հայտ։");
-        return;
-      }
-
-      if (data?.error === "INVALID_FILE_TYPE") {
-        setError("Թույլատրվում են միայն JPG, PNG կամ WEBP նկարներ։");
-        return;
-      }
-
-      if (data?.error === "FILE_TOO_LARGE") {
-        setError("Յուրաքանչյուր նկարի չափը պետք է լինի մինչև 5MB։");
-        return;
-      }
-
-      setError("Չհաջողվեց ուղարկել վերիֆիկացիայի հայտը։ Փորձեք կրկին։");
-      return;
-    }
-
-    if (data?.request) {
-      setRequestInfo({
-        status: data.request.status,
-        submittedAt: data.request.submittedAt,
-        selfieUrl: data.request.selfieUrl,
-        documentUrl: data.request.documentUrl,
+    try {
+      const formData = new FormData(event.currentTarget);
+      const response = await fetch("/api/account/verification", {
+        method: "POST",
+        body: formData,
       });
-      formRef.current?.reset();
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        if (data?.error === "PENDING_REQUEST_EXISTS") {
+          const msg =
+            "Դուք արդեն ունեք սպասման մեջ գտնվող վերիֆիկացիայի հայտ։";
+          setError(msg);
+          toastError("Հայտ արդեն կա", msg);
+          return;
+        }
+
+        if (data?.error === "INVALID_FILE_TYPE") {
+          const msg = "Թույլատրվում են միայն JPG, PNG կամ WEBP նկարներ։";
+          setError(msg);
+          toastError("Ֆայլի տեսակ", msg);
+          return;
+        }
+
+        if (data?.error === "FILE_TOO_LARGE") {
+          const msg = "Յուրաքանչյուր նկարի չափը պետք է լինի մինչև 5MB։";
+          setError(msg);
+          toastError("Ֆայլը մեծ է", msg);
+          return;
+        }
+
+        const msg =
+          "Չհաջողվեց ուղարկել վերիֆիկացիայի հայտը։ Փորձեք կրկին։";
+        setError(msg);
+        toastError("Ուղարկում չհաջողվեց", msg);
+        return;
+      }
+
+      if (data?.request) {
+        setRequestInfo({
+          status: data.request.status,
+          submittedAt: data.request.submittedAt,
+          selfieUrl: data.request.selfieUrl,
+          documentUrl: data.request.documentUrl,
+        });
+        formRef.current?.reset();
+        toastSuccess(
+          "Հայտը ուղարկվեց",
+          "Վերիֆիկացիան կստուգվի մոդերատորների կողմից։",
+        );
+      }
+    } catch {
+      const msg = "Ցանցի խնդիր։ Փորձեք կրկին։";
+      setError(msg);
+      toastError("Ցանց", msg);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 

@@ -9,6 +9,7 @@ import {
   LEGAL_FORM_LABEL,
   type LegalFormValue,
 } from "@/lib/account-type";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 export type AccountCompanyInitial = {
   accountType: AccountTypeValue;
@@ -79,23 +80,33 @@ export function AccountCompanySettings({ initial }: Props) {
 
     if (accountType === "LEGAL_ENTITY") {
       if (companyName.trim().length < 2) {
-        setError("Ընկերության անվանումը պարտադիր է։");
+        const msg = "Ընկերության անվանումը պարտադիր է։";
+        setError(msg);
+        toastError("Լրացրեք", msg);
         return;
       }
       if (!legalForm) {
-        setError("Ընտրեք իրավաբանական ձևը։");
+        const msg = "Ընտրեք իրավաբանական ձևը։";
+        setError(msg);
+        toastError("Լրացրեք", msg);
         return;
       }
       if (taxId.trim().length === 0) {
-        setError("ՀՎՀՀ-ն պարտադիր է։");
+        const msg = "ՀՎՀՀ-ն պարտադիր է։";
+        setError(msg);
+        toastError("Լրացրեք", msg);
         return;
       }
       if (legalAddress.trim().length === 0) {
-        setError("Իրավաբանական հասցեն պարտադիր է։");
+        const msg = "Իրավաբանական հասցեն պարտադիր է։";
+        setError(msg);
+        toastError("Լրացրեք", msg);
         return;
       }
       if (directorName.trim().length === 0) {
-        setError("Տնօրենի անունը պարտադիր է։");
+        const msg = "Տնօրենի անունը պարտադիր է։";
+        setError(msg);
+        toastError("Լրացրեք", msg);
         return;
       }
     }
@@ -124,20 +135,28 @@ export function AccountCompanySettings({ initial }: Props) {
 
       if (!res.ok) {
         if (data?.error === "INVALID_PAYLOAD") {
-          setError("Ստուգեք դաշտերը — հնարավոր է լրացված չէ պարտադիրը։");
+          const msg =
+            "Ստուգեք դաշտերը — հնարավոր է լրացված չէ պարտադիրը։";
+          setError(msg);
+          toastError("Ստուգեք դաշտերը", msg);
         } else {
-          setError("Չհաջողվեց պահպանել։");
+          const msg = "Չհաջողվեց պահպանել։";
+          setError(msg);
+          toastError("Պահպանում չհաջողվեց", msg);
         }
         return;
       }
-      setOkMessage(
+      const ok =
         accountType === "LEGAL_ENTITY"
           ? "Ընկերության տվյալները պահպանվեցին։"
-          : "Տիպը փոխվել է։ Ընկերության տվյալները մաքրվեցին։",
-      );
+          : "Տիպը փոխվել է։ Ընկերության տվյալները մաքրվեցին։";
+      setOkMessage(ok);
+      toastSuccess("Պահպանվեց", ok);
       router.refresh();
     } catch {
-      setError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setSaving(false);
     }

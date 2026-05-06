@@ -3,6 +3,7 @@
 import { Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 const ERROR_MESSAGES: Record<string, string> = {
   TITLE_TAKEN: "Այս անունով ոլորտ արդեն կա։",
@@ -76,7 +77,9 @@ export function CategoryFormDialog({
 
     const sortOrderNumber = Number(sortOrder);
     if (Number.isNaN(sortOrderNumber) || sortOrderNumber < 0) {
-      setError("Հերթականությունը պետք է լինի 0 կամ ավելի։");
+      const msg = "Հերթականությունը պետք է լինի 0 կամ ավելի։";
+      setError(msg);
+      toastError("Հերթականություն", msg);
       setIsSubmitting(false);
       return;
     }
@@ -106,14 +109,21 @@ export function CategoryFormDialog({
           ? (ERROR_MESSAGES[data.error] ?? "Չհաջողվեց պահպանել։")
           : "Չհաջողվեց պահպանել։";
         setError(message);
+        toastError("Ոլորտ", message);
         setIsSubmitting(false);
         return;
       }
 
+      toastSuccess(
+        isEdit ? "Ոլորտը թարմացվեց" : "Ոլորտը ստեղծվեց",
+        isEdit ? "Փոփոխությունները պահպանված են։" : "Նոր ոլորտը ավելացվել է։",
+      );
       router.refresh();
       onClose();
     } catch {
-      setError("Ցանցի սխալ։ Փորձեք կրկին։");
+      const msg = "Ցանցի սխալ։ Փորձեք կրկին։";
+      setError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setIsSubmitting(false);
     }

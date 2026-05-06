@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { formatDateTime } from "@/lib/format";
 import { ROUTES } from "@/lib/routes";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 type Props = {
   tenderId: string;
@@ -54,23 +55,35 @@ export function TenderDedicatedReviewForm({
       } | null;
       if (!res.ok) {
         if (data?.error === "ALREADY_REVIEWED") {
-          setError("Դուք արդեն գնահատել եք։");
+          const msg = "Դուք արդեն գնահատել եք։";
+          setError(msg);
+          toastError("Չի կարող պահպանել", msg);
         } else if (data?.error === "REVIEW_PENDING_MODERATION") {
-          setError(
-            "Ձեր գնահատականը արդեն ուղարկված է և սպասում է մոդերացիայի։",
-          );
+          const msg =
+            "Ձեր գնահատականը արդեն ուղարկված է և սպասում է մոդերացիայի։";
+          setError(msg);
+          toastError("Սպասում է մոդերացիայի", msg);
         } else if (data?.error === "NOT_REVIEWABLE") {
-          setError("Այս մրցույթը գնահատման համար հասանելի չէ։");
+          const msg = "Այս մրցույթը գնահատման համար հասանելի չէ։";
+          setError(msg);
+          toastError("Չի կարող գնահատել", msg);
         } else if (data?.error === "FORBIDDEN") {
-          setError("Մուտքը արգելված է։");
+          const msg = "Մուտքը արգելված է։";
+          setError(msg);
+          toastError("Մուտք չկա", msg);
         } else {
-          setError("Չհաջողվեց պահպանել գնահատականը։");
+          const msg = "Չհաջողվեց պահպանել գնահատականը։";
+          setError(msg);
+          toastError("Սխալ", msg);
         }
         return;
       }
+      toastSuccess("Գնահատականը ուղարկվեց", "Շնորհակալություն։");
       router.push(ROUTES.tenderDetail(tenderId));
     } catch {
-      setError("Ցանցի խնդիր։");
+      const msg = "Ցանցի խնդիր։";
+      setError(msg);
+      toastError("Ցանցի խնդիր", msg);
     } finally {
       setLoading(false);
     }

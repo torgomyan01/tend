@@ -2,6 +2,7 @@
 
 import {
   History,
+  Heart,
   Languages,
   LayoutDashboard,
   LogIn,
@@ -14,7 +15,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { WalletDepositPanel } from "@/components/wallet-deposit-panel";
@@ -28,19 +29,19 @@ const navItems = [
   { label: "Մասնագետների համար", href: ROUTES.sections.providers },
 ];
 
-export function MobileMenu() {
+type Props = {
+  isLoggedIn: boolean;
+  isAdmin: boolean;
+};
+
+export function MobileMenu({ isLoggedIn, isAdmin }: Props) {
   const router = useRouter();
-  const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [walletBalance, setWalletBalance] = useState<number | null>(null);
   const [walletLoading, setWalletLoading] = useState(false);
 
-  const loggedIn = status === "authenticated" && Boolean(session?.user?.id);
-  const isAdmin =
-    session?.user?.role === "ADMIN" || session?.user?.role === "MODERATOR";
-
   const refreshWallet = useCallback(async () => {
-    if (!loggedIn) return;
+    if (!isLoggedIn) return;
     setWalletLoading(true);
     try {
       const res = await fetch("/api/account/wallet", { cache: "no-store" });
@@ -55,12 +56,12 @@ export function MobileMenu() {
     } finally {
       setWalletLoading(false);
     }
-  }, [loggedIn]);
+  }, [isLoggedIn]);
 
   useEffect(() => {
-    if (!isOpen || !loggedIn) return;
+    if (!isOpen || !isLoggedIn) return;
     void refreshWallet();
-  }, [isOpen, loggedIn, refreshWallet]);
+  }, [isOpen, isLoggedIn, refreshWallet]);
 
   const close = () => setIsOpen(false);
 
@@ -93,7 +94,7 @@ export function MobileMenu() {
 
           <div className="my-3 h-px bg-slate-100" />
 
-          {loggedIn ? (
+          {isLoggedIn ? (
             <>
               <div className="rounded-3xl bg-slate-50 p-4 ring-1 ring-slate-200">
                 <div className="flex items-center gap-2">
@@ -154,6 +155,14 @@ export function MobileMenu() {
                 >
                   <History className="size-4 text-amber-700" />
                   Իմ առաջարկներ
+                </Link>
+                <Link
+                  href={ROUTES.likedTenders}
+                  onClick={close}
+                  className="flex items-center gap-3 rounded-3xl bg-white px-4 py-3 text-sm font-black text-slate-800 ring-1 ring-slate-200"
+                >
+                  <Heart className="size-4 text-amber-700" />
+                  Իմ հավանածները
                 </Link>
                 {isAdmin ? (
                   <Link

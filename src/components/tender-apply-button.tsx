@@ -14,6 +14,7 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatAmd } from "@/lib/format";
 import { tenderApplyMockCookieName } from "@/lib/tender-apply-mock-cookie";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 type Stage = "details" | "processing" | "success";
 
@@ -268,7 +269,9 @@ export function TenderApplyButton({
 
       if (!res.ok) {
         clearMockCookie();
-        setSubmitError(mapApiError(data?.error));
+        const msg = mapApiError(data?.error);
+        setSubmitError(msg);
+        toastError("Առաջարկը չուղարկվեց", msg);
         setStage("details");
         submitLockRef.current = false;
         return;
@@ -277,10 +280,13 @@ export function TenderApplyButton({
       clearMockCookie();
       setStage("success");
       pendingRouterRefreshRef.current = true;
+      toastSuccess("Առաջարկը ուղարկված է", "Պատվիրատուն կստանա ծանուցում։");
       submitLockRef.current = false;
     } catch {
       clearMockCookie();
-      setSubmitError("Ցանցի խնդիր։ Կապակցումը ընդհատվեց։");
+      const msg = "Ցանցի խնդիր։ Կապակցումը ընդհատվեց։";
+      setSubmitError(msg);
+      toastError("Ցանցի խնդիր", msg);
       setStage("details");
       submitLockRef.current = false;
     }

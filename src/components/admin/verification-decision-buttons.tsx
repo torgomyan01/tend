@@ -3,6 +3,7 @@
 import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 type VerificationDecisionButtonsProps = {
   requestId: string;
@@ -32,13 +33,25 @@ export function VerificationDecisionButtons({
 
       if (!response.ok) {
         const payload = await response.json().catch(() => null);
-        setError(payload?.error ?? "REQUEST_FAILED");
+        const raw = payload?.error ?? "REQUEST_FAILED";
+        setError(raw);
+        toastError(
+          "Վերիֆիկացիա",
+          "Չհաջողվեց պահպանել։ Փորձեք կրկին։",
+        );
         return;
       }
 
+      toastSuccess(
+        action === "APPROVE" ? "Հաստատվեց" : "Մերժվեց",
+        action === "APPROVE"
+          ? "Վերիֆիկացիան հաստատված է։"
+          : "Վերիֆիկացիան մերժված է։",
+      );
       router.refresh();
     } catch {
       setError("NETWORK_ERROR");
+      toastError("Ցանց", "Ցանցի խնդիր։ Փորձեք կրկին։");
     } finally {
       setIsPending(null);
     }

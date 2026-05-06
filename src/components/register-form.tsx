@@ -27,6 +27,7 @@ import {
 } from "@/lib/account-type";
 import { ROUTES } from "@/lib/routes";
 import type { ServiceCategoryWithServices } from "@/lib/services-data";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 type RegisterResponse = {
   userId: string;
@@ -86,6 +87,7 @@ export function RegisterForm({ categories }: RegisterFormProps) {
 
       if (data.verified) {
         setIsVerified(true);
+        toastSuccess("Հաշիվը վերիֆիկացվեց", "Կարող եք մուտք գործել։");
         window.clearInterval(intervalId);
       }
     }, 3000);
@@ -101,26 +103,31 @@ export function RegisterForm({ categories }: RegisterFormProps) {
     if (isLegal) {
       if (companyName.trim().length < 2) {
         setError("Ընկերության անվանումը պարտադիր է։");
+        toastError("Սխալ տվյալներ", "Ընկերության անվանումը պարտադիր է։");
         setIsSubmitting(false);
         return;
       }
       if (!legalForm) {
         setError("Ընտրեք իրավաբանական ձևը։");
+        toastError("Սխալ տվյալներ", "Ընտրեք իրավաբանական ձևը։");
         setIsSubmitting(false);
         return;
       }
       if (taxId.trim().length === 0) {
         setError("ՀՎՀՀ-ն պարտադիր է։");
+        toastError("Սխալ տվյալներ", "ՀՎՀՀ-ն պարտադիր է։");
         setIsSubmitting(false);
         return;
       }
       if (legalAddress.trim().length === 0) {
         setError("Իրավաբանական հասցեն պարտադիր է։");
+        toastError("Սխալ տվյալներ", "Իրավաբանական հասցեն պարտադիր է։");
         setIsSubmitting(false);
         return;
       }
       if (directorName.trim().length === 0) {
         setError("Տնօրենի անունը պարտադիր է։");
+        toastError("Սխալ տվյալներ", "Տնօրենի անունը պարտադիր է։");
         setIsSubmitting(false);
         return;
       }
@@ -151,18 +158,22 @@ export function RegisterForm({ categories }: RegisterFormProps) {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(
+        const msg =
           data.error === "USER_ALREADY_EXISTS"
             ? "Այս էլ․ փոստով կամ հեռախոսահամարով հաշիվ արդեն գոյություն ունի։"
-            : "Չհաջողվեց ստեղծել հաշիվը։ Ստուգեք դաշտերը և փորձեք նորից։",
-        );
+            : "Չհաջողվեց ստեղծել հաշիվը։ Ստուգեք դաշտերը և փորձեք նորից։";
+        setError(msg);
+        toastError("Գրանցումը չհաջողվեց", msg);
         return;
       }
 
       setVerification(data as RegisterResponse);
       setStep("telegram");
+      toastSuccess("Հաշիվը ստեղծվեց", "Հիմա ավարտեք Telegram վերիֆիկացիան։");
     } catch {
-      setError("Սերվերի հետ կապ հաստատել չհաջողվեց։ Փորձեք մի փոքր ուշ։");
+      const msg = "Սերվերի հետ կապ հաստատել չհաջողվեց։ Փորձեք մի փոքր ուշ։";
+      setError(msg);
+      toastError("Ցանցի խնդիր", msg);
     } finally {
       setIsSubmitting(false);
     }
@@ -224,14 +235,14 @@ export function RegisterForm({ categories }: RegisterFormProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-2">
+      <div className="-mx-1 flex items-center gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:overflow-visible sm:px-0 sm:pb-0">
         {steps.map((stepItem, index) => {
           const isActive = step === stepItem.value;
           const isComplete = index < currentStepIndex;
           return (
             <div
               key={stepItem.value}
-              className="flex flex-1 items-center gap-2"
+              className="flex flex-none items-center gap-2 sm:flex-1"
             >
               <span
                 className={`grid size-7 place-items-center rounded-full text-xs font-black ${
@@ -245,11 +256,22 @@ export function RegisterForm({ categories }: RegisterFormProps) {
                 {isComplete ? <CheckCircle2 className="size-4" /> : index + 1}
               </span>
               <span
-                className={`text-xs font-black uppercase tracking-[0.16em] ${
+                className={`hidden text-xs font-black uppercase tracking-[0.16em] sm:inline ${
                   isActive ? "text-slate-950" : "text-slate-400"
                 }`}
               >
                 {stepItem.label}
+              </span>
+              <span
+                className={`text-[10px] font-black uppercase tracking-[0.16em] sm:hidden ${
+                  isActive ? "text-slate-950" : "text-slate-400"
+                }`}
+              >
+                {stepItem.value === "type"
+                  ? "Տիպ"
+                  : stepItem.value === "interests"
+                    ? "Ոլորտ"
+                    : "Տվյալներ"}
               </span>
               {index < steps.length - 1 ? (
                 <span className="ml-2 hidden h-px flex-1 bg-slate-200 sm:block" />

@@ -2,6 +2,7 @@
 
 import {
   History,
+  Heart,
   LayoutDashboard,
   LogIn,
   LogOut,
@@ -11,21 +12,19 @@ import {
   UserPlus,
 } from "lucide-react";
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import { ROUTES } from "@/lib/routes";
 
-export function AuthDropdown() {
-  const { data: session, status } = useSession();
+type Props = {
+  isLoggedIn: boolean;
+  label: string;
+  isAdmin: boolean;
+};
+
+export function AuthDropdown({ isLoggedIn, label, isAdmin }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const isLoggedIn = status === "authenticated";
-  const isAdmin =
-    session?.user?.role === "ADMIN" || session?.user?.role === "MODERATOR";
-  const label =
-    session?.user?.name?.trim() ||
-    session?.user?.email?.trim() ||
-    "Մուտք եղած եք";
 
   useEffect(() => {
     function handlePointerDown(event: PointerEvent) {
@@ -93,6 +92,15 @@ export function AuthDropdown() {
               >
                 <History className="size-4 text-amber-700" />
                 Իմ առաջարկներ
+              </Link>
+              <Link
+                role="menuitem"
+                href={ROUTES.likedTenders}
+                className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50 hover:text-slate-950"
+                onClick={() => setIsOpen(false)}
+              >
+                <Heart className="size-4 text-amber-700" />
+                Իմ հավանածները
               </Link>
               {isAdmin ? (
                 <Link

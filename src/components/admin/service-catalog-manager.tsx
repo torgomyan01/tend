@@ -40,6 +40,7 @@ import {
   ServiceFormDialog,
   type ServiceFormService,
 } from "@/components/admin/service-form-dialog";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 export type AdminCatalogService = {
   id: string;
@@ -113,13 +114,18 @@ export function ServiceCatalogManager({
         method: "DELETE",
       });
       if (!response.ok) {
-        setDeleteError("Չհաջողվեց ջնջել ոլորտը։");
+        const msg = "Չհաջողվեց ջնջել ոլորտը։";
+        setDeleteError(msg);
+        toastError("Ջնջում", msg);
         return;
       }
       setDeletingCategoryId(null);
+      toastSuccess("Ջնջվեց", "Ոլորտը և նրա ծառայությունները հեռացվել են։");
       router.refresh();
     } catch {
-      setDeleteError("Ցանցի սխալ։ Փորձեք կրկին։");
+      const msg = "Ցանցի սխալ։ Փորձեք կրկին։";
+      setDeleteError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setIsDeletingCategory(false);
     }
@@ -141,12 +147,17 @@ export function ServiceCatalogManager({
         },
       );
       if (!response.ok) {
-        setDeleteError("Չհաջողվեց պահպանել հերթականությունը։");
+        const msg = "Չհաջողվեց պահպանել հերթականությունը։";
+        setDeleteError(msg);
+        toastError("Հերթականություն", msg);
         return;
       }
+      toastSuccess("Պահպանվեց", "Ծառայությունների հերթականությունը թարմացված է։");
       router.refresh();
     } catch {
-      setDeleteError("Ցանցի սխալ։ Փորձեք կրկին։");
+      const msg = "Ցանցի սխալ։ Փորձեք կրկին։";
+      setDeleteError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setReorderBusyCategoryId(null);
     }
@@ -160,13 +171,18 @@ export function ServiceCatalogManager({
         method: "DELETE",
       });
       if (!response.ok) {
-        setDeleteError("Չհաջողվեց ջնջել ծառայությունը։");
+        const msg = "Չհաջողվեց ջնջել ծառայությունը։";
+        setDeleteError(msg);
+        toastError("Ջնջում", msg);
         return;
       }
       setDeletingServiceId(null);
+      toastSuccess("Ջնջվեց", "Ծառայությունը հեռացվել է։");
       router.refresh();
     } catch {
-      setDeleteError("Ցանցի սխալ։ Փորձեք կրկին։");
+      const msg = "Ցանցի սխալ։ Փորձեք կրկին։";
+      setDeleteError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setIsDeletingService(false);
     }

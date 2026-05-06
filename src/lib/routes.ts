@@ -4,6 +4,7 @@ export const ROUTES = {
   register: "/register",
   forgotPassword: "/forgot-password",
   categories: "/categories",
+  categoryDetail: (id: string) => `/categories/${id}`,
   terms: "/terms",
   privacy: "/privacy",
   account: "/account",
@@ -11,11 +12,13 @@ export const ROUTES = {
   accountVerification: "/account/verification",
   myTenders: "/tenders?scope=my",
   bidHistory: "/tenders?scope=bids",
+  likedTenders: "/tenders?scope=liked",
   tenders: "/tenders",
   tenderDetail: (id: string) => `/tenders/${id}`,
   /** Միայն COMPLETED AWARDED զույգ՝ փոխադարձ գնահատական։ */
   tenderReview: (id: string) => `/tenders/${id}/review`,
   createTender: "/tenders/new",
+  userProfile: (id: string) => `/users/${id}`,
   admin: {
     dashboard: "/admin",
     users: "/admin/users",
@@ -31,6 +34,6 @@ export const ROUTES = {
   sections: {
     howItWorks: "/#how-it-works",
     features: "/#features",
-    providers: "/#providers",
+    providers: "/providers",
   },
 };

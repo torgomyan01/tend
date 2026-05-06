@@ -107,6 +107,11 @@ export type Location = Prisma.LocationModel
  */
 export type Tender = Prisma.TenderModel
 /**
+ * Model TenderLike
+ * 
+ */
+export type TenderLike = Prisma.TenderLikeModel
+/**
  * Model TenderImage
  * 
  */

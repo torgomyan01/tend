@@ -7,6 +7,7 @@ import {
   UserFormDialog,
   type UserFormUser,
 } from "@/components/admin/user-form-dialog";
+import { toastError, toastSuccess } from "@/lib/toast";
 
 const DELETE_ERROR_MESSAGES: Record<string, string> = {
   CANNOT_DELETE_SELF: "Չեք կարող ջնջել ինքներդ ձեզ։",
@@ -41,14 +42,18 @@ export function UserRowActions({ user, isSelf }: UserRowActionsProps) {
           ? (DELETE_ERROR_MESSAGES[data.error] ?? "Չհաջողվեց ջնջել։")
           : "Չհաջողվեց ջնջել։";
         setError(message);
+        toastError("Ջնջում", message);
         setIsDeleting(false);
         return;
       }
 
       setIsConfirmingDelete(false);
+      toastSuccess("Ջնջվեց", "Օգտատերը և կապակցված տվյալները հեռացվել են։");
       router.refresh();
     } catch {
-      setError("Ցանցի սխալ։ Փորձեք կրկին։");
+      const msg = "Ցանցի սխալ։ Փորձեք կրկին։";
+      setError(msg);
+      toastError("Ցանց", msg);
     } finally {
       setIsDeleting(false);
     }
