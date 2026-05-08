@@ -1,5 +1,6 @@
 export const ROUTES = {
   home: "/",
+  howItWorks: "/how-it-works",
   login: "/login",
   register: "/register",
   forgotPassword: "/forgot-password",
@@ -32,7 +33,7 @@ export const ROUTES = {
     services: "/admin/services",
   },
   sections: {
-    howItWorks: "/#how-it-works",
+    howItWorks: "/how-it-works",
     features: "/#features",
     providers: "/providers",
   },

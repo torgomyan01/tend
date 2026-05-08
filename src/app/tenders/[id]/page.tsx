@@ -148,7 +148,7 @@ export default async function TenderDetailPage({ params }: Props) {
         moderationStatus: "APPROVED",
       },
     }),
-    viewerEligibleForPatronContact && providerId
+    providerId
       ? prisma.bid.findUnique({
           where: {
             tenderId_providerId: {
@@ -156,7 +156,14 @@ export default async function TenderDetailPage({ params }: Props) {
               providerId,
             },
           },
-          select: { id: true, ownerContactSharedAt: true },
+          select: {
+            id: true,
+            ownerContactSharedAt: true,
+            bidFeeAmount: true,
+            bidFeeRefundedAt: true,
+            bidFeeRefundedAmount: true,
+            bidFeeRefundReason: true,
+          },
         })
       : Promise.resolve(null),
     tender.status === "COMPLETED"
@@ -230,6 +237,13 @@ export default async function TenderDetailPage({ params }: Props) {
 
   const hasExistingBid = Boolean(existingBid);
   const contactSharedWithMe = Boolean(existingBid?.ownerContactSharedAt);
+  const bidFeeRefundInfo =
+    existingBid?.bidFeeRefundedAt && existingBid.bidFeeRefundedAmount
+      ? {
+          amount: Number(existingBid.bidFeeRefundedAmount),
+          reason: existingBid.bidFeeRefundReason ?? "TENDER_CANCELLED",
+        }
+      : null;
 
   const patronPhoneForViewer =
     viewerEligibleForPatronContact &&
@@ -305,7 +319,7 @@ export default async function TenderDetailPage({ params }: Props) {
       ? tenderEndsAtMs - Date.now()
       : null;
 
-  const bidFee = computeBidFee({
+  const computedBidFee = computeBidFee({
     budgetMin:
       tender.budgetMin !== null && tender.budgetMin !== undefined
         ? Number(tender.budgetMin)
@@ -314,6 +328,8 @@ export default async function TenderDetailPage({ params }: Props) {
       tender.budgetMax !== null && tender.budgetMax !== undefined
         ? Number(tender.budgetMax)
         : null,
+    category: tender.category,
+    endsAt: tender.endsAt,
   });
   const isAuthenticated = Boolean(session?.user?.id);
   const viewerId = session?.user?.id ?? null;
@@ -326,6 +342,24 @@ export default async function TenderDetailPage({ params }: Props) {
         where: { userId: viewerId, tenderId: tender.id },
       })) > 0
     : false;
+
+  const freeBidsRemaining = viewerId
+    ? (() => {
+        const now = new Date();
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        return prisma.bid
+          .count({
+            where: {
+              providerId: viewerId,
+              bidFeeAmount: 0,
+              createdAt: { gte: monthStart },
+            },
+          })
+          .then((used) => Math.max(2 - used, 0));
+      })()
+    : Promise.resolve(0);
+  const resolvedFreeRemaining = await freeBidsRemaining;
+  const bidFee = resolvedFreeRemaining > 0 ? 0 : computedBidFee;
 
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
@@ -696,6 +730,24 @@ export default async function TenderDetailPage({ params }: Props) {
                     </div>
                   ) : null}
 
+                  {bidFeeRefundInfo ? (
+                    <div className="mt-6 w-full rounded-2xl bg-amber-50 px-4 py-3 text-left ring-1 ring-amber-200">
+                      <p className="text-[10px] font-black uppercase tracking-[0.14em] text-amber-900">
+                        Մուտքի վճարը վերադարձված է կրեդիտով
+                      </p>
+                      <p className="mt-1 text-base font-black text-amber-950">
+                        {formatAmd(bidFeeRefundInfo.amount)}
+                      </p>
+                      <p className="mt-1 text-[11px] font-semibold leading-snug text-amber-900/90">
+                        {bidFeeRefundInfo.reason === "BID_REJECTED_BY_MODERATOR"
+                          ? "Ձեր առաջարկը մերժվել է մոդերացիայի կողմից, մուտքի վճարը հասանելի է դրամապանակում։"
+                          : bidFeeRefundInfo.reason === "TENDER_DELETED"
+                            ? "Մրցույթը հեռացվել է, մուտքի վճարը հասանելի է դրամապանակում նոր դիմումի համար։"
+                            : "Մրցույթը չեղարկվել է, մուտքի վճարը հասանելի է դրամապանակում նոր դիմումի համար։"}
+                      </p>
+                    </div>
+                  ) : null}
+
                   {showContactCta ? (
                     <div className="mt-6 w-full">
                       <TenderApplyButton
@@ -713,14 +765,17 @@ export default async function TenderDetailPage({ params }: Props) {
                               : null,
                         }}
                         fee={bidFee}
+                        freeRemaining={resolvedFreeRemaining}
                         isAuthenticated={isAuthenticated}
                         loginHref={loginHref}
                         cannotApplyAgain={cannotApplyAgain}
-                        viewerId={providerId ?? null}
+                        viewerId={viewerId}
                       />
                       <p className="mt-2 text-center text-[11px] font-semibold text-slate-500">
-                        Մուտքի վճարը դրամապանակից · {tender._count.bids}{" "}
-                        մասնակից արդեն դիմել է
+                        {resolvedFreeRemaining > 0
+                          ? `Ամսական անվճար դիմումներ՝ ${resolvedFreeRemaining} մնացել է · `
+                          : "Մուտքի վճարը դրամապանակից · "}
+                        {tender._count.bids} մասնակից արդեն դիմել է
                       </p>
                     </div>
                   ) : isOwner ? (

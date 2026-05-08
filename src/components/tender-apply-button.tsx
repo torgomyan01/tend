@@ -35,6 +35,7 @@ type Props = {
     budgetMax: number | null;
   };
   fee: number;
+  freeRemaining?: number;
   isAuthenticated: boolean;
   loginHref: string;
   /** From server: DB bid exists or mock cookie set (see tenderApplyMockCookieName) */
@@ -69,6 +70,7 @@ function newPickId(): string {
 export function TenderApplyButton({
   tender,
   fee,
+  freeRemaining = 0,
   isAuthenticated,
   loginHref,
   cannotApplyAgain,
@@ -241,6 +243,8 @@ export function TenderApplyButton({
           return "Ձեր հաշիվը արգելափակված է։";
         case "TELEGRAM_REQUIRED":
           return "Առաջարկ ուղարկելու համար անհրաժեշտ է Telegram վերիֆիկացիա։";
+        case "COMPANY_PROFILE_REQUIRED":
+          return "Շարունակելու համար լրացրեք ընկերության տվյալները՝ Կարգավորումներ էջում։";
         case "PRICE_OUT_OF_RANGE":
           return "Գինը չի համապատասխանում մրցույթի բյուջեին։";
         case "INVALID_PAYLOAD":
@@ -269,6 +273,16 @@ export function TenderApplyButton({
 
       if (!res.ok) {
         clearMockCookie();
+        if (data?.error === "COMPANY_PROFILE_REQUIRED") {
+          const msg =
+            "Դուք նշել եք «Իրավաբանական անձ»։ Շարունակելու համար լրացրեք ընկերության տվյալները (Կարգավորումներ → Տիպ ու ընկերության տվյալներ)։";
+          setSubmitError(msg);
+          toastError("Պահանջվում է ընկերության տվյալներ", msg);
+          setStage("details");
+          submitLockRef.current = false;
+          router.push("/account/settings#company");
+          return;
+        }
         const msg = mapApiError(data?.error);
         setSubmitError(msg);
         toastError("Առաջարկը չուղարկվեց", msg);
@@ -322,7 +336,11 @@ export function TenderApplyButton({
           Դիմել մրցույթին
         </span>
         <span className="flex items-center justify-center gap-1 text-[11px] font-bold text-amber-100/95">
-          Մուտքի վճար՝ {formatAmd(fee)}
+          {freeRemaining > 0 ? (
+            <>Անվճար դիմում · մնացել է {freeRemaining}</>
+          ) : (
+            <>Մուտքի վճար՝ {formatAmd(fee)}</>
+          )}
         </span>
       </button>
 
@@ -614,7 +632,12 @@ export function TenderApplyButton({
                       label="Ժամկետ"
                       value={days ? `${days} օր` : "—"}
                     />
-                    <SummaryRow label="Մուտքի վճար" value={formatAmd(fee)} />
+                    <SummaryRow
+                      label="Մուտքի վճար"
+                      value={
+                        freeRemaining > 0 ? "0 ֏ (անվճար)" : formatAmd(fee)
+                      }
+                    />
                     {images.length > 0 || documents.length > 0 ? (
                       <SummaryRow
                         label="Կցված նյութեր"

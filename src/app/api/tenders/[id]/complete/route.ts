@@ -25,9 +25,12 @@ export async function POST(
       id: true,
       status: true,
       title: true,
+      awardedAt: true,
+      updatedAt: true,
       client: { select: { telegramChatId: true } },
       awardedBid: {
         select: {
+          timelineDays: true,
           provider: { select: { telegramChatId: true } },
         },
       },
@@ -40,6 +43,27 @@ export async function POST(
 
   if (tender.status !== "AWARDED") {
     return NextResponse.json({ error: "NOT_AWARDED" }, { status: 409 });
+  }
+
+  const timelineDays = tender.awardedBid?.timelineDays ?? null;
+  if (timelineDays && timelineDays > 0) {
+    // Anti-fake reviews: require waiting before closing the tender.
+    // Example: 7-day timeline -> can complete after 5 days (7 - 2).
+    const minWaitDays = Math.max(1, timelineDays - 2);
+    // Fallback to updatedAt for legacy rows where awardedAt is null.
+    const awardedAt = tender.awardedAt ?? tender.updatedAt;
+    const earliest = new Date(
+      awardedAt.getTime() + minWaitDays * 24 * 60 * 60 * 1000,
+    );
+    const now = new Date();
+    if (now < earliest) {
+      const msLeft = earliest.getTime() - now.getTime();
+      const hoursLeft = Math.max(1, Math.ceil(msLeft / (60 * 60 * 1000)));
+      return NextResponse.json(
+        { error: "TOO_EARLY_TO_COMPLETE", minWaitDays, hoursLeft },
+        { status: 409 },
+      );
+    }
   }
 
   await prisma.tender.update({

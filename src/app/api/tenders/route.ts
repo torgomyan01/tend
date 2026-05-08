@@ -13,7 +13,7 @@ const MAX_IMAGES = 6;
 const MIN_IMAGES = 1;
 const MAX_DOCUMENT_SIZE_BYTES = 10 * 1024 * 1024;
 const MAX_DOCUMENTS = 5;
-const MAX_SERVICES = 5;
+const MAX_SERVICES = 10;
 
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
@@ -91,7 +91,11 @@ function parseServicesPayload(raw: unknown):
     return { ok: false, reason: "invalid" };
   }
 
-  const arrayParsed = z.array(servicePairSchema).min(1).max(MAX_SERVICES).safeParse(parsed);
+  const arrayParsed = z
+    .array(servicePairSchema)
+    .min(1)
+    .max(MAX_SERVICES)
+    .safeParse(parsed);
   if (!arrayParsed.success) {
     return { ok: false, reason: "invalid" };
   }
@@ -198,7 +202,17 @@ export async function POST(request: Request) {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { id: true, telegramVerifiedAt: true, isBlocked: true },
+    select: {
+      id: true,
+      telegramVerifiedAt: true,
+      isBlocked: true,
+      accountType: true,
+      companyName: true,
+      legalForm: true,
+      taxId: true,
+      legalAddress: true,
+      directorName: true,
+    },
   });
 
   if (!user) {
@@ -211,6 +225,20 @@ export async function POST(request: Request) {
 
   if (!user.telegramVerifiedAt) {
     return NextResponse.json({ error: "TELEGRAM_REQUIRED" }, { status: 403 });
+  }
+
+  if (
+    user.accountType === "LEGAL_ENTITY" &&
+    (!user.companyName?.trim() ||
+      !user.legalForm ||
+      !user.taxId?.trim() ||
+      !user.legalAddress?.trim() ||
+      !user.directorName?.trim())
+  ) {
+    return NextResponse.json(
+      { error: "COMPANY_PROFILE_REQUIRED" },
+      { status: 400 },
+    );
   }
 
   let formData: FormData;

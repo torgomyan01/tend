@@ -296,11 +296,11 @@ export type TransactionOrderByWithRelationInput = {
 
 export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  bidId?: string
   AND?: Prisma.TransactionWhereInput | Prisma.TransactionWhereInput[]
   OR?: Prisma.TransactionWhereInput[]
   NOT?: Prisma.TransactionWhereInput | Prisma.TransactionWhereInput[]
   userId?: Prisma.StringFilter<"Transaction"> | string
+  bidId?: Prisma.StringNullableFilter<"Transaction"> | string | null
   type?: Prisma.EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
   status?: Prisma.EnumTransactionStatusFilter<"Transaction"> | $Enums.TransactionStatus
   amount?: Prisma.DecimalFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -312,7 +312,7 @@ export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   bid?: Prisma.XOR<Prisma.BidNullableScalarRelationFilter, Prisma.BidWhereInput> | null
-}, "id" | "bidId">
+}, "id">
 
 export type TransactionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -364,7 +364,7 @@ export type TransactionCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutTransactionsInput
-  bid?: Prisma.BidCreateNestedOneWithoutTransactionInput
+  bid?: Prisma.BidCreateNestedOneWithoutTransactionsInput
 }
 
 export type TransactionUncheckedCreateInput = {
@@ -394,7 +394,7 @@ export type TransactionUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutTransactionsNestedInput
-  bid?: Prisma.BidUpdateOneWithoutTransactionNestedInput
+  bid?: Prisma.BidUpdateOneWithoutTransactionsNestedInput
 }
 
 export type TransactionUncheckedUpdateInput = {
@@ -463,11 +463,6 @@ export type TransactionListRelationFilter = {
 
 export type TransactionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type TransactionNullableScalarRelationFilter = {
-  is?: Prisma.TransactionWhereInput | null
-  isNot?: Prisma.TransactionWhereInput | null
 }
 
 export type TransactionOrderByRelevanceInput = {
@@ -571,36 +566,46 @@ export type TransactionUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.TransactionScalarWhereInput | Prisma.TransactionScalarWhereInput[]
 }
 
-export type TransactionCreateNestedOneWithoutBidInput = {
-  create?: Prisma.XOR<Prisma.TransactionCreateWithoutBidInput, Prisma.TransactionUncheckedCreateWithoutBidInput>
-  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutBidInput
-  connect?: Prisma.TransactionWhereUniqueInput
+export type TransactionCreateNestedManyWithoutBidInput = {
+  create?: Prisma.XOR<Prisma.TransactionCreateWithoutBidInput, Prisma.TransactionUncheckedCreateWithoutBidInput> | Prisma.TransactionCreateWithoutBidInput[] | Prisma.TransactionUncheckedCreateWithoutBidInput[]
+  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutBidInput | Prisma.TransactionCreateOrConnectWithoutBidInput[]
+  createMany?: Prisma.TransactionCreateManyBidInputEnvelope
+  connect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
 }
 
-export type TransactionUncheckedCreateNestedOneWithoutBidInput = {
-  create?: Prisma.XOR<Prisma.TransactionCreateWithoutBidInput, Prisma.TransactionUncheckedCreateWithoutBidInput>
-  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutBidInput
-  connect?: Prisma.TransactionWhereUniqueInput
+export type TransactionUncheckedCreateNestedManyWithoutBidInput = {
+  create?: Prisma.XOR<Prisma.TransactionCreateWithoutBidInput, Prisma.TransactionUncheckedCreateWithoutBidInput> | Prisma.TransactionCreateWithoutBidInput[] | Prisma.TransactionUncheckedCreateWithoutBidInput[]
+  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutBidInput | Prisma.TransactionCreateOrConnectWithoutBidInput[]
+  createMany?: Prisma.TransactionCreateManyBidInputEnvelope
+  connect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
 }
 
-export type TransactionUpdateOneWithoutBidNestedInput = {
-  create?: Prisma.XOR<Prisma.TransactionCreateWithoutBidInput, Prisma.TransactionUncheckedCreateWithoutBidInput>
-  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutBidInput
-  upsert?: Prisma.TransactionUpsertWithoutBidInput
-  disconnect?: Prisma.TransactionWhereInput | boolean
-  delete?: Prisma.TransactionWhereInput | boolean
-  connect?: Prisma.TransactionWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.TransactionUpdateToOneWithWhereWithoutBidInput, Prisma.TransactionUpdateWithoutBidInput>, Prisma.TransactionUncheckedUpdateWithoutBidInput>
+export type TransactionUpdateManyWithoutBidNestedInput = {
+  create?: Prisma.XOR<Prisma.TransactionCreateWithoutBidInput, Prisma.TransactionUncheckedCreateWithoutBidInput> | Prisma.TransactionCreateWithoutBidInput[] | Prisma.TransactionUncheckedCreateWithoutBidInput[]
+  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutBidInput | Prisma.TransactionCreateOrConnectWithoutBidInput[]
+  upsert?: Prisma.TransactionUpsertWithWhereUniqueWithoutBidInput | Prisma.TransactionUpsertWithWhereUniqueWithoutBidInput[]
+  createMany?: Prisma.TransactionCreateManyBidInputEnvelope
+  set?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  disconnect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  delete?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  connect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  update?: Prisma.TransactionUpdateWithWhereUniqueWithoutBidInput | Prisma.TransactionUpdateWithWhereUniqueWithoutBidInput[]
+  updateMany?: Prisma.TransactionUpdateManyWithWhereWithoutBidInput | Prisma.TransactionUpdateManyWithWhereWithoutBidInput[]
+  deleteMany?: Prisma.TransactionScalarWhereInput | Prisma.TransactionScalarWhereInput[]
 }
 
-export type TransactionUncheckedUpdateOneWithoutBidNestedInput = {
-  create?: Prisma.XOR<Prisma.TransactionCreateWithoutBidInput, Prisma.TransactionUncheckedCreateWithoutBidInput>
-  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutBidInput
-  upsert?: Prisma.TransactionUpsertWithoutBidInput
-  disconnect?: Prisma.TransactionWhereInput | boolean
-  delete?: Prisma.TransactionWhereInput | boolean
-  connect?: Prisma.TransactionWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.TransactionUpdateToOneWithWhereWithoutBidInput, Prisma.TransactionUpdateWithoutBidInput>, Prisma.TransactionUncheckedUpdateWithoutBidInput>
+export type TransactionUncheckedUpdateManyWithoutBidNestedInput = {
+  create?: Prisma.XOR<Prisma.TransactionCreateWithoutBidInput, Prisma.TransactionUncheckedCreateWithoutBidInput> | Prisma.TransactionCreateWithoutBidInput[] | Prisma.TransactionUncheckedCreateWithoutBidInput[]
+  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutBidInput | Prisma.TransactionCreateOrConnectWithoutBidInput[]
+  upsert?: Prisma.TransactionUpsertWithWhereUniqueWithoutBidInput | Prisma.TransactionUpsertWithWhereUniqueWithoutBidInput[]
+  createMany?: Prisma.TransactionCreateManyBidInputEnvelope
+  set?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  disconnect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  delete?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  connect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  update?: Prisma.TransactionUpdateWithWhereUniqueWithoutBidInput | Prisma.TransactionUpdateWithWhereUniqueWithoutBidInput[]
+  updateMany?: Prisma.TransactionUpdateManyWithWhereWithoutBidInput | Prisma.TransactionUpdateManyWithWhereWithoutBidInput[]
+  deleteMany?: Prisma.TransactionScalarWhereInput | Prisma.TransactionScalarWhereInput[]
 }
 
 export type EnumTransactionTypeFieldUpdateOperationsInput = {
@@ -622,7 +627,7 @@ export type TransactionCreateWithoutUserInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  bid?: Prisma.BidCreateNestedOneWithoutTransactionInput
+  bid?: Prisma.BidCreateNestedOneWithoutTransactionsInput
 }
 
 export type TransactionUncheckedCreateWithoutUserInput = {
@@ -716,15 +721,95 @@ export type TransactionCreateOrConnectWithoutBidInput = {
   create: Prisma.XOR<Prisma.TransactionCreateWithoutBidInput, Prisma.TransactionUncheckedCreateWithoutBidInput>
 }
 
-export type TransactionUpsertWithoutBidInput = {
-  update: Prisma.XOR<Prisma.TransactionUpdateWithoutBidInput, Prisma.TransactionUncheckedUpdateWithoutBidInput>
-  create: Prisma.XOR<Prisma.TransactionCreateWithoutBidInput, Prisma.TransactionUncheckedCreateWithoutBidInput>
-  where?: Prisma.TransactionWhereInput
+export type TransactionCreateManyBidInputEnvelope = {
+  data: Prisma.TransactionCreateManyBidInput | Prisma.TransactionCreateManyBidInput[]
+  skipDuplicates?: boolean
 }
 
-export type TransactionUpdateToOneWithWhereWithoutBidInput = {
-  where?: Prisma.TransactionWhereInput
+export type TransactionUpsertWithWhereUniqueWithoutBidInput = {
+  where: Prisma.TransactionWhereUniqueInput
+  update: Prisma.XOR<Prisma.TransactionUpdateWithoutBidInput, Prisma.TransactionUncheckedUpdateWithoutBidInput>
+  create: Prisma.XOR<Prisma.TransactionCreateWithoutBidInput, Prisma.TransactionUncheckedCreateWithoutBidInput>
+}
+
+export type TransactionUpdateWithWhereUniqueWithoutBidInput = {
+  where: Prisma.TransactionWhereUniqueInput
   data: Prisma.XOR<Prisma.TransactionUpdateWithoutBidInput, Prisma.TransactionUncheckedUpdateWithoutBidInput>
+}
+
+export type TransactionUpdateManyWithWhereWithoutBidInput = {
+  where: Prisma.TransactionScalarWhereInput
+  data: Prisma.XOR<Prisma.TransactionUpdateManyMutationInput, Prisma.TransactionUncheckedUpdateManyWithoutBidInput>
+}
+
+export type TransactionCreateManyUserInput = {
+  id?: string
+  bidId?: string | null
+  type: $Enums.TransactionType
+  status?: $Enums.TransactionStatus
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  gateway?: string | null
+  gatewayRef?: string | null
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TransactionUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  gateway?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bid?: Prisma.BidUpdateOneWithoutTransactionsNestedInput
+}
+
+export type TransactionUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  bidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  gateway?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TransactionUncheckedUpdateManyWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  bidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  gateway?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TransactionCreateManyBidInput = {
+  id?: string
+  userId: string
+  type: $Enums.TransactionType
+  status?: $Enums.TransactionStatus
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  gateway?: string | null
+  gatewayRef?: string | null
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type TransactionUpdateWithoutBidInput = {
@@ -755,51 +840,9 @@ export type TransactionUncheckedUpdateWithoutBidInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type TransactionCreateManyUserInput = {
-  id?: string
-  bidId?: string | null
-  type: $Enums.TransactionType
-  status?: $Enums.TransactionStatus
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currency?: string
-  gateway?: string | null
-  gatewayRef?: string | null
-  description?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type TransactionUpdateWithoutUserInput = {
+export type TransactionUncheckedUpdateManyWithoutBidInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
-  status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currency?: Prisma.StringFieldUpdateOperationsInput | string
-  gateway?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  bid?: Prisma.BidUpdateOneWithoutTransactionNestedInput
-}
-
-export type TransactionUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  bidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
-  status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currency?: Prisma.StringFieldUpdateOperationsInput | string
-  gateway?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type TransactionUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  bidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string

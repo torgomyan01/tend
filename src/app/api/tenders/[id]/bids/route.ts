@@ -42,6 +42,7 @@ export async function POST(
           title: true,
           status: true,
           clientId: true,
+          category: true,
           startsAt: true,
           endsAt: true,
           budgetMin: true,
@@ -88,6 +89,12 @@ export async function POST(
           name: true,
           email: true,
           phone: true,
+          accountType: true,
+          companyName: true,
+          legalForm: true,
+          taxId: true,
+          legalAddress: true,
+          directorName: true,
         },
       });
 
@@ -106,6 +113,19 @@ export async function POST(
       if (!provider.telegramVerifiedAt) {
         throw Object.assign(new Error("TELEGRAM_REQUIRED"), {
           code: "TELEGRAM_REQUIRED" as const,
+        });
+      }
+
+      if (
+        provider.accountType === "LEGAL_ENTITY" &&
+        (!provider.companyName?.trim() ||
+          !provider.legalForm ||
+          !provider.taxId?.trim() ||
+          !provider.legalAddress?.trim() ||
+          !provider.directorName?.trim())
+      ) {
+        throw Object.assign(new Error("COMPANY_PROFILE_REQUIRED"), {
+          code: "COMPANY_PROFILE_REQUIRED" as const,
         });
       }
 
@@ -130,13 +150,28 @@ export async function POST(
           tender.budgetMin !== null ? Number(tender.budgetMin) : null,
         budgetMax:
           tender.budgetMax !== null ? Number(tender.budgetMax) : null,
+        category: tender.category,
+        endsAt: tender.endsAt,
       });
 
-      const balance = Number(provider.walletBalance);
-      if (!Number.isFinite(balance) || balance < fee) {
-        throw Object.assign(new Error("INSUFFICIENT_BALANCE"), {
-          code: "INSUFFICIENT_BALANCE" as const,
-        });
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      const freeUsedThisMonth = await tx.bid.count({
+        where: {
+          providerId,
+          bidFeeAmount: 0,
+          createdAt: { gte: monthStart },
+        },
+      });
+      const freeRemaining = Math.max(2 - freeUsedThisMonth, 0);
+      const feeToCharge = freeRemaining > 0 ? 0 : fee;
+
+      if (feeToCharge > 0) {
+        const balance = Number(provider.walletBalance);
+        if (!Number.isFinite(balance) || balance < feeToCharge) {
+          throw Object.assign(new Error("INSUFFICIENT_BALANCE"), {
+            code: "INSUFFICIENT_BALANCE" as const,
+          });
+        }
       }
 
       const minB =
@@ -156,14 +191,16 @@ export async function POST(
         });
       }
 
-      await tx.user.update({
-        where: { id: providerId },
-        data: {
-          walletBalance: {
-            decrement: fee,
+      if (feeToCharge > 0) {
+        await tx.user.update({
+          where: { id: providerId },
+          data: {
+            walletBalance: {
+              decrement: feeToCharge,
+            },
           },
-        },
-      });
+        });
+      }
 
       const bid = await tx.bid.create({
         data: {
@@ -172,29 +209,31 @@ export async function POST(
           price,
           timelineDays: parsed.data.timelineDays,
           coverLetter: parsed.data.coverLetter,
-          bidFeeAmount: fee,
+          bidFeeAmount: feeToCharge,
           status: "PENDING",
         },
         select: { id: true },
       });
 
-      await tx.transaction.create({
-        data: {
-          userId: providerId,
-          bidId: bid.id,
-          type: "BID_FEE",
-          status: "SUCCEEDED",
-          amount: fee,
-          currency: "AMD",
-          description: `Մուտքի վճար՝ մրցույթ «${tender.title.slice(0, 120)}»`,
-        },
-      });
+      if (feeToCharge > 0) {
+        await tx.transaction.create({
+          data: {
+            userId: providerId,
+            bidId: bid.id,
+            type: "BID_FEE",
+            status: "SUCCEEDED",
+            amount: feeToCharge,
+            currency: "AMD",
+            description: `Մուտքի վճար՝ մրցույթ «${tender.title.slice(0, 120)}»`,
+          },
+        });
+      }
 
       return {
         tender,
         provider,
         bidId: bid.id,
-        fee,
+        fee: feeToCharge,
       };
     });
 
@@ -234,6 +273,12 @@ export async function POST(
       return NextResponse.json(
         { error: "TELEGRAM_REQUIRED" },
         { status: 403 },
+      );
+    }
+    if (code === "COMPANY_PROFILE_REQUIRED") {
+      return NextResponse.json(
+        { error: "COMPANY_PROFILE_REQUIRED" },
+        { status: 400 },
       );
     }
     if (code === "PRICE_OUT_OF_RANGE") {

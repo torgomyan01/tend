@@ -132,18 +132,47 @@ export function CreateTenderForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMode, setSubmitMode] = useState<"publish" | "draft" | null>(null);
 
+  const [suggestions, setSuggestions] = useState<{
+    titles: string[];
+    title: string;
+    description: string;
+    checklist: string[];
+    source: "static";
+    loading: boolean;
+    key: string | null;
+  }>({
+    titles: [],
+    title: "",
+    description: "",
+    checklist: [],
+    source: "static",
+    loading: false,
+    key: null,
+  });
+
+  // AI suggestions removed.
+
   useEffect(() => {
     return () => {
       images.forEach((image) => URL.revokeObjectURL(image.url));
     };
   }, [images]);
 
+  // Title is always user-entered (no auto-fill from selected service).
+
   useEffect(() => {
-    const primary = services[0];
-    if (primary && !title) {
-      setTitle(primary.service);
+    if (services.length === 0) {
+      setSuggestions({
+        titles: [],
+        title: "",
+        description: "",
+        checklist: [],
+        source: "static",
+        loading: false,
+        key: null,
+      });
     }
-  }, [services, title]);
+  }, [services.length]);
 
   const titleLength = title.trim().length;
   const descriptionLength = description.trim().length;
@@ -370,6 +399,14 @@ export function CreateTenderForm({
         | null;
 
       if (!response.ok || !payload?.tender) {
+        if (payload?.error === "COMPANY_PROFILE_REQUIRED") {
+          const msg =
+            "Շարունակելու համար լրացրեք ընկերության տվյալները (տիպ ու ընկերության տվյալներ)։";
+          setError(msg);
+          toastError("Պահանջվում է ընկերության պրոֆիլ", msg);
+          router.push(`${ROUTES.accountSettings}#company`);
+          return;
+        }
         const message = payload?.error
           ? mapErrorMessage(payload.error)
           : "Չհաջողվեց հրապարակել մրցույթը։";
@@ -415,11 +452,14 @@ export function CreateTenderForm({
               onServicesChange={setServices}
               title={title}
               onTitleChange={setTitle}
+              suggestions={suggestions}
             />
           ) : null}
 
           {step === 2 ? (
             <StepTwo
+              services={services}
+              tenderTitle={title}
               description={description}
               onDescriptionChange={setDescription}
               images={images}
@@ -430,6 +470,7 @@ export function CreateTenderForm({
               onAddDocuments={handleAddDocuments}
               onRemoveDocument={handleRemoveDocument}
               documentInputRef={documentInputRef}
+              suggestions={suggestions}
             />
           ) : null}
 
@@ -539,10 +580,12 @@ function mapErrorMessage(code: string): string {
       return "Մրցույթ տեղադրելու համար նախ ավարտեք Telegram վերիֆիկացիան։";
     case "BLOCKED":
       return "Հաշիվը արգելափակված է։";
+    case "COMPANY_PROFILE_REQUIRED":
+      return "Շարունակելու համար լրացրեք ընկերության տվյալները հաշվի կարգավորումներում։";
     case "VALIDATION_FAILED":
       return "Տվյալները թերի կամ սխալ են։";
     case "INVALID_SERVICES":
-      return "Ստուգեք ընտրված ծառայությունները (1–5, առանց կրկնության)։";
+      return `Ստուգեք ընտրված ծառայությունները (1–${MAX_SELECTED_SERVICES}, առանց կրկնության)։`;
     case "DUPLICATE_SERVICE":
       return "Նույն ծառայությունը երկու անգամ ընտրված է։";
     case "TOO_MANY_IMAGES":
@@ -606,21 +649,77 @@ function Stepper({ currentStep }: { currentStep: number }) {
   );
 }
 
+type SuggestionsState = {
+  titles: string[];
+  title: string;
+  description: string;
+  checklist: string[];
+  source: "static";
+  loading: boolean;
+};
+
 function StepOne({
   categories,
   services,
   onServicesChange,
   title,
   onTitleChange,
+  suggestions: _suggestions,
 }: {
   categories: ServiceCategoryWithServices[];
   services: ServiceSelection[];
   onServicesChange: (values: ServiceSelection[]) => void;
   title: string;
   onTitleChange: (value: string) => void;
+  suggestions: SuggestionsState;
 }) {
+  const [titleAiLoading, setTitleAiLoading] = useState(false);
   const titleLength = title.trim().length;
   const isTitleValid = titleLength >= TITLE_MIN && titleLength <= TITLE_MAX;
+  void _suggestions;
+
+  async function handleAiTitle() {
+    if (services.length === 0) {
+      toastError("Ծառայություն չկա", "Նախ ընտրեք առնվազն մեկ ծառայություն։");
+      return;
+    }
+    const hadTitle = title.trim().length > 0;
+    setTitleAiLoading(true);
+    try {
+      const res = await fetch("/api/tender-suggestions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          services,
+          ...(hadTitle ? { title: title.trim() } : {}),
+        }),
+      });
+      const data = (await res.json()) as { title?: string; error?: string };
+      if (!res.ok) {
+        const code = data.error ?? "";
+        if (code === "UNAUTHENTICATED") {
+          toastError("Չեղավ", "Անհրաժեշտ է մուտք գործել։");
+        } else if (code === "AI_NOT_CONFIGURED") {
+          toastError("AI-ը անջատված է", "Կարգավորված չէ գեներացիան (GEMINI_API_KEY)։");
+        } else if (code === "MALFORMED_AI_RESPONSE") {
+          toastError("Չհաջողվեց", "Մոդելը տվեց անսպասելի պատասխար։ Փորձեք կրկին։");
+        } else {
+          toastError("Չհաջողվեց", "Վերնագիրը չստացվեց։ Փորձեք կրկին։");
+        }
+        return;
+      }
+      if (typeof data.title === "string" && data.title.trim()) {
+        onTitleChange(data.title.trim().slice(0, TITLE_MAX));
+        toastSuccess(hadTitle ? "Վերնագիրը բարելավվեց" : "Վերնագիրը ստեղծվեց");
+      } else {
+        toastError("Չհաջողվեց", "Պատասխանը անսպասելի էր։");
+      }
+    } catch {
+      toastError("Ցանցի սխալ", "Ստուգեք կապը և փորձեք կրկին։");
+    } finally {
+      setTitleAiLoading(false);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -671,12 +770,27 @@ function StepOne({
       </div>
 
       <div>
-        <label
-          htmlFor="tender-title"
-          className="text-xs font-black uppercase tracking-[0.18em] text-slate-500"
-        >
-          Վերնագիր
-        </label>
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <label
+            htmlFor="tender-title"
+            className="text-xs font-black uppercase tracking-[0.18em] text-slate-500"
+          >
+            Վերնագիր
+          </label>
+          <button
+            type="button"
+            onClick={handleAiTitle}
+            disabled={titleAiLoading || services.length === 0}
+            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-[0.65rem] font-black uppercase tracking-[0.14em] text-slate-800 shadow-sm transition hover:border-slate-900 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {titleAiLoading ? (
+              <Loader2 className="size-3.5 shrink-0 animate-spin" aria-hidden />
+            ) : (
+              <Sparkles className="size-3.5 shrink-0 text-amber-500" aria-hidden />
+            )}
+            {title.trim() ? "Բարելավել վերնագիր" : "Գեներացնել վերնագիր"}
+          </button>
+        </div>
         <input
           id="tender-title"
           type="text"
@@ -696,12 +810,16 @@ function StepOne({
             {titleLength}/{TITLE_MAX}
           </span>
         </div>
+
       </div>
+
     </div>
   );
 }
 
 function StepTwo({
+  services,
+  tenderTitle,
   description,
   onDescriptionChange,
   images,
@@ -712,7 +830,10 @@ function StepTwo({
   onAddDocuments,
   onRemoveDocument,
   documentInputRef,
+  suggestions,
 }: {
+  services: ServiceSelection[];
+  tenderTitle: string;
   description: string;
   onDescriptionChange: (value: string) => void;
   images: ImagePreview[];
@@ -723,10 +844,58 @@ function StepTwo({
   onAddDocuments: (files: FileList | null) => void;
   onRemoveDocument: (id: string) => void;
   documentInputRef: React.RefObject<HTMLInputElement | null>;
+  suggestions: SuggestionsState;
 }) {
+  const [descriptionAiLoading, setDescriptionAiLoading] = useState(false);
   const length = description.trim().length;
   const descOk = length >= DESCRIPTION_MIN && length <= DESCRIPTION_MAX;
   const photosOk = images.length >= MIN_IMAGES && images.length <= MAX_IMAGES;
+  void suggestions;
+
+  async function handleAiDescription() {
+    if (services.length === 0) {
+      toastError("Ծառայություն չկա", "Նախ ընտրեք ծառայություններ (քայլ 1)։");
+      return;
+    }
+    const hadDraft = description.trim().length > 0;
+    setDescriptionAiLoading(true);
+    try {
+      const res = await fetch("/api/tender-suggestions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          kind: "description",
+          services,
+          ...(tenderTitle.trim() ? { tenderTitle: tenderTitle.trim() } : {}),
+          ...(hadDraft ? { currentDescription: description.trim() } : {}),
+        }),
+      });
+      const data = (await res.json()) as { description?: string; error?: string };
+      if (!res.ok) {
+        const code = data.error ?? "";
+        if (code === "UNAUTHENTICATED") {
+          toastError("Չեղավ", "Անհրաժեշտ է մուտք գործել։");
+        } else if (code === "AI_NOT_CONFIGURED") {
+          toastError("AI-ը անջատված է", "Կարգավորված չէ գեներացիան (GEMINI_API_KEY)։");
+        } else if (code === "MALFORMED_AI_RESPONSE") {
+          toastError("Չհաջողվեց", "Մոդելը տվեց անսպասելի պատասխար։ Փորձեք կրկին։");
+        } else {
+          toastError("Չհաջողվեց", "Նկարագրությունը չստացվեց։ Փորձեք կրկին։");
+        }
+        return;
+      }
+      if (typeof data.description === "string" && data.description.trim()) {
+        onDescriptionChange(data.description.trim().slice(0, DESCRIPTION_MAX));
+        toastSuccess(hadDraft ? "Նկարագրությունը բարելավվեց" : "Ֆորմայի նմուշը պատրաստ է");
+      } else {
+        toastError("Չհաջողվեց", "Պատասխանը անսպասելի էր։");
+      }
+    } catch {
+      toastError("Ցանցի սխալ", "Ստուգեք կապը և փորձեք կրկին։");
+    } finally {
+      setDescriptionAiLoading(false);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -739,12 +908,27 @@ function StepTwo({
       </div>
 
       <div>
-        <label
-          htmlFor="tender-description"
-          className="text-xs font-black uppercase tracking-[0.18em] text-slate-500"
-        >
-          Նկարագրություն
-        </label>
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <label
+            htmlFor="tender-description"
+            className="text-xs font-black uppercase tracking-[0.18em] text-slate-500"
+          >
+            Նկարագրություն
+          </label>
+          <button
+            type="button"
+            onClick={handleAiDescription}
+            disabled={descriptionAiLoading || services.length === 0}
+            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-[0.65rem] font-black uppercase tracking-[0.14em] text-slate-800 shadow-sm transition hover:border-slate-900 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {descriptionAiLoading ? (
+              <Loader2 className="size-3.5 shrink-0 animate-spin" aria-hidden />
+            ) : (
+              <Sparkles className="size-3.5 shrink-0 text-amber-500" aria-hidden />
+            )}
+            {description.trim() ? "Բարելավել նկարագրություն" : "Գեներացնել ֆորմայի նմուշ"}
+          </button>
+        </div>
         <textarea
           id="tender-description"
           value={description}
@@ -1359,7 +1543,7 @@ function SidebarTips({ step }: { step: number }) {
     <aside className="space-y-4 lg:sticky lg:top-6">
       <div className="rounded-4xl bg-slate-950 p-5 text-white shadow-xl">
         <div className="flex items-center gap-2">
-          <Sparkles className="size-4 text-amber-400" />
+          <span className="size-4" />
           <p className="text-xs font-black uppercase tracking-[0.22em] text-amber-300">
             Խորհուրդներ
           </p>

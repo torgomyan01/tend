@@ -282,6 +282,7 @@ export const TenderScalarFieldEnum = {
   startsAt: 'startsAt',
   endsAt: 'endsAt',
   awardedBidId: 'awardedBidId',
+  awardedAt: 'awardedAt',
   completedAt: 'completedAt',
   cancelledAt: 'cancelledAt',
   createdAt: 'createdAt',
@@ -363,6 +364,9 @@ export const BidScalarFieldEnum = {
   status: 'status',
   bidFeeAmount: 'bidFeeAmount',
   ownerContactSharedAt: 'ownerContactSharedAt',
+  bidFeeRefundedAt: 'bidFeeRefundedAt',
+  bidFeeRefundedAmount: 'bidFeeRefundedAmount',
+  bidFeeRefundReason: 'bidFeeRefundReason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -639,7 +643,8 @@ export const BidOrderByRelevanceFieldEnum = {
   id: 'id',
   tenderId: 'tenderId',
   providerId: 'providerId',
-  coverLetter: 'coverLetter'
+  coverLetter: 'coverLetter',
+  bidFeeRefundReason: 'bidFeeRefundReason'
 } as const
 
 export type BidOrderByRelevanceFieldEnum = (typeof BidOrderByRelevanceFieldEnum)[keyof typeof BidOrderByRelevanceFieldEnum]

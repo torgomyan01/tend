@@ -184,7 +184,10 @@ export default async function AccountSettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-4xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-8">
+          <section
+            id="company"
+            className="rounded-4xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-8"
+          >
             <div className="flex items-start gap-3">
               <div className="grid size-11 shrink-0 place-items-center rounded-2xl bg-amber-100 text-amber-800">
                 <Building2 className="size-5" />

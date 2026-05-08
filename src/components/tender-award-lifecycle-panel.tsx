@@ -85,9 +85,24 @@ export function TenderAwardLifecyclePanel({
         method: "POST",
       });
       if (!res.ok) {
-        const msg = "Չհաջողվեց փակել մրցույթը։";
-        setCompleteError(msg);
-        toastError("Մրցույթը չփակվեց", msg);
+        const data = (await res.json().catch(() => null)) as
+          | { error?: string; minWaitDays?: number; hoursLeft?: number }
+          | null;
+        if (data?.error === "TOO_EARLY_TO_COMPLETE") {
+          const hours = typeof data.hoursLeft === "number" ? data.hoursLeft : null;
+          const days = typeof data.minWaitDays === "number" ? data.minWaitDays : null;
+          const msg = hours
+            ? `Չի կարելի փակել հիմա։ Փորձեք մոտ ${hours} ժամ հետո։`
+            : days
+              ? `Չի կարելի փակել հիմա։ Փորձեք մոտ ${days} օր անց։`
+              : "Չի կարելի փակել հիմա։ Փորձեք ավելի ուշ։";
+          setCompleteError(msg);
+          toastError("Շուտ է փակելու համար", msg);
+        } else {
+          const msg = "Չհաջողվեց փակել մրցույթը։";
+          setCompleteError(msg);
+          toastError("Մրցույթը չփակվեց", msg);
+        }
         return;
       }
       toastSuccess("Մրցույթը փակված է", "Հիմա կարող եք փոխադարձ գնահատական թողնել։");

@@ -34,6 +34,10 @@ export function buildTenderAdminStatusData(
     data.cancelledAt = null;
   }
 
+  if (next === "AWARDED") {
+    data.awardedAt = now;
+  }
+
   if (next === "COMPLETED") {
     data.completedAt = now;
   } else if (prev.status === "COMPLETED") {

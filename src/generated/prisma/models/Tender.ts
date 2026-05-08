@@ -55,6 +55,7 @@ export type TenderMinAggregateOutputType = {
   startsAt: Date | null
   endsAt: Date | null
   awardedBidId: string | null
+  awardedAt: Date | null
   completedAt: Date | null
   cancelledAt: Date | null
   createdAt: Date | null
@@ -78,6 +79,7 @@ export type TenderMaxAggregateOutputType = {
   startsAt: Date | null
   endsAt: Date | null
   awardedBidId: string | null
+  awardedAt: Date | null
   completedAt: Date | null
   cancelledAt: Date | null
   createdAt: Date | null
@@ -101,6 +103,7 @@ export type TenderCountAggregateOutputType = {
   startsAt: number
   endsAt: number
   awardedBidId: number
+  awardedAt: number
   completedAt: number
   cancelledAt: number
   createdAt: number
@@ -138,6 +141,7 @@ export type TenderMinAggregateInputType = {
   startsAt?: true
   endsAt?: true
   awardedBidId?: true
+  awardedAt?: true
   completedAt?: true
   cancelledAt?: true
   createdAt?: true
@@ -161,6 +165,7 @@ export type TenderMaxAggregateInputType = {
   startsAt?: true
   endsAt?: true
   awardedBidId?: true
+  awardedAt?: true
   completedAt?: true
   cancelledAt?: true
   createdAt?: true
@@ -184,6 +189,7 @@ export type TenderCountAggregateInputType = {
   startsAt?: true
   endsAt?: true
   awardedBidId?: true
+  awardedAt?: true
   completedAt?: true
   cancelledAt?: true
   createdAt?: true
@@ -294,6 +300,7 @@ export type TenderGroupByOutputType = {
   startsAt: Date | null
   endsAt: Date | null
   awardedBidId: string | null
+  awardedAt: Date | null
   completedAt: Date | null
   cancelledAt: Date | null
   createdAt: Date
@@ -340,6 +347,7 @@ export type TenderWhereInput = {
   startsAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   endsAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   awardedBidId?: Prisma.StringNullableFilter<"Tender"> | string | null
+  awardedAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Tender"> | Date | string
@@ -373,6 +381,7 @@ export type TenderOrderByWithRelationInput = {
   startsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   awardedBidId?: Prisma.SortOrderInput | Prisma.SortOrder
+  awardedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   cancelledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -410,6 +419,7 @@ export type TenderWhereUniqueInput = Prisma.AtLeast<{
   isBlindBidding?: Prisma.BoolFilter<"Tender"> | boolean
   startsAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   endsAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
+  awardedAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Tender"> | Date | string
@@ -443,6 +453,7 @@ export type TenderOrderByWithAggregationInput = {
   startsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   awardedBidId?: Prisma.SortOrderInput | Prisma.SortOrder
+  awardedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   cancelledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -474,6 +485,7 @@ export type TenderScalarWhereWithAggregatesInput = {
   startsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Tender"> | Date | string | null
   endsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Tender"> | Date | string | null
   awardedBidId?: Prisma.StringNullableWithAggregatesFilter<"Tender"> | string | null
+  awardedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Tender"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Tender"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Tender"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Tender"> | Date | string
@@ -494,6 +506,7 @@ export type TenderCreateInput = {
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -527,6 +540,7 @@ export type TenderUncheckedCreateInput = {
   startsAt?: Date | string | null
   endsAt?: Date | string | null
   awardedBidId?: string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -554,6 +568,7 @@ export type TenderUpdateInput = {
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -587,6 +602,7 @@ export type TenderUncheckedUpdateInput = {
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -617,6 +633,7 @@ export type TenderCreateManyInput = {
   startsAt?: Date | string | null
   endsAt?: Date | string | null
   awardedBidId?: string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -637,6 +654,7 @@ export type TenderUpdateManyMutationInput = {
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -660,6 +678,7 @@ export type TenderUncheckedUpdateManyInput = {
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -699,6 +718,7 @@ export type TenderCountOrderByAggregateInput = {
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrder
   awardedBidId?: Prisma.SortOrder
+  awardedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -728,6 +748,7 @@ export type TenderMaxOrderByAggregateInput = {
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrder
   awardedBidId?: Prisma.SortOrder
+  awardedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -751,6 +772,7 @@ export type TenderMinOrderByAggregateInput = {
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrder
   awardedBidId?: Prisma.SortOrder
+  awardedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -1013,6 +1035,7 @@ export type TenderCreateWithoutClientInput = {
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1044,6 +1067,7 @@ export type TenderUncheckedCreateWithoutClientInput = {
   startsAt?: Date | string | null
   endsAt?: Date | string | null
   awardedBidId?: string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1103,6 +1127,7 @@ export type TenderScalarWhereInput = {
   startsAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   endsAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   awardedBidId?: Prisma.StringNullableFilter<"Tender"> | string | null
+  awardedAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Tender"> | Date | string
@@ -1123,6 +1148,7 @@ export type TenderCreateWithoutLocalityInput = {
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1154,6 +1180,7 @@ export type TenderUncheckedCreateWithoutLocalityInput = {
   startsAt?: Date | string | null
   endsAt?: Date | string | null
   awardedBidId?: string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1207,6 +1234,7 @@ export type TenderCreateWithoutLikesInput = {
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1239,6 +1267,7 @@ export type TenderUncheckedCreateWithoutLikesInput = {
   startsAt?: Date | string | null
   endsAt?: Date | string | null
   awardedBidId?: string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1281,6 +1310,7 @@ export type TenderUpdateWithoutLikesInput = {
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1313,6 +1343,7 @@ export type TenderUncheckedUpdateWithoutLikesInput = {
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1339,6 +1370,7 @@ export type TenderCreateWithoutImagesInput = {
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1371,6 +1403,7 @@ export type TenderUncheckedCreateWithoutImagesInput = {
   startsAt?: Date | string | null
   endsAt?: Date | string | null
   awardedBidId?: string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1413,6 +1446,7 @@ export type TenderUpdateWithoutImagesInput = {
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1445,6 +1479,7 @@ export type TenderUncheckedUpdateWithoutImagesInput = {
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1471,6 +1506,7 @@ export type TenderCreateWithoutDocumentsInput = {
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1503,6 +1539,7 @@ export type TenderUncheckedCreateWithoutDocumentsInput = {
   startsAt?: Date | string | null
   endsAt?: Date | string | null
   awardedBidId?: string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1545,6 +1582,7 @@ export type TenderUpdateWithoutDocumentsInput = {
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1577,6 +1615,7 @@ export type TenderUncheckedUpdateWithoutDocumentsInput = {
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1603,6 +1642,7 @@ export type TenderCreateWithoutSelectedServicesInput = {
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1635,6 +1675,7 @@ export type TenderUncheckedCreateWithoutSelectedServicesInput = {
   startsAt?: Date | string | null
   endsAt?: Date | string | null
   awardedBidId?: string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1677,6 +1718,7 @@ export type TenderUpdateWithoutSelectedServicesInput = {
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1709,6 +1751,7 @@ export type TenderUncheckedUpdateWithoutSelectedServicesInput = {
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1735,6 +1778,7 @@ export type TenderCreateWithoutComplaintsInput = {
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1767,6 +1811,7 @@ export type TenderUncheckedCreateWithoutComplaintsInput = {
   startsAt?: Date | string | null
   endsAt?: Date | string | null
   awardedBidId?: string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1809,6 +1854,7 @@ export type TenderUpdateWithoutComplaintsInput = {
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1841,6 +1887,7 @@ export type TenderUncheckedUpdateWithoutComplaintsInput = {
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1867,6 +1914,7 @@ export type TenderCreateWithoutBidsInput = {
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1899,6 +1947,7 @@ export type TenderUncheckedCreateWithoutBidsInput = {
   startsAt?: Date | string | null
   endsAt?: Date | string | null
   awardedBidId?: string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1930,6 +1979,7 @@ export type TenderCreateWithoutAwardedBidInput = {
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -1961,6 +2011,7 @@ export type TenderUncheckedCreateWithoutAwardedBidInput = {
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -2004,6 +2055,7 @@ export type TenderUpdateWithoutBidsInput = {
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2036,6 +2088,7 @@ export type TenderUncheckedUpdateWithoutBidsInput = {
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2073,6 +2126,7 @@ export type TenderUpdateWithoutAwardedBidInput = {
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2104,6 +2158,7 @@ export type TenderUncheckedUpdateWithoutAwardedBidInput = {
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2131,6 +2186,7 @@ export type TenderCreateWithoutReviewsInput = {
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -2163,6 +2219,7 @@ export type TenderUncheckedCreateWithoutReviewsInput = {
   startsAt?: Date | string | null
   endsAt?: Date | string | null
   awardedBidId?: string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -2205,6 +2262,7 @@ export type TenderUpdateWithoutReviewsInput = {
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2237,6 +2295,7 @@ export type TenderUncheckedUpdateWithoutReviewsInput = {
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2265,6 +2324,7 @@ export type TenderCreateManyClientInput = {
   startsAt?: Date | string | null
   endsAt?: Date | string | null
   awardedBidId?: string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -2285,6 +2345,7 @@ export type TenderUpdateWithoutClientInput = {
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2316,6 +2377,7 @@ export type TenderUncheckedUpdateWithoutClientInput = {
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2345,6 +2407,7 @@ export type TenderUncheckedUpdateManyWithoutClientInput = {
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2367,6 +2430,7 @@ export type TenderCreateManyLocalityInput = {
   startsAt?: Date | string | null
   endsAt?: Date | string | null
   awardedBidId?: string | null
+  awardedAt?: Date | string | null
   completedAt?: Date | string | null
   cancelledAt?: Date | string | null
   createdAt?: Date | string
@@ -2387,6 +2451,7 @@ export type TenderUpdateWithoutLocalityInput = {
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2418,6 +2483,7 @@ export type TenderUncheckedUpdateWithoutLocalityInput = {
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2447,6 +2513,7 @@ export type TenderUncheckedUpdateManyWithoutLocalityInput = {
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2555,6 +2622,7 @@ export type TenderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   startsAt?: boolean
   endsAt?: boolean
   awardedBidId?: boolean
+  awardedAt?: boolean
   completedAt?: boolean
   cancelledAt?: boolean
   createdAt?: boolean
@@ -2591,13 +2659,14 @@ export type TenderSelectScalar = {
   startsAt?: boolean
   endsAt?: boolean
   awardedBidId?: boolean
+  awardedAt?: boolean
   completedAt?: boolean
   cancelledAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TenderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "title" | "description" | "category" | "service" | "city" | "locationId" | "address" | "budgetMin" | "budgetMax" | "status" | "isBlindBidding" | "startsAt" | "endsAt" | "awardedBidId" | "completedAt" | "cancelledAt" | "createdAt" | "updatedAt", ExtArgs["result"]["tender"]>
+export type TenderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "title" | "description" | "category" | "service" | "city" | "locationId" | "address" | "budgetMin" | "budgetMax" | "status" | "isBlindBidding" | "startsAt" | "endsAt" | "awardedBidId" | "awardedAt" | "completedAt" | "cancelledAt" | "createdAt" | "updatedAt", ExtArgs["result"]["tender"]>
 export type TenderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   locality?: boolean | Prisma.Tender$localityArgs<ExtArgs>
   client?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -2643,6 +2712,7 @@ export type $TenderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     startsAt: Date | null
     endsAt: Date | null
     awardedBidId: string | null
+    awardedAt: Date | null
     completedAt: Date | null
     cancelledAt: Date | null
     createdAt: Date
@@ -3042,6 +3112,7 @@ export interface TenderFieldRefs {
   readonly startsAt: Prisma.FieldRef<"Tender", 'DateTime'>
   readonly endsAt: Prisma.FieldRef<"Tender", 'DateTime'>
   readonly awardedBidId: Prisma.FieldRef<"Tender", 'String'>
+  readonly awardedAt: Prisma.FieldRef<"Tender", 'DateTime'>
   readonly completedAt: Prisma.FieldRef<"Tender", 'DateTime'>
   readonly cancelledAt: Prisma.FieldRef<"Tender", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Tender", 'DateTime'>

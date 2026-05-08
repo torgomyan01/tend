@@ -72,6 +72,7 @@ export async function POST(
       where: { id: tenderId },
       data: {
         awardedBidId: bid.id,
+        awardedAt: new Date(),
         status: "AWARDED",
       },
     });

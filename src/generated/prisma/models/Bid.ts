@@ -30,12 +30,14 @@ export type BidAvgAggregateOutputType = {
   price: runtime.Decimal | null
   timelineDays: number | null
   bidFeeAmount: runtime.Decimal | null
+  bidFeeRefundedAmount: runtime.Decimal | null
 }
 
 export type BidSumAggregateOutputType = {
   price: runtime.Decimal | null
   timelineDays: number | null
   bidFeeAmount: runtime.Decimal | null
+  bidFeeRefundedAmount: runtime.Decimal | null
 }
 
 export type BidMinAggregateOutputType = {
@@ -48,6 +50,9 @@ export type BidMinAggregateOutputType = {
   status: $Enums.BidStatus | null
   bidFeeAmount: runtime.Decimal | null
   ownerContactSharedAt: Date | null
+  bidFeeRefundedAt: Date | null
+  bidFeeRefundedAmount: runtime.Decimal | null
+  bidFeeRefundReason: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -62,6 +67,9 @@ export type BidMaxAggregateOutputType = {
   status: $Enums.BidStatus | null
   bidFeeAmount: runtime.Decimal | null
   ownerContactSharedAt: Date | null
+  bidFeeRefundedAt: Date | null
+  bidFeeRefundedAmount: runtime.Decimal | null
+  bidFeeRefundReason: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -76,6 +84,9 @@ export type BidCountAggregateOutputType = {
   status: number
   bidFeeAmount: number
   ownerContactSharedAt: number
+  bidFeeRefundedAt: number
+  bidFeeRefundedAmount: number
+  bidFeeRefundReason: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -86,12 +97,14 @@ export type BidAvgAggregateInputType = {
   price?: true
   timelineDays?: true
   bidFeeAmount?: true
+  bidFeeRefundedAmount?: true
 }
 
 export type BidSumAggregateInputType = {
   price?: true
   timelineDays?: true
   bidFeeAmount?: true
+  bidFeeRefundedAmount?: true
 }
 
 export type BidMinAggregateInputType = {
@@ -104,6 +117,9 @@ export type BidMinAggregateInputType = {
   status?: true
   bidFeeAmount?: true
   ownerContactSharedAt?: true
+  bidFeeRefundedAt?: true
+  bidFeeRefundedAmount?: true
+  bidFeeRefundReason?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -118,6 +134,9 @@ export type BidMaxAggregateInputType = {
   status?: true
   bidFeeAmount?: true
   ownerContactSharedAt?: true
+  bidFeeRefundedAt?: true
+  bidFeeRefundedAmount?: true
+  bidFeeRefundReason?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -132,6 +151,9 @@ export type BidCountAggregateInputType = {
   status?: true
   bidFeeAmount?: true
   ownerContactSharedAt?: true
+  bidFeeRefundedAt?: true
+  bidFeeRefundedAmount?: true
+  bidFeeRefundReason?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -233,6 +255,9 @@ export type BidGroupByOutputType = {
   status: $Enums.BidStatus
   bidFeeAmount: runtime.Decimal
   ownerContactSharedAt: Date | null
+  bidFeeRefundedAt: Date | null
+  bidFeeRefundedAmount: runtime.Decimal
+  bidFeeRefundReason: string | null
   createdAt: Date
   updatedAt: Date
   _count: BidCountAggregateOutputType | null
@@ -270,12 +295,15 @@ export type BidWhereInput = {
   status?: Prisma.EnumBidStatusFilter<"Bid"> | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFilter<"Bid"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.DateTimeNullableFilter<"Bid"> | Date | string | null
+  bidFeeRefundedAt?: Prisma.DateTimeNullableFilter<"Bid"> | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFilter<"Bid"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.StringNullableFilter<"Bid"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Bid"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Bid"> | Date | string
   tender?: Prisma.XOR<Prisma.TenderScalarRelationFilter, Prisma.TenderWhereInput>
   provider?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   awardedTender?: Prisma.XOR<Prisma.TenderNullableScalarRelationFilter, Prisma.TenderWhereInput> | null
-  transaction?: Prisma.XOR<Prisma.TransactionNullableScalarRelationFilter, Prisma.TransactionWhereInput> | null
+  transactions?: Prisma.TransactionListRelationFilter
 }
 
 export type BidOrderByWithRelationInput = {
@@ -288,12 +316,15 @@ export type BidOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   bidFeeAmount?: Prisma.SortOrder
   ownerContactSharedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  bidFeeRefundedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  bidFeeRefundedAmount?: Prisma.SortOrder
+  bidFeeRefundReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tender?: Prisma.TenderOrderByWithRelationInput
   provider?: Prisma.UserOrderByWithRelationInput
   awardedTender?: Prisma.TenderOrderByWithRelationInput
-  transaction?: Prisma.TransactionOrderByWithRelationInput
+  transactions?: Prisma.TransactionOrderByRelationAggregateInput
   _relevance?: Prisma.BidOrderByRelevanceInput
 }
 
@@ -311,12 +342,15 @@ export type BidWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumBidStatusFilter<"Bid"> | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFilter<"Bid"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.DateTimeNullableFilter<"Bid"> | Date | string | null
+  bidFeeRefundedAt?: Prisma.DateTimeNullableFilter<"Bid"> | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFilter<"Bid"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.StringNullableFilter<"Bid"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Bid"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Bid"> | Date | string
   tender?: Prisma.XOR<Prisma.TenderScalarRelationFilter, Prisma.TenderWhereInput>
   provider?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   awardedTender?: Prisma.XOR<Prisma.TenderNullableScalarRelationFilter, Prisma.TenderWhereInput> | null
-  transaction?: Prisma.XOR<Prisma.TransactionNullableScalarRelationFilter, Prisma.TransactionWhereInput> | null
+  transactions?: Prisma.TransactionListRelationFilter
 }, "id" | "tenderId_providerId">
 
 export type BidOrderByWithAggregationInput = {
@@ -329,6 +363,9 @@ export type BidOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   bidFeeAmount?: Prisma.SortOrder
   ownerContactSharedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  bidFeeRefundedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  bidFeeRefundedAmount?: Prisma.SortOrder
+  bidFeeRefundReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.BidCountOrderByAggregateInput
@@ -351,6 +388,9 @@ export type BidScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumBidStatusWithAggregatesFilter<"Bid"> | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalWithAggregatesFilter<"Bid"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Bid"> | Date | string | null
+  bidFeeRefundedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Bid"> | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalWithAggregatesFilter<"Bid"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.StringNullableWithAggregatesFilter<"Bid"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Bid"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Bid"> | Date | string
 }
@@ -363,12 +403,15 @@ export type BidCreateInput = {
   status?: $Enums.BidStatus
   bidFeeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Date | string | null
+  bidFeeRefundedAt?: Date | string | null
+  bidFeeRefundedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tender: Prisma.TenderCreateNestedOneWithoutBidsInput
   provider: Prisma.UserCreateNestedOneWithoutBidsInput
   awardedTender?: Prisma.TenderCreateNestedOneWithoutAwardedBidInput
-  transaction?: Prisma.TransactionCreateNestedOneWithoutBidInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutBidInput
 }
 
 export type BidUncheckedCreateInput = {
@@ -381,10 +424,13 @@ export type BidUncheckedCreateInput = {
   status?: $Enums.BidStatus
   bidFeeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Date | string | null
+  bidFeeRefundedAt?: Date | string | null
+  bidFeeRefundedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   awardedTender?: Prisma.TenderUncheckedCreateNestedOneWithoutAwardedBidInput
-  transaction?: Prisma.TransactionUncheckedCreateNestedOneWithoutBidInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutBidInput
 }
 
 export type BidUpdateInput = {
@@ -395,12 +441,15 @@ export type BidUpdateInput = {
   status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tender?: Prisma.TenderUpdateOneRequiredWithoutBidsNestedInput
   provider?: Prisma.UserUpdateOneRequiredWithoutBidsNestedInput
   awardedTender?: Prisma.TenderUpdateOneWithoutAwardedBidNestedInput
-  transaction?: Prisma.TransactionUpdateOneWithoutBidNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutBidNestedInput
 }
 
 export type BidUncheckedUpdateInput = {
@@ -413,10 +462,13 @@ export type BidUncheckedUpdateInput = {
   status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   awardedTender?: Prisma.TenderUncheckedUpdateOneWithoutAwardedBidNestedInput
-  transaction?: Prisma.TransactionUncheckedUpdateOneWithoutBidNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutBidNestedInput
 }
 
 export type BidCreateManyInput = {
@@ -429,6 +481,9 @@ export type BidCreateManyInput = {
   status?: $Enums.BidStatus
   bidFeeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Date | string | null
+  bidFeeRefundedAt?: Date | string | null
+  bidFeeRefundedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -441,6 +496,9 @@ export type BidUpdateManyMutationInput = {
   status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -455,6 +513,9 @@ export type BidUncheckedUpdateManyInput = {
   status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -495,6 +556,9 @@ export type BidCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   bidFeeAmount?: Prisma.SortOrder
   ownerContactSharedAt?: Prisma.SortOrder
+  bidFeeRefundedAt?: Prisma.SortOrder
+  bidFeeRefundedAmount?: Prisma.SortOrder
+  bidFeeRefundReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -503,6 +567,7 @@ export type BidAvgOrderByAggregateInput = {
   price?: Prisma.SortOrder
   timelineDays?: Prisma.SortOrder
   bidFeeAmount?: Prisma.SortOrder
+  bidFeeRefundedAmount?: Prisma.SortOrder
 }
 
 export type BidMaxOrderByAggregateInput = {
@@ -515,6 +580,9 @@ export type BidMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   bidFeeAmount?: Prisma.SortOrder
   ownerContactSharedAt?: Prisma.SortOrder
+  bidFeeRefundedAt?: Prisma.SortOrder
+  bidFeeRefundedAmount?: Prisma.SortOrder
+  bidFeeRefundReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -529,6 +597,9 @@ export type BidMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   bidFeeAmount?: Prisma.SortOrder
   ownerContactSharedAt?: Prisma.SortOrder
+  bidFeeRefundedAt?: Prisma.SortOrder
+  bidFeeRefundedAmount?: Prisma.SortOrder
+  bidFeeRefundReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -537,6 +608,7 @@ export type BidSumOrderByAggregateInput = {
   price?: Prisma.SortOrder
   timelineDays?: Prisma.SortOrder
   bidFeeAmount?: Prisma.SortOrder
+  bidFeeRefundedAmount?: Prisma.SortOrder
 }
 
 export type BidCreateNestedManyWithoutProviderInput = {
@@ -643,20 +715,20 @@ export type EnumBidStatusFieldUpdateOperationsInput = {
   set?: $Enums.BidStatus
 }
 
-export type BidCreateNestedOneWithoutTransactionInput = {
-  create?: Prisma.XOR<Prisma.BidCreateWithoutTransactionInput, Prisma.BidUncheckedCreateWithoutTransactionInput>
-  connectOrCreate?: Prisma.BidCreateOrConnectWithoutTransactionInput
+export type BidCreateNestedOneWithoutTransactionsInput = {
+  create?: Prisma.XOR<Prisma.BidCreateWithoutTransactionsInput, Prisma.BidUncheckedCreateWithoutTransactionsInput>
+  connectOrCreate?: Prisma.BidCreateOrConnectWithoutTransactionsInput
   connect?: Prisma.BidWhereUniqueInput
 }
 
-export type BidUpdateOneWithoutTransactionNestedInput = {
-  create?: Prisma.XOR<Prisma.BidCreateWithoutTransactionInput, Prisma.BidUncheckedCreateWithoutTransactionInput>
-  connectOrCreate?: Prisma.BidCreateOrConnectWithoutTransactionInput
-  upsert?: Prisma.BidUpsertWithoutTransactionInput
+export type BidUpdateOneWithoutTransactionsNestedInput = {
+  create?: Prisma.XOR<Prisma.BidCreateWithoutTransactionsInput, Prisma.BidUncheckedCreateWithoutTransactionsInput>
+  connectOrCreate?: Prisma.BidCreateOrConnectWithoutTransactionsInput
+  upsert?: Prisma.BidUpsertWithoutTransactionsInput
   disconnect?: Prisma.BidWhereInput | boolean
   delete?: Prisma.BidWhereInput | boolean
   connect?: Prisma.BidWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.BidUpdateToOneWithWhereWithoutTransactionInput, Prisma.BidUpdateWithoutTransactionInput>, Prisma.BidUncheckedUpdateWithoutTransactionInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BidUpdateToOneWithWhereWithoutTransactionsInput, Prisma.BidUpdateWithoutTransactionsInput>, Prisma.BidUncheckedUpdateWithoutTransactionsInput>
 }
 
 export type BidCreateWithoutProviderInput = {
@@ -667,11 +739,14 @@ export type BidCreateWithoutProviderInput = {
   status?: $Enums.BidStatus
   bidFeeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Date | string | null
+  bidFeeRefundedAt?: Date | string | null
+  bidFeeRefundedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tender: Prisma.TenderCreateNestedOneWithoutBidsInput
   awardedTender?: Prisma.TenderCreateNestedOneWithoutAwardedBidInput
-  transaction?: Prisma.TransactionCreateNestedOneWithoutBidInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutBidInput
 }
 
 export type BidUncheckedCreateWithoutProviderInput = {
@@ -683,10 +758,13 @@ export type BidUncheckedCreateWithoutProviderInput = {
   status?: $Enums.BidStatus
   bidFeeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Date | string | null
+  bidFeeRefundedAt?: Date | string | null
+  bidFeeRefundedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   awardedTender?: Prisma.TenderUncheckedCreateNestedOneWithoutAwardedBidInput
-  transaction?: Prisma.TransactionUncheckedCreateNestedOneWithoutBidInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutBidInput
 }
 
 export type BidCreateOrConnectWithoutProviderInput = {
@@ -728,6 +806,9 @@ export type BidScalarWhereInput = {
   status?: Prisma.EnumBidStatusFilter<"Bid"> | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFilter<"Bid"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.DateTimeNullableFilter<"Bid"> | Date | string | null
+  bidFeeRefundedAt?: Prisma.DateTimeNullableFilter<"Bid"> | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFilter<"Bid"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.StringNullableFilter<"Bid"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Bid"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Bid"> | Date | string
 }
@@ -740,11 +821,14 @@ export type BidCreateWithoutAwardedTenderInput = {
   status?: $Enums.BidStatus
   bidFeeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Date | string | null
+  bidFeeRefundedAt?: Date | string | null
+  bidFeeRefundedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tender: Prisma.TenderCreateNestedOneWithoutBidsInput
   provider: Prisma.UserCreateNestedOneWithoutBidsInput
-  transaction?: Prisma.TransactionCreateNestedOneWithoutBidInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutBidInput
 }
 
 export type BidUncheckedCreateWithoutAwardedTenderInput = {
@@ -757,9 +841,12 @@ export type BidUncheckedCreateWithoutAwardedTenderInput = {
   status?: $Enums.BidStatus
   bidFeeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Date | string | null
+  bidFeeRefundedAt?: Date | string | null
+  bidFeeRefundedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  transaction?: Prisma.TransactionUncheckedCreateNestedOneWithoutBidInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutBidInput
 }
 
 export type BidCreateOrConnectWithoutAwardedTenderInput = {
@@ -775,11 +862,14 @@ export type BidCreateWithoutTenderInput = {
   status?: $Enums.BidStatus
   bidFeeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Date | string | null
+  bidFeeRefundedAt?: Date | string | null
+  bidFeeRefundedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   provider: Prisma.UserCreateNestedOneWithoutBidsInput
   awardedTender?: Prisma.TenderCreateNestedOneWithoutAwardedBidInput
-  transaction?: Prisma.TransactionCreateNestedOneWithoutBidInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutBidInput
 }
 
 export type BidUncheckedCreateWithoutTenderInput = {
@@ -791,10 +881,13 @@ export type BidUncheckedCreateWithoutTenderInput = {
   status?: $Enums.BidStatus
   bidFeeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Date | string | null
+  bidFeeRefundedAt?: Date | string | null
+  bidFeeRefundedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   awardedTender?: Prisma.TenderUncheckedCreateNestedOneWithoutAwardedBidInput
-  transaction?: Prisma.TransactionUncheckedCreateNestedOneWithoutBidInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutBidInput
 }
 
 export type BidCreateOrConnectWithoutTenderInput = {
@@ -826,11 +919,14 @@ export type BidUpdateWithoutAwardedTenderInput = {
   status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tender?: Prisma.TenderUpdateOneRequiredWithoutBidsNestedInput
   provider?: Prisma.UserUpdateOneRequiredWithoutBidsNestedInput
-  transaction?: Prisma.TransactionUpdateOneWithoutBidNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutBidNestedInput
 }
 
 export type BidUncheckedUpdateWithoutAwardedTenderInput = {
@@ -843,9 +939,12 @@ export type BidUncheckedUpdateWithoutAwardedTenderInput = {
   status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  transaction?: Prisma.TransactionUncheckedUpdateOneWithoutBidNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutBidNestedInput
 }
 
 export type BidUpsertWithWhereUniqueWithoutTenderInput = {
@@ -864,7 +963,7 @@ export type BidUpdateManyWithWhereWithoutTenderInput = {
   data: Prisma.XOR<Prisma.BidUpdateManyMutationInput, Prisma.BidUncheckedUpdateManyWithoutTenderInput>
 }
 
-export type BidCreateWithoutTransactionInput = {
+export type BidCreateWithoutTransactionsInput = {
   id?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   timelineDays?: number | null
@@ -872,6 +971,9 @@ export type BidCreateWithoutTransactionInput = {
   status?: $Enums.BidStatus
   bidFeeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Date | string | null
+  bidFeeRefundedAt?: Date | string | null
+  bidFeeRefundedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tender: Prisma.TenderCreateNestedOneWithoutBidsInput
@@ -879,7 +981,7 @@ export type BidCreateWithoutTransactionInput = {
   awardedTender?: Prisma.TenderCreateNestedOneWithoutAwardedBidInput
 }
 
-export type BidUncheckedCreateWithoutTransactionInput = {
+export type BidUncheckedCreateWithoutTransactionsInput = {
   id?: string
   tenderId: string
   providerId: string
@@ -889,28 +991,31 @@ export type BidUncheckedCreateWithoutTransactionInput = {
   status?: $Enums.BidStatus
   bidFeeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Date | string | null
+  bidFeeRefundedAt?: Date | string | null
+  bidFeeRefundedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   awardedTender?: Prisma.TenderUncheckedCreateNestedOneWithoutAwardedBidInput
 }
 
-export type BidCreateOrConnectWithoutTransactionInput = {
+export type BidCreateOrConnectWithoutTransactionsInput = {
   where: Prisma.BidWhereUniqueInput
-  create: Prisma.XOR<Prisma.BidCreateWithoutTransactionInput, Prisma.BidUncheckedCreateWithoutTransactionInput>
+  create: Prisma.XOR<Prisma.BidCreateWithoutTransactionsInput, Prisma.BidUncheckedCreateWithoutTransactionsInput>
 }
 
-export type BidUpsertWithoutTransactionInput = {
-  update: Prisma.XOR<Prisma.BidUpdateWithoutTransactionInput, Prisma.BidUncheckedUpdateWithoutTransactionInput>
-  create: Prisma.XOR<Prisma.BidCreateWithoutTransactionInput, Prisma.BidUncheckedCreateWithoutTransactionInput>
+export type BidUpsertWithoutTransactionsInput = {
+  update: Prisma.XOR<Prisma.BidUpdateWithoutTransactionsInput, Prisma.BidUncheckedUpdateWithoutTransactionsInput>
+  create: Prisma.XOR<Prisma.BidCreateWithoutTransactionsInput, Prisma.BidUncheckedCreateWithoutTransactionsInput>
   where?: Prisma.BidWhereInput
 }
 
-export type BidUpdateToOneWithWhereWithoutTransactionInput = {
+export type BidUpdateToOneWithWhereWithoutTransactionsInput = {
   where?: Prisma.BidWhereInput
-  data: Prisma.XOR<Prisma.BidUpdateWithoutTransactionInput, Prisma.BidUncheckedUpdateWithoutTransactionInput>
+  data: Prisma.XOR<Prisma.BidUpdateWithoutTransactionsInput, Prisma.BidUncheckedUpdateWithoutTransactionsInput>
 }
 
-export type BidUpdateWithoutTransactionInput = {
+export type BidUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timelineDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -918,6 +1023,9 @@ export type BidUpdateWithoutTransactionInput = {
   status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tender?: Prisma.TenderUpdateOneRequiredWithoutBidsNestedInput
@@ -925,7 +1033,7 @@ export type BidUpdateWithoutTransactionInput = {
   awardedTender?: Prisma.TenderUpdateOneWithoutAwardedBidNestedInput
 }
 
-export type BidUncheckedUpdateWithoutTransactionInput = {
+export type BidUncheckedUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenderId?: Prisma.StringFieldUpdateOperationsInput | string
   providerId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -935,6 +1043,9 @@ export type BidUncheckedUpdateWithoutTransactionInput = {
   status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   awardedTender?: Prisma.TenderUncheckedUpdateOneWithoutAwardedBidNestedInput
@@ -949,6 +1060,9 @@ export type BidCreateManyProviderInput = {
   status?: $Enums.BidStatus
   bidFeeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Date | string | null
+  bidFeeRefundedAt?: Date | string | null
+  bidFeeRefundedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -961,11 +1075,14 @@ export type BidUpdateWithoutProviderInput = {
   status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tender?: Prisma.TenderUpdateOneRequiredWithoutBidsNestedInput
   awardedTender?: Prisma.TenderUpdateOneWithoutAwardedBidNestedInput
-  transaction?: Prisma.TransactionUpdateOneWithoutBidNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutBidNestedInput
 }
 
 export type BidUncheckedUpdateWithoutProviderInput = {
@@ -977,10 +1094,13 @@ export type BidUncheckedUpdateWithoutProviderInput = {
   status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   awardedTender?: Prisma.TenderUncheckedUpdateOneWithoutAwardedBidNestedInput
-  transaction?: Prisma.TransactionUncheckedUpdateOneWithoutBidNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutBidNestedInput
 }
 
 export type BidUncheckedUpdateManyWithoutProviderInput = {
@@ -992,6 +1112,9 @@ export type BidUncheckedUpdateManyWithoutProviderInput = {
   status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1005,6 +1128,9 @@ export type BidCreateManyTenderInput = {
   status?: $Enums.BidStatus
   bidFeeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Date | string | null
+  bidFeeRefundedAt?: Date | string | null
+  bidFeeRefundedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1017,11 +1143,14 @@ export type BidUpdateWithoutTenderInput = {
   status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   provider?: Prisma.UserUpdateOneRequiredWithoutBidsNestedInput
   awardedTender?: Prisma.TenderUpdateOneWithoutAwardedBidNestedInput
-  transaction?: Prisma.TransactionUpdateOneWithoutBidNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutBidNestedInput
 }
 
 export type BidUncheckedUpdateWithoutTenderInput = {
@@ -1033,10 +1162,13 @@ export type BidUncheckedUpdateWithoutTenderInput = {
   status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   awardedTender?: Prisma.TenderUncheckedUpdateOneWithoutAwardedBidNestedInput
-  transaction?: Prisma.TransactionUncheckedUpdateOneWithoutBidNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutBidNestedInput
 }
 
 export type BidUncheckedUpdateManyWithoutTenderInput = {
@@ -1048,10 +1180,42 @@ export type BidUncheckedUpdateManyWithoutTenderInput = {
   status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
   bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type BidCountOutputType
+ */
+
+export type BidCountOutputType = {
+  transactions: number
+}
+
+export type BidCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  transactions?: boolean | BidCountOutputTypeCountTransactionsArgs
+}
+
+/**
+ * BidCountOutputType without action
+ */
+export type BidCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BidCountOutputType
+   */
+  select?: Prisma.BidCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * BidCountOutputType without action
+ */
+export type BidCountOutputTypeCountTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TransactionWhereInput
+}
 
 
 export type BidSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1064,12 +1228,16 @@ export type BidSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   status?: boolean
   bidFeeAmount?: boolean
   ownerContactSharedAt?: boolean
+  bidFeeRefundedAt?: boolean
+  bidFeeRefundedAmount?: boolean
+  bidFeeRefundReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tender?: boolean | Prisma.TenderDefaultArgs<ExtArgs>
   provider?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   awardedTender?: boolean | Prisma.Bid$awardedTenderArgs<ExtArgs>
-  transaction?: boolean | Prisma.Bid$transactionArgs<ExtArgs>
+  transactions?: boolean | Prisma.Bid$transactionsArgs<ExtArgs>
+  _count?: boolean | Prisma.BidCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bid"]>
 
 
@@ -1084,16 +1252,20 @@ export type BidSelectScalar = {
   status?: boolean
   bidFeeAmount?: boolean
   ownerContactSharedAt?: boolean
+  bidFeeRefundedAt?: boolean
+  bidFeeRefundedAmount?: boolean
+  bidFeeRefundReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type BidOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenderId" | "providerId" | "price" | "timelineDays" | "coverLetter" | "status" | "bidFeeAmount" | "ownerContactSharedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["bid"]>
+export type BidOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenderId" | "providerId" | "price" | "timelineDays" | "coverLetter" | "status" | "bidFeeAmount" | "ownerContactSharedAt" | "bidFeeRefundedAt" | "bidFeeRefundedAmount" | "bidFeeRefundReason" | "createdAt" | "updatedAt", ExtArgs["result"]["bid"]>
 export type BidInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tender?: boolean | Prisma.TenderDefaultArgs<ExtArgs>
   provider?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   awardedTender?: boolean | Prisma.Bid$awardedTenderArgs<ExtArgs>
-  transaction?: boolean | Prisma.Bid$transactionArgs<ExtArgs>
+  transactions?: boolean | Prisma.Bid$transactionsArgs<ExtArgs>
+  _count?: boolean | Prisma.BidCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $BidPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1102,7 +1274,7 @@ export type $BidPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     tender: Prisma.$TenderPayload<ExtArgs>
     provider: Prisma.$UserPayload<ExtArgs>
     awardedTender: Prisma.$TenderPayload<ExtArgs> | null
-    transaction: Prisma.$TransactionPayload<ExtArgs> | null
+    transactions: Prisma.$TransactionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1117,6 +1289,18 @@ export type $BidPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
      * * Պատվիրատուն կիսվել է իր կապով այս առաջարկի հետ (դիմողը տեսնում է հեռախոսը)։
      */
     ownerContactSharedAt: Date | null
+    /**
+     * * Մուտքի վճարը վերադարձվել է կրեդիտով (մրցույթի չեղարկում/մերժում)։ Idempotency.
+     */
+    bidFeeRefundedAt: Date | null
+    /**
+     * * Վերադարձված գումարը (credit), AMD-ով։ 0՝ եթե դեռ չի վերադարձվել։
+     */
+    bidFeeRefundedAmount: runtime.Decimal
+    /**
+     * * Վերադարձի պատճառը՝ ներքին տեղեկության համար։
+     */
+    bidFeeRefundReason: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["bid"]>
@@ -1462,7 +1646,7 @@ export interface Prisma__BidClient<T, Null = never, ExtArgs extends runtime.Type
   tender<T extends Prisma.TenderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenderDefaultArgs<ExtArgs>>): Prisma.Prisma__TenderClient<runtime.Types.Result.GetResult<Prisma.$TenderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   provider<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   awardedTender<T extends Prisma.Bid$awardedTenderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Bid$awardedTenderArgs<ExtArgs>>): Prisma.Prisma__TenderClient<runtime.Types.Result.GetResult<Prisma.$TenderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  transaction<T extends Prisma.Bid$transactionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Bid$transactionArgs<ExtArgs>>): Prisma.Prisma__TransactionClient<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  transactions<T extends Prisma.Bid$transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Bid$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1501,6 +1685,9 @@ export interface BidFieldRefs {
   readonly status: Prisma.FieldRef<"Bid", 'BidStatus'>
   readonly bidFeeAmount: Prisma.FieldRef<"Bid", 'Decimal'>
   readonly ownerContactSharedAt: Prisma.FieldRef<"Bid", 'DateTime'>
+  readonly bidFeeRefundedAt: Prisma.FieldRef<"Bid", 'DateTime'>
+  readonly bidFeeRefundedAmount: Prisma.FieldRef<"Bid", 'Decimal'>
+  readonly bidFeeRefundReason: Prisma.FieldRef<"Bid", 'String'>
   readonly createdAt: Prisma.FieldRef<"Bid", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Bid", 'DateTime'>
 }
@@ -1870,9 +2057,9 @@ export type Bid$awardedTenderArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Bid.transaction
+ * Bid.transactions
  */
-export type Bid$transactionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Bid$transactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Transaction
    */
@@ -1886,6 +2073,11 @@ export type Bid$transactionArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.TransactionInclude<ExtArgs> | null
   where?: Prisma.TransactionWhereInput
+  orderBy?: Prisma.TransactionOrderByWithRelationInput | Prisma.TransactionOrderByWithRelationInput[]
+  cursor?: Prisma.TransactionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TransactionScalarFieldEnum | Prisma.TransactionScalarFieldEnum[]
 }
 
 /**

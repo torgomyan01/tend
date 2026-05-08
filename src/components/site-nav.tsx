@@ -35,12 +35,12 @@ export function SiteNav() {
       >
         Ոլորտներ
       </Link>
-      <a
+      <Link
         className={navLinkClass(isActivePath(pathname, ROUTES.sections.howItWorks))}
         href={ROUTES.sections.howItWorks}
       >
         Ինչպես է աշխատում
-      </a>
+      </Link>
       <Link
         className={navLinkClass(isActivePath(pathname, ROUTES.sections.providers))}
         href={ROUTES.sections.providers}

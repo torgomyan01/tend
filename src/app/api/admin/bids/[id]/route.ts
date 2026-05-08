@@ -6,6 +6,11 @@ import { isAdminRole } from "@/lib/admin";
 import { notifyProviderBidModerationApproved } from "@/lib/bid-moderation-approved-notify";
 import { prisma } from "@/lib/prisma";
 import { notifyTenderOwnerNewBid } from "@/lib/tender-owner-new-bid-notify";
+import { refundSingleBidAsCredit } from "@/lib/bid-fee-refund";
+import {
+  notifyProviderBidFeeRefunded,
+  REFUND_REASON_LABELS,
+} from "@/lib/bid-fee-refund-notify";
 
 export const dynamic = "force-dynamic";
 
@@ -67,12 +72,27 @@ export async function PATCH(
 
   const isApprove = parsed.data.action === "APPROVE";
 
-  await prisma.bid.update({
-    where: { id: bid.id },
-    data: {
-      status: isApprove ? "SHORTLISTED" : "REJECTED",
-    },
+  const refunded = await prisma.$transaction(async (tx) => {
+    await tx.bid.update({
+      where: { id: bid.id },
+      data: {
+        status: isApprove ? "SHORTLISTED" : "REJECTED",
+      },
+    });
+    if (isApprove) return null;
+    return refundSingleBidAsCredit(tx, bid.id, "BID_REJECTED_BY_MODERATOR");
   });
+
+  if (refunded) {
+    try {
+      await notifyProviderBidFeeRefunded(
+        refunded,
+        REFUND_REASON_LABELS.BID_REJECTED_BY_MODERATOR,
+      );
+    } catch {
+      /* Telegram failures must not block moderation */
+    }
+  }
 
   if (isApprove) {
     try {

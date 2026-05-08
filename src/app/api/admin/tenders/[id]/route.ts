@@ -12,6 +12,15 @@ import {
 } from "@/lib/tender-publisher-notify";
 import { notifyInterestedUsersNewPublishedTender } from "@/lib/tender-sector-subscribers-notify";
 import { trySendTelegramMessage } from "@/lib/telegram";
+import {
+  refundTenderBidsAsCredit,
+  type BidFeeRefundReason,
+  type RefundedBidInfo,
+} from "@/lib/bid-fee-refund";
+import {
+  notifyProviderBidFeeRefunded,
+  REFUND_REASON_LABELS,
+} from "@/lib/bid-fee-refund-notify";
 import type { Prisma, TenderStatus } from "@/generated/prisma/client";
 
 export const dynamic = "force-dynamic";
@@ -165,10 +174,21 @@ export async function PATCH(
 
     const data = buildTenderAdminStatusData(statusCtx, nextStatus);
 
-    await prisma.tender.update({
-      where: { id: tender.id },
-      data,
+    let refunded: RefundedBidInfo[] = [];
+    await prisma.$transaction(async (tx) => {
+      await tx.tender.update({
+        where: { id: tender.id },
+        data,
+      });
+      if (nextStatus === "CANCELLED") {
+        refunded = await refundTenderBidsAsCredit(
+          tx,
+          tender.id,
+          "TENDER_REJECTED",
+        );
+      }
     });
+    await notifyRefundedProviders(refunded, "TENDER_REJECTED");
 
     await notifyTenderPublisherStatusChange({
       chatId,
@@ -202,10 +222,21 @@ export async function PATCH(
     const prevStatus = tender.status;
     const data = buildTenderAdminStatusData(statusCtx, payload.status);
 
-    await prisma.tender.update({
-      where: { id: tender.id },
-      data,
+    let refunded: RefundedBidInfo[] = [];
+    await prisma.$transaction(async (tx) => {
+      await tx.tender.update({
+        where: { id: tender.id },
+        data,
+      });
+      if (payload.status === "CANCELLED" && prevStatus !== "CANCELLED") {
+        refunded = await refundTenderBidsAsCredit(
+          tx,
+          tender.id,
+          "TENDER_CANCELLED",
+        );
+      }
     });
+    await notifyRefundedProviders(refunded, "TENDER_CANCELLED");
 
     await notifyTenderPublisherStatusChange({
       chatId,
@@ -291,10 +322,27 @@ export async function PATCH(
       );
     }
 
-    await prisma.tender.update({
-      where: { id: tender.id },
-      data,
+    let refunded: RefundedBidInfo[] = [];
+    await prisma.$transaction(async (tx) => {
+      await tx.tender.update({
+        where: { id: tender.id },
+        data,
+      });
+      if (
+        statusChanged &&
+        payload.status === "CANCELLED" &&
+        prevStatus !== "CANCELLED"
+      ) {
+        refunded = await refundTenderBidsAsCredit(
+          tx,
+          tender.id,
+          "TENDER_CANCELLED",
+        );
+      }
     });
+    if (refunded.length) {
+      await notifyRefundedProviders(refunded, "TENDER_CANCELLED");
+    }
 
     if (statusChanged && payload.status !== undefined) {
       await notifyTenderPublisherStatusChange({
@@ -382,15 +430,22 @@ export async function DELETE(
     return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
   }
 
-  await prisma.$transaction([
-    prisma.tender.update({
+  let refunded: RefundedBidInfo[] = [];
+  await prisma.$transaction(async (tx) => {
+    refunded = await refundTenderBidsAsCredit(
+      tx,
+      tender.id,
+      "TENDER_DELETED",
+    );
+    await tx.tender.update({
       where: { id: tender.id },
       data: { awardedBidId: null },
-    }),
-    prisma.tender.delete({
+    });
+    await tx.tender.delete({
       where: { id: tender.id },
-    }),
-  ]);
+    });
+  });
+  await notifyRefundedProviders(refunded, "TENDER_DELETED");
 
   await notifyTenderPublisherDeleted({
     chatId: tender.client.telegramChatId,
@@ -398,4 +453,19 @@ export async function DELETE(
   });
 
   return NextResponse.json({ ok: true });
+}
+
+async function notifyRefundedProviders(
+  refunded: RefundedBidInfo[],
+  reason: BidFeeRefundReason,
+): Promise<void> {
+  if (!refunded.length) return;
+  const label = REFUND_REASON_LABELS[reason];
+  await Promise.all(
+    refunded.map((info) =>
+      notifyProviderBidFeeRefunded(info, label).catch(() => {
+        /* Telegram failures must not block the admin action */
+      }),
+    ),
+  );
 }

@@ -1,11 +1,13 @@
 import {
   AlertTriangle,
+  BarChart3,
   BadgeCheck,
   BriefcaseBusiness,
   ChevronRight,
   Clock3,
   CreditCard,
   MapPin,
+  Star,
   WalletCards,
 } from "lucide-react";
 import Link from "next/link";
@@ -21,6 +23,7 @@ import {
   TENDER_STATUS_BADGE,
   TENDER_STATUS_LABEL,
 } from "@/lib/tender-status";
+import type { TenderStatus } from "@/generated/prisma/client";
 
 export default async function AccountPage() {
   const session = await getServerSession(authOptions);
@@ -36,6 +39,11 @@ export default async function AccountPage() {
     activeTenderCount,
     bidCount,
     wonBidCount,
+    tenderStatusCounts,
+    bidStatusCounts,
+    likesCount,
+    ratingAgg,
+    pendingReviewsReceivedCount,
     myTendersPreview,
     transactions,
     latestVerificationRequest,
@@ -69,6 +77,25 @@ export default async function AccountPage() {
       }),
       prisma.bid.count({ where: { providerId: userId } }),
       prisma.bid.count({ where: { providerId: userId, status: "ACCEPTED" } }),
+      prisma.tender.groupBy({
+        by: ["status"],
+        where: { clientId: userId },
+        _count: { _all: true },
+      }),
+      prisma.bid.groupBy({
+        by: ["status"],
+        where: { providerId: userId },
+        _count: { _all: true },
+      }),
+      prisma.tenderLike.count({ where: { userId } }),
+      prisma.review.aggregate({
+        where: { revieweeId: userId, moderationStatus: "APPROVED" },
+        _avg: { rating: true },
+        _count: { _all: true },
+      }),
+      prisma.review.count({
+        where: { revieweeId: userId, moderationStatus: "PENDING" },
+      }),
       prisma.tender.findMany({
         where: { clientId: userId },
         orderBy: { updatedAt: "desc" },
@@ -110,6 +137,17 @@ export default async function AccountPage() {
     : 0;
   const walletBalance = Number(user.walletBalance);
   const isFullyVerified = latestVerificationRequest?.status === "APPROVED";
+  const avgRating =
+    ratingAgg._avg.rating !== null && ratingAgg._avg.rating !== undefined
+      ? Number(ratingAgg._avg.rating)
+      : null;
+  const successRate = bidCount > 0 ? wonBidCount / bidCount : 0;
+  const tenderByStatus = new Map(
+    tenderStatusCounts.map((row) => [row.status, row._count._all]),
+  );
+  const bidsByStatus = new Map(
+    bidStatusCounts.map((row) => [row.status, row._count._all]),
+  );
 
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
@@ -226,6 +264,130 @@ export default async function AccountPage() {
                   : "Ակտիվ փաթեթ չկա"}
               </p>
             </article>
+          </section>
+
+          <section className="rounded-4xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-xl font-black">Անալիտիկա</h2>
+                <p className="mt-1 text-sm font-semibold text-slate-500">
+                  Արագ պատկեր՝ ձեր ակտիվության և արդյունքների մասին։
+                </p>
+              </div>
+              <span className="inline-flex w-fit items-center gap-2 rounded-full bg-slate-50 px-4 py-2 text-xs font-black text-slate-700 ring-1 ring-slate-200">
+                <BarChart3 className="size-4 text-amber-700" />
+                Թարմացված՝ հիմա
+              </span>
+            </div>
+
+            <div className="mt-6 grid gap-4 lg:grid-cols-3">
+              <div className="rounded-4xl bg-slate-50 p-5 ring-1 ring-slate-200">
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">
+                  Մրցույթներ՝ ըստ կարգավիճակի
+                </p>
+                <div className="mt-3 grid grid-cols-2 gap-3 text-sm font-bold text-slate-700 sm:grid-cols-3 lg:grid-cols-2">
+                  {(
+                    [
+                      ["DRAFT", "Սևագիր"],
+                      ["REVIEW", "Դիտարկում"],
+                      ["ACTIVE", "Ակտիվ"],
+                      ["AWARDED", "Հանձնված"],
+                      ["COMPLETED", "Ավարտված"],
+                      ["CANCELLED", "Չեղարկված"],
+                    ] as Array<[TenderStatus, string]>
+                  ).map(([key, label]) => (
+                    <div
+                      key={key}
+                      className="rounded-3xl bg-white px-4 py-3 ring-1 ring-slate-200"
+                    >
+                      <p className="text-xs font-black text-slate-900">
+                        {tenderByStatus.get(key) ?? 0}
+                      </p>
+                      <p className="mt-1 text-[11px] font-semibold text-slate-500">
+                        {label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-4xl bg-slate-50 p-5 ring-1 ring-slate-200">
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">
+                  Առաջարկներ՝ ձեր կողմից
+                </p>
+                <div className="mt-3 grid gap-3">
+                  <div className="rounded-3xl bg-white px-4 py-3 ring-1 ring-slate-200">
+                    <p className="text-xs font-black text-slate-900">
+                      {Math.round(successRate * 100)}%
+                    </p>
+                    <p className="mt-1 text-[11px] font-semibold text-slate-500">
+                      Հաղթանակների տոկոս (ընդհանուր՝ {bidCount})
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="rounded-3xl bg-white px-4 py-3 ring-1 ring-slate-200">
+                      <p className="text-xs font-black text-slate-900">
+                        {bidsByStatus.get("ACCEPTED") ?? 0}
+                      </p>
+                      <p className="mt-1 text-[11px] font-semibold text-slate-500">
+                        Ընդունված
+                      </p>
+                    </div>
+                    <div className="rounded-3xl bg-white px-4 py-3 ring-1 ring-slate-200">
+                      <p className="text-xs font-black text-slate-900">
+                        {(bidsByStatus.get("PENDING") ?? 0) +
+                          (bidsByStatus.get("SHORTLISTED") ?? 0)}
+                      </p>
+                      <p className="mt-1 text-[11px] font-semibold text-slate-500">
+                        Ընթացքում
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-4xl bg-slate-50 p-5 ring-1 ring-slate-200">
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">
+                  Վարկանիշ և ակտիվություն
+                </p>
+                <div className="mt-3 grid gap-3">
+                  <div className="rounded-3xl bg-white px-4 py-3 ring-1 ring-slate-200">
+                    <div className="flex items-center gap-2 text-amber-600">
+                      <Star className="size-4 fill-current" />
+                      <p className="text-sm font-black text-slate-900">
+                        {avgRating !== null ? avgRating.toFixed(1) : "—"}
+                      </p>
+                      <p className="text-xs font-semibold text-slate-500">
+                        ({ratingAgg._count._all})
+                      </p>
+                    </div>
+                    <p className="mt-1 text-[11px] font-semibold text-slate-500">
+                      Հաստատված գնահատականների միջին
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="rounded-3xl bg-white px-4 py-3 ring-1 ring-slate-200">
+                      <p className="text-xs font-black text-slate-900">{likesCount}</p>
+                      <p className="mt-1 text-[11px] font-semibold text-slate-500">
+                        Հավանած
+                      </p>
+                    </div>
+                    <div className="rounded-3xl bg-white px-4 py-3 ring-1 ring-slate-200">
+                      <p className="text-xs font-black text-slate-900">
+                        {pendingReviewsReceivedCount}
+                      </p>
+                      <p className="mt-1 text-[11px] font-semibold text-slate-500">
+                        Մոդերացիայում
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-xs font-semibold text-slate-500">
+                    Դիտումներ/այցելություններ ավելացնելու համար պետք է առանձին հաշվառում
+                    իրականացնենք (հիմա DB-ում view-count չի պահվում)։
+                  </p>
+                </div>
+              </div>
+            </div>
           </section>
 
           <section className="rounded-4xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
