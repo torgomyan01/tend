@@ -313,6 +313,8 @@ model Tender {
   budgetMin      Decimal?     @db.Decimal(12, 2)
   budgetMax      Decimal?     @db.Decimal(12, 2)
   status         TenderStatus @default(DRAFT)
+  draftWizardStep    Int?       @map("draft_wizard_step")
+  draftDurationDays  Int?       @map("draft_duration_days")
   isBlindBidding Boolean      @default(true)
   startsAt       DateTime?
   endsAt         DateTime?

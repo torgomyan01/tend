@@ -30,12 +30,16 @@ export type TenderAvgAggregateOutputType = {
   locationId: number | null
   budgetMin: runtime.Decimal | null
   budgetMax: runtime.Decimal | null
+  draftWizardStep: number | null
+  draftDurationDays: number | null
 }
 
 export type TenderSumAggregateOutputType = {
   locationId: number | null
   budgetMin: runtime.Decimal | null
   budgetMax: runtime.Decimal | null
+  draftWizardStep: number | null
+  draftDurationDays: number | null
 }
 
 export type TenderMinAggregateOutputType = {
@@ -51,6 +55,8 @@ export type TenderMinAggregateOutputType = {
   budgetMin: runtime.Decimal | null
   budgetMax: runtime.Decimal | null
   status: $Enums.TenderStatus | null
+  draftWizardStep: number | null
+  draftDurationDays: number | null
   isBlindBidding: boolean | null
   startsAt: Date | null
   endsAt: Date | null
@@ -75,6 +81,8 @@ export type TenderMaxAggregateOutputType = {
   budgetMin: runtime.Decimal | null
   budgetMax: runtime.Decimal | null
   status: $Enums.TenderStatus | null
+  draftWizardStep: number | null
+  draftDurationDays: number | null
   isBlindBidding: boolean | null
   startsAt: Date | null
   endsAt: Date | null
@@ -99,6 +107,8 @@ export type TenderCountAggregateOutputType = {
   budgetMin: number
   budgetMax: number
   status: number
+  draftWizardStep: number
+  draftDurationDays: number
   isBlindBidding: number
   startsAt: number
   endsAt: number
@@ -116,12 +126,16 @@ export type TenderAvgAggregateInputType = {
   locationId?: true
   budgetMin?: true
   budgetMax?: true
+  draftWizardStep?: true
+  draftDurationDays?: true
 }
 
 export type TenderSumAggregateInputType = {
   locationId?: true
   budgetMin?: true
   budgetMax?: true
+  draftWizardStep?: true
+  draftDurationDays?: true
 }
 
 export type TenderMinAggregateInputType = {
@@ -137,6 +151,8 @@ export type TenderMinAggregateInputType = {
   budgetMin?: true
   budgetMax?: true
   status?: true
+  draftWizardStep?: true
+  draftDurationDays?: true
   isBlindBidding?: true
   startsAt?: true
   endsAt?: true
@@ -161,6 +177,8 @@ export type TenderMaxAggregateInputType = {
   budgetMin?: true
   budgetMax?: true
   status?: true
+  draftWizardStep?: true
+  draftDurationDays?: true
   isBlindBidding?: true
   startsAt?: true
   endsAt?: true
@@ -185,6 +203,8 @@ export type TenderCountAggregateInputType = {
   budgetMin?: true
   budgetMax?: true
   status?: true
+  draftWizardStep?: true
+  draftDurationDays?: true
   isBlindBidding?: true
   startsAt?: true
   endsAt?: true
@@ -296,6 +316,8 @@ export type TenderGroupByOutputType = {
   budgetMin: runtime.Decimal | null
   budgetMax: runtime.Decimal | null
   status: $Enums.TenderStatus
+  draftWizardStep: number | null
+  draftDurationDays: number | null
   isBlindBidding: boolean
   startsAt: Date | null
   endsAt: Date | null
@@ -343,6 +365,8 @@ export type TenderWhereInput = {
   budgetMin?: Prisma.DecimalNullableFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.DecimalNullableFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFilter<"Tender"> | $Enums.TenderStatus
+  draftWizardStep?: Prisma.IntNullableFilter<"Tender"> | number | null
+  draftDurationDays?: Prisma.IntNullableFilter<"Tender"> | number | null
   isBlindBidding?: Prisma.BoolFilter<"Tender"> | boolean
   startsAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   endsAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
@@ -377,6 +401,8 @@ export type TenderOrderByWithRelationInput = {
   budgetMin?: Prisma.SortOrderInput | Prisma.SortOrder
   budgetMax?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  draftWizardStep?: Prisma.SortOrderInput | Prisma.SortOrder
+  draftDurationDays?: Prisma.SortOrderInput | Prisma.SortOrder
   isBlindBidding?: Prisma.SortOrder
   startsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -416,6 +442,8 @@ export type TenderWhereUniqueInput = Prisma.AtLeast<{
   budgetMin?: Prisma.DecimalNullableFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.DecimalNullableFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFilter<"Tender"> | $Enums.TenderStatus
+  draftWizardStep?: Prisma.IntNullableFilter<"Tender"> | number | null
+  draftDurationDays?: Prisma.IntNullableFilter<"Tender"> | number | null
   isBlindBidding?: Prisma.BoolFilter<"Tender"> | boolean
   startsAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   endsAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
@@ -449,6 +477,8 @@ export type TenderOrderByWithAggregationInput = {
   budgetMin?: Prisma.SortOrderInput | Prisma.SortOrder
   budgetMax?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  draftWizardStep?: Prisma.SortOrderInput | Prisma.SortOrder
+  draftDurationDays?: Prisma.SortOrderInput | Prisma.SortOrder
   isBlindBidding?: Prisma.SortOrder
   startsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -481,6 +511,8 @@ export type TenderScalarWhereWithAggregatesInput = {
   budgetMin?: Prisma.DecimalNullableWithAggregatesFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.DecimalNullableWithAggregatesFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusWithAggregatesFilter<"Tender"> | $Enums.TenderStatus
+  draftWizardStep?: Prisma.IntNullableWithAggregatesFilter<"Tender"> | number | null
+  draftDurationDays?: Prisma.IntNullableWithAggregatesFilter<"Tender"> | number | null
   isBlindBidding?: Prisma.BoolWithAggregatesFilter<"Tender"> | boolean
   startsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Tender"> | Date | string | null
   endsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Tender"> | Date | string | null
@@ -503,6 +535,8 @@ export type TenderCreateInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -536,6 +570,8 @@ export type TenderUncheckedCreateInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -565,6 +601,8 @@ export type TenderUpdateInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -598,6 +636,8 @@ export type TenderUncheckedUpdateInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -629,6 +669,8 @@ export type TenderCreateManyInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -651,6 +693,8 @@ export type TenderUpdateManyMutationInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -674,6 +718,8 @@ export type TenderUncheckedUpdateManyInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -714,6 +760,8 @@ export type TenderCountOrderByAggregateInput = {
   budgetMin?: Prisma.SortOrder
   budgetMax?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  draftWizardStep?: Prisma.SortOrder
+  draftDurationDays?: Prisma.SortOrder
   isBlindBidding?: Prisma.SortOrder
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrder
@@ -729,6 +777,8 @@ export type TenderAvgOrderByAggregateInput = {
   locationId?: Prisma.SortOrder
   budgetMin?: Prisma.SortOrder
   budgetMax?: Prisma.SortOrder
+  draftWizardStep?: Prisma.SortOrder
+  draftDurationDays?: Prisma.SortOrder
 }
 
 export type TenderMaxOrderByAggregateInput = {
@@ -744,6 +794,8 @@ export type TenderMaxOrderByAggregateInput = {
   budgetMin?: Prisma.SortOrder
   budgetMax?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  draftWizardStep?: Prisma.SortOrder
+  draftDurationDays?: Prisma.SortOrder
   isBlindBidding?: Prisma.SortOrder
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrder
@@ -768,6 +820,8 @@ export type TenderMinOrderByAggregateInput = {
   budgetMin?: Prisma.SortOrder
   budgetMax?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  draftWizardStep?: Prisma.SortOrder
+  draftDurationDays?: Prisma.SortOrder
   isBlindBidding?: Prisma.SortOrder
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrder
@@ -783,6 +837,8 @@ export type TenderSumOrderByAggregateInput = {
   locationId?: Prisma.SortOrder
   budgetMin?: Prisma.SortOrder
   budgetMax?: Prisma.SortOrder
+  draftWizardStep?: Prisma.SortOrder
+  draftDurationDays?: Prisma.SortOrder
 }
 
 export type TenderScalarRelationFilter = {
@@ -1032,6 +1088,8 @@ export type TenderCreateWithoutClientInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1063,6 +1121,8 @@ export type TenderUncheckedCreateWithoutClientInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1123,6 +1183,8 @@ export type TenderScalarWhereInput = {
   budgetMin?: Prisma.DecimalNullableFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.DecimalNullableFilter<"Tender"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFilter<"Tender"> | $Enums.TenderStatus
+  draftWizardStep?: Prisma.IntNullableFilter<"Tender"> | number | null
+  draftDurationDays?: Prisma.IntNullableFilter<"Tender"> | number | null
   isBlindBidding?: Prisma.BoolFilter<"Tender"> | boolean
   startsAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
   endsAt?: Prisma.DateTimeNullableFilter<"Tender"> | Date | string | null
@@ -1145,6 +1207,8 @@ export type TenderCreateWithoutLocalityInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1176,6 +1240,8 @@ export type TenderUncheckedCreateWithoutLocalityInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1231,6 +1297,8 @@ export type TenderCreateWithoutLikesInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1263,6 +1331,8 @@ export type TenderUncheckedCreateWithoutLikesInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1307,6 +1377,8 @@ export type TenderUpdateWithoutLikesInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1339,6 +1411,8 @@ export type TenderUncheckedUpdateWithoutLikesInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1367,6 +1441,8 @@ export type TenderCreateWithoutImagesInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1399,6 +1475,8 @@ export type TenderUncheckedCreateWithoutImagesInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1443,6 +1521,8 @@ export type TenderUpdateWithoutImagesInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1475,6 +1555,8 @@ export type TenderUncheckedUpdateWithoutImagesInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1503,6 +1585,8 @@ export type TenderCreateWithoutDocumentsInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1535,6 +1619,8 @@ export type TenderUncheckedCreateWithoutDocumentsInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1579,6 +1665,8 @@ export type TenderUpdateWithoutDocumentsInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1611,6 +1699,8 @@ export type TenderUncheckedUpdateWithoutDocumentsInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1639,6 +1729,8 @@ export type TenderCreateWithoutSelectedServicesInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1671,6 +1763,8 @@ export type TenderUncheckedCreateWithoutSelectedServicesInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1715,6 +1809,8 @@ export type TenderUpdateWithoutSelectedServicesInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1747,6 +1843,8 @@ export type TenderUncheckedUpdateWithoutSelectedServicesInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1775,6 +1873,8 @@ export type TenderCreateWithoutComplaintsInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1807,6 +1907,8 @@ export type TenderUncheckedCreateWithoutComplaintsInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1851,6 +1953,8 @@ export type TenderUpdateWithoutComplaintsInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1883,6 +1987,8 @@ export type TenderUncheckedUpdateWithoutComplaintsInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1911,6 +2017,8 @@ export type TenderCreateWithoutBidsInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1943,6 +2051,8 @@ export type TenderUncheckedCreateWithoutBidsInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -1976,6 +2086,8 @@ export type TenderCreateWithoutAwardedBidInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -2008,6 +2120,8 @@ export type TenderUncheckedCreateWithoutAwardedBidInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -2052,6 +2166,8 @@ export type TenderUpdateWithoutBidsInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2084,6 +2200,8 @@ export type TenderUncheckedUpdateWithoutBidsInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2123,6 +2241,8 @@ export type TenderUpdateWithoutAwardedBidInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2155,6 +2275,8 @@ export type TenderUncheckedUpdateWithoutAwardedBidInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2183,6 +2305,8 @@ export type TenderCreateWithoutReviewsInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -2215,6 +2339,8 @@ export type TenderUncheckedCreateWithoutReviewsInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -2259,6 +2385,8 @@ export type TenderUpdateWithoutReviewsInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2291,6 +2419,8 @@ export type TenderUncheckedUpdateWithoutReviewsInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2320,6 +2450,8 @@ export type TenderCreateManyClientInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -2342,6 +2474,8 @@ export type TenderUpdateWithoutClientInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2373,6 +2507,8 @@ export type TenderUncheckedUpdateWithoutClientInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2403,6 +2539,8 @@ export type TenderUncheckedUpdateManyWithoutClientInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2426,6 +2564,8 @@ export type TenderCreateManyLocalityInput = {
   budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
   isBlindBidding?: boolean
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -2448,6 +2588,8 @@ export type TenderUpdateWithoutLocalityInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2479,6 +2621,8 @@ export type TenderUncheckedUpdateWithoutLocalityInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2509,6 +2653,8 @@ export type TenderUncheckedUpdateManyWithoutLocalityInput = {
   budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2618,6 +2764,8 @@ export type TenderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   budgetMin?: boolean
   budgetMax?: boolean
   status?: boolean
+  draftWizardStep?: boolean
+  draftDurationDays?: boolean
   isBlindBidding?: boolean
   startsAt?: boolean
   endsAt?: boolean
@@ -2655,6 +2803,8 @@ export type TenderSelectScalar = {
   budgetMin?: boolean
   budgetMax?: boolean
   status?: boolean
+  draftWizardStep?: boolean
+  draftDurationDays?: boolean
   isBlindBidding?: boolean
   startsAt?: boolean
   endsAt?: boolean
@@ -2666,7 +2816,7 @@ export type TenderSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TenderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "title" | "description" | "category" | "service" | "city" | "locationId" | "address" | "budgetMin" | "budgetMax" | "status" | "isBlindBidding" | "startsAt" | "endsAt" | "awardedBidId" | "awardedAt" | "completedAt" | "cancelledAt" | "createdAt" | "updatedAt", ExtArgs["result"]["tender"]>
+export type TenderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "title" | "description" | "category" | "service" | "city" | "locationId" | "address" | "budgetMin" | "budgetMax" | "status" | "draftWizardStep" | "draftDurationDays" | "isBlindBidding" | "startsAt" | "endsAt" | "awardedBidId" | "awardedAt" | "completedAt" | "cancelledAt" | "createdAt" | "updatedAt", ExtArgs["result"]["tender"]>
 export type TenderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   locality?: boolean | Prisma.Tender$localityArgs<ExtArgs>
   client?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -2708,6 +2858,8 @@ export type $TenderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     budgetMin: runtime.Decimal | null
     budgetMax: runtime.Decimal | null
     status: $Enums.TenderStatus
+    draftWizardStep: number | null
+    draftDurationDays: number | null
     isBlindBidding: boolean
     startsAt: Date | null
     endsAt: Date | null
@@ -3108,6 +3260,8 @@ export interface TenderFieldRefs {
   readonly budgetMin: Prisma.FieldRef<"Tender", 'Decimal'>
   readonly budgetMax: Prisma.FieldRef<"Tender", 'Decimal'>
   readonly status: Prisma.FieldRef<"Tender", 'TenderStatus'>
+  readonly draftWizardStep: Prisma.FieldRef<"Tender", 'Int'>
+  readonly draftDurationDays: Prisma.FieldRef<"Tender", 'Int'>
   readonly isBlindBidding: Prisma.FieldRef<"Tender", 'Boolean'>
   readonly startsAt: Prisma.FieldRef<"Tender", 'DateTime'>
   readonly endsAt: Prisma.FieldRef<"Tender", 'DateTime'>

@@ -2103,6 +2103,8 @@ export const TenderScalarFieldEnum = {
   budgetMin: 'budgetMin',
   budgetMax: 'budgetMax',
   status: 'status',
+  draftWizardStep: 'draftWizardStep',
+  draftDurationDays: 'draftDurationDays',
   isBlindBidding: 'isBlindBidding',
   startsAt: 'startsAt',
   endsAt: 'endsAt',

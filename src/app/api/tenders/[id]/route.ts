@@ -1,9 +1,16 @@
-import { randomUUID } from "node:crypto";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { authOptions } from "@/lib/auth";
+import {
+  normalizeTitleDescription,
+  parseDraftWizardStep,
+  parseStringIdArray,
+  tenderNumericFieldsSchema,
+} from "@/lib/tender-form-fields";
 import { resolveLocationCityLabel } from "@/lib/locations-data";
+import { prisma } from "@/lib/prisma";
+import { parseServicesPayload } from "@/lib/tender-form-services";
 import {
   ALLOWED_IMAGE_TYPES,
   documentExtension,
@@ -16,15 +23,14 @@ import {
   saveTenderDocument,
   saveTenderImage,
 } from "@/lib/tender-form-upload";
-import { prisma } from "@/lib/prisma";
-import { parseServicesPayload } from "@/lib/tender-form-services";
-import {
-  normalizeTitleDescription,
-  parseDraftWizardStep,
-  tenderNumericFieldsSchema,
-} from "@/lib/tender-form-fields";
 
-export async function POST(request: Request) {
+export const dynamic = "force-dynamic";
+
+type Params = { params: Promise<{ id: string }> };
+
+export async function PATCH(request: Request, { params }: Params) {
+  const { id: tenderId } = await params;
+
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
@@ -72,6 +78,15 @@ export async function POST(request: Request) {
     );
   }
 
+  const existing = await prisma.tender.findFirst({
+    where: { id: tenderId, clientId: user.id, status: "DRAFT" },
+    select: { id: true },
+  });
+
+  if (!existing) {
+    return NextResponse.json({ error: "NOT_FOUND_OR_NOT_EDITABLE" }, { status: 404 });
+  }
+
   let formData: FormData;
   try {
     formData = await request.formData();
@@ -85,7 +100,6 @@ export async function POST(request: Request) {
       servicesPayload.reason === "duplicate" ? "DUPLICATE_SERVICE" : "INVALID_SERVICES";
     return NextResponse.json({ error: status }, { status: 400 });
   }
-
   const services = servicesPayload.services;
 
   const parsed = tenderNumericFieldsSchema.safeParse({
@@ -96,12 +110,11 @@ export async function POST(request: Request) {
     isBlindBidding: formData.get("isBlindBidding"),
     publish: formData.get("publish"),
   });
-
   if (!parsed.success) {
     return NextResponse.json({ error: "VALIDATION_FAILED" }, { status: 400 });
   }
-
   const data = parsed.data;
+
   const normalized = normalizeTitleDescription(
     String(formData.get("title") ?? ""),
     String(formData.get("description") ?? ""),
@@ -142,6 +155,37 @@ export async function POST(request: Request) {
     }
   }
 
+  const keepImageIds = parseStringIdArray(formData.get("keepImageIds"));
+  const keepDocumentIds = parseStringIdArray(formData.get("keepDocumentIds"));
+  if (keepImageIds === null || keepDocumentIds === null) {
+    return NextResponse.json({ error: "VALIDATION_FAILED" }, { status: 400 });
+  }
+
+  const [existingImages, existingDocs] = await Promise.all([
+    prisma.tenderImage.findMany({
+      where: { tenderId },
+      select: { id: true },
+    }),
+    prisma.tenderDocument.findMany({
+      where: { tenderId },
+      select: { id: true },
+    }),
+  ]);
+
+  const imageSet = new Set(existingImages.map((row) => row.id));
+  for (const id of keepImageIds) {
+    if (!imageSet.has(id)) {
+      return NextResponse.json({ error: "INVALID_IMAGE_REFERENCE" }, { status: 400 });
+    }
+  }
+
+  const docSet = new Set(existingDocs.map((row) => row.id));
+  for (const id of keepDocumentIds) {
+    if (!docSet.has(id)) {
+      return NextResponse.json({ error: "INVALID_DOCUMENT_REFERENCE" }, { status: 400 });
+    }
+  }
+
   const imageEntries = formData.getAll("images");
   const imageFiles = imageEntries.filter(
     (entry): entry is File => entry instanceof File && entry.size > 0,
@@ -151,14 +195,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "TOO_MANY_IMAGES" }, { status: 400 });
   }
 
-  if (data.publish && imageFiles.length < MIN_IMAGES_PUBLISH) {
+  if (keepImageIds.length + imageFiles.length > MAX_IMAGES) {
+    return NextResponse.json({ error: "TOO_MANY_IMAGES" }, { status: 400 });
+  }
+
+  if (
+    data.publish &&
+    keepImageIds.length + imageFiles.length < MIN_IMAGES_PUBLISH
+  ) {
     return NextResponse.json({ error: "TOO_FEW_IMAGES" }, { status: 400 });
   }
 
   for (const file of imageFiles) {
-    if (
-      !(ALLOWED_IMAGE_TYPES as readonly string[]).includes(file.type)
-    ) {
+    if (!(ALLOWED_IMAGE_TYPES as readonly string[]).includes(file.type)) {
       return NextResponse.json({ error: "INVALID_IMAGE" }, { status: 400 });
     }
     if (file.size > MAX_IMAGE_SIZE_BYTES) {
@@ -171,7 +220,7 @@ export async function POST(request: Request) {
     (entry): entry is File => entry instanceof File && entry.size > 0,
   );
 
-  if (documentFiles.length > MAX_DOCUMENTS) {
+  if (keepDocumentIds.length + documentFiles.length > MAX_DOCUMENTS) {
     return NextResponse.json({ error: "TOO_MANY_DOCUMENTS" }, { status: 400 });
   }
 
@@ -189,74 +238,99 @@ export async function POST(request: Request) {
 
   const now = new Date();
   const endsAt = new Date(now.getTime() + data.durationDays * 24 * 60 * 60 * 1000);
-
   const primary = services[0];
 
   try {
-    const tenderId = randomUUID();
+    await prisma.$transaction(async (tx) => {
+      await tx.tenderImage.deleteMany({
+        where: { tenderId, id: { notIn: keepImageIds } },
+      });
+      await tx.tenderDocument.deleteMany({
+        where: { tenderId, id: { notIn: keepDocumentIds } },
+      });
 
-    const imageUrls: string[] = [];
-    for (const file of imageFiles) {
-      const url = await saveTenderImage(file, tenderId);
-      imageUrls.push(url);
-    }
+      for (let i = 0; i < keepImageIds.length; i += 1) {
+        await tx.tenderImage.update({
+          where: { id: keepImageIds[i] },
+          data: { sortOrder: i },
+        });
+      }
 
-    const savedDocs: Array<{
-      url: string;
-      originalFileName: string;
-      mimeType: string | null;
-    }> = [];
-    for (const file of documentFiles) {
-      savedDocs.push(await saveTenderDocument(file, tenderId));
-    }
+      const newImageUrls: string[] = [];
+      for (const file of imageFiles) {
+        const url = await saveTenderImage(file, tenderId);
+        newImageUrls.push(url);
+      }
+      const baseSort = keepImageIds.length;
+      for (let i = 0; i < newImageUrls.length; i += 1) {
+        await tx.tenderImage.create({
+          data: {
+            tenderId,
+            url: newImageUrls[i],
+            sortOrder: baseSort + i,
+          },
+        });
+      }
 
-    await prisma.tender.create({
-      data: {
-        id: tenderId,
-        clientId: user.id,
-        title: normalized.title,
-        description: normalized.description,
-        category: primary.category,
-        service: primary.service,
-        city: resolvedCity,
-        locationId,
-        address: data.address || null,
-        budgetMin: data.budgetMin ? data.budgetMin : null,
-        budgetMax: data.budgetMax ? data.budgetMax : null,
-        status: data.publish ? "REVIEW" : "DRAFT",
-        isBlindBidding: data.isBlindBidding,
-        startsAt: null,
-        endsAt: data.publish ? endsAt : null,
-        draftWizardStep: data.publish ? null : draftWizardStep,
-        draftDurationDays: data.publish ? null : data.durationDays,
-        selectedServices: {
-          create: services.map((entry, index) => ({
-            category: entry.category,
-            service: entry.service,
-            sortOrder: index,
-          })),
+      for (let i = 0; i < keepDocumentIds.length; i += 1) {
+        await tx.tenderDocument.update({
+          where: { id: keepDocumentIds[i] },
+          data: { sortOrder: i },
+        });
+      }
+
+      const savedDocs: Array<{
+        url: string;
+        originalFileName: string;
+        mimeType: string | null;
+      }> = [];
+      for (const file of documentFiles) {
+        savedDocs.push(await saveTenderDocument(file, tenderId));
+      }
+      const docBase = keepDocumentIds.length;
+      for (let i = 0; i < savedDocs.length; i += 1) {
+        const doc = savedDocs[i];
+        await tx.tenderDocument.create({
+          data: {
+            tenderId,
+            url: doc.url,
+            originalFileName: doc.originalFileName,
+            mimeType: doc.mimeType,
+            sortOrder: docBase + i,
+          },
+        });
+      }
+
+      await tx.tenderSelectedService.deleteMany({ where: { tenderId } });
+      await tx.tenderSelectedService.createMany({
+        data: services.map((entry, index) => ({
+          tenderId,
+          category: entry.category,
+          service: entry.service,
+          sortOrder: index,
+        })),
+      });
+
+      await tx.tender.update({
+        where: { id: tenderId },
+        data: {
+          title: normalized.title,
+          description: normalized.description,
+          category: primary.category,
+          service: primary.service,
+          city: resolvedCity,
+          locationId,
+          address: data.address || null,
+          budgetMin: data.budgetMin ? data.budgetMin : null,
+          budgetMax: data.budgetMax ? data.budgetMax : null,
+          isBlindBidding: data.isBlindBidding,
+          status: data.publish ? "REVIEW" : "DRAFT",
+          startsAt: null,
+          endsAt: data.publish ? endsAt : null,
+          draftWizardStep: data.publish ? null : draftWizardStep,
+          draftDurationDays: data.publish ? null : data.durationDays,
         },
-        images:
-          imageUrls.length > 0
-            ? {
-                create: imageUrls.map((url, index) => ({
-                  url,
-                  sortOrder: index,
-                })),
-              }
-            : undefined,
-        documents:
-          savedDocs.length > 0
-            ? {
-                create: savedDocs.map((doc, index) => ({
-                  url: doc.url,
-                  originalFileName: doc.originalFileName,
-                  mimeType: doc.mimeType,
-                  sortOrder: index,
-                })),
-              }
-            : undefined,
-      },
+      });
     });
 
     const tender = await prisma.tender.findUnique({
@@ -284,8 +358,7 @@ export async function POST(request: Request) {
     if (error instanceof Error && error.message === "INVALID_DOCUMENT") {
       return NextResponse.json({ error: "INVALID_DOCUMENT" }, { status: 400 });
     }
-
-    console.error("Failed to create tender", error);
-    return NextResponse.json({ error: "TENDER_CREATE_FAILED" }, { status: 500 });
+    console.error("Failed to update tender draft", error);
+    return NextResponse.json({ error: "TENDER_UPDATE_FAILED" }, { status: 500 });
   }
 }
