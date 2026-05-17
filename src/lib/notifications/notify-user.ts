@@ -27,6 +27,8 @@ export type NotifyPayload = {
   inApp: InAppNotificationInput;
   /** true — Telegram չուղարկել (օր. աջակցության պատասխան) */
   skipTelegram?: boolean;
+  /** true — ուղարկել Telegram + Email (անկախ notificationChannel-ից) */
+  forceAllChannels?: boolean;
 };
 
 function stripTelegramHtml(text: string): string {
@@ -114,11 +116,12 @@ export async function notifyUserDirect(
   let sentTelegram = false;
   let sentEmail = false;
 
-  if (
+  const tryTelegram =
     !payload.skipTelegram &&
-    allowsTelegram(channel, hasTelegram) &&
-    target.telegramChatId
-  ) {
+    target.telegramChatId &&
+    (payload.forceAllChannels || allowsTelegram(channel, hasTelegram));
+
+  if (tryTelegram && target.telegramChatId) {
     sentTelegram = await trySendTelegramMessage(
       target.telegramChatId,
       payload.telegramText,
@@ -126,7 +129,13 @@ export async function notifyUserDirect(
     );
   }
 
-  if (allowsEmail(channel, emailOk) && target.email) {
+  const tryEmail =
+    target.email &&
+    (payload.forceAllChannels
+      ? Boolean(target.email)
+      : allowsEmail(channel, emailOk));
+
+  if (tryEmail && target.email) {
     const bodyHtml =
       payload.emailBodyHtml ??
       (payload.emailPlainText

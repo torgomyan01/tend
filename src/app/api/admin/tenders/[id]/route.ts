@@ -32,6 +32,7 @@ const TENDER_STATUSES = [
   "AWARDED",
   "COMPLETED",
   "CANCELLED",
+  "EXPIRED_UNAWARDED",
 ] as const satisfies readonly TenderStatus[];
 
 const approveSchema = z.object({

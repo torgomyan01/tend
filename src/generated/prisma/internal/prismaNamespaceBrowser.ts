@@ -424,6 +424,7 @@ export const ReviewScalarFieldEnum = {
   revieweeId: 'revieweeId',
   rating: 'rating',
   comment: 'comment',
+  isPlatformPenalty: 'isPlatformPenalty',
   moderationStatus: 'moderationStatus',
   moderatedAt: 'moderatedAt',
   createdAt: 'createdAt'

@@ -34,7 +34,7 @@ export async function SiteHeader() {
           T
         </span> */}
         <Image src="/icons/logo.svg" alt="Tend.am" width={100} height={100} className="size-11" />
-        <span className="text-xl font-black tracking-tight">Tend.am</span>
+        <span className="text-xl font-black tracking-tight hidden md:block">Tend.am</span>
       </Link>
       <SiteNav />
       <div className="flex items-center gap-3">

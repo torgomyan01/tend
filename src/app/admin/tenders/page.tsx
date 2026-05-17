@@ -32,6 +32,10 @@ const FILTERS = [
   { value: "AWARDED", label: TENDER_STATUS_LABEL.AWARDED },
   { value: "COMPLETED", label: TENDER_STATUS_LABEL.COMPLETED },
   { value: "CANCELLED", label: TENDER_STATUS_LABEL.CANCELLED },
+  {
+    value: "EXPIRED_UNAWARDED",
+    label: TENDER_STATUS_LABEL.EXPIRED_UNAWARDED,
+  },
 ];
 
 export default async function AdminTendersPage({

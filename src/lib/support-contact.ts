@@ -4,7 +4,7 @@ export const SUPPORT_EMAIL = "info@tend.am";
 
 export const SUPPORT_PHONES = [
   { display: "077 769668", dial: "077769668" },
-  { display: "094263449", dial: "094263449" },
+  { display: "094 263449", dial: "094263449" },
 ] as const;
 
 export function supportPhoneHref(dial: string): string {

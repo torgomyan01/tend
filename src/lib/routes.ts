@@ -36,6 +36,7 @@ export const ROUTES = {
     tenderComplaints: "/admin/tender-complaints",
     services: "/admin/services",
     support: "/admin/support",
+    expiredUnawarded: "/admin/expired-unawarded",
   },
   sections: {
     howItWorks: "/how-it-works",

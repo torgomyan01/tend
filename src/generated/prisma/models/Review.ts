@@ -41,6 +41,7 @@ export type ReviewMinAggregateOutputType = {
   revieweeId: string | null
   rating: number | null
   comment: string | null
+  isPlatformPenalty: boolean | null
   moderationStatus: $Enums.ReviewModerationStatus | null
   moderatedAt: Date | null
   createdAt: Date | null
@@ -53,6 +54,7 @@ export type ReviewMaxAggregateOutputType = {
   revieweeId: string | null
   rating: number | null
   comment: string | null
+  isPlatformPenalty: boolean | null
   moderationStatus: $Enums.ReviewModerationStatus | null
   moderatedAt: Date | null
   createdAt: Date | null
@@ -65,6 +67,7 @@ export type ReviewCountAggregateOutputType = {
   revieweeId: number
   rating: number
   comment: number
+  isPlatformPenalty: number
   moderationStatus: number
   moderatedAt: number
   createdAt: number
@@ -87,6 +90,7 @@ export type ReviewMinAggregateInputType = {
   revieweeId?: true
   rating?: true
   comment?: true
+  isPlatformPenalty?: true
   moderationStatus?: true
   moderatedAt?: true
   createdAt?: true
@@ -99,6 +103,7 @@ export type ReviewMaxAggregateInputType = {
   revieweeId?: true
   rating?: true
   comment?: true
+  isPlatformPenalty?: true
   moderationStatus?: true
   moderatedAt?: true
   createdAt?: true
@@ -111,6 +116,7 @@ export type ReviewCountAggregateInputType = {
   revieweeId?: true
   rating?: true
   comment?: true
+  isPlatformPenalty?: true
   moderationStatus?: true
   moderatedAt?: true
   createdAt?: true
@@ -210,6 +216,7 @@ export type ReviewGroupByOutputType = {
   revieweeId: string
   rating: number
   comment: string | null
+  isPlatformPenalty: boolean
   moderationStatus: $Enums.ReviewModerationStatus
   moderatedAt: Date | null
   createdAt: Date
@@ -245,6 +252,7 @@ export type ReviewWhereInput = {
   revieweeId?: Prisma.StringFilter<"Review"> | string
   rating?: Prisma.IntFilter<"Review"> | number
   comment?: Prisma.StringNullableFilter<"Review"> | string | null
+  isPlatformPenalty?: Prisma.BoolFilter<"Review"> | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFilter<"Review"> | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.DateTimeNullableFilter<"Review"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Review"> | Date | string
@@ -260,6 +268,7 @@ export type ReviewOrderByWithRelationInput = {
   revieweeId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   comment?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPlatformPenalty?: Prisma.SortOrder
   moderationStatus?: Prisma.SortOrder
   moderatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -280,6 +289,7 @@ export type ReviewWhereUniqueInput = Prisma.AtLeast<{
   revieweeId?: Prisma.StringFilter<"Review"> | string
   rating?: Prisma.IntFilter<"Review"> | number
   comment?: Prisma.StringNullableFilter<"Review"> | string | null
+  isPlatformPenalty?: Prisma.BoolFilter<"Review"> | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFilter<"Review"> | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.DateTimeNullableFilter<"Review"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Review"> | Date | string
@@ -295,6 +305,7 @@ export type ReviewOrderByWithAggregationInput = {
   revieweeId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   comment?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPlatformPenalty?: Prisma.SortOrder
   moderationStatus?: Prisma.SortOrder
   moderatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -315,6 +326,7 @@ export type ReviewScalarWhereWithAggregatesInput = {
   revieweeId?: Prisma.StringWithAggregatesFilter<"Review"> | string
   rating?: Prisma.IntWithAggregatesFilter<"Review"> | number
   comment?: Prisma.StringNullableWithAggregatesFilter<"Review"> | string | null
+  isPlatformPenalty?: Prisma.BoolWithAggregatesFilter<"Review"> | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusWithAggregatesFilter<"Review"> | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Review"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Review"> | Date | string
@@ -324,6 +336,7 @@ export type ReviewCreateInput = {
   id?: string
   rating: number
   comment?: string | null
+  isPlatformPenalty?: boolean
   moderationStatus?: $Enums.ReviewModerationStatus
   moderatedAt?: Date | string | null
   createdAt?: Date | string
@@ -339,6 +352,7 @@ export type ReviewUncheckedCreateInput = {
   revieweeId: string
   rating: number
   comment?: string | null
+  isPlatformPenalty?: boolean
   moderationStatus?: $Enums.ReviewModerationStatus
   moderatedAt?: Date | string | null
   createdAt?: Date | string
@@ -348,6 +362,7 @@ export type ReviewUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformPenalty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFieldUpdateOperationsInput | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -363,6 +378,7 @@ export type ReviewUncheckedUpdateInput = {
   revieweeId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformPenalty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFieldUpdateOperationsInput | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -375,6 +391,7 @@ export type ReviewCreateManyInput = {
   revieweeId: string
   rating: number
   comment?: string | null
+  isPlatformPenalty?: boolean
   moderationStatus?: $Enums.ReviewModerationStatus
   moderatedAt?: Date | string | null
   createdAt?: Date | string
@@ -384,6 +401,7 @@ export type ReviewUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformPenalty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFieldUpdateOperationsInput | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -396,6 +414,7 @@ export type ReviewUncheckedUpdateManyInput = {
   revieweeId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformPenalty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFieldUpdateOperationsInput | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -430,6 +449,7 @@ export type ReviewCountOrderByAggregateInput = {
   revieweeId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   comment?: Prisma.SortOrder
+  isPlatformPenalty?: Prisma.SortOrder
   moderationStatus?: Prisma.SortOrder
   moderatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -446,6 +466,7 @@ export type ReviewMaxOrderByAggregateInput = {
   revieweeId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   comment?: Prisma.SortOrder
+  isPlatformPenalty?: Prisma.SortOrder
   moderationStatus?: Prisma.SortOrder
   moderatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -458,6 +479,7 @@ export type ReviewMinOrderByAggregateInput = {
   revieweeId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   comment?: Prisma.SortOrder
+  isPlatformPenalty?: Prisma.SortOrder
   moderationStatus?: Prisma.SortOrder
   moderatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -601,6 +623,7 @@ export type ReviewCreateWithoutReviewerInput = {
   id?: string
   rating: number
   comment?: string | null
+  isPlatformPenalty?: boolean
   moderationStatus?: $Enums.ReviewModerationStatus
   moderatedAt?: Date | string | null
   createdAt?: Date | string
@@ -614,6 +637,7 @@ export type ReviewUncheckedCreateWithoutReviewerInput = {
   revieweeId: string
   rating: number
   comment?: string | null
+  isPlatformPenalty?: boolean
   moderationStatus?: $Enums.ReviewModerationStatus
   moderatedAt?: Date | string | null
   createdAt?: Date | string
@@ -633,6 +657,7 @@ export type ReviewCreateWithoutRevieweeInput = {
   id?: string
   rating: number
   comment?: string | null
+  isPlatformPenalty?: boolean
   moderationStatus?: $Enums.ReviewModerationStatus
   moderatedAt?: Date | string | null
   createdAt?: Date | string
@@ -646,6 +671,7 @@ export type ReviewUncheckedCreateWithoutRevieweeInput = {
   reviewerId: string
   rating: number
   comment?: string | null
+  isPlatformPenalty?: boolean
   moderationStatus?: $Enums.ReviewModerationStatus
   moderatedAt?: Date | string | null
   createdAt?: Date | string
@@ -687,6 +713,7 @@ export type ReviewScalarWhereInput = {
   revieweeId?: Prisma.StringFilter<"Review"> | string
   rating?: Prisma.IntFilter<"Review"> | number
   comment?: Prisma.StringNullableFilter<"Review"> | string | null
+  isPlatformPenalty?: Prisma.BoolFilter<"Review"> | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFilter<"Review"> | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.DateTimeNullableFilter<"Review"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Review"> | Date | string
@@ -712,6 +739,7 @@ export type ReviewCreateWithoutTenderInput = {
   id?: string
   rating: number
   comment?: string | null
+  isPlatformPenalty?: boolean
   moderationStatus?: $Enums.ReviewModerationStatus
   moderatedAt?: Date | string | null
   createdAt?: Date | string
@@ -725,6 +753,7 @@ export type ReviewUncheckedCreateWithoutTenderInput = {
   revieweeId: string
   rating: number
   comment?: string | null
+  isPlatformPenalty?: boolean
   moderationStatus?: $Enums.ReviewModerationStatus
   moderatedAt?: Date | string | null
   createdAt?: Date | string
@@ -762,6 +791,7 @@ export type ReviewCreateManyReviewerInput = {
   revieweeId: string
   rating: number
   comment?: string | null
+  isPlatformPenalty?: boolean
   moderationStatus?: $Enums.ReviewModerationStatus
   moderatedAt?: Date | string | null
   createdAt?: Date | string
@@ -773,6 +803,7 @@ export type ReviewCreateManyRevieweeInput = {
   reviewerId: string
   rating: number
   comment?: string | null
+  isPlatformPenalty?: boolean
   moderationStatus?: $Enums.ReviewModerationStatus
   moderatedAt?: Date | string | null
   createdAt?: Date | string
@@ -782,6 +813,7 @@ export type ReviewUpdateWithoutReviewerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformPenalty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFieldUpdateOperationsInput | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -795,6 +827,7 @@ export type ReviewUncheckedUpdateWithoutReviewerInput = {
   revieweeId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformPenalty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFieldUpdateOperationsInput | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -806,6 +839,7 @@ export type ReviewUncheckedUpdateManyWithoutReviewerInput = {
   revieweeId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformPenalty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFieldUpdateOperationsInput | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -815,6 +849,7 @@ export type ReviewUpdateWithoutRevieweeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformPenalty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFieldUpdateOperationsInput | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -828,6 +863,7 @@ export type ReviewUncheckedUpdateWithoutRevieweeInput = {
   reviewerId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformPenalty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFieldUpdateOperationsInput | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -839,6 +875,7 @@ export type ReviewUncheckedUpdateManyWithoutRevieweeInput = {
   reviewerId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformPenalty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFieldUpdateOperationsInput | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -850,6 +887,7 @@ export type ReviewCreateManyTenderInput = {
   revieweeId: string
   rating: number
   comment?: string | null
+  isPlatformPenalty?: boolean
   moderationStatus?: $Enums.ReviewModerationStatus
   moderatedAt?: Date | string | null
   createdAt?: Date | string
@@ -859,6 +897,7 @@ export type ReviewUpdateWithoutTenderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformPenalty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFieldUpdateOperationsInput | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -872,6 +911,7 @@ export type ReviewUncheckedUpdateWithoutTenderInput = {
   revieweeId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformPenalty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFieldUpdateOperationsInput | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -883,6 +923,7 @@ export type ReviewUncheckedUpdateManyWithoutTenderInput = {
   revieweeId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformPenalty?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moderationStatus?: Prisma.EnumReviewModerationStatusFieldUpdateOperationsInput | $Enums.ReviewModerationStatus
   moderatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -897,6 +938,7 @@ export type ReviewSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   revieweeId?: boolean
   rating?: boolean
   comment?: boolean
+  isPlatformPenalty?: boolean
   moderationStatus?: boolean
   moderatedAt?: boolean
   createdAt?: boolean
@@ -914,12 +956,13 @@ export type ReviewSelectScalar = {
   revieweeId?: boolean
   rating?: boolean
   comment?: boolean
+  isPlatformPenalty?: boolean
   moderationStatus?: boolean
   moderatedAt?: boolean
   createdAt?: boolean
 }
 
-export type ReviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenderId" | "reviewerId" | "revieweeId" | "rating" | "comment" | "moderationStatus" | "moderatedAt" | "createdAt", ExtArgs["result"]["review"]>
+export type ReviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenderId" | "reviewerId" | "revieweeId" | "rating" | "comment" | "isPlatformPenalty" | "moderationStatus" | "moderatedAt" | "createdAt", ExtArgs["result"]["review"]>
 export type ReviewInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tender?: boolean | Prisma.TenderDefaultArgs<ExtArgs>
   reviewer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -940,6 +983,10 @@ export type $ReviewPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     revieweeId: string
     rating: number
     comment: string | null
+    /**
+     * * Հարթակի պատիժ (ժամկետանց, կատարող չընտրված)
+     */
+    isPlatformPenalty: boolean
     /**
      * * Նոր գնահատականները սկսում են PENDING; հանրությանը երևում են միայն APPROVED։
      */
@@ -1324,6 +1371,7 @@ export interface ReviewFieldRefs {
   readonly revieweeId: Prisma.FieldRef<"Review", 'String'>
   readonly rating: Prisma.FieldRef<"Review", 'Int'>
   readonly comment: Prisma.FieldRef<"Review", 'String'>
+  readonly isPlatformPenalty: Prisma.FieldRef<"Review", 'Boolean'>
   readonly moderationStatus: Prisma.FieldRef<"Review", 'ReviewModerationStatus'>
   readonly moderatedAt: Prisma.FieldRef<"Review", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Review", 'DateTime'>

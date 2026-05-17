@@ -19,6 +19,7 @@ const QUICK_STATUSES: TenderStatus[] = [
   "AWARDED",
   "COMPLETED",
   "CANCELLED",
+  "EXPIRED_UNAWARDED",
 ];
 
 type Props = {

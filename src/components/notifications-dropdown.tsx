@@ -200,7 +200,7 @@ export function NotificationsDropdown({ isLoggedIn, className = "" }: Props) {
       </button>
 
       {open ? (
-        <div className="absolute right-0 top-full z-40 mt-3 flex w-[min(100vw-2rem,400px)] flex-col overflow-hidden rounded-3xl bg-white shadow-2xl shadow-slate-950/15 ring-1 ring-slate-200">
+        <div className="fixed inset-x-3 top-[4.25rem] z-50 box-border flex w-[calc(100vw-1.5rem)] max-w-none flex-col overflow-hidden rounded-3xl bg-white shadow-2xl shadow-slate-950/15 ring-1 ring-slate-200 md:absolute md:inset-x-auto md:right-0 md:top-full md:mt-3 md:w-[min(100vw-2rem,400px)] md:max-w-[400px]">
           <div className="flex items-start justify-between gap-2 border-b border-slate-100 px-4 py-3">
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.18em] text-amber-700">

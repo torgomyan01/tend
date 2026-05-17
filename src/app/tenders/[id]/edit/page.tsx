@@ -98,7 +98,8 @@ export default async function EditTenderPage({ params }: Props) {
   if (
     rowStatus === "AWARDED" ||
     rowStatus === "COMPLETED" ||
-    rowStatus === "CANCELLED"
+    rowStatus === "CANCELLED" ||
+    rowStatus === "EXPIRED_UNAWARDED"
   ) {
     return (
       <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
@@ -110,8 +111,8 @@ export default async function EditTenderPage({ params }: Props) {
             </span>
             <h1 className="text-2xl font-black">Այս մրցույթը չի կարող խմբարկվել</h1>
             <p className="text-sm font-semibold text-slate-600">
-              Ավարտված, չեղարկված կամ մրցանակակիր ընտրված մրցույթների բովանդակությունը
-              փոխել հնարավոր չէ։
+              Ավարտված, չեղարկված, ժամկետանց կամ մրցանակակիր ընտրված մրցույթների
+              բովանդակությունը փոխել հնարավոր չէ։
             </p>
             <Link
               href={ROUTES.tenderDetail(id)}

@@ -15,7 +15,8 @@ export const TenderStatus = {
   REVIEW: 'REVIEW',
   AWARDED: 'AWARDED',
   COMPLETED: 'COMPLETED',
-  CANCELLED: 'CANCELLED'
+  CANCELLED: 'CANCELLED',
+  EXPIRED_UNAWARDED: 'EXPIRED_UNAWARDED'
 } as const
 
 export type TenderStatus = (typeof TenderStatus)[keyof typeof TenderStatus]

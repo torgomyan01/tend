@@ -14,6 +14,8 @@ enum TenderStatus {
   AWARDED
   COMPLETED
   CANCELLED
+  /** Ժամկետը անցել է, ≥3 դիմում, կատարող չի ընտրվել */
+  EXPIRED_UNAWARDED
 }
 
 enum BidStatus {
@@ -524,6 +526,8 @@ model Review {
   revieweeId       String
   rating           Int
   comment          String?                @db.Text
+  /** Հարթակի պատիժ (ժամկետանց, կատարող չընտրված) */
+  isPlatformPenalty Boolean               @default(false) @map("is_platform_penalty")
   /** Նոր գնահատականները սկսում են PENDING; հանրությանը երևում են միայն APPROVED։ */
   moderationStatus ReviewModerationStatus   @default(APPROVED)
   moderatedAt      DateTime?

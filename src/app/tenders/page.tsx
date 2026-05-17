@@ -14,7 +14,10 @@ import {
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
-import { TendersBrowseSidebar } from "@/components/tenders-browse-sidebar";
+import {
+  TendersBrowseMobileFilters,
+  TendersBrowseSidebar,
+} from "@/components/tenders-browse-sidebar";
 import { authOptions } from "@/lib/auth";
 import { formatAmd, formatDateTime, formatNumber } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
@@ -672,8 +675,8 @@ export default async function TendersPage({
           </section>
 
           {view.type === "public" ? (
-            <div className="flex flex-col-reverse gap-8 lg:grid lg:grid-cols-[minmax(280px,340px)_minmax(0,1fr)] lg:items-start">
-              <aside className="lg:sticky lg:top-24 lg:z-10 lg:self-start">
+            <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(280px,340px)_minmax(0,1fr)] lg:items-start lg:gap-8">
+              <aside className="hidden lg:sticky lg:top-24 lg:z-10 lg:block lg:self-start">
                 <TendersBrowseSidebar
                   categories={categories}
                   cities={browseCities}
@@ -690,6 +693,20 @@ export default async function TendersPage({
                 />
               </aside>
               <div className="min-w-0 space-y-4">
+                <TendersBrowseMobileFilters
+                  categories={categories}
+                  cities={browseCities}
+                  initial={{
+                    q: browseState.q,
+                    catalogPicks: browseState.catalogPicks,
+                    city: browseState.city,
+                    sort: browseState.sort,
+                    budgetMin: browseState.budgetMin,
+                    budgetMax: browseState.budgetMax,
+                    deadline: browseState.deadline,
+                    blind: browseState.blind,
+                  }}
+                />
               {publicTotal > 0 ? (
                 <p className="text-sm font-semibold text-slate-600">
                   Գտնվել է {formatNumber(publicTotal)} մրցույթ

@@ -7,6 +7,7 @@ import {
   Clock3,
   CreditCard,
   MapPin,
+  Pencil,
   Star,
   WalletCards,
 } from "lucide-react";
@@ -434,13 +435,18 @@ export default async function AccountPage() {
                         )}`
                       : "—";
                   const thumb = tender.images[0]?.url ?? null;
+                  const canEditTender =
+                    tender.status === "DRAFT" ||
+                    tender.status === "REVIEW" ||
+                    (tender.status === "ACTIVE" && tender._count.bids === 0);
 
                   return (
                     <li key={tender.id}>
-                      <Link
-                        href={ROUTES.tenderDetail(tender.id)}
-                        className="flex flex-col gap-3 rounded-3xl bg-slate-50 p-4 ring-1 ring-slate-200 transition hover:bg-white hover:ring-slate-300 sm:flex-row sm:items-center sm:gap-4"
-                      >
+                      <div className="flex flex-col gap-3 rounded-3xl bg-slate-50 p-4 ring-1 ring-slate-200 transition hover:bg-white hover:ring-slate-300 sm:flex-row sm:items-center sm:gap-4">
+                        <Link
+                          href={ROUTES.tenderDetail(tender.id)}
+                          className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-center sm:gap-4"
+                        >
                         {thumb ? (
                           <div className="shrink-0 overflow-hidden rounded-2xl bg-slate-200 ring-1 ring-slate-200 sm:size-24">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -478,6 +484,7 @@ export default async function AccountPage() {
                             </span>
                           </div>
                         </div>
+                        </Link>
                         <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-col sm:items-end">
                           <div className="rounded-2xl bg-white px-3 py-2 text-right ring-1 ring-slate-200">
                             <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">
@@ -487,12 +494,26 @@ export default async function AccountPage() {
                               {budgetText}
                             </p>
                           </div>
-                          <span className="inline-flex items-center gap-0.5 text-xs font-black text-amber-800">
-                            Բացել
-                            <ChevronRight className="size-3.5" />
-                          </span>
+                          <div className="flex flex-wrap items-center gap-2">
+                            {canEditTender ? (
+                              <Link
+                                href={ROUTES.editTender(tender.id)}
+                                className="inline-flex items-center gap-1 rounded-full bg-slate-950 px-3 py-1.5 text-xs font-black text-white ring-1 ring-slate-800 transition hover:bg-slate-800"
+                              >
+                                <Pencil className="size-3.5 shrink-0" aria-hidden />
+                                Խմբագրել
+                              </Link>
+                            ) : null}
+                            <Link
+                              href={ROUTES.tenderDetail(tender.id)}
+                              className="inline-flex items-center gap-0.5 text-xs font-black text-amber-800 transition hover:text-amber-950"
+                            >
+                              Բացել
+                              <ChevronRight className="size-3.5" />
+                            </Link>
+                          </div>
                         </div>
-                      </Link>
+                      </div>
                     </li>
                   );
                 })}
