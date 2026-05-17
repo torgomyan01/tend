@@ -1,5 +1,6 @@
 import { formatAmd } from "@/lib/format";
 import { notifyUserById } from "@/lib/notifications/notify-user";
+import { NOTIFICATION_KINDS } from "@/lib/notifications/in-app";
 import { ROUTES } from "@/lib/routes";
 import { absoluteAppUrl } from "@/lib/absolute-app-url";
 import { escapeTelegramHtml } from "@/lib/telegram";
@@ -43,11 +44,27 @@ export async function notifyTenderOwnerNewBid(params: {
     text += `\n\n<a href="${escapeTelegramHtml(url)}">Բացել մրցույթը</a>`;
   }
 
+  const plainBody = [
+    `Նոր առաջարկ՝ ${params.providerDisplayName}`,
+    `Գին՝ ${formatAmd(params.priceAmd)}, ${params.timelineDays} օր`,
+    excerptRaw ? `Նամակ՝ ${excerptRaw}` : null,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
   await notifyUserById(params.userId, {
     telegramText: text,
     emailSubject: `Նոր առաջարկ՝ ${params.tenderTitle}`,
     emailTitle: "Նոր առաջարկ ձեր մրցույթին",
     ctaLabel: "Բացել մրցույթը",
     ctaUrl: url || undefined,
+    inApp: {
+      category: "PENDING",
+      kind: NOTIFICATION_KINDS.NEW_BID,
+      title: `Նոր առաջարկ՝ ${params.tenderTitle}`,
+      body: plainBody,
+      href: tenderPath,
+      tenderId: params.tenderId,
+    },
   });
 }

@@ -494,6 +494,40 @@ export type EnumReviewModerationStatusWithAggregatesFilter<$PrismaModel = never>
   _max?: Prisma.NestedEnumReviewModerationStatusFilter<$PrismaModel>
 }
 
+export type EnumUserNotificationCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.UserNotificationCategory | Prisma.EnumUserNotificationCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.UserNotificationCategory[]
+  notIn?: $Enums.UserNotificationCategory[]
+  not?: Prisma.NestedEnumUserNotificationCategoryFilter<$PrismaModel> | $Enums.UserNotificationCategory
+}
+
+export type EnumUserNotificationCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.UserNotificationCategory | Prisma.EnumUserNotificationCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.UserNotificationCategory[]
+  notIn?: $Enums.UserNotificationCategory[]
+  not?: Prisma.NestedEnumUserNotificationCategoryWithAggregatesFilter<$PrismaModel> | $Enums.UserNotificationCategory
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumUserNotificationCategoryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumUserNotificationCategoryFilter<$PrismaModel>
+}
+
+export type EnumSupportMessageSenderFilter<$PrismaModel = never> = {
+  equals?: $Enums.SupportMessageSender | Prisma.EnumSupportMessageSenderFieldRefInput<$PrismaModel>
+  in?: $Enums.SupportMessageSender[]
+  notIn?: $Enums.SupportMessageSender[]
+  not?: Prisma.NestedEnumSupportMessageSenderFilter<$PrismaModel> | $Enums.SupportMessageSender
+}
+
+export type EnumSupportMessageSenderWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SupportMessageSender | Prisma.EnumSupportMessageSenderFieldRefInput<$PrismaModel>
+  in?: $Enums.SupportMessageSender[]
+  notIn?: $Enums.SupportMessageSender[]
+  not?: Prisma.NestedEnumSupportMessageSenderWithAggregatesFilter<$PrismaModel> | $Enums.SupportMessageSender
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSupportMessageSenderFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSupportMessageSenderFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[]
@@ -989,6 +1023,40 @@ export type NestedEnumReviewModerationStatusWithAggregatesFilter<$PrismaModel = 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumReviewModerationStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumReviewModerationStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumUserNotificationCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.UserNotificationCategory | Prisma.EnumUserNotificationCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.UserNotificationCategory[]
+  notIn?: $Enums.UserNotificationCategory[]
+  not?: Prisma.NestedEnumUserNotificationCategoryFilter<$PrismaModel> | $Enums.UserNotificationCategory
+}
+
+export type NestedEnumUserNotificationCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.UserNotificationCategory | Prisma.EnumUserNotificationCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.UserNotificationCategory[]
+  notIn?: $Enums.UserNotificationCategory[]
+  not?: Prisma.NestedEnumUserNotificationCategoryWithAggregatesFilter<$PrismaModel> | $Enums.UserNotificationCategory
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumUserNotificationCategoryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumUserNotificationCategoryFilter<$PrismaModel>
+}
+
+export type NestedEnumSupportMessageSenderFilter<$PrismaModel = never> = {
+  equals?: $Enums.SupportMessageSender | Prisma.EnumSupportMessageSenderFieldRefInput<$PrismaModel>
+  in?: $Enums.SupportMessageSender[]
+  notIn?: $Enums.SupportMessageSender[]
+  not?: Prisma.NestedEnumSupportMessageSenderFilter<$PrismaModel> | $Enums.SupportMessageSender
+}
+
+export type NestedEnumSupportMessageSenderWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SupportMessageSender | Prisma.EnumSupportMessageSenderFieldRefInput<$PrismaModel>
+  in?: $Enums.SupportMessageSender[]
+  notIn?: $Enums.SupportMessageSender[]
+  not?: Prisma.NestedEnumSupportMessageSenderWithAggregatesFilter<$PrismaModel> | $Enums.SupportMessageSender
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSupportMessageSenderFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSupportMessageSenderFilter<$PrismaModel>
 }
 
 

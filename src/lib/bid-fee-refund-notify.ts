@@ -2,10 +2,10 @@ import { formatAmd } from "@/lib/format";
 import type { RefundedBidInfo } from "@/lib/bid-fee-refund";
 import { absoluteAppUrl } from "@/lib/absolute-app-url";
 import { notifyUserById } from "@/lib/notifications/notify-user";
+import { NOTIFICATION_KINDS } from "@/lib/notifications/in-app";
 import { ROUTES } from "@/lib/routes";
 import { escapeTelegramHtml } from "@/lib/telegram";
 
-/** Ծանուցում մասնագետին՝ մուտքի վճարը վերադարձված է կրեդիտով։ */
 export async function notifyProviderBidFeeRefunded(
   info: RefundedBidInfo,
   reasonLabel: string,
@@ -20,7 +20,8 @@ export async function notifyProviderBidFeeRefunded(
   text += `Կրեդիտացված գումար՝ <b>${amount}</b>\n`;
   text += `Կրեդիտը հասանելի է ձեր դրամապանակում նոր մրցույթներին դիմելու համար։`;
 
-  const url = absoluteAppUrl(ROUTES.tenderDetail(info.tenderId));
+  const tenderPath = ROUTES.tenderDetail(info.tenderId);
+  const url = absoluteAppUrl(tenderPath);
   if (url) {
     text += `\n\n<a href="${escapeTelegramHtml(url)}">Բացել մրցույթը</a>`;
   }
@@ -31,6 +32,15 @@ export async function notifyProviderBidFeeRefunded(
     emailTitle: "Վերադարձ կրեդիտով",
     ctaLabel: "Բացել մրցույթը",
     ctaUrl: url || undefined,
+    inApp: {
+      category: "INFO",
+      kind: NOTIFICATION_KINDS.BID_FEE_REFUND,
+      title: "Մուտքի վճարի վերադարձ",
+      body: `«${info.tenderTitle}» — ${reasonLabel}. Գումար՝ ${formatAmd(info.amount)} (կրեդիտ)`,
+      href: tenderPath,
+      tenderId: info.tenderId,
+      bidId: info.bidId,
+    },
   });
 }
 

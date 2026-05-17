@@ -1,11 +1,12 @@
 import { tenderReviewUrlForNotify } from "@/lib/absolute-app-url";
 import { notifyUserById } from "@/lib/notifications/notify-user";
+import { NOTIFICATION_KINDS } from "@/lib/notifications/in-app";
+import { ROUTES } from "@/lib/routes";
 import {
   escapeTelegramHtml,
   type TelegramSendOptions,
 } from "@/lib/telegram";
 
-/** Telegram URL կոճակի համար պարտադիր է http/https։ */
 function canTelegramUrlButton(url: string): boolean {
   return /^https?:\/\//i.test(url.trim());
 }
@@ -27,7 +28,6 @@ function buildCompletedNotifyMessage(params: {
   tenderTitleEscaped: string;
   bodyParagraph: string;
   urlRaw: string;
-  /** Եթե false՝ URL-ը տեքստում չենք դնում (կա ներքևի URL կոճակ)։ */
   includeUrlInMessageBody: boolean;
 }): string {
   const lines: string[] = [
@@ -46,17 +46,16 @@ function buildCompletedNotifyMessage(params: {
   return lines.join("\n");
 }
 
-/** Մրցույթը COMPLETED — ծանուցում երկու կողմին (Telegram + Email)։ */
 export async function notifyPartiesTenderWorkCompleted(params: {
   tenderTitle: string;
   tenderId: string;
   providerUserId: string;
   clientUserId: string;
-  /** Կանչող բրաուզերի հասցեն (localhost vs live դոմեն)՝ հղման համար։ */
   request?: Request | null;
 }) {
   const title = escapeTelegramHtml(params.tenderTitle);
   const urlRaw = tenderReviewUrlForNotify(params.tenderId, params.request ?? null);
+  const reviewPath = ROUTES.tenderReview(params.tenderId);
 
   if (!urlRaw && process.env.NODE_ENV === "production") {
     console.warn(
@@ -67,18 +66,21 @@ export async function notifyPartiesTenderWorkCompleted(params: {
   const useUrlButton = Boolean(urlRaw && canTelegramUrlButton(urlRaw));
   const msgOpts = reviewCompletedReplyMarkup(urlRaw);
 
+  const providerParagraph =
+    "Պատվիրատուն փակել է մրցույթը։ Կարող եք գնահատել միայն պատվիրատուին, ում հետ այս մրցույթով աշխատել եք։";
+  const clientParagraph =
+    "Դուք փակել եք մրցույթը։ Կարող եք գնահատել միայն ընտրված կատարողին, ում հետ այս մրցույթով աշխատել եք։";
+
   const toProvider = buildCompletedNotifyMessage({
     tenderTitleEscaped: title,
-    bodyParagraph:
-      "Պատվիրատուն փակել է մրցույթը։ Կարող եք գնահատել միայն պատվիրատուին, ում հետ այս մրցույթով աշխատել եք՝ բացելով կայքը վերևի հղումով։",
+    bodyParagraph: providerParagraph,
     urlRaw,
     includeUrlInMessageBody: !useUrlButton,
   });
 
   const toClient = buildCompletedNotifyMessage({
     tenderTitleEscaped: title,
-    bodyParagraph:
-      "Դուք փակել եք մրցույթը։ Կարող եք գնահատել միայն ընտրված կատարողին, ում հետ այս մրցույթով աշխատել եք՝ բացելով կայքը վերևի հղումով։",
+    bodyParagraph: clientParagraph,
     urlRaw,
     includeUrlInMessageBody: !useUrlButton,
   });
@@ -95,10 +97,26 @@ export async function notifyPartiesTenderWorkCompleted(params: {
     notifyUserById(params.providerUserId, {
       ...payloadBase,
       telegramText: toProvider,
+      inApp: {
+        category: "INFO",
+        kind: NOTIFICATION_KINDS.TENDER_COMPLETED,
+        title: "Աշխատանքն ավարտված է",
+        body: `${providerParagraph} «${params.tenderTitle}»`,
+        href: reviewPath,
+        tenderId: params.tenderId,
+      },
     }),
     notifyUserById(params.clientUserId, {
       ...payloadBase,
       telegramText: toClient,
+      inApp: {
+        category: "INFO",
+        kind: NOTIFICATION_KINDS.TENDER_COMPLETED,
+        title: "Աշխատանքն ավարտված է",
+        body: `${clientParagraph} «${params.tenderTitle}»`,
+        href: reviewPath,
+        tenderId: params.tenderId,
+      },
     }),
   ]);
 }

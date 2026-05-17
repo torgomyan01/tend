@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
+import { SupportContactLinks } from "@/components/support-contact-links";
 import { SITE_PUBLIC_ORIGIN } from "@/lib/absolute-app-url";
 import { ROUTES } from "@/lib/routes";
 
@@ -73,6 +74,14 @@ export default function TermsPage() {
               {""}՝ տեղեկությունը, թե ինչպես ենք մշակում անձնական տվյալները։
 
             </p>
+          </div>
+
+          <div className="mt-10 rounded-3xl bg-slate-50 p-6 ring-1 ring-slate-200">
+            <h2 className="text-lg font-black text-slate-950">Աջակցություն</h2>
+            <p className="mt-2 text-sm font-semibold text-slate-600">
+              Հարցերի դեպքում կարող եք զանգահարել կամ գրել մեզ.
+            </p>
+            <SupportContactLinks className="mt-4" />
           </div>
 
           <div className="mt-12 flex flex-wrap gap-3 border-t border-slate-100 pt-8">

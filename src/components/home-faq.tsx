@@ -1,4 +1,5 @@
 import { ChevronDown, HelpCircle } from "lucide-react";
+import { SupportContactLinks } from "@/components/support-contact-links";
 
 const faqItems = [
   {
@@ -43,9 +44,12 @@ export function HomeFaq() {
             Ամեն ինչ, ինչ պետք է իմանաս՝ սկսելուց առաջ։
           </h2>
           <p className="mt-5 text-base leading-7 text-slate-600 sm:text-lg">
-            Չե՞ս գտել քո հարցի պատասխանը։ Գրիր մեզ՝ կպատասխանենք 24 ժամվա
-            ընթացքում, և եթե հարցդ ընդհանուր է՝ կավելացնենք այս ցուցակում։
+            Չե՞ս գտել քո հարցի պատասխանը։ Զանգահարիր կամ գրիր մեզ՝ կպատասխանենք
+            24 ժամվա ընթացքում։
           </p>
+          <div className="mt-6 rounded-3xl bg-white p-5 ring-1 ring-slate-200">
+            <SupportContactLinks showLabel />
+          </div>
         </div>
 
         <div className="space-y-3">

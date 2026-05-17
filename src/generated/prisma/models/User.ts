@@ -438,6 +438,9 @@ export type UserWhereInput = {
   credentials?: Prisma.UserCredentialListRelationFilter
   portfolioItems?: Prisma.UserPortfolioItemListRelationFilter
   tenderLikes?: Prisma.TenderLikeListRelationFilter
+  notifications?: Prisma.UserNotificationListRelationFilter
+  supportConversation?: Prisma.XOR<Prisma.SupportConversationNullableScalarRelationFilter, Prisma.SupportConversationWhereInput> | null
+  supportMessagesSent?: Prisma.SupportMessageListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -486,6 +489,9 @@ export type UserOrderByWithRelationInput = {
   credentials?: Prisma.UserCredentialOrderByRelationAggregateInput
   portfolioItems?: Prisma.UserPortfolioItemOrderByRelationAggregateInput
   tenderLikes?: Prisma.TenderLikeOrderByRelationAggregateInput
+  notifications?: Prisma.UserNotificationOrderByRelationAggregateInput
+  supportConversation?: Prisma.SupportConversationOrderByWithRelationInput
+  supportMessagesSent?: Prisma.SupportMessageOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -538,6 +544,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   credentials?: Prisma.UserCredentialListRelationFilter
   portfolioItems?: Prisma.UserPortfolioItemListRelationFilter
   tenderLikes?: Prisma.TenderLikeListRelationFilter
+  notifications?: Prisma.UserNotificationListRelationFilter
+  supportConversation?: Prisma.XOR<Prisma.SupportConversationNullableScalarRelationFilter, Prisma.SupportConversationWhereInput> | null
+  supportMessagesSent?: Prisma.SupportMessageListRelationFilter
 }, "id" | "email" | "emailVerifyToken" | "phone" | "telegramChatId" | "telegramLinkToken" | "passwordResetToken">
 
 export type UserOrderByWithAggregationInput = {
@@ -662,6 +671,9 @@ export type UserCreateInput = {
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -710,6 +722,9 @@ export type UserUncheckedCreateInput = {
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUpdateInput = {
@@ -758,6 +773,9 @@ export type UserUpdateInput = {
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -806,6 +824,9 @@ export type UserUncheckedUpdateInput = {
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1029,6 +1050,11 @@ export type UserSumOrderByAggregateInput = {
 export type UserScalarRelationFilter = {
   is?: Prisma.UserWhereInput
   isNot?: Prisma.UserWhereInput
+}
+
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -1275,6 +1301,50 @@ export type UserUpdateOneRequiredWithoutReviewsReceivedNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewsReceivedInput, Prisma.UserUpdateWithoutReviewsReceivedInput>, Prisma.UserUncheckedUpdateWithoutReviewsReceivedInput>
 }
 
+export type UserCreateNestedOneWithoutNotificationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotificationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotificationsInput
+  upsert?: Prisma.UserUpsertWithoutNotificationsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type UserCreateNestedOneWithoutSupportConversationInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportConversationInput, Prisma.UserUncheckedCreateWithoutSupportConversationInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportConversationInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSupportConversationNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportConversationInput, Prisma.UserUncheckedCreateWithoutSupportConversationInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportConversationInput
+  upsert?: Prisma.UserUpsertWithoutSupportConversationInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSupportConversationInput, Prisma.UserUpdateWithoutSupportConversationInput>, Prisma.UserUncheckedUpdateWithoutSupportConversationInput>
+}
+
+export type UserCreateNestedOneWithoutSupportMessagesSentInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportMessagesSentInput, Prisma.UserUncheckedCreateWithoutSupportMessagesSentInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportMessagesSentInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSupportMessagesSentNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportMessagesSentInput, Prisma.UserUncheckedCreateWithoutSupportMessagesSentInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportMessagesSentInput
+  upsert?: Prisma.UserUpsertWithoutSupportMessagesSentInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSupportMessagesSentInput, Prisma.UserUpdateWithoutSupportMessagesSentInput>, Prisma.UserUncheckedUpdateWithoutSupportMessagesSentInput>
+}
+
 export type UserCreateWithoutCredentialsInput = {
   id?: string
   name?: string | null
@@ -1320,6 +1390,9 @@ export type UserCreateWithoutCredentialsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUncheckedCreateWithoutCredentialsInput = {
@@ -1367,6 +1440,9 @@ export type UserUncheckedCreateWithoutCredentialsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserCreateOrConnectWithoutCredentialsInput = {
@@ -1430,6 +1506,9 @@ export type UserUpdateWithoutCredentialsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCredentialsInput = {
@@ -1477,6 +1556,9 @@ export type UserUncheckedUpdateWithoutCredentialsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserCreateWithoutPortfolioItemsInput = {
@@ -1524,6 +1606,9 @@ export type UserCreateWithoutPortfolioItemsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUncheckedCreateWithoutPortfolioItemsInput = {
@@ -1571,6 +1656,9 @@ export type UserUncheckedCreateWithoutPortfolioItemsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserCreateOrConnectWithoutPortfolioItemsInput = {
@@ -1634,6 +1722,9 @@ export type UserUpdateWithoutPortfolioItemsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPortfolioItemsInput = {
@@ -1681,6 +1772,9 @@ export type UserUncheckedUpdateWithoutPortfolioItemsInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserCreateWithoutInterestsInput = {
@@ -1728,6 +1822,9 @@ export type UserCreateWithoutInterestsInput = {
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUncheckedCreateWithoutInterestsInput = {
@@ -1775,6 +1872,9 @@ export type UserUncheckedCreateWithoutInterestsInput = {
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserCreateOrConnectWithoutInterestsInput = {
@@ -1838,6 +1938,9 @@ export type UserUpdateWithoutInterestsInput = {
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInterestsInput = {
@@ -1885,6 +1988,9 @@ export type UserUncheckedUpdateWithoutInterestsInput = {
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserCreateWithoutVerificationRequestsInput = {
@@ -1932,6 +2038,9 @@ export type UserCreateWithoutVerificationRequestsInput = {
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUncheckedCreateWithoutVerificationRequestsInput = {
@@ -1979,6 +2088,9 @@ export type UserUncheckedCreateWithoutVerificationRequestsInput = {
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserCreateOrConnectWithoutVerificationRequestsInput = {
@@ -2042,6 +2154,9 @@ export type UserUpdateWithoutVerificationRequestsInput = {
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVerificationRequestsInput = {
@@ -2089,6 +2204,9 @@ export type UserUncheckedUpdateWithoutVerificationRequestsInput = {
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -2136,6 +2254,9 @@ export type UserCreateWithoutAccountsInput = {
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -2183,6 +2304,9 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -2246,6 +2370,9 @@ export type UserUpdateWithoutAccountsInput = {
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -2293,6 +2420,9 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -2340,6 +2470,9 @@ export type UserCreateWithoutSessionsInput = {
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -2387,6 +2520,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -2450,6 +2586,9 @@ export type UserUpdateWithoutSessionsInput = {
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -2497,6 +2636,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserCreateWithoutTendersInput = {
@@ -2544,6 +2686,9 @@ export type UserCreateWithoutTendersInput = {
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUncheckedCreateWithoutTendersInput = {
@@ -2591,6 +2736,9 @@ export type UserUncheckedCreateWithoutTendersInput = {
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserCreateOrConnectWithoutTendersInput = {
@@ -2654,6 +2802,9 @@ export type UserUpdateWithoutTendersInput = {
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTendersInput = {
@@ -2701,6 +2852,9 @@ export type UserUncheckedUpdateWithoutTendersInput = {
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserCreateWithoutTenderLikesInput = {
@@ -2748,6 +2902,9 @@ export type UserCreateWithoutTenderLikesInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUncheckedCreateWithoutTenderLikesInput = {
@@ -2795,6 +2952,9 @@ export type UserUncheckedCreateWithoutTenderLikesInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserCreateOrConnectWithoutTenderLikesInput = {
@@ -2858,6 +3018,9 @@ export type UserUpdateWithoutTenderLikesInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTenderLikesInput = {
@@ -2905,6 +3068,9 @@ export type UserUncheckedUpdateWithoutTenderLikesInput = {
   tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserCreateWithoutTenderComplaintsFiledInput = {
@@ -2952,6 +3118,9 @@ export type UserCreateWithoutTenderComplaintsFiledInput = {
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUncheckedCreateWithoutTenderComplaintsFiledInput = {
@@ -2999,6 +3168,9 @@ export type UserUncheckedCreateWithoutTenderComplaintsFiledInput = {
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserCreateOrConnectWithoutTenderComplaintsFiledInput = {
@@ -3062,6 +3234,9 @@ export type UserUpdateWithoutTenderComplaintsFiledInput = {
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTenderComplaintsFiledInput = {
@@ -3109,6 +3284,9 @@ export type UserUncheckedUpdateWithoutTenderComplaintsFiledInput = {
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserCreateWithoutBidsInput = {
@@ -3156,6 +3334,9 @@ export type UserCreateWithoutBidsInput = {
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUncheckedCreateWithoutBidsInput = {
@@ -3203,6 +3384,9 @@ export type UserUncheckedCreateWithoutBidsInput = {
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserCreateOrConnectWithoutBidsInput = {
@@ -3266,6 +3450,9 @@ export type UserUpdateWithoutBidsInput = {
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBidsInput = {
@@ -3313,6 +3500,9 @@ export type UserUncheckedUpdateWithoutBidsInput = {
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserCreateWithoutTransactionsInput = {
@@ -3360,6 +3550,9 @@ export type UserCreateWithoutTransactionsInput = {
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -3407,6 +3600,9 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -3470,6 +3666,9 @@ export type UserUpdateWithoutTransactionsInput = {
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -3517,6 +3716,9 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserCreateWithoutSubscriptionsInput = {
@@ -3564,6 +3766,9 @@ export type UserCreateWithoutSubscriptionsInput = {
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUncheckedCreateWithoutSubscriptionsInput = {
@@ -3611,6 +3816,9 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserCreateOrConnectWithoutSubscriptionsInput = {
@@ -3674,6 +3882,9 @@ export type UserUpdateWithoutSubscriptionsInput = {
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSubscriptionsInput = {
@@ -3721,6 +3932,9 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserCreateWithoutReviewsGivenInput = {
@@ -3768,6 +3982,9 @@ export type UserCreateWithoutReviewsGivenInput = {
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsGivenInput = {
@@ -3815,6 +4032,9 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsGivenInput = {
@@ -3867,6 +4087,9 @@ export type UserCreateWithoutReviewsReceivedInput = {
   credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsReceivedInput = {
@@ -3914,6 +4137,9 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsReceivedInput = {
@@ -3977,6 +4203,9 @@ export type UserUpdateWithoutReviewsGivenInput = {
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsGivenInput = {
@@ -4024,6 +4253,9 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUpsertWithoutReviewsReceivedInput = {
@@ -4082,6 +4314,9 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
@@ -4129,6 +4364,657 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
   portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+}
+
+export type UserCreateWithoutNotificationsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+}
+
+export type UserUncheckedCreateWithoutNotificationsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderUncheckedCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+}
+
+export type UserCreateOrConnectWithoutNotificationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+}
+
+export type UserUpsertWithoutNotificationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutNotificationsInput, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutNotificationsInput, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type UserUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUncheckedUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+}
+
+export type UserCreateWithoutSupportConversationInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+}
+
+export type UserUncheckedCreateWithoutSupportConversationInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderUncheckedCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+}
+
+export type UserCreateOrConnectWithoutSupportConversationInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportConversationInput, Prisma.UserUncheckedCreateWithoutSupportConversationInput>
+}
+
+export type UserUpsertWithoutSupportConversationInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSupportConversationInput, Prisma.UserUncheckedUpdateWithoutSupportConversationInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportConversationInput, Prisma.UserUncheckedCreateWithoutSupportConversationInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSupportConversationInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSupportConversationInput, Prisma.UserUncheckedUpdateWithoutSupportConversationInput>
+}
+
+export type UserUpdateWithoutSupportConversationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSupportConversationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUncheckedUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+}
+
+export type UserCreateWithoutSupportMessagesSentInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSupportMessagesSentInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderUncheckedCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSupportMessagesSentInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportMessagesSentInput, Prisma.UserUncheckedCreateWithoutSupportMessagesSentInput>
+}
+
+export type UserUpsertWithoutSupportMessagesSentInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSupportMessagesSentInput, Prisma.UserUncheckedUpdateWithoutSupportMessagesSentInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportMessagesSentInput, Prisma.UserUncheckedCreateWithoutSupportMessagesSentInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSupportMessagesSentInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSupportMessagesSentInput, Prisma.UserUncheckedUpdateWithoutSupportMessagesSentInput>
+}
+
+export type UserUpdateWithoutSupportMessagesSentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSupportMessagesSentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUncheckedUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
 }
 
 
@@ -4151,6 +5037,8 @@ export type UserCountOutputType = {
   credentials: number
   portfolioItems: number
   tenderLikes: number
+  notifications: number
+  supportMessagesSent: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4168,6 +5056,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   credentials?: boolean | UserCountOutputTypeCountCredentialsArgs
   portfolioItems?: boolean | UserCountOutputTypeCountPortfolioItemsArgs
   tenderLikes?: boolean | UserCountOutputTypeCountTenderLikesArgs
+  notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
+  supportMessagesSent?: boolean | UserCountOutputTypeCountSupportMessagesSentArgs
 }
 
 /**
@@ -4278,6 +5168,20 @@ export type UserCountOutputTypeCountTenderLikesArgs<ExtArgs extends runtime.Type
   where?: Prisma.TenderLikeWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserNotificationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSupportMessagesSentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupportMessageWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -4325,6 +5229,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   credentials?: boolean | Prisma.User$credentialsArgs<ExtArgs>
   portfolioItems?: boolean | Prisma.User$portfolioItemsArgs<ExtArgs>
   tenderLikes?: boolean | Prisma.User$tenderLikesArgs<ExtArgs>
+  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  supportConversation?: boolean | Prisma.User$supportConversationArgs<ExtArgs>
+  supportMessagesSent?: boolean | Prisma.User$supportMessagesSentArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -4380,6 +5287,9 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   credentials?: boolean | Prisma.User$credentialsArgs<ExtArgs>
   portfolioItems?: boolean | Prisma.User$portfolioItemsArgs<ExtArgs>
   tenderLikes?: boolean | Prisma.User$tenderLikesArgs<ExtArgs>
+  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  supportConversation?: boolean | Prisma.User$supportConversationArgs<ExtArgs>
+  supportMessagesSent?: boolean | Prisma.User$supportMessagesSentArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -4400,6 +5310,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     credentials: Prisma.$UserCredentialPayload<ExtArgs>[]
     portfolioItems: Prisma.$UserPortfolioItemPayload<ExtArgs>[]
     tenderLikes: Prisma.$TenderLikePayload<ExtArgs>[]
+    notifications: Prisma.$UserNotificationPayload<ExtArgs>[]
+    supportConversation: Prisma.$SupportConversationPayload<ExtArgs> | null
+    supportMessagesSent: Prisma.$SupportMessagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -4787,6 +5700,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   credentials<T extends Prisma.User$credentialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$credentialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserCredentialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   portfolioItems<T extends Prisma.User$portfolioItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$portfolioItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPortfolioItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tenderLikes<T extends Prisma.User$tenderLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tenderLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  supportConversation<T extends Prisma.User$supportConversationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supportConversationArgs<ExtArgs>>): Prisma.Prisma__SupportConversationClient<runtime.Types.Result.GetResult<Prisma.$SupportConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  supportMessagesSent<T extends Prisma.User$supportMessagesSentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supportMessagesSentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5528,6 +6444,73 @@ export type User$tenderLikesArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.TenderLikeScalarFieldEnum | Prisma.TenderLikeScalarFieldEnum[]
+}
+
+/**
+ * User.notifications
+ */
+export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserNotification
+   */
+  select?: Prisma.UserNotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserNotification
+   */
+  omit?: Prisma.UserNotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserNotificationInclude<ExtArgs> | null
+  where?: Prisma.UserNotificationWhereInput
+  orderBy?: Prisma.UserNotificationOrderByWithRelationInput | Prisma.UserNotificationOrderByWithRelationInput[]
+  cursor?: Prisma.UserNotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserNotificationScalarFieldEnum | Prisma.UserNotificationScalarFieldEnum[]
+}
+
+/**
+ * User.supportConversation
+ */
+export type User$supportConversationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupportConversation
+   */
+  select?: Prisma.SupportConversationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupportConversation
+   */
+  omit?: Prisma.SupportConversationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupportConversationInclude<ExtArgs> | null
+  where?: Prisma.SupportConversationWhereInput
+}
+
+/**
+ * User.supportMessagesSent
+ */
+export type User$supportMessagesSentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupportMessage
+   */
+  select?: Prisma.SupportMessageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupportMessage
+   */
+  omit?: Prisma.SupportMessageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupportMessageInclude<ExtArgs> | null
+  where?: Prisma.SupportMessageWhereInput
+  orderBy?: Prisma.SupportMessageOrderByWithRelationInput | Prisma.SupportMessageOrderByWithRelationInput[]
+  cursor?: Prisma.SupportMessageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupportMessageScalarFieldEnum | Prisma.SupportMessageScalarFieldEnum[]
 }
 
 /**

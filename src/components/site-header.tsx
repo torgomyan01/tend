@@ -5,6 +5,7 @@ import { TelegramConnectBanner } from "@/components/telegram-connect-banner";
 import { LanguageDropdown } from "@/components/language-dropdown";
 import { MobileMenu } from "@/components/mobile-menu";
 import { SiteNav } from "@/components/site-nav";
+import { NotificationsDropdown } from "@/components/notifications-dropdown";
 import { WalletDropdown } from "@/components/wallet-dropdown";
 import { authOptions } from "@/lib/auth";
 import { ROUTES } from "@/lib/routes";
@@ -37,7 +38,15 @@ export async function SiteHeader() {
       </Link>
       <SiteNav />
       <div className="flex items-center gap-3">
-        {isLoggedIn ? <WalletDropdown isLoggedIn={isLoggedIn} /> : null}
+        {isLoggedIn ? (
+          <>
+            <NotificationsDropdown
+              isLoggedIn={isLoggedIn}
+              className="hidden md:block"
+            />
+            <WalletDropdown isLoggedIn={isLoggedIn} />
+          </>
+        ) : null}
         {/* <LanguageDropdown /> */}
         {isLoggedIn ? (
           <AuthDropdown isLoggedIn={isLoggedIn} isAdmin={isAdmin} label={authLabel} />

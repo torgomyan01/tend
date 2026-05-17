@@ -113,7 +113,7 @@ html {
 }
 
 .tend-marquee-track {
-  animation: tend-marquee 38s linear infinite;
+  animation: tend-marquee 90s linear infinite;
 }
 
 .tend-marquee-track:hover {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
+import { SupportContactLinks } from "@/components/support-contact-links";
 import { SITE_PUBLIC_ORIGIN } from "@/lib/absolute-app-url";
 import { ROUTES } from "@/lib/routes";
 
@@ -286,14 +287,11 @@ export default function PrivacyPage() {
             </Section>
 
             <Section title="9) Կապ">
-              <p>
-                Հարցեր կամ դիմումներ գաղտնիության վերաբերյալ ուղղեք՝{" "}
-                <strong className="text-slate-900">
-                  հարթակի ադմինիստրացիայի
-                </strong>{" "}
-                միջոցով (կամ օգտագործեք ձեր հաշվից հասանելի աջակցման
-                ալիքները, եթե այդպիսին կա տվյալ պատրաստված տարբերակում)։
+              <p className="mb-4">
+                Հարցեր կամ դիմումներ գաղտնիության վերաբերյալ կարող եք
+                զանգահարել կամ գրել մեզ.
               </p>
+              <SupportContactLinks />
             </Section>
           </div>
 

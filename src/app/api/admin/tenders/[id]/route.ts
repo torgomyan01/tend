@@ -376,6 +376,7 @@ export async function PATCH(
     const delivered = await notifyTenderPublisherAdminMessage({
       userId: publisherUserId,
       tenderTitle: tender.title,
+      tenderId: tender.id,
       body: payload.message,
     });
 
@@ -451,6 +452,7 @@ export async function DELETE(
   await notifyTenderPublisherDeleted({
     userId: tender.clientId,
     tenderTitle: tender.title,
+    tenderId: tender.id,
   });
 
   return NextResponse.json({ ok: true });

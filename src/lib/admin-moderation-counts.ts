@@ -1,3 +1,4 @@
+import { countSupportConversationsNeedingStaff } from "@/lib/support-chat";
 import { prisma } from "@/lib/prisma";
 
 export type AdminModerationCounts = {
@@ -15,6 +16,8 @@ export type AdminModerationCounts = {
   blockedUsers: number;
   /** New users in the last 7 days */
   newUsers7d: number;
+  /** Support chats waiting for staff reply */
+  supportChats: number;
 };
 
 export async function getAdminModerationCounts(): Promise<AdminModerationCounts> {
@@ -28,6 +31,7 @@ export async function getAdminModerationCounts(): Promise<AdminModerationCounts>
     tenderComplaints,
     blockedUsers,
     newUsers7d,
+    supportChats,
   ] = await Promise.all([
     prisma.verificationRequest.count({ where: { status: "PENDING" } }),
     prisma.tender.count({ where: { status: "REVIEW" } }),
@@ -36,6 +40,7 @@ export async function getAdminModerationCounts(): Promise<AdminModerationCounts>
     prisma.tenderComplaint.count({ where: { status: "PENDING" } }),
     prisma.user.count({ where: { isBlocked: true } }),
     prisma.user.count({ where: { createdAt: { gte: last7Days } } }),
+    countSupportConversationsNeedingStaff(),
   ]);
 
   return {
@@ -46,5 +51,6 @@ export async function getAdminModerationCounts(): Promise<AdminModerationCounts>
     tenderComplaints,
     blockedUsers,
     newUsers7d,
+    supportChats,
   };
 }

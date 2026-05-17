@@ -134,6 +134,24 @@ export const NotificationChannel = {
 export type NotificationChannel = (typeof NotificationChannel)[keyof typeof NotificationChannel]
 
 
+export const UserNotificationCategory = {
+  APPROVED: 'APPROVED',
+  PENDING: 'PENDING',
+  REJECTED: 'REJECTED',
+  INFO: 'INFO'
+} as const
+
+export type UserNotificationCategory = (typeof UserNotificationCategory)[keyof typeof UserNotificationCategory]
+
+
+export const SupportMessageSender = {
+  USER: 'USER',
+  STAFF: 'STAFF'
+} as const
+
+export type SupportMessageSender = (typeof SupportMessageSender)[keyof typeof SupportMessageSender]
+
+
 export const UserCredentialKind = {
   DIPLOMA: 'DIPLOMA',
   LICENSE: 'LICENSE',

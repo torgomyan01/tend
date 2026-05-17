@@ -1,9 +1,9 @@
 import { absoluteAppUrl } from "@/lib/absolute-app-url";
 import { notifyUserById } from "@/lib/notifications/notify-user";
+import { NOTIFICATION_KINDS } from "@/lib/notifications/in-app";
 import { ROUTES } from "@/lib/routes";
 import { escapeTelegramHtml } from "@/lib/telegram";
 
-/** Ծանուցում դիմողին՝ ընտրվել է որպես վերջնական կատարող։ */
 export async function notifyProviderAwarded(params: {
   userId: string;
   tenderTitle: string;
@@ -15,7 +15,8 @@ export async function notifyProviderAwarded(params: {
   text += `<b>${title}</b>\n\n`;
   text += `Պատվիրատուն ընտրել է ձեզ այս մրցույթի համար։ Կարող եք բացել մրցույթը և շարունակել կապը։`;
 
-  const url = absoluteAppUrl(ROUTES.tenderDetail(params.tenderId));
+  const tenderPath = ROUTES.tenderDetail(params.tenderId);
+  const url = absoluteAppUrl(tenderPath);
   if (url) {
     text += `\n\n<a href="${escapeTelegramHtml(url)}">Բացել մրցույթը</a>`;
   }
@@ -26,5 +27,13 @@ export async function notifyProviderAwarded(params: {
     emailTitle: "Շնորհավորում ենք",
     ctaLabel: "Բացել մրցույթը",
     ctaUrl: url || undefined,
+    inApp: {
+      category: "APPROVED",
+      kind: NOTIFICATION_KINDS.PROVIDER_AWARDED,
+      title: "Ընտրվել եք որպես կատարող",
+      body: `Պատվիրատուն ընտրել է ձեզ «${params.tenderTitle}» մրցույթի համար։`,
+      href: tenderPath,
+      tenderId: params.tenderId,
+    },
   });
 }

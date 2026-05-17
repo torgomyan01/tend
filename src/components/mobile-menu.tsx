@@ -20,6 +20,8 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { WalletDepositPanel } from "@/components/wallet-deposit-panel";
 import { formatAmd } from "@/lib/format";
+import { NotificationsDropdown } from "@/components/notifications-dropdown";
+import { SupportContactLinks } from "@/components/support-contact-links";
 import { ROUTES } from "@/lib/routes";
 
 const navItems = [
@@ -92,10 +94,18 @@ export function MobileMenu({ isLoggedIn, isAdmin }: Props) {
             ))}
           </nav>
 
+          <div className="mt-4 rounded-3xl bg-slate-50 p-4 ring-1 ring-slate-200">
+            <SupportContactLinks showLabel />
+          </div>
+
           <div className="my-3 h-px bg-slate-100" />
 
           {isLoggedIn ? (
             <>
+              <NotificationsDropdown
+                isLoggedIn={isLoggedIn}
+                className="md:hidden"
+              />
               <div className="rounded-3xl bg-slate-50 p-4 ring-1 ring-slate-200">
                 <div className="flex items-center gap-2">
                   <Wallet className="size-5 text-amber-700" />
@@ -207,9 +217,9 @@ export function MobileMenu({ isLoggedIn, isAdmin }: Props) {
             </div>
           )}
 
-          <div className="my-3 h-px bg-slate-100" />
+          {/* <div className="my-3 h-px bg-slate-100" /> */}
 
-          <div className="grid grid-cols-2 gap-2">
+          {/* <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               className="flex items-center justify-center gap-2 rounded-3xl bg-amber-50 px-4 py-3 text-sm font-black text-amber-800"
@@ -223,7 +233,7 @@ export function MobileMenu({ isLoggedIn, isAdmin }: Props) {
             >
               English
             </button>
-          </div>
+          </div> */}
         </div>
       ) : null}
     </div>

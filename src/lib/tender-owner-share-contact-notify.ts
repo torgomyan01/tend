@@ -1,9 +1,9 @@
 import { absoluteAppUrl } from "@/lib/absolute-app-url";
 import { notifyUserById } from "@/lib/notifications/notify-user";
+import { NOTIFICATION_KINDS } from "@/lib/notifications/in-app";
 import { ROUTES } from "@/lib/routes";
 import { escapeTelegramHtml } from "@/lib/telegram";
 
-/** Ծանուցում դիմողին՝ պատվիրատուն կիսվել է կապով։ */
 export async function notifyProviderOwnerSharedContact(params: {
   userId: string;
   tenderTitle: string;
@@ -22,10 +22,16 @@ export async function notifyProviderOwnerSharedContact(params: {
     text += `\n<b>Հեռախոս</b>՝ ${escapeTelegramHtml(params.ownerPhone.trim())}`;
   }
 
-  const url = absoluteAppUrl(ROUTES.tenderDetail(params.tenderId));
+  const tenderPath = ROUTES.tenderDetail(params.tenderId);
+  const url = absoluteAppUrl(tenderPath);
   if (url) {
     text += `\n\n<a href="${escapeTelegramHtml(url)}">Բացել մրցույթը</a>`;
   }
+
+  const bodyLines = [
+    `Պատվիրատու՝ ${params.ownerDisplayName}`,
+    params.ownerPhone?.trim() ? `Հեռախոս՝ ${params.ownerPhone.trim()}` : null,
+  ].filter(Boolean) as string[];
 
   await notifyUserById(params.userId, {
     telegramText: text,
@@ -33,5 +39,13 @@ export async function notifyProviderOwnerSharedContact(params: {
     emailTitle: "Կապի տվյալներ",
     ctaLabel: "Բացել մրցույթը",
     ctaUrl: url || undefined,
+    inApp: {
+      category: "APPROVED",
+      kind: NOTIFICATION_KINDS.OWNER_SHARED_CONTACT,
+      title: "Պատվիրատուն բացել է կապը",
+      body: bodyLines.join("\n"),
+      href: tenderPath,
+      tenderId: params.tenderId,
+    },
   });
 }

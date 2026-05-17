@@ -72,7 +72,11 @@ export const ModelName = {
   Bid: 'Bid',
   Transaction: 'Transaction',
   Subscription: 'Subscription',
-  Review: 'Review'
+  Review: 'Review',
+  UserNotification: 'UserNotification',
+  SupportConversation: 'SupportConversation',
+  SupportMessage: 'SupportMessage',
+  SupportAttachment: 'SupportAttachment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -428,6 +432,62 @@ export const ReviewScalarFieldEnum = {
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
 
 
+export const UserNotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  category: 'category',
+  kind: 'kind',
+  title: 'title',
+  body: 'body',
+  href: 'href',
+  tenderId: 'tenderId',
+  bidId: 'bidId',
+  readAt: 'readAt',
+  sentTelegram: 'sentTelegram',
+  sentEmail: 'sentEmail',
+  createdAt: 'createdAt'
+} as const
+
+export type UserNotificationScalarFieldEnum = (typeof UserNotificationScalarFieldEnum)[keyof typeof UserNotificationScalarFieldEnum]
+
+
+export const SupportConversationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  lastMessageAt: 'lastMessageAt',
+  userLastReadAt: 'userLastReadAt',
+  staffLastReadAt: 'staffLastReadAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SupportConversationScalarFieldEnum = (typeof SupportConversationScalarFieldEnum)[keyof typeof SupportConversationScalarFieldEnum]
+
+
+export const SupportMessageScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  sender: 'sender',
+  senderUserId: 'senderUserId',
+  body: 'body',
+  createdAt: 'createdAt'
+} as const
+
+export type SupportMessageScalarFieldEnum = (typeof SupportMessageScalarFieldEnum)[keyof typeof SupportMessageScalarFieldEnum]
+
+
+export const SupportAttachmentScalarFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes'
+} as const
+
+export type SupportAttachmentScalarFieldEnum = (typeof SupportAttachmentScalarFieldEnum)[keyof typeof SupportAttachmentScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -687,4 +747,47 @@ export const ReviewOrderByRelevanceFieldEnum = {
 } as const
 
 export type ReviewOrderByRelevanceFieldEnum = (typeof ReviewOrderByRelevanceFieldEnum)[keyof typeof ReviewOrderByRelevanceFieldEnum]
+
+
+export const UserNotificationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  kind: 'kind',
+  title: 'title',
+  body: 'body',
+  href: 'href',
+  tenderId: 'tenderId',
+  bidId: 'bidId'
+} as const
+
+export type UserNotificationOrderByRelevanceFieldEnum = (typeof UserNotificationOrderByRelevanceFieldEnum)[keyof typeof UserNotificationOrderByRelevanceFieldEnum]
+
+
+export const SupportConversationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId'
+} as const
+
+export type SupportConversationOrderByRelevanceFieldEnum = (typeof SupportConversationOrderByRelevanceFieldEnum)[keyof typeof SupportConversationOrderByRelevanceFieldEnum]
+
+
+export const SupportMessageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  senderUserId: 'senderUserId',
+  body: 'body'
+} as const
+
+export type SupportMessageOrderByRelevanceFieldEnum = (typeof SupportMessageOrderByRelevanceFieldEnum)[keyof typeof SupportMessageOrderByRelevanceFieldEnum]
+
+
+export const SupportAttachmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType'
+} as const
+
+export type SupportAttachmentOrderByRelevanceFieldEnum = (typeof SupportAttachmentOrderByRelevanceFieldEnum)[keyof typeof SupportAttachmentOrderByRelevanceFieldEnum]
 

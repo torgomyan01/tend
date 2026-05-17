@@ -2,11 +2,13 @@
 
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
+import { SupportChatWidget } from "@/components/support-chat-widget";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       {children}
+      <SupportChatWidget />
       <Toaster
         position="top-right"
         richColors

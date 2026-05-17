@@ -127,3 +127,23 @@ export type Subscription = Prisma.SubscriptionModel
  * 
  */
 export type Review = Prisma.ReviewModel
+/**
+ * Model UserNotification
+ * 
+ */
+export type UserNotification = Prisma.UserNotificationModel
+/**
+ * Model SupportConversation
+ * 
+ */
+export type SupportConversation = Prisma.SupportConversationModel
+/**
+ * Model SupportMessage
+ * 
+ */
+export type SupportMessage = Prisma.SupportMessageModel
+/**
+ * Model SupportAttachment
+ * 
+ */
+export type SupportAttachment = Prisma.SupportAttachmentModel

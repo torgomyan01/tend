@@ -1,5 +1,6 @@
 import { absoluteAppUrl } from "@/lib/absolute-app-url";
 import { notifyUserById } from "@/lib/notifications/notify-user";
+import { NOTIFICATION_KINDS } from "@/lib/notifications/in-app";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
 import {
@@ -7,15 +8,10 @@ import {
   type TelegramSendOptions,
 } from "@/lib/telegram";
 
-/** Telegram URL կոճակի համար պարտադիր է http/https։ */
 function canTelegramUrlButton(url: string): boolean {
   return /^https?:\/\//i.test(url.trim());
 }
 
-/**
- * Մրցույթը հրապարակվելուց հետո (ACTIVE) — ծանուցումներ
- * ոլորտում (category) գրանցված հետաքրքրություն ունեցող մասնակիցներին։
- */
 export async function notifyInterestedUsersNewPublishedTender(params: {
   tenderId: string;
   tenderTitle: string;
@@ -97,6 +93,14 @@ export async function notifyInterestedUsersNewPublishedTender(params: {
       emailTitle: "Նոր մրցույթ",
       ctaLabel: "Բացել մրցույթը",
       ctaUrl: tenderUrl || undefined,
+      inApp: {
+        category: "INFO",
+        kind: NOTIFICATION_KINDS.TENDER_PUBLISHED_SECTOR,
+        title: "Նոր մրցույթ ձեր ոլորտում",
+        body: `Հրապարակվել է «${params.tenderTitle}»։ Շտապեք ծանոթանալ և դիմել։`,
+        href: tenderPath,
+        tenderId: params.tenderId,
+      },
     });
   }
 }

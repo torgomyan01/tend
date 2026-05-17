@@ -7,6 +7,7 @@ import {
   type CreateTenderInitialDraft,
 } from "@/components/create-tender-form";
 import { SiteHeader } from "@/components/site-header";
+import { SupportContactLinks } from "@/components/support-contact-links";
 import { isAccountVerified } from "@/lib/account-verification";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -163,8 +164,10 @@ export default async function EditTenderPage({ params }: Props) {
             </span>
             <h1 className="text-2xl font-black">Հաշիվը արգելափակված է</h1>
             <p className="text-sm font-semibold text-slate-600">
-              Մրցույթ խմբագրելու համար անհրաժեշտ է կապ հաստատել թիմի հետ։
+              Մրցույթ խմբագրելու համար անհրաժեշտ է կապ հաստատել աջակցության թիմի
+              հետ։
             </p>
+            <SupportContactLinks className="mt-4" />
           </div>
         </main>
       </div>

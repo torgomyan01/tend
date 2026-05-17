@@ -1,9 +1,9 @@
 import { absoluteAppUrl } from "@/lib/absolute-app-url";
 import { notifyUserById } from "@/lib/notifications/notify-user";
+import { NOTIFICATION_KINDS } from "@/lib/notifications/in-app";
 import { ROUTES } from "@/lib/routes";
 import { escapeTelegramHtml } from "@/lib/telegram";
 
-/** Ծանուցում բողոք ներկայացնող օգտատիրոջը՝ մոդերացիայի որոշման համար։ */
 export async function notifyTenderComplaintReporterDecision(params: {
   userId: string;
   tenderTitle: string;
@@ -22,15 +22,16 @@ export async function notifyTenderComplaintReporterDecision(params: {
     text += `\n\n<i>Մոդերատորի նշում՝</i> ${escapeTelegramHtml(params.note.trim())}`;
   }
 
-  const url = absoluteAppUrl(ROUTES.tenderDetail(params.tenderId));
+  const tenderPath = ROUTES.tenderDetail(params.tenderId);
+  const url = absoluteAppUrl(tenderPath);
   if (url) {
     text += `\n\n<a href="${escapeTelegramHtml(url)}">Բացել մրցույթը</a>`;
   }
 
-  const subject =
-    params.decision === "REVIEWED"
-      ? `Բողոքը դիտարկված է՝ ${params.tenderTitle}`
-      : `Բողոքը մերժված է՝ ${params.tenderTitle}`;
+  const approved = params.decision === "REVIEWED";
+  const subject = approved
+    ? `Բողոքը դիտարկված է՝ ${params.tenderTitle}`
+    : `Բողոքը մերժված է՝ ${params.tenderTitle}`;
 
   await notifyUserById(params.userId, {
     telegramText: text,
@@ -38,5 +39,18 @@ export async function notifyTenderComplaintReporterDecision(params: {
     emailTitle: "Բողոքի վերաբերյալ որոշում",
     ctaLabel: "Բացել մրցույթը",
     ctaUrl: url || undefined,
+    inApp: {
+      category: approved ? "APPROVED" : "REJECTED",
+      kind: NOTIFICATION_KINDS.COMPLAINT_DECISION,
+      title: approved ? "Բողոքը դիտարկված է" : "Բողոքը մերժված է",
+      body: [
+        `«${params.tenderTitle}»`,
+        params.note?.trim() ? `Նշում՝ ${params.note.trim()}` : null,
+      ]
+        .filter(Boolean)
+        .join("\n"),
+      href: tenderPath,
+      tenderId: params.tenderId,
+    },
   });
 }

@@ -6,6 +6,7 @@ import {
 } from "@/lib/email/templates/notification";
 import { trySendEmail } from "@/lib/email/send";
 import { isEmailVerified } from "@/lib/account-verification";
+import type { InAppNotificationInput } from "@/lib/notifications/in-app";
 import {
   trySendTelegramMessage,
   type TelegramSendOptions,
@@ -17,29 +18,27 @@ export type NotifyPayload = {
   telegramOptions?: TelegramSendOptions;
   /** Email-ի վերնագիր */
   emailSubject: string;
-  /** Email-ի HTML մարմին (կամ plain → convert) */
   emailBodyHtml?: string;
-  /** Plain text → email paragraphs */
   emailPlainText?: string;
   emailTitle?: string;
   ctaLabel?: string;
   ctaUrl?: string;
+  /** Կայքի ներսի ծանուցում (միշտ պահվում է, անկախ Telegram/Email-ից) */
+  inApp: InAppNotificationInput;
+  /** true — Telegram չուղարկել (օր. աջակցության պատասխան) */
+  skipTelegram?: boolean;
 };
 
-function allowsTelegram(
-  channel: NotificationChannel,
-  hasTelegram: boolean,
-): boolean {
-  if (!hasTelegram) return false;
-  return channel === "TELEGRAM" || channel === "BOTH";
-}
-
-function allowsEmail(
-  channel: NotificationChannel,
-  emailVerified: boolean,
-): boolean {
-  if (!emailVerified) return false;
-  return channel === "EMAIL" || channel === "BOTH";
+function stripTelegramHtml(text: string): string {
+  return text
+    .replace(/<a href="([^"]+)">([^<]*)<\/a>/gi, "$2 ($1)")
+    .replace(/<\/?b>/gi, "")
+    .replace(/<\/?i>/gi, "")
+    .replace(/<\/?strong>/gi, "")
+    .replace(/<\/?em>/gi, "")
+    .replace(/<[^>]+>/g, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 async function loadUserTargets(userId: string) {
@@ -56,7 +55,28 @@ async function loadUserTargets(userId: string) {
   });
 }
 
-/** Ուղարկում է Telegram և/կամ Email՝ ըստ օգտատիրոջ notificationChannel կարգավորումների։ */
+async function persistInAppNotification(
+  userId: string,
+  inApp: InAppNotificationInput,
+  delivery: { sentTelegram: boolean; sentEmail: boolean },
+) {
+  await prisma.userNotification.create({
+    data: {
+      userId,
+      category: inApp.category,
+      kind: inApp.kind,
+      title: inApp.title,
+      body: inApp.body,
+      href: inApp.href ?? null,
+      tenderId: inApp.tenderId ?? null,
+      bidId: inApp.bidId ?? null,
+      sentTelegram: delivery.sentTelegram,
+      sentEmail: delivery.sentEmail,
+    },
+  });
+}
+
+/** Ուղարկում է Telegram, Email և պահում կայքի ծանուցումների ցանկում։ */
 export async function notifyUserById(
   userId: string,
   payload: NotifyPayload,
@@ -68,6 +88,7 @@ export async function notifyUserById(
 
   await notifyUserDirect(
     {
+      userId,
       telegramChatId: user.telegramChatId,
       email: user.email,
       emailVerified: user.emailVerified,
@@ -79,19 +100,26 @@ export async function notifyUserById(
 
 export async function notifyUserDirect(
   target: {
+    userId?: string;
     telegramChatId?: string | null;
     email?: string | null;
     emailVerified?: Date | null;
     notificationChannel?: NotificationChannel;
   },
   payload: NotifyPayload,
-): Promise<void> {
+): Promise<{ sentTelegram: boolean; sentEmail: boolean }> {
   const channel = target.notificationChannel ?? "TELEGRAM";
   const emailOk = isEmailVerified(target);
   const hasTelegram = Boolean(target.telegramChatId);
+  let sentTelegram = false;
+  let sentEmail = false;
 
-  if (allowsTelegram(channel, hasTelegram) && target.telegramChatId) {
-    await trySendTelegramMessage(
+  if (
+    !payload.skipTelegram &&
+    allowsTelegram(channel, hasTelegram) &&
+    target.telegramChatId
+  ) {
+    sentTelegram = await trySendTelegramMessage(
       target.telegramChatId,
       payload.telegramText,
       payload.telegramOptions,
@@ -113,21 +141,35 @@ export async function notifyUserDirect(
       ctaUrl: payload.ctaUrl,
     });
 
-    await trySendEmail({
+    sentEmail = await trySendEmail({
       to: target.email,
       subject: payload.emailSubject,
       html,
     });
   }
+
+  if (target.userId) {
+    await persistInAppNotification(target.userId, payload.inApp, {
+      sentTelegram,
+      sentEmail,
+    });
+  }
+
+  return { sentTelegram, sentEmail };
 }
 
-/** Telegram HTML թեգերը հեռացնել email տարբերակի համար */
-function stripTelegramHtml(text: string): string {
-  return text
-    .replace(/<a href="([^"]+)">([^<]*)<\/a>/gi, "$2 ($1)")
-    .replace(/<\/?b>/gi, "")
-    .replace(/<\/?i>/gi, "")
-    .replace(/<\/?strong>/gi, "")
-    .replace(/<\/?em>/gi, "")
-    .replace(/<[^>]+>/g, "");
+function allowsTelegram(
+  channel: NotificationChannel,
+  hasTelegram: boolean,
+): boolean {
+  if (!hasTelegram) return false;
+  return channel === "TELEGRAM" || channel === "BOTH";
+}
+
+function allowsEmail(
+  channel: NotificationChannel,
+  emailVerified: boolean,
+): boolean {
+  if (!emailVerified) return false;
+  return channel === "EMAIL" || channel === "BOTH";
 }

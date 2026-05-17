@@ -93,6 +93,18 @@ enum NotificationChannel {
   BOTH
 }
 
+enum UserNotificationCategory {
+  APPROVED
+  PENDING
+  REJECTED
+  INFO
+}
+
+enum SupportMessageSender {
+  USER
+  STAFF
+}
+
 model User {
   id                String              @id @default(cuid())
   name              String?
@@ -139,6 +151,9 @@ model User {
   credentials       UserCredential[]
   portfolioItems    UserPortfolioItem[]
   tenderLikes       TenderLike[]
+  notifications     UserNotification[]
+  supportConversation SupportConversation?
+  supportMessagesSent SupportMessage[] @relation("SupportMessagesSent")
 
   @@index([email])
   @@index([phone])
@@ -522,4 +537,69 @@ model Review {
   @@index([reviewerId])
   @@index([moderationStatus])
   @@map("review")
+}
+
+model UserNotification {
+  id           String                   @id @default(cuid())
+  userId       String
+  category     UserNotificationCategory
+  kind         String                   @db.VarChar(80)
+  title        String                   @db.VarChar(300)
+  body         String                   @db.Text
+  href         String?                  @db.VarChar(500)
+  tenderId     String?
+  bidId        String?
+  readAt       DateTime?
+  sentTelegram Boolean                  @default(false)
+  sentEmail    Boolean                  @default(false)
+  createdAt    DateTime                 @default(now())
+  user         User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([userId, readAt])
+  @@index([userId, category])
+  @@map("usernotification")
+}
+
+model SupportConversation {
+  id              String            @id @default(cuid())
+  userId          String            @unique
+  lastMessageAt   DateTime          @default(now())
+  userLastReadAt  DateTime?
+  staffLastReadAt DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages        SupportMessage[]
+
+  @@index([lastMessageAt])
+  @@map("supportconversation")
+}
+
+model SupportMessage {
+  id             String               @id @default(cuid())
+  conversationId String
+  sender         SupportMessageSender
+  senderUserId   String?
+  body           String               @db.Text
+  createdAt      DateTime             @default(now())
+  conversation   SupportConversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderUser     User?                @relation("SupportMessagesSent", fields: [senderUserId], references: [id], onDelete: SetNull)
+  attachments    SupportAttachment[]
+
+  @@index([conversationId, createdAt])
+  @@map("supportmessage")
+}
+
+model SupportAttachment {
+  id               String         @id @default(cuid())
+  messageId        String
+  url              String         @db.VarChar(500)
+  originalFileName String         @db.VarChar(255)
+  mimeType         String         @db.VarChar(120)
+  sizeBytes        Int
+  message          SupportMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+  @@map("supportattachment")
 }

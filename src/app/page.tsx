@@ -24,6 +24,7 @@ import Link from "next/link";
 import { FeaturedTenderSlider } from "@/components/featured-tender-slider";
 import { HomeCategoriesMarquee } from "@/components/home-categories-marquee";
 import { HomeFaq } from "@/components/home-faq";
+import { SupportContactLinks } from "@/components/support-contact-links";
 import { HomeStatsCounter } from "@/components/home-stats-counter";
 import { ServiceSearch } from "@/components/service-search";
 import { SiteHeader } from "@/components/site-header";
@@ -812,7 +813,7 @@ export default async function Home() {
 
       <footer className="border-t border-slate-200 bg-white/60 backdrop-blur">
         <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             <div>
               <Link
                 href={ROUTES.home}
@@ -863,6 +864,13 @@ export default async function Home() {
                 { label: "Օգտագործման պայմաններ", href: ROUTES.terms },
               ]}
             />
+
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">
+                Աջակցություն
+              </p>
+              <SupportContactLinks className="mt-4" />
+            </div>
           </div>
 
           <div className="mt-10 flex flex-col gap-3 border-t border-slate-200 pt-6 text-sm font-semibold text-slate-500 sm:flex-row sm:items-center sm:justify-between">

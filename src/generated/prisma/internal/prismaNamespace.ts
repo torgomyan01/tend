@@ -405,7 +405,11 @@ export const ModelName = {
   Bid: 'Bid',
   Transaction: 'Transaction',
   Subscription: 'Subscription',
-  Review: 'Review'
+  Review: 'Review',
+  UserNotification: 'UserNotification',
+  SupportConversation: 'SupportConversation',
+  SupportMessage: 'SupportMessage',
+  SupportAttachment: 'SupportAttachment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -421,7 +425,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userCredential" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderLike" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "transaction" | "subscription" | "review"
+    modelProps: "user" | "userCredential" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderLike" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "transaction" | "subscription" | "review" | "userNotification" | "supportConversation" | "supportMessage" | "supportAttachment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1877,6 +1881,270 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    UserNotification: {
+      payload: Prisma.$UserNotificationPayload<ExtArgs>
+      fields: Prisma.UserNotificationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserNotificationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserNotificationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserNotificationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserNotificationPayload>
+        }
+        findFirst: {
+          args: Prisma.UserNotificationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserNotificationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserNotificationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserNotificationPayload>
+        }
+        findMany: {
+          args: Prisma.UserNotificationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserNotificationPayload>[]
+        }
+        create: {
+          args: Prisma.UserNotificationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserNotificationPayload>
+        }
+        createMany: {
+          args: Prisma.UserNotificationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.UserNotificationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserNotificationPayload>
+        }
+        update: {
+          args: Prisma.UserNotificationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserNotificationPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserNotificationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserNotificationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.UserNotificationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserNotificationPayload>
+        }
+        aggregate: {
+          args: Prisma.UserNotificationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserNotification>
+        }
+        groupBy: {
+          args: Prisma.UserNotificationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserNotificationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserNotificationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserNotificationCountAggregateOutputType> | number
+        }
+      }
+    }
+    SupportConversation: {
+      payload: Prisma.$SupportConversationPayload<ExtArgs>
+      fields: Prisma.SupportConversationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SupportConversationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportConversationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SupportConversationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportConversationPayload>
+        }
+        findFirst: {
+          args: Prisma.SupportConversationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportConversationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SupportConversationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportConversationPayload>
+        }
+        findMany: {
+          args: Prisma.SupportConversationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportConversationPayload>[]
+        }
+        create: {
+          args: Prisma.SupportConversationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportConversationPayload>
+        }
+        createMany: {
+          args: Prisma.SupportConversationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.SupportConversationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportConversationPayload>
+        }
+        update: {
+          args: Prisma.SupportConversationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportConversationPayload>
+        }
+        deleteMany: {
+          args: Prisma.SupportConversationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SupportConversationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.SupportConversationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportConversationPayload>
+        }
+        aggregate: {
+          args: Prisma.SupportConversationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSupportConversation>
+        }
+        groupBy: {
+          args: Prisma.SupportConversationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SupportConversationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SupportConversationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SupportConversationCountAggregateOutputType> | number
+        }
+      }
+    }
+    SupportMessage: {
+      payload: Prisma.$SupportMessagePayload<ExtArgs>
+      fields: Prisma.SupportMessageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SupportMessageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportMessagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SupportMessageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportMessagePayload>
+        }
+        findFirst: {
+          args: Prisma.SupportMessageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportMessagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SupportMessageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportMessagePayload>
+        }
+        findMany: {
+          args: Prisma.SupportMessageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportMessagePayload>[]
+        }
+        create: {
+          args: Prisma.SupportMessageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportMessagePayload>
+        }
+        createMany: {
+          args: Prisma.SupportMessageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.SupportMessageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportMessagePayload>
+        }
+        update: {
+          args: Prisma.SupportMessageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportMessagePayload>
+        }
+        deleteMany: {
+          args: Prisma.SupportMessageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SupportMessageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.SupportMessageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportMessagePayload>
+        }
+        aggregate: {
+          args: Prisma.SupportMessageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSupportMessage>
+        }
+        groupBy: {
+          args: Prisma.SupportMessageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SupportMessageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SupportMessageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SupportMessageCountAggregateOutputType> | number
+        }
+      }
+    }
+    SupportAttachment: {
+      payload: Prisma.$SupportAttachmentPayload<ExtArgs>
+      fields: Prisma.SupportAttachmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SupportAttachmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportAttachmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SupportAttachmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportAttachmentPayload>
+        }
+        findFirst: {
+          args: Prisma.SupportAttachmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportAttachmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SupportAttachmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportAttachmentPayload>
+        }
+        findMany: {
+          args: Prisma.SupportAttachmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportAttachmentPayload>[]
+        }
+        create: {
+          args: Prisma.SupportAttachmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportAttachmentPayload>
+        }
+        createMany: {
+          args: Prisma.SupportAttachmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.SupportAttachmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportAttachmentPayload>
+        }
+        update: {
+          args: Prisma.SupportAttachmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportAttachmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.SupportAttachmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SupportAttachmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.SupportAttachmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportAttachmentPayload>
+        }
+        aggregate: {
+          args: Prisma.SupportAttachmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSupportAttachment>
+        }
+        groupBy: {
+          args: Prisma.SupportAttachmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SupportAttachmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SupportAttachmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SupportAttachmentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2253,6 +2521,62 @@ export const ReviewScalarFieldEnum = {
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
 
 
+export const UserNotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  category: 'category',
+  kind: 'kind',
+  title: 'title',
+  body: 'body',
+  href: 'href',
+  tenderId: 'tenderId',
+  bidId: 'bidId',
+  readAt: 'readAt',
+  sentTelegram: 'sentTelegram',
+  sentEmail: 'sentEmail',
+  createdAt: 'createdAt'
+} as const
+
+export type UserNotificationScalarFieldEnum = (typeof UserNotificationScalarFieldEnum)[keyof typeof UserNotificationScalarFieldEnum]
+
+
+export const SupportConversationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  lastMessageAt: 'lastMessageAt',
+  userLastReadAt: 'userLastReadAt',
+  staffLastReadAt: 'staffLastReadAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SupportConversationScalarFieldEnum = (typeof SupportConversationScalarFieldEnum)[keyof typeof SupportConversationScalarFieldEnum]
+
+
+export const SupportMessageScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  sender: 'sender',
+  senderUserId: 'senderUserId',
+  body: 'body',
+  createdAt: 'createdAt'
+} as const
+
+export type SupportMessageScalarFieldEnum = (typeof SupportMessageScalarFieldEnum)[keyof typeof SupportMessageScalarFieldEnum]
+
+
+export const SupportAttachmentScalarFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes'
+} as const
+
+export type SupportAttachmentScalarFieldEnum = (typeof SupportAttachmentScalarFieldEnum)[keyof typeof SupportAttachmentScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2514,6 +2838,49 @@ export const ReviewOrderByRelevanceFieldEnum = {
 export type ReviewOrderByRelevanceFieldEnum = (typeof ReviewOrderByRelevanceFieldEnum)[keyof typeof ReviewOrderByRelevanceFieldEnum]
 
 
+export const UserNotificationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  kind: 'kind',
+  title: 'title',
+  body: 'body',
+  href: 'href',
+  tenderId: 'tenderId',
+  bidId: 'bidId'
+} as const
+
+export type UserNotificationOrderByRelevanceFieldEnum = (typeof UserNotificationOrderByRelevanceFieldEnum)[keyof typeof UserNotificationOrderByRelevanceFieldEnum]
+
+
+export const SupportConversationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId'
+} as const
+
+export type SupportConversationOrderByRelevanceFieldEnum = (typeof SupportConversationOrderByRelevanceFieldEnum)[keyof typeof SupportConversationOrderByRelevanceFieldEnum]
+
+
+export const SupportMessageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  senderUserId: 'senderUserId',
+  body: 'body'
+} as const
+
+export type SupportMessageOrderByRelevanceFieldEnum = (typeof SupportMessageOrderByRelevanceFieldEnum)[keyof typeof SupportMessageOrderByRelevanceFieldEnum]
+
+
+export const SupportAttachmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType'
+} as const
+
+export type SupportAttachmentOrderByRelevanceFieldEnum = (typeof SupportAttachmentOrderByRelevanceFieldEnum)[keyof typeof SupportAttachmentOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -2650,6 +3017,20 @@ export type EnumSubscriptionStatusFieldRefInput<$PrismaModel> = FieldRefInputTyp
  * Reference to a field of type 'ReviewModerationStatus'
  */
 export type EnumReviewModerationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReviewModerationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'UserNotificationCategory'
+ */
+export type EnumUserNotificationCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserNotificationCategory'>
+    
+
+
+/**
+ * Reference to a field of type 'SupportMessageSender'
+ */
+export type EnumSupportMessageSenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SupportMessageSender'>
     
 
 
@@ -2791,6 +3172,10 @@ export type GlobalOmitConfig = {
   transaction?: Prisma.TransactionOmit
   subscription?: Prisma.SubscriptionOmit
   review?: Prisma.ReviewOmit
+  userNotification?: Prisma.UserNotificationOmit
+  supportConversation?: Prisma.SupportConversationOmit
+  supportMessage?: Prisma.SupportMessageOmit
+  supportAttachment?: Prisma.SupportAttachmentOmit
 }
 
 /* Types for Logging */
