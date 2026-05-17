@@ -38,7 +38,7 @@ export async function SiteHeader() {
       <SiteNav />
       <div className="flex items-center gap-3">
         {isLoggedIn ? <WalletDropdown isLoggedIn={isLoggedIn} /> : null}
-        <LanguageDropdown />
+        {/* <LanguageDropdown /> */}
         {isLoggedIn ? (
           <AuthDropdown isLoggedIn={isLoggedIn} isAdmin={isAdmin} label={authLabel} />
         ) : (
