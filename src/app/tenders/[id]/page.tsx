@@ -5,6 +5,7 @@ import {
   CalendarClock,
   FileDown,
   MapPin,
+  Pencil,
   Phone,
   Star,
   Trophy,
@@ -17,6 +18,7 @@ import { TenderApplicantTeasers } from "@/components/tender-applicant-teasers";
 import { TenderAwardLifecyclePanel } from "@/components/tender-award-lifecycle-panel";
 import { TenderApplyButton } from "@/components/tender-apply-button";
 import { TenderComplaintModal } from "@/components/tender-complaint-modal";
+import { TenderDetailImageGallery } from "@/components/tender-detail-image-gallery";
 import { TenderOwnerApplicantsModal } from "@/components/tender-owner-applicants-modal";
 import { AccountTypeBadge } from "@/components/account-type-badge";
 import { TenderEndsCountdown } from "@/components/tender-ends-countdown";
@@ -105,6 +107,11 @@ export default async function TenderDetailPage({ params }: Props) {
   }
 
   const isOwner = session?.user?.id === tender.clientId;
+  const canEditTender =
+    isOwner &&
+    (tender.status === "DRAFT" ||
+      tender.status === "REVIEW" ||
+      (tender.status === "ACTIVE" && tender._count.bids === 0));
   const providerId = session?.user?.id;
   const awardedProviderId = tender.awardedBid?.providerId ?? null;
   const isWinner = Boolean(
@@ -394,6 +401,15 @@ export default async function TenderDetailPage({ params }: Props) {
                         Ձեր հայտարարություն
                       </span>
                     ) : null}
+                    {canEditTender ? (
+                      <Link
+                        href={ROUTES.editTender(tender.id)}
+                        className="inline-flex items-center gap-1.5 rounded-full bg-slate-950 px-3 py-1.5 text-xs font-black text-white shadow-sm ring-1 ring-slate-800 transition hover:bg-slate-800"
+                      >
+                        <Pencil className="size-3.5 shrink-0" aria-hidden />
+                        Խմբագրել
+                      </Link>
+                    ) : null}
                     {tender.isBlindBidding ? (
                       <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700 ring-1 ring-slate-200">
                         Փակ առաջարկներ
@@ -501,21 +517,13 @@ export default async function TenderDetailPage({ params }: Props) {
               </div>
 
               {tender.images.length > 0 ? (
-                <div className="grid gap-2 border-b border-slate-100 bg-slate-50 p-3 sm:grid-cols-2 sm:p-4">
-                  {tender.images.map((img) => (
-                    <div
-                      key={img.id}
-                      className="overflow-hidden rounded-2xl ring-1 ring-slate-200"
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={img.url}
-                        alt={img.alt ?? ""}
-                        className="aspect-4/3 w-full object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
+                <TenderDetailImageGallery
+                  images={tender.images.map((img) => ({
+                    id: img.id,
+                    url: img.url,
+                    alt: img.alt,
+                  }))}
+                />
               ) : null}
 
               <div className="space-y-6 p-6 sm:p-8">

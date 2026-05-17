@@ -39,6 +39,10 @@ export type UserMinAggregateOutputType = {
   name: string | null
   email: string | null
   emailVerified: Date | null
+  emailVerifyToken: string | null
+  emailVerifyTokenExpiresAt: Date | null
+  verificationChannel: $Enums.VerificationChannel | null
+  notificationChannel: $Enums.NotificationChannel | null
   phone: string | null
   passwordHash: string | null
   image: string | null
@@ -69,6 +73,10 @@ export type UserMaxAggregateOutputType = {
   name: string | null
   email: string | null
   emailVerified: Date | null
+  emailVerifyToken: string | null
+  emailVerifyTokenExpiresAt: Date | null
+  verificationChannel: $Enums.VerificationChannel | null
+  notificationChannel: $Enums.NotificationChannel | null
   phone: string | null
   passwordHash: string | null
   image: string | null
@@ -99,6 +107,10 @@ export type UserCountAggregateOutputType = {
   name: number
   email: number
   emailVerified: number
+  emailVerifyToken: number
+  emailVerifyTokenExpiresAt: number
+  verificationChannel: number
+  notificationChannel: number
   phone: number
   passwordHash: number
   image: number
@@ -139,6 +151,10 @@ export type UserMinAggregateInputType = {
   name?: true
   email?: true
   emailVerified?: true
+  emailVerifyToken?: true
+  emailVerifyTokenExpiresAt?: true
+  verificationChannel?: true
+  notificationChannel?: true
   phone?: true
   passwordHash?: true
   image?: true
@@ -169,6 +185,10 @@ export type UserMaxAggregateInputType = {
   name?: true
   email?: true
   emailVerified?: true
+  emailVerifyToken?: true
+  emailVerifyTokenExpiresAt?: true
+  verificationChannel?: true
+  notificationChannel?: true
   phone?: true
   passwordHash?: true
   image?: true
@@ -199,6 +219,10 @@ export type UserCountAggregateInputType = {
   name?: true
   email?: true
   emailVerified?: true
+  emailVerifyToken?: true
+  emailVerifyTokenExpiresAt?: true
+  verificationChannel?: true
+  notificationChannel?: true
   phone?: true
   passwordHash?: true
   image?: true
@@ -316,6 +340,10 @@ export type UserGroupByOutputType = {
   name: string | null
   email: string
   emailVerified: Date | null
+  emailVerifyToken: string | null
+  emailVerifyTokenExpiresAt: Date | null
+  verificationChannel: $Enums.VerificationChannel | null
+  notificationChannel: $Enums.NotificationChannel
   phone: string | null
   passwordHash: string | null
   image: string | null
@@ -369,6 +397,10 @@ export type UserWhereInput = {
   name?: Prisma.StringNullableFilter<"User"> | string | null
   email?: Prisma.StringFilter<"User"> | string
   emailVerified?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  emailVerifyToken?: Prisma.StringNullableFilter<"User"> | string | null
+  emailVerifyTokenExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  verificationChannel?: Prisma.EnumVerificationChannelNullableFilter<"User"> | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFilter<"User"> | $Enums.NotificationChannel
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
@@ -413,6 +445,10 @@ export type UserOrderByWithRelationInput = {
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifyToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifyTokenExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationChannel?: Prisma.SortOrderInput | Prisma.SortOrder
+  notificationChannel?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -456,6 +492,7 @@ export type UserOrderByWithRelationInput = {
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
+  emailVerifyToken?: string
   phone?: string
   telegramChatId?: string
   telegramLinkToken?: string
@@ -465,6 +502,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringNullableFilter<"User"> | string | null
   emailVerified?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  emailVerifyTokenExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  verificationChannel?: Prisma.EnumVerificationChannelNullableFilter<"User"> | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFilter<"User"> | $Enums.NotificationChannel
   passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
@@ -498,13 +538,17 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   credentials?: Prisma.UserCredentialListRelationFilter
   portfolioItems?: Prisma.UserPortfolioItemListRelationFilter
   tenderLikes?: Prisma.TenderLikeListRelationFilter
-}, "id" | "email" | "phone" | "telegramChatId" | "telegramLinkToken" | "passwordResetToken">
+}, "id" | "email" | "emailVerifyToken" | "phone" | "telegramChatId" | "telegramLinkToken" | "passwordResetToken">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifyToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifyTokenExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationChannel?: Prisma.SortOrderInput | Prisma.SortOrder
+  notificationChannel?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -543,6 +587,10 @@ export type UserScalarWhereWithAggregatesInput = {
   name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   emailVerified?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  emailVerifyToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  emailVerifyTokenExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  verificationChannel?: Prisma.EnumVerificationChannelNullableWithAggregatesFilter<"User"> | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelWithAggregatesFilter<"User"> | $Enums.NotificationChannel
   phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   passwordHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -573,6 +621,10 @@ export type UserCreateInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -617,6 +669,10 @@ export type UserUncheckedCreateInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -661,6 +717,10 @@ export type UserUpdateInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -705,6 +765,10 @@ export type UserUncheckedUpdateInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -749,6 +813,10 @@ export type UserCreateManyInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -779,6 +847,10 @@ export type UserUpdateManyMutationInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -809,6 +881,10 @@ export type UserUncheckedUpdateManyInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -845,6 +921,10 @@ export type UserCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
+  emailVerifyToken?: Prisma.SortOrder
+  emailVerifyTokenExpiresAt?: Prisma.SortOrder
+  verificationChannel?: Prisma.SortOrder
+  notificationChannel?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   image?: Prisma.SortOrder
@@ -879,6 +959,10 @@ export type UserMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
+  emailVerifyToken?: Prisma.SortOrder
+  emailVerifyTokenExpiresAt?: Prisma.SortOrder
+  verificationChannel?: Prisma.SortOrder
+  notificationChannel?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   image?: Prisma.SortOrder
@@ -909,6 +993,10 @@ export type UserMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
+  emailVerifyToken?: Prisma.SortOrder
+  emailVerifyTokenExpiresAt?: Prisma.SortOrder
+  verificationChannel?: Prisma.SortOrder
+  notificationChannel?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   image?: Prisma.SortOrder
@@ -953,6 +1041,14 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
+}
+
+export type NullableEnumVerificationChannelFieldUpdateOperationsInput = {
+  set?: $Enums.VerificationChannel | null
+}
+
+export type EnumNotificationChannelFieldUpdateOperationsInput = {
+  set?: $Enums.NotificationChannel
 }
 
 export type EnumUserRoleFieldUpdateOperationsInput = {
@@ -1184,6 +1280,10 @@ export type UserCreateWithoutCredentialsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -1227,6 +1327,10 @@ export type UserUncheckedCreateWithoutCredentialsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -1286,6 +1390,10 @@ export type UserUpdateWithoutCredentialsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1329,6 +1437,10 @@ export type UserUncheckedUpdateWithoutCredentialsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1372,6 +1484,10 @@ export type UserCreateWithoutPortfolioItemsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -1415,6 +1531,10 @@ export type UserUncheckedCreateWithoutPortfolioItemsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -1474,6 +1594,10 @@ export type UserUpdateWithoutPortfolioItemsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1517,6 +1641,10 @@ export type UserUncheckedUpdateWithoutPortfolioItemsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1560,6 +1688,10 @@ export type UserCreateWithoutInterestsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -1603,6 +1735,10 @@ export type UserUncheckedCreateWithoutInterestsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -1662,6 +1798,10 @@ export type UserUpdateWithoutInterestsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1705,6 +1845,10 @@ export type UserUncheckedUpdateWithoutInterestsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1748,6 +1892,10 @@ export type UserCreateWithoutVerificationRequestsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -1791,6 +1939,10 @@ export type UserUncheckedCreateWithoutVerificationRequestsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -1850,6 +2002,10 @@ export type UserUpdateWithoutVerificationRequestsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1893,6 +2049,10 @@ export type UserUncheckedUpdateWithoutVerificationRequestsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1936,6 +2096,10 @@ export type UserCreateWithoutAccountsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -1979,6 +2143,10 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -2038,6 +2206,10 @@ export type UserUpdateWithoutAccountsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2081,6 +2253,10 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2124,6 +2300,10 @@ export type UserCreateWithoutSessionsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -2167,6 +2347,10 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -2226,6 +2410,10 @@ export type UserUpdateWithoutSessionsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2269,6 +2457,10 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2312,6 +2504,10 @@ export type UserCreateWithoutTendersInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -2355,6 +2551,10 @@ export type UserUncheckedCreateWithoutTendersInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -2414,6 +2614,10 @@ export type UserUpdateWithoutTendersInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2457,6 +2661,10 @@ export type UserUncheckedUpdateWithoutTendersInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2500,6 +2708,10 @@ export type UserCreateWithoutTenderLikesInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -2543,6 +2755,10 @@ export type UserUncheckedCreateWithoutTenderLikesInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -2602,6 +2818,10 @@ export type UserUpdateWithoutTenderLikesInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2645,6 +2865,10 @@ export type UserUncheckedUpdateWithoutTenderLikesInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2688,6 +2912,10 @@ export type UserCreateWithoutTenderComplaintsFiledInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -2731,6 +2959,10 @@ export type UserUncheckedCreateWithoutTenderComplaintsFiledInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -2790,6 +3022,10 @@ export type UserUpdateWithoutTenderComplaintsFiledInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2833,6 +3069,10 @@ export type UserUncheckedUpdateWithoutTenderComplaintsFiledInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2876,6 +3116,10 @@ export type UserCreateWithoutBidsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -2919,6 +3163,10 @@ export type UserUncheckedCreateWithoutBidsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -2978,6 +3226,10 @@ export type UserUpdateWithoutBidsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3021,6 +3273,10 @@ export type UserUncheckedUpdateWithoutBidsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3064,6 +3320,10 @@ export type UserCreateWithoutTransactionsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -3107,6 +3367,10 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -3166,6 +3430,10 @@ export type UserUpdateWithoutTransactionsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3209,6 +3477,10 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3252,6 +3524,10 @@ export type UserCreateWithoutSubscriptionsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -3295,6 +3571,10 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -3354,6 +3634,10 @@ export type UserUpdateWithoutSubscriptionsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3397,6 +3681,10 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3440,6 +3728,10 @@ export type UserCreateWithoutReviewsGivenInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -3483,6 +3775,10 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -3531,6 +3827,10 @@ export type UserCreateWithoutReviewsReceivedInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -3574,6 +3874,10 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   name?: string | null
   email: string
   emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
   phone?: string | null
   passwordHash?: string | null
   image?: string | null
@@ -3633,6 +3937,10 @@ export type UserUpdateWithoutReviewsGivenInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3676,6 +3984,10 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3730,6 +4042,10 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3773,6 +4089,10 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3964,6 +4284,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   name?: boolean
   email?: boolean
   emailVerified?: boolean
+  emailVerifyToken?: boolean
+  emailVerifyTokenExpiresAt?: boolean
+  verificationChannel?: boolean
+  notificationChannel?: boolean
   phone?: boolean
   passwordHash?: boolean
   image?: boolean
@@ -4011,6 +4335,10 @@ export type UserSelectScalar = {
   name?: boolean
   email?: boolean
   emailVerified?: boolean
+  emailVerifyToken?: boolean
+  emailVerifyTokenExpiresAt?: boolean
+  verificationChannel?: boolean
+  notificationChannel?: boolean
   phone?: boolean
   passwordHash?: boolean
   image?: boolean
@@ -4036,7 +4364,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "phone" | "passwordHash" | "image" | "role" | "telegramChatId" | "telegramVerifiedAt" | "telegramLinkToken" | "telegramLinkTokenExpiresAt" | "passwordResetToken" | "passwordResetTokenExpiresAt" | "walletBalance" | "isVerified" | "isBlocked" | "bio" | "accountType" | "companyName" | "legalForm" | "taxId" | "legalAddress" | "directorName" | "companyPhone" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "emailVerifyToken" | "emailVerifyTokenExpiresAt" | "verificationChannel" | "notificationChannel" | "phone" | "passwordHash" | "image" | "role" | "telegramChatId" | "telegramVerifiedAt" | "telegramLinkToken" | "telegramLinkTokenExpiresAt" | "passwordResetToken" | "passwordResetTokenExpiresAt" | "walletBalance" | "isVerified" | "isBlocked" | "bio" | "accountType" | "companyName" | "legalForm" | "taxId" | "legalAddress" | "directorName" | "companyPhone" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -4078,6 +4406,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     name: string | null
     email: string
     emailVerified: Date | null
+    emailVerifyToken: string | null
+    emailVerifyTokenExpiresAt: Date | null
+    verificationChannel: $Enums.VerificationChannel | null
+    notificationChannel: $Enums.NotificationChannel
     phone: string | null
     passwordHash: string | null
     image: string | null
@@ -4488,6 +4820,10 @@ export interface UserFieldRefs {
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly emailVerified: Prisma.FieldRef<"User", 'DateTime'>
+  readonly emailVerifyToken: Prisma.FieldRef<"User", 'String'>
+  readonly emailVerifyTokenExpiresAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly verificationChannel: Prisma.FieldRef<"User", 'VerificationChannel'>
+  readonly notificationChannel: Prisma.FieldRef<"User", 'NotificationChannel'>
   readonly phone: Prisma.FieldRef<"User", 'String'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
   readonly image: Prisma.FieldRef<"User", 'String'>

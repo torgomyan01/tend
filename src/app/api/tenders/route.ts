@@ -16,6 +16,7 @@ import {
   saveTenderDocument,
   saveTenderImage,
 } from "@/lib/tender-form-upload";
+import { isAccountVerified } from "@/lib/account-verification";
 import { prisma } from "@/lib/prisma";
 import { parseServicesPayload } from "@/lib/tender-form-services";
 import {
@@ -36,6 +37,7 @@ export async function POST(request: Request) {
     select: {
       id: true,
       telegramVerifiedAt: true,
+      emailVerified: true,
       isBlocked: true,
       accountType: true,
       companyName: true,
@@ -54,8 +56,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "BLOCKED" }, { status: 403 });
   }
 
-  if (!user.telegramVerifiedAt) {
-    return NextResponse.json({ error: "TELEGRAM_REQUIRED" }, { status: 403 });
+  if (!isAccountVerified(user)) {
+    return NextResponse.json({ error: "VERIFICATION_REQUIRED" }, { status: 403 });
   }
 
   if (

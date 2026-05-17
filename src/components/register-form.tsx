@@ -5,16 +5,17 @@ import {
   ArrowRight,
   Building2,
   CheckCircle2,
-  ExternalLink,
   Loader2,
   LockKeyhole,
   Mail,
   Phone,
-  Send,
   User,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { EmailVerificationPanel } from "@/components/email-verification-panel";
+import { RegisterOnboardingPreferences } from "@/components/register-onboarding-preferences";
+import { TelegramVerificationPanel } from "@/components/telegram-verification-panel";
 import {
   InterestSelector,
   type InterestSelection,
@@ -26,14 +27,28 @@ import {
 import { ROUTES } from "@/lib/routes";
 import type { ServiceCategoryWithServices } from "@/lib/services-data";
 import { toastError, toastSuccess } from "@/lib/toast";
+import type {
+  NotificationChannelValue,
+  VerificationChannelValue,
+} from "@/lib/verification-channels";
 
 type RegisterResponse = {
   userId: string;
-  telegramBotUrl: string;
-  expiresAt: string;
+  verificationChannel: VerificationChannelValue;
+  phoneMasked: string;
+  telegramBotUrl?: string;
+  expiresAt?: string;
+  email?: string;
+  emailSent?: boolean;
 };
 
-type Step = "type" | "interests" | "info" | "telegram";
+type Step =
+  | "type"
+  | "interests"
+  | "info"
+  | "preferences"
+  | "complete-telegram"
+  | "complete-email";
 
 type RegisterFormProps = {
   categories: ServiceCategoryWithServices[];
@@ -52,53 +67,30 @@ export function RegisterForm({ categories }: RegisterFormProps) {
   const [verification, setVerification] = useState<RegisterResponse | null>(
     null,
   );
-  const [isVerified, setIsVerified] = useState(false);
 
   const [accountType, setAccountType] =
     useState<AccountTypeValue>("INDIVIDUAL");
 
   const isLegal = accountType === "LEGAL_ENTITY";
 
-  useEffect(() => {
-    if (!verification || isVerified) {
-      return;
-    }
-
-    const intervalId = window.setInterval(async () => {
-      const response = await fetch(
-        `/api/auth/register/status?userId=${encodeURIComponent(
-          verification.userId,
-        )}`,
-      );
-
-      if (!response.ok) {
-        return;
-      }
-
-      const data = (await response.json()) as { verified: boolean };
-
-      if (data.verified) {
-        setIsVerified(true);
-        toastSuccess("Հաշիվը վերիֆիկացվեց", "Կարող եք մուտք գործել։");
-        window.clearInterval(intervalId);
-      }
-    }, 3000);
-
-    return () => window.clearInterval(intervalId);
-  }, [isVerified, verification]);
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleInfoContinue(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
-    setIsSubmitting(true);
     if (isLegal) {
-      // Գրանցման պահին չենք պահանջում ընկերության տվյալները։
-      // Դրանք կլրացվեն հետո՝ մրցույթ հայտարարելու կամ առաջարկ ուղարկելու պահին։
       toastSuccess(
         "Կարող եք շարունակել",
         "Իրավաբանական տվյալները կլրացնեք հետո՝ անհրաժեշտության պահին։",
       );
     }
+    setStep("preferences");
+  }
+
+  async function handleRegister(prefs: {
+    verificationChannel: VerificationChannelValue;
+    notificationChannel: NotificationChannelValue;
+  }) {
+    setError(null);
+    setIsSubmitting(true);
 
     try {
       const response = await fetch("/api/auth/register", {
@@ -114,8 +106,8 @@ export function RegisterForm({ categories }: RegisterFormProps) {
           acceptedTerms,
           interests,
           accountType,
-          // Գրանցման պահին իրավաբանական դաշտերը չենք ուղարկում։
-          // Դրանք կլրացվեն հետագայում՝ հաշվի կարգավորումներում։
+          verificationChannel: prefs.verificationChannel,
+          notificationChannel: prefs.notificationChannel,
           companyName: undefined,
           legalForm: undefined,
           taxId: undefined,
@@ -130,15 +122,27 @@ export function RegisterForm({ categories }: RegisterFormProps) {
         const msg =
           data.error === "USER_ALREADY_EXISTS"
             ? "Այս էլ․ փոստով կամ հեռախոսահամարով հաշիվ արդեն գոյություն ունի։"
-            : "Չհաջողվեց ստեղծել հաշիվը։ Ստուգեք դաշտերը և փորձեք նորից։";
+            : data.error === "EMAIL_OR_PHONE_ALREADY_USED"
+              ? "Էլ․ փոստը կամ հեռախոսահամարը արդեն կապված է այլ հաշվի հետ։"
+            : data.error === "INVALID_PHONE"
+              ? "Օգտագործեք հայկական հեռախոսահամար (+374 77 123 456)։"
+              : data.error === "EMAIL_SEND_FAILED"
+                ? "Չհաջողվեց ուղարկել հաստատման նամակը։ Փորձեք Telegram վերիֆիկացիա։"
+              : "Չհաջողվեց ստեղծել հաշիվը։ Ստուգեք դաշտերը և փորձեք նորից։";
         setError(msg);
         toastError("Գրանցումը չհաջողվեց", msg);
         return;
       }
 
-      setVerification(data as RegisterResponse);
-      setStep("telegram");
-      toastSuccess("Հաշիվը ստեղծվեց", "Հիմա ավարտեք Telegram վերիֆիկացիան։");
+      const result = data as RegisterResponse;
+      setVerification(result);
+      if (result.verificationChannel === "EMAIL") {
+        setStep("complete-email");
+        toastSuccess("Հաշիվը ստեղծվեց", "Ստուգեք էլ․ փոստը հաստատման հղման համար։");
+      } else {
+        setStep("complete-telegram");
+        toastSuccess("Հաշիվը ստեղծվեց", "Հիմա ավարտեք Telegram վերիֆիկացիան։");
+      }
     } catch {
       const msg = "Սերվերի հետ կապ հաստատել չհաջողվեց։ Փորձեք մի փոքր ուշ։";
       setError(msg);
@@ -148,49 +152,22 @@ export function RegisterForm({ categories }: RegisterFormProps) {
     }
   }
 
-  if (step === "telegram" && verification) {
+  if (step === "complete-telegram" && verification?.telegramBotUrl) {
     return (
-      <div className="rounded-4xl bg-slate-50 p-5 ring-1 ring-slate-200">
-        <div className="grid size-14 place-items-center rounded-2xl bg-amber-100 text-amber-800">
-          {isVerified ? (
-            <CheckCircle2 className="size-7" />
-          ) : (
-            <Send className="size-7" />
-          )}
-        </div>
-        <h2 className="mt-5 text-2xl font-black tracking-tight sm:text-3xl">
-          {isVerified ? "Հաշիվը վերիֆիկացվեց" : "Ավարտեք Telegram վերիֆիկացիան"}
-        </h2>
-        <p className="mt-3 leading-7 text-slate-600">
-          {isVerified
-            ? "Ձեր Telegram chat ID-ն պահպանվեց։ Հետագայում կօգտագործենք այն նոր գործերի ծանուցումների և գաղտնաբառի վերականգնման համար։"
-            : "Սեղմեք կոճակը, բացեք @tend_am_bot-ը և սեղմեք Start։ Վերիֆիկացիայից հետո այս էջը ավտոմատ կթարմացվի։"}
-        </p>
+      <TelegramVerificationPanel
+        registerUserId={verification.userId}
+        initialTelegramBotUrl={verification.telegramBotUrl}
+        initialPhoneMasked={verification.phoneMasked}
+      />
+    );
+  }
 
-        {isVerified ? (
-          <Link
-            href={ROUTES.login}
-            className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-slate-950 px-6 py-4 text-base font-black text-white shadow-2xl shadow-slate-950/20 transition hover:-translate-y-1 hover:bg-slate-800"
-          >
-            Մուտք գործել
-          </Link>
-        ) : (
-          <>
-            <a
-              href={verification.telegramBotUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-4 text-base font-black text-white shadow-2xl shadow-slate-950/20 transition hover:-translate-y-1 hover:bg-slate-800"
-            >
-              Բացել @tend_am_bot
-              <ExternalLink className="size-5" />
-            </a>
-            <p className="mt-4 text-center text-sm font-semibold text-slate-500">
-              Սպասում ենք Telegram հաստատմանը...
-            </p>
-          </>
-        )}
-      </div>
+  if (step === "complete-email" && verification) {
+    return (
+      <EmailVerificationPanel
+        registerUserId={verification.userId}
+        email={verification.email ?? email}
+      />
     );
   }
 
@@ -198,9 +175,16 @@ export function RegisterForm({ categories }: RegisterFormProps) {
     { value: "type", label: "Տիպ" },
     { value: "interests", label: "Հետաքրքրություններ" },
     { value: "info", label: "Տվյալներ" },
+    { value: "preferences", label: "Վերիֆիկացիա" },
   ];
   const currentStepIndex =
-    step === "type" ? 0 : step === "interests" ? 1 : 2;
+    step === "type"
+      ? 0
+      : step === "interests"
+        ? 1
+        : step === "info"
+          ? 2
+          : 3;
 
   return (
     <div className="space-y-6">
@@ -240,7 +224,9 @@ export function RegisterForm({ categories }: RegisterFormProps) {
                   ? "Տիպ"
                   : stepItem.value === "interests"
                     ? "Ոլորտ"
-                    : "Տվյալներ"}
+                    : stepItem.value === "info"
+                      ? "Տվյալներ"
+                      : "Հաստատում"}
               </span>
               {index < steps.length - 1 ? (
                 <span className="ml-2 hidden h-px flex-1 bg-slate-200 sm:block" />
@@ -367,7 +353,7 @@ export function RegisterForm({ categories }: RegisterFormProps) {
       ) : null}
 
       {step === "info" ? (
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleInfoContinue}>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
               <span className="text-sm font-black text-slate-700">
@@ -508,10 +494,26 @@ export function RegisterForm({ categories }: RegisterFormProps) {
               className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-4 text-base font-black text-white shadow-2xl shadow-slate-950/20 transition hover:-translate-y-1 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? <Loader2 className="size-5 animate-spin" /> : null}
-              Գրանցվել և անցնել վերիֆիկացիա
+              Շարունակել
             </button>
           </div>
         </form>
+      ) : null}
+
+      {step === "preferences" ? (
+        <div className="space-y-4">
+          {error ? (
+            <div className="rounded-3xl bg-red-50 p-4 text-sm font-bold text-red-700 ring-1 ring-red-100">
+              {error}
+            </div>
+          ) : null}
+          <RegisterOnboardingPreferences
+            defaultEmail={email}
+            onBack={() => setStep("info")}
+            onContinue={(prefs) => void handleRegister(prefs)}
+            isSubmitting={isSubmitting}
+          />
+        </div>
       ) : null}
     </div>
   );

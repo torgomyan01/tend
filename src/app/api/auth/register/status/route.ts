@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { isAccountVerified } from "@/lib/account-verification";
+import { maskArmenianPhone } from "@/lib/phone";
 import { prisma } from "@/lib/prisma";
 import { processPendingTelegramUpdates } from "@/lib/telegram-verification";
 
@@ -18,7 +20,10 @@ export async function GET(request: Request) {
       id: true,
       isVerified: true,
       telegramVerifiedAt: true,
+      emailVerified: true,
       telegramChatId: true,
+      phone: true,
+      verificationChannel: true,
     },
   });
 
@@ -27,8 +32,12 @@ export async function GET(request: Request) {
   }
 
   return NextResponse.json({
-    verified: Boolean(user.telegramVerifiedAt),
+    verified: isAccountVerified(user),
+    telegramVerified: Boolean(user.telegramVerifiedAt),
+    emailVerified: Boolean(user.emailVerified),
     fullyVerified: user.isVerified,
     telegramLinked: Boolean(user.telegramChatId),
+    phoneMasked: user.phone ? maskArmenianPhone(user.phone) : null,
+    verificationChannel: user.verificationChannel,
   });
 }

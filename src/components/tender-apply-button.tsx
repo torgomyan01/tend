@@ -241,8 +241,8 @@ export function TenderApplyButton({
           return "Չեք կարող առաջարկ ուղարկել սեփական մրցույթին։";
         case "USER_BLOCKED":
           return "Ձեր հաշիվը արգելափակված է։";
-        case "TELEGRAM_REQUIRED":
-          return "Առաջարկ ուղարկելու համար անհրաժեշտ է Telegram վերիֆիկացիա։";
+        case "VERIFICATION_REQUIRED":
+          return "Առաջարկ ուղարկելու համար անհրաժեշտ է հաստատել հաշիվը (Telegram կամ էլ․ փոստ)։";
         case "COMPANY_PROFILE_REQUIRED":
           return "Շարունակելու համար լրացրեք ընկերության տվյալները՝ Կարգավորումներ էջում։";
         case "PRICE_OUT_OF_RANGE":

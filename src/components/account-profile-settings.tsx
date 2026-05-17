@@ -130,6 +130,7 @@ export function AccountProfileSettings({ initialProfile }: Props) {
       const data = (await res.json().catch(() => null)) as {
         error?: string;
         user?: AccountProfileInitial;
+        requiresTelegramReverification?: boolean;
       } | null;
       if (!res.ok) {
         if (data?.error === "EMAIL_OR_PHONE_TAKEN") {
@@ -155,12 +156,13 @@ export function AccountProfileSettings({ initialProfile }: Props) {
         setImageUrl(data.user.image);
         setBio(data.user.bio ?? "");
 
-        if (phoneActuallyChanged) {
+        if (phoneActuallyChanged || data.requiresTelegramReverification) {
           toastSuccess(
             "Հեռախոսը թարմացվեց",
-            "Մուտք գործեք նորից՝ հաստատելու համար։",
+            "Ավարտեք Telegram վերիֆիկացիան՝ նոր համարով հաշիվը ակտիվացնելու համար։",
           );
-          await signOut({ callbackUrl: ROUTES.login });
+          router.push(ROUTES.accountVerifyTelegram);
+          router.refresh();
           return;
         }
 

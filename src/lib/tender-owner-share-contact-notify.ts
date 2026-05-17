@@ -1,29 +1,16 @@
-import { escapeTelegramHtml, trySendTelegramMessage } from "@/lib/telegram";
-
-function tenderPublicUrl(tenderId: string) {
-  const base =
-    process.env.NEXTAUTH_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "");
-
-  if (!base) {
-    return "";
-  }
-
-  return `${base.replace(/\/$/, "")}/tenders/${tenderId}`;
-}
+import { absoluteAppUrl } from "@/lib/absolute-app-url";
+import { notifyUserById } from "@/lib/notifications/notify-user";
+import { ROUTES } from "@/lib/routes";
+import { escapeTelegramHtml } from "@/lib/telegram";
 
 /** Ծանուցում դիմողին՝ պատվիրատուն կիսվել է կապով։ */
 export async function notifyProviderOwnerSharedContact(params: {
-  chatId: string | null | undefined;
+  userId: string;
   tenderTitle: string;
   tenderId: string;
   ownerDisplayName: string;
   ownerPhone: string | null;
 }) {
-  if (!params.chatId) {
-    return;
-  }
-
   const title = escapeTelegramHtml(params.tenderTitle);
   const name = escapeTelegramHtml(params.ownerDisplayName);
 
@@ -35,10 +22,16 @@ export async function notifyProviderOwnerSharedContact(params: {
     text += `\n<b>Հեռախոս</b>՝ ${escapeTelegramHtml(params.ownerPhone.trim())}`;
   }
 
-  const url = tenderPublicUrl(params.tenderId);
+  const url = absoluteAppUrl(ROUTES.tenderDetail(params.tenderId));
   if (url) {
     text += `\n\n<a href="${escapeTelegramHtml(url)}">Բացել մրցույթը</a>`;
   }
 
-  await trySendTelegramMessage(params.chatId, text);
+  await notifyUserById(params.userId, {
+    telegramText: text,
+    emailSubject: `Պատվիրատուն կիսվել է կապով՝ ${params.tenderTitle}`,
+    emailTitle: "Կապի տվյալներ",
+    ctaLabel: "Բացել մրցույթը",
+    ctaUrl: url || undefined,
+  });
 }

@@ -33,11 +33,7 @@ export async function PATCH(
           title: true,
         },
       },
-      provider: {
-        select: {
-          telegramChatId: true,
-        },
-      },
+      providerId: true,
     },
   });
 
@@ -70,7 +66,7 @@ export async function PATCH(
   if (!alreadyShared) {
     try {
       await notifyProviderOwnerSharedContact({
-        chatId: bid.provider.telegramChatId,
+        userId: bid.providerId,
         tenderTitle: bid.tender.title,
         tenderId,
         ownerDisplayName: owner.name?.trim() || owner.email,

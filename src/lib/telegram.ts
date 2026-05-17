@@ -8,11 +8,19 @@ export function escapeTelegramHtml(text: string) {
     .replace(/>/g, "&gt;");
 }
 
-/** Inline keyboard — URL կոճակներ (մինչև 8 շարք, տողում մինչև 8 կոճակ)։ */
+export type TelegramReplyMarkup =
+  | {
+      inline_keyboard: { text: string; url: string }[][];
+    }
+  | {
+      keyboard: { text: string; request_contact?: boolean }[][];
+      resize_keyboard?: boolean;
+      one_time_keyboard?: boolean;
+    }
+  | { remove_keyboard: true };
+
 export type TelegramSendOptions = {
-  replyMarkup?: {
-    inline_keyboard: { text: string; url: string }[][];
-  };
+  replyMarkup?: TelegramReplyMarkup;
 };
 
 export async function trySendTelegramMessage(
@@ -55,7 +63,7 @@ export async function sendTelegramMessage(
     parse_mode: "HTML",
   };
 
-  if (options?.replyMarkup?.inline_keyboard?.length) {
+  if (options?.replyMarkup) {
     payload.reply_markup = options.replyMarkup;
   }
 

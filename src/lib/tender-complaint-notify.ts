@@ -1,29 +1,16 @@
-import { escapeTelegramHtml, trySendTelegramMessage } from "@/lib/telegram";
+import { absoluteAppUrl } from "@/lib/absolute-app-url";
+import { notifyUserById } from "@/lib/notifications/notify-user";
+import { ROUTES } from "@/lib/routes";
+import { escapeTelegramHtml } from "@/lib/telegram";
 
-function tenderPublicUrl(tenderId: string) {
-  const base =
-    process.env.NEXTAUTH_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "");
-
-  if (!base) {
-    return "";
-  }
-
-  return `${base.replace(/\/$/, "")}/tenders/${tenderId}`;
-}
-
-/** Telegram ծանուցում բողոք ներկայացնող օգտատիրոջը՝ մոդերացիայի որոշման համար։ */
+/** Ծանուցում բողոք ներկայացնող օգտատիրոջը՝ մոդերացիայի որոշման համար։ */
 export async function notifyTenderComplaintReporterDecision(params: {
-  chatId: string | null | undefined;
+  userId: string;
   tenderTitle: string;
   tenderId: string;
   decision: "REVIEWED" | "DISMISSED";
   note?: string | null;
 }) {
-  if (!params.chatId) {
-    return;
-  }
-
   const title = escapeTelegramHtml(params.tenderTitle);
 
   let text =
@@ -35,10 +22,21 @@ export async function notifyTenderComplaintReporterDecision(params: {
     text += `\n\n<i>Մոդերատորի նշում՝</i> ${escapeTelegramHtml(params.note.trim())}`;
   }
 
-  const url = tenderPublicUrl(params.tenderId);
+  const url = absoluteAppUrl(ROUTES.tenderDetail(params.tenderId));
   if (url) {
     text += `\n\n<a href="${escapeTelegramHtml(url)}">Բացել մրցույթը</a>`;
   }
 
-  await trySendTelegramMessage(params.chatId, text);
+  const subject =
+    params.decision === "REVIEWED"
+      ? `Բողոքը դիտարկված է՝ ${params.tenderTitle}`
+      : `Բողոքը մերժված է՝ ${params.tenderTitle}`;
+
+  await notifyUserById(params.userId, {
+    telegramText: text,
+    emailSubject: subject,
+    emailTitle: "Բողոքի վերաբերյալ որոշում",
+    ctaLabel: "Բացել մրցույթը",
+    ctaUrl: url || undefined,
+  });
 }

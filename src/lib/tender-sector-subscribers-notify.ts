@@ -1,9 +1,9 @@
 import { absoluteAppUrl } from "@/lib/absolute-app-url";
+import { notifyUserById } from "@/lib/notifications/notify-user";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
 import {
   escapeTelegramHtml,
-  trySendTelegramMessage,
   type TelegramSendOptions,
 } from "@/lib/telegram";
 
@@ -13,7 +13,7 @@ function canTelegramUrlButton(url: string): boolean {
 }
 
 /**
- * Մրցույթը հրապարակվելուց հետո (ACTIVE) — Telegram ծանուցումներ
+ * Մրցույթը հրապարակվելուց հետո (ACTIVE) — ծանուցումներ
  * ոլորտում (category) գրանցված հետաքրքրություն ունեցող մասնակիցներին։
  */
 export async function notifyInterestedUsersNewPublishedTender(params: {
@@ -48,14 +48,15 @@ export async function notifyInterestedUsersNewPublishedTender(params: {
       category: { in: categoryList },
       userId: { not: params.publisherUserId },
       user: {
-        telegramChatId: { not: null },
         isBlocked: false,
+        OR: [
+          { telegramChatId: { not: null } },
+          { emailVerified: { not: null } },
+        ],
       },
     },
-    select: {
-      userId: true,
-      user: { select: { telegramChatId: true } },
-    },
+    select: { userId: true },
+    distinct: ["userId"],
   });
 
   const tenderPath = ROUTES.tenderDetail(params.tenderId);
@@ -85,13 +86,17 @@ export async function notifyInterestedUsersNewPublishedTender(params: {
     text += `\n\n<a href="${urlEsc}">Բացել մրցույթը</a>`;
   }
 
-  const seenChat = new Set<string>();
+  const seen = new Set<string>();
   for (const row of recipients) {
-    const chatId = row.user.telegramChatId;
-    if (!chatId || seenChat.has(chatId)) {
-      continue;
-    }
-    seenChat.add(chatId);
-    await trySendTelegramMessage(chatId, text, buttonMarkup);
+    if (seen.has(row.userId)) continue;
+    seen.add(row.userId);
+    await notifyUserById(row.userId, {
+      telegramText: text,
+      telegramOptions: buttonMarkup,
+      emailSubject: `Նոր մրցույթ ձեր ոլորտում՝ ${params.tenderTitle}`,
+      emailTitle: "Նոր մրցույթ",
+      ctaLabel: "Բացել մրցույթը",
+      ctaUrl: tenderUrl || undefined,
+    });
   }
 }

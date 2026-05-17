@@ -6,7 +6,13 @@ import {
   LEGAL_FORM_VALUES,
 } from "@/lib/account-type";
 import { authOptions } from "@/lib/auth";
+import {
+  formatArmenianPhoneDisplay,
+  isValidArmenianPhone,
+  phonesMatch,
+} from "@/lib/phone";
 import { prisma } from "@/lib/prisma";
+import { issueTelegramLinkForUser } from "@/lib/telegram-link";
 
 export const dynamic = "force-dynamic";
 
@@ -92,7 +98,17 @@ export async function PATCH(request: Request) {
   }
 
   const normalizedEmail = parsed.data.email.toLowerCase().trim();
-  const phone = parsed.data.phone.trim();
+  if (!isValidArmenianPhone(parsed.data.phone)) {
+    return NextResponse.json({ error: "INVALID_PHONE" }, { status: 400 });
+  }
+  const phone = formatArmenianPhoneDisplay(parsed.data.phone);
+
+  const currentUser = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { phone: true },
+  });
+  const phoneChanged =
+    currentUser?.phone != null && !phonesMatch(currentUser.phone, phone);
 
   const conflict = await prisma.user.findFirst({
     where: {
@@ -150,7 +166,12 @@ export async function PATCH(request: Request) {
 
   const updated = await prisma.user.update({
     where: { id: session.user.id },
-    data: updateData,
+    data: {
+      ...updateData,
+      ...(phoneChanged
+        ? { telegramVerifiedAt: null, telegramChatId: null }
+        : {}),
+    },
     select: {
       name: true,
       email: true,
@@ -166,6 +187,15 @@ export async function PATCH(request: Request) {
       companyPhone: true,
     },
   });
+
+  if (phoneChanged) {
+    await issueTelegramLinkForUser(session.user.id);
+    return NextResponse.json({
+      ok: true,
+      user: updated,
+      requiresTelegramReverification: true,
+    });
+  }
 
   return NextResponse.json({
     ok: true,

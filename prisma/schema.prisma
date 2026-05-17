@@ -82,11 +82,26 @@ enum ReviewModerationStatus {
   APPROVED
 }
 
+enum VerificationChannel {
+  TELEGRAM
+  EMAIL
+}
+
+enum NotificationChannel {
+  TELEGRAM
+  EMAIL
+  BOTH
+}
+
 model User {
   id                String              @id @default(cuid())
   name              String?
   email             String              @unique
   emailVerified     DateTime?
+  emailVerifyToken  String?             @unique
+  emailVerifyTokenExpiresAt DateTime?
+  verificationChannel VerificationChannel?
+  notificationChannel NotificationChannel @default(TELEGRAM)
   phone             String?             @unique
   passwordHash      String?
   image             String?
@@ -128,6 +143,7 @@ model User {
   @@index([email])
   @@index([phone])
   @@index([telegramLinkToken])
+  @@index([emailVerifyToken])
   @@map("user")
 }
 

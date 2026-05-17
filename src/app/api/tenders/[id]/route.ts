@@ -9,6 +9,8 @@ import {
   tenderNumericFieldsSchema,
 } from "@/lib/tender-form-fields";
 import { resolveLocationCityLabel } from "@/lib/locations-data";
+import type { Prisma } from "@/generated/prisma/client";
+import { isAccountVerified } from "@/lib/account-verification";
 import { prisma } from "@/lib/prisma";
 import { parseServicesPayload } from "@/lib/tender-form-services";
 import {
@@ -42,6 +44,7 @@ export async function PATCH(request: Request, { params }: Params) {
     select: {
       id: true,
       telegramVerifiedAt: true,
+      emailVerified: true,
       isBlocked: true,
       accountType: true,
       companyName: true,
@@ -60,8 +63,8 @@ export async function PATCH(request: Request, { params }: Params) {
     return NextResponse.json({ error: "BLOCKED" }, { status: 403 });
   }
 
-  if (!user.telegramVerifiedAt) {
-    return NextResponse.json({ error: "TELEGRAM_REQUIRED" }, { status: 403 });
+  if (!isAccountVerified(user)) {
+    return NextResponse.json({ error: "VERIFICATION_REQUIRED" }, { status: 403 });
   }
 
   if (
@@ -79,11 +82,29 @@ export async function PATCH(request: Request, { params }: Params) {
   }
 
   const existing = await prisma.tender.findFirst({
-    where: { id: tenderId, clientId: user.id, status: "DRAFT" },
-    select: { id: true },
+    where: { id: tenderId, clientId: user.id },
+    select: {
+      id: true,
+      status: true,
+      startsAt: true,
+      endsAt: true,
+      _count: { select: { bids: true } },
+    },
   });
 
   if (!existing) {
+    return NextResponse.json({ error: "NOT_FOUND_OR_NOT_EDITABLE" }, { status: 404 });
+  }
+
+  const rowStatus = existing.status;
+  if (
+    rowStatus === "AWARDED" ||
+    rowStatus === "COMPLETED" ||
+    rowStatus === "CANCELLED"
+  ) {
+    return NextResponse.json({ error: "NOT_FOUND_OR_NOT_EDITABLE" }, { status: 404 });
+  }
+  if (rowStatus === "ACTIVE" && existing._count.bids > 0) {
     return NextResponse.json({ error: "NOT_FOUND_OR_NOT_EDITABLE" }, { status: 404 });
   }
 
@@ -96,9 +117,9 @@ export async function PATCH(request: Request, { params }: Params) {
 
   const servicesPayload = parseServicesPayload(formData.get("services"));
   if (!servicesPayload.ok) {
-    const status =
+    const errCode =
       servicesPayload.reason === "duplicate" ? "DUPLICATE_SERVICE" : "INVALID_SERVICES";
-    return NextResponse.json({ error: status }, { status: 400 });
+    return NextResponse.json({ error: errCode }, { status: 400 });
   }
   const services = servicesPayload.services;
 
@@ -114,6 +135,13 @@ export async function PATCH(request: Request, { params }: Params) {
     return NextResponse.json({ error: "VALIDATION_FAILED" }, { status: 400 });
   }
   const data = parsed.data;
+
+  if (existing.status === "ACTIVE" && !data.publish) {
+    return NextResponse.json(
+      { error: "ACTIVE_TENDER_REQUIRES_PUBLISH_SAVE" },
+      { status: 400 },
+    );
+  }
 
   const normalized = normalizeTitleDescription(
     String(formData.get("title") ?? ""),
@@ -237,8 +265,62 @@ export async function PATCH(request: Request, { params }: Params) {
   }
 
   const now = new Date();
-  const endsAt = new Date(now.getTime() + data.durationDays * 24 * 60 * 60 * 1000);
+  const publishEndsAt = new Date(
+    now.getTime() + data.durationDays * 24 * 60 * 60 * 1000,
+  );
   const primary = services[0];
+
+  const baseTenderFields: Prisma.TenderUncheckedUpdateInput = {
+    title: normalized.title,
+    description: normalized.description,
+    category: primary.category,
+    service: primary.service,
+    city: resolvedCity,
+    locationId,
+    address: data.address || null,
+    budgetMin: data.budgetMin ? data.budgetMin : null,
+    budgetMax: data.budgetMax ? data.budgetMax : null,
+    isBlindBidding: data.isBlindBidding,
+  };
+
+  let tenderUpdateData: Prisma.TenderUncheckedUpdateInput;
+
+  if (existing.status === "ACTIVE") {
+    tenderUpdateData = {
+      ...baseTenderFields,
+      draftWizardStep: null,
+      draftDurationDays: null,
+    };
+  } else if (existing.status === "REVIEW") {
+    if (data.publish) {
+      tenderUpdateData = {
+        ...baseTenderFields,
+        status: "REVIEW",
+        startsAt: null,
+        endsAt: publishEndsAt,
+        draftWizardStep: null,
+        draftDurationDays: null,
+      };
+    } else {
+      tenderUpdateData = {
+        ...baseTenderFields,
+        status: "DRAFT",
+        startsAt: null,
+        endsAt: null,
+        draftWizardStep: draftWizardStep,
+        draftDurationDays: data.durationDays,
+      };
+    }
+  } else {
+    tenderUpdateData = {
+      ...baseTenderFields,
+      status: data.publish ? "REVIEW" : "DRAFT",
+      startsAt: null,
+      endsAt: data.publish ? publishEndsAt : null,
+      draftWizardStep: data.publish ? null : draftWizardStep,
+      draftDurationDays: data.publish ? null : data.durationDays,
+    };
+  }
 
   try {
     await prisma.$transaction(async (tx) => {
@@ -313,23 +395,7 @@ export async function PATCH(request: Request, { params }: Params) {
 
       await tx.tender.update({
         where: { id: tenderId },
-        data: {
-          title: normalized.title,
-          description: normalized.description,
-          category: primary.category,
-          service: primary.service,
-          city: resolvedCity,
-          locationId,
-          address: data.address || null,
-          budgetMin: data.budgetMin ? data.budgetMin : null,
-          budgetMax: data.budgetMax ? data.budgetMax : null,
-          isBlindBidding: data.isBlindBidding,
-          status: data.publish ? "REVIEW" : "DRAFT",
-          startsAt: null,
-          endsAt: data.publish ? endsAt : null,
-          draftWizardStep: data.publish ? null : draftWizardStep,
-          draftDurationDays: data.publish ? null : data.durationDays,
-        },
+        data: tenderUpdateData,
       });
     });
 

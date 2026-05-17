@@ -1,6 +1,7 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { z } from "zod";
+import { isAccountVerified } from "@/lib/account-verification";
 import { verifyPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
 
@@ -22,6 +23,8 @@ export const authOptions: NextAuthOptions = {
         token.name = user.name ?? undefined;
         token.picture = user.image ?? undefined;
         token.phone = user.phone ?? undefined;
+        token.accountVerified = user.accountVerified ?? false;
+        token.telegramVerified = user.telegramVerified ?? false;
       }
 
       if (trigger === "update" && session) {
@@ -42,13 +45,19 @@ export const authOptions: NextAuthOptions = {
         }
       }
 
-      if (token.sub && !token.role) {
+      if (token.sub && (!token.role || !token.accountVerified)) {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.sub },
-          select: { role: true },
+          select: {
+            role: true,
+            telegramVerifiedAt: true,
+            emailVerified: true,
+          },
         });
         if (dbUser) {
           token.role = dbUser.role;
+          token.telegramVerified = Boolean(dbUser.telegramVerifiedAt);
+          token.accountVerified = isAccountVerified(dbUser);
         }
       }
 
@@ -69,6 +78,8 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.name as string | null | undefined;
         session.user.image = token.picture as string | null | undefined;
         session.user.phone = token.phone as string | null | undefined;
+        session.user.telegramVerified = Boolean(token.telegramVerified);
+        session.user.accountVerified = Boolean(token.accountVerified);
       }
 
       return session;
@@ -106,6 +117,7 @@ export const authOptions: NextAuthOptions = {
             isBlocked: true,
             role: true,
             telegramVerifiedAt: true,
+            emailVerified: true,
           },
         });
 
@@ -121,10 +133,6 @@ export const authOptions: NextAuthOptions = {
           throw new Error("ACCOUNT_BLOCKED");
         }
 
-        if (!user.telegramVerifiedAt) {
-          throw new Error("TELEGRAM_NOT_VERIFIED");
-        }
-
         return {
           id: user.id,
           email: user.email,
@@ -132,6 +140,8 @@ export const authOptions: NextAuthOptions = {
           phone: user.phone ?? undefined,
           image: user.image ?? undefined,
           role: user.role,
+          telegramVerified: Boolean(user.telegramVerifiedAt),
+          accountVerified: isAccountVerified(user),
         };
       },
     }),

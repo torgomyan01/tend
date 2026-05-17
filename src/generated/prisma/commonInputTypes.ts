@@ -55,6 +55,20 @@ export type DateTimeNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
 }
 
+export type EnumVerificationChannelNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.VerificationChannel | Prisma.EnumVerificationChannelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.VerificationChannel[] | null
+  notIn?: $Enums.VerificationChannel[] | null
+  not?: Prisma.NestedEnumVerificationChannelNullableFilter<$PrismaModel> | $Enums.VerificationChannel | null
+}
+
+export type EnumNotificationChannelFilter<$PrismaModel = never> = {
+  equals?: $Enums.NotificationChannel | Prisma.EnumNotificationChannelFieldRefInput<$PrismaModel>
+  in?: $Enums.NotificationChannel[]
+  notIn?: $Enums.NotificationChannel[]
+  not?: Prisma.NestedEnumNotificationChannelFilter<$PrismaModel> | $Enums.NotificationChannel
+}
+
 export type EnumUserRoleFilter<$PrismaModel = never> = {
   equals?: $Enums.UserRole | Prisma.EnumUserRoleFieldRefInput<$PrismaModel>
   in?: $Enums.UserRole[]
@@ -156,6 +170,26 @@ export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
   _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
+}
+
+export type EnumVerificationChannelNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.VerificationChannel | Prisma.EnumVerificationChannelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.VerificationChannel[] | null
+  notIn?: $Enums.VerificationChannel[] | null
+  not?: Prisma.NestedEnumVerificationChannelNullableWithAggregatesFilter<$PrismaModel> | $Enums.VerificationChannel | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumVerificationChannelNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumVerificationChannelNullableFilter<$PrismaModel>
+}
+
+export type EnumNotificationChannelWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.NotificationChannel | Prisma.EnumNotificationChannelFieldRefInput<$PrismaModel>
+  in?: $Enums.NotificationChannel[]
+  notIn?: $Enums.NotificationChannel[]
+  not?: Prisma.NestedEnumNotificationChannelWithAggregatesFilter<$PrismaModel> | $Enums.NotificationChannel
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumNotificationChannelFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumNotificationChannelFilter<$PrismaModel>
 }
 
 export type EnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -501,6 +535,20 @@ export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
 }
 
+export type NestedEnumVerificationChannelNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.VerificationChannel | Prisma.EnumVerificationChannelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.VerificationChannel[] | null
+  notIn?: $Enums.VerificationChannel[] | null
+  not?: Prisma.NestedEnumVerificationChannelNullableFilter<$PrismaModel> | $Enums.VerificationChannel | null
+}
+
+export type NestedEnumNotificationChannelFilter<$PrismaModel = never> = {
+  equals?: $Enums.NotificationChannel | Prisma.EnumNotificationChannelFieldRefInput<$PrismaModel>
+  in?: $Enums.NotificationChannel[]
+  notIn?: $Enums.NotificationChannel[]
+  not?: Prisma.NestedEnumNotificationChannelFilter<$PrismaModel> | $Enums.NotificationChannel
+}
+
 export type NestedEnumUserRoleFilter<$PrismaModel = never> = {
   equals?: $Enums.UserRole | Prisma.EnumUserRoleFieldRefInput<$PrismaModel>
   in?: $Enums.UserRole[]
@@ -619,6 +667,26 @@ export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
   _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumVerificationChannelNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.VerificationChannel | Prisma.EnumVerificationChannelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.VerificationChannel[] | null
+  notIn?: $Enums.VerificationChannel[] | null
+  not?: Prisma.NestedEnumVerificationChannelNullableWithAggregatesFilter<$PrismaModel> | $Enums.VerificationChannel | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumVerificationChannelNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumVerificationChannelNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumNotificationChannelWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.NotificationChannel | Prisma.EnumNotificationChannelFieldRefInput<$PrismaModel>
+  in?: $Enums.NotificationChannel[]
+  notIn?: $Enums.NotificationChannel[]
+  not?: Prisma.NestedEnumNotificationChannelWithAggregatesFilter<$PrismaModel> | $Enums.NotificationChannel
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumNotificationChannelFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumNotificationChannelFilter<$PrismaModel>
 }
 
 export type NestedEnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {

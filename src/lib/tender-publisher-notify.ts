@@ -1,28 +1,19 @@
 import type { TenderStatus } from "@/generated/prisma/client";
-import { escapeTelegramHtml, trySendTelegramMessage } from "@/lib/telegram";
+import { absoluteAppUrl } from "@/lib/absolute-app-url";
+import { notifyUserById } from "@/lib/notifications/notify-user";
+import { ROUTES } from "@/lib/routes";
 import { TENDER_STATUS_LABEL } from "@/lib/tender-status";
-
-function tenderPublicUrl(tenderId: string) {
-  const base =
-    process.env.NEXTAUTH_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "");
-
-  if (!base) {
-    return "";
-  }
-
-  return `${base.replace(/\/$/, "")}/tenders/${tenderId}`;
-}
+import { escapeTelegramHtml } from "@/lib/telegram";
 
 export async function notifyTenderPublisherStatusChange(params: {
-  chatId: string | null | undefined;
+  userId: string;
   tenderTitle: string;
   tenderId: string;
   previousStatus: TenderStatus;
   nextStatus: TenderStatus;
   note?: string | null;
 }) {
-  if (!params.chatId || params.previousStatus === params.nextStatus) {
+  if (params.previousStatus === params.nextStatus) {
     return;
   }
 
@@ -40,41 +31,49 @@ export async function notifyTenderPublisherStatusChange(params: {
     text += `\n\n<i>Մոդերատորի նշում՝</i> ${escapeTelegramHtml(params.note.trim())}`;
   }
 
-  const url = tenderPublicUrl(params.tenderId);
+  const url = absoluteAppUrl(ROUTES.tenderDetail(params.tenderId));
   if (url) {
     text += `\n\n<a href="${escapeTelegramHtml(url)}">Բացել մրցույթը</a>`;
   }
 
-  await trySendTelegramMessage(params.chatId, text);
+  await notifyUserById(params.userId, {
+    telegramText: text,
+    emailSubject: `Մրցույթի կարգավիճակը փոխվեց՝ ${params.tenderTitle}`,
+    emailTitle: "Մրցույթի կարգավիճակ",
+    ctaLabel: "Բացել մրցույթը",
+    ctaUrl: url || undefined,
+  });
 }
 
 export async function notifyTenderPublisherAdminMessage(params: {
-  chatId: string | null | undefined;
+  userId: string;
   tenderTitle: string;
   body: string;
 }): Promise<boolean> {
-  if (!params.chatId) {
-    return false;
-  }
-
   const title = escapeTelegramHtml(params.tenderTitle);
   const body = escapeTelegramHtml(params.body);
 
   const text = `<b>Tend.am — մոդերացիա</b>\n<b>${title}</b>\n\n${body}`;
 
-  return trySendTelegramMessage(params.chatId, text);
+  await notifyUserById(params.userId, {
+    telegramText: text,
+    emailSubject: `Մոդերացիա՝ ${params.tenderTitle}`,
+    emailTitle: "Հաղորդագրություն մոդերատորից",
+  });
+
+  return true;
 }
 
 export async function notifyTenderPublisherDeleted(params: {
-  chatId: string | null | undefined;
+  userId: string;
   tenderTitle: string;
 }) {
-  if (!params.chatId) {
-    return;
-  }
-
   const title = escapeTelegramHtml(params.tenderTitle);
   const text = `<b>Tend.am</b>\nՁեր մրցույթը հեռացվել է հարթակից։\n\n<b>${title}</b>`;
 
-  await trySendTelegramMessage(params.chatId, text);
+  await notifyUserById(params.userId, {
+    telegramText: text,
+    emailSubject: `Մրցույթը հեռացվել է՝ ${params.tenderTitle}`,
+    emailTitle: "Մրցույթը հեռացվել է",
+  });
 }

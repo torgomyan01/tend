@@ -1921,6 +1921,10 @@ export const UserScalarFieldEnum = {
   name: 'name',
   email: 'email',
   emailVerified: 'emailVerified',
+  emailVerifyToken: 'emailVerifyToken',
+  emailVerifyTokenExpiresAt: 'emailVerifyTokenExpiresAt',
+  verificationChannel: 'verificationChannel',
+  notificationChannel: 'notificationChannel',
   phone: 'phone',
   passwordHash: 'passwordHash',
   image: 'image',
@@ -2269,6 +2273,7 @@ export const UserOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
+  emailVerifyToken: 'emailVerifyToken',
   phone: 'phone',
   passwordHash: 'passwordHash',
   image: 'image',
@@ -2526,6 +2531,20 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'VerificationChannel'
+ */
+export type EnumVerificationChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VerificationChannel'>
+    
+
+
+/**
+ * Reference to a field of type 'NotificationChannel'
+ */
+export type EnumNotificationChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationChannel'>
     
 
 

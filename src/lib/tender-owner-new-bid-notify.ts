@@ -1,20 +1,11 @@
 import { formatAmd } from "@/lib/format";
-import { escapeTelegramHtml, trySendTelegramMessage } from "@/lib/telegram";
-
-function tenderPublicUrl(tenderId: string) {
-  const base =
-    process.env.NEXTAUTH_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "");
-
-  if (!base) {
-    return "";
-  }
-
-  return `${base.replace(/\/$/, "")}/tenders/${tenderId}`;
-}
+import { notifyUserById } from "@/lib/notifications/notify-user";
+import { ROUTES } from "@/lib/routes";
+import { absoluteAppUrl } from "@/lib/absolute-app-url";
+import { escapeTelegramHtml } from "@/lib/telegram";
 
 export async function notifyTenderOwnerNewBid(params: {
-  chatId: string | null | undefined;
+  userId: string;
   tenderTitle: string;
   tenderId: string;
   providerDisplayName: string;
@@ -24,10 +15,6 @@ export async function notifyTenderOwnerNewBid(params: {
   timelineDays: number;
   coverLetter: string;
 }) {
-  if (!params.chatId) {
-    return;
-  }
-
   const title = escapeTelegramHtml(params.tenderTitle);
   const name = escapeTelegramHtml(params.providerDisplayName);
   const email = escapeTelegramHtml(params.providerEmail);
@@ -50,10 +37,17 @@ export async function notifyTenderOwnerNewBid(params: {
   text += `<b>Կատարման ժամկետ</b>՝ ${params.timelineDays} օր\n\n`;
   text += `<i>Ուղեկից նամակ</i>\n${excerpt}`;
 
-  const url = tenderPublicUrl(params.tenderId);
+  const tenderPath = ROUTES.tenderDetail(params.tenderId);
+  const url = absoluteAppUrl(tenderPath);
   if (url) {
     text += `\n\n<a href="${escapeTelegramHtml(url)}">Բացել մրցույթը</a>`;
   }
 
-  await trySendTelegramMessage(params.chatId, text);
+  await notifyUserById(params.userId, {
+    telegramText: text,
+    emailSubject: `Նոր առաջարկ՝ ${params.tenderTitle}`,
+    emailTitle: "Նոր առաջարկ ձեր մրցույթին",
+    ctaLabel: "Բացել մրցույթը",
+    ctaUrl: url || undefined,
+  });
 }

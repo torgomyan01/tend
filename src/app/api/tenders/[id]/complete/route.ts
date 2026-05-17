@@ -27,11 +27,11 @@ export async function POST(
       title: true,
       awardedAt: true,
       updatedAt: true,
-      client: { select: { telegramChatId: true } },
+      clientId: true,
       awardedBid: {
         select: {
           timelineDays: true,
-          provider: { select: { telegramChatId: true } },
+          providerId: true,
         },
       },
     },
@@ -75,13 +75,15 @@ export async function POST(
   });
 
   try {
-    await notifyPartiesTenderWorkCompleted({
-      tenderTitle: tender.title,
-      tenderId,
-      providerChatId: tender.awardedBid?.provider.telegramChatId,
-      clientChatId: tender.client.telegramChatId,
-      request,
-    });
+    if (tender.awardedBid?.providerId) {
+      await notifyPartiesTenderWorkCompleted({
+        tenderTitle: tender.title,
+        tenderId,
+        providerUserId: tender.awardedBid.providerId,
+        clientUserId: tender.clientId,
+        request,
+      });
+    }
   } catch {
     /* Telegram-ը չպետք է կասեցնի փակումը */
   }

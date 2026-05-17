@@ -117,6 +117,23 @@ export const ReviewModerationStatus = {
 export type ReviewModerationStatus = (typeof ReviewModerationStatus)[keyof typeof ReviewModerationStatus]
 
 
+export const VerificationChannel = {
+  TELEGRAM: 'TELEGRAM',
+  EMAIL: 'EMAIL'
+} as const
+
+export type VerificationChannel = (typeof VerificationChannel)[keyof typeof VerificationChannel]
+
+
+export const NotificationChannel = {
+  TELEGRAM: 'TELEGRAM',
+  EMAIL: 'EMAIL',
+  BOTH: 'BOTH'
+} as const
+
+export type NotificationChannel = (typeof NotificationChannel)[keyof typeof NotificationChannel]
+
+
 export const UserCredentialKind = {
   DIPLOMA: 'DIPLOMA',
   LICENSE: 'LICENSE',

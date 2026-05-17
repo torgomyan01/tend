@@ -7,6 +7,7 @@ import {
   type CreateTenderInitialDraft,
 } from "@/components/create-tender-form";
 import { SiteHeader } from "@/components/site-header";
+import { isAccountVerified } from "@/lib/account-verification";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getLocationPickerOptions } from "@/lib/locations-data";
@@ -45,6 +46,7 @@ export default async function CreateTenderPage({
       select: {
         id: true,
         telegramVerifiedAt: true,
+        emailVerified: true,
         isBlocked: true,
         name: true,
       },
@@ -121,7 +123,7 @@ export default async function CreateTenderPage({
     );
   }
 
-  if (!user.telegramVerifiedAt) {
+  if (!isAccountVerified(user)) {
     return (
       <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
         <SiteHeader />
@@ -130,13 +132,12 @@ export default async function CreateTenderPage({
             <span className="grid size-12 place-items-center rounded-2xl bg-amber-100 text-amber-800">
               <AlertTriangle className="size-6" />
             </span>
-            <h1 className="text-2xl font-black">Telegram վերիֆիկացիան անհրաժեշտ է</h1>
+            <h1 className="text-2xl font-black">Հաշվի հաստատումը անհրաժեշտ է</h1>
             <p className="text-sm font-semibold text-slate-600">
-              Մրցույթ տեղադրելու համար նախ ավարտեք Telegram վերիֆիկացիան՝ ձեզ ծանուցելու և
-              պաշտպանելու համար։
+              Մրցույթ տեղադրելու համար նախ հաստատեք հաշիվը Telegram-ով կամ էլ․ փոստով։
             </p>
             <Link
-              href={ROUTES.account}
+              href={ROUTES.accountVerify}
               className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-black text-white"
             >
               Անցնել հաշվի էջ

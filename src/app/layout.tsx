@@ -16,9 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tend.am | Private Tender Platform",
+  title: "Մրցույթ հայտարարել, առաջարկներ ստանալ, մասնագետ ընտրել | Tend.am",
   description:
-    "Tend.am-ը Հայաստանի private tender հարթակն է պատվիրատուների և մասնագետների համար։",
+    "Tend.am — մրցույթների (tender) հարթակ Հայաստանում․ պատվիրատուները հայտարարում են մրցույթ, մասնագետները ուղարկում են առաջարկներ, դուք ընտրում եք լավագույնը։ Ստեղծեք մրցույթ, համեմատեք գներ և աշխատեք վստահելի մասնագետների հետ։",
 };
 
 export default function RootLayout({

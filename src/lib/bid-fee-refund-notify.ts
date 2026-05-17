@@ -1,22 +1,15 @@
-import { escapeTelegramHtml, trySendTelegramMessage } from "@/lib/telegram";
 import { formatAmd } from "@/lib/format";
 import type { RefundedBidInfo } from "@/lib/bid-fee-refund";
-
-function tenderPublicUrl(tenderId: string): string {
-  const base =
-    process.env.NEXTAUTH_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "");
-  if (!base) return "";
-  return `${base.replace(/\/$/, "")}/tenders/${tenderId}`;
-}
+import { absoluteAppUrl } from "@/lib/absolute-app-url";
+import { notifyUserById } from "@/lib/notifications/notify-user";
+import { ROUTES } from "@/lib/routes";
+import { escapeTelegramHtml } from "@/lib/telegram";
 
 /** Ծանուցում մասնագետին՝ մուտքի վճարը վերադարձված է կրեդիտով։ */
 export async function notifyProviderBidFeeRefunded(
   info: RefundedBidInfo,
   reasonLabel: string,
 ): Promise<void> {
-  if (!info.providerChatId) return;
-
   const title = escapeTelegramHtml(info.tenderTitle);
   const reason = escapeTelegramHtml(reasonLabel);
   const amount = escapeTelegramHtml(formatAmd(info.amount));
@@ -27,12 +20,18 @@ export async function notifyProviderBidFeeRefunded(
   text += `Կրեդիտացված գումար՝ <b>${amount}</b>\n`;
   text += `Կրեդիտը հասանելի է ձեր դրամապանակում նոր մրցույթներին դիմելու համար։`;
 
-  const url = tenderPublicUrl(info.tenderId);
+  const url = absoluteAppUrl(ROUTES.tenderDetail(info.tenderId));
   if (url) {
     text += `\n\n<a href="${escapeTelegramHtml(url)}">Բացել մրցույթը</a>`;
   }
 
-  await trySendTelegramMessage(info.providerChatId, text);
+  await notifyUserById(info.providerId, {
+    telegramText: text,
+    emailSubject: `Մուտքի վճարի վերադարձ՝ ${info.tenderTitle}`,
+    emailTitle: "Վերադարձ կրեդիտով",
+    ctaLabel: "Բացել մրցույթը",
+    ctaUrl: url || undefined,
+  });
 }
 
 export const REFUND_REASON_LABELS = {

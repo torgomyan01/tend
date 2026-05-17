@@ -28,6 +28,7 @@ import {
   type ServiceSelection,
 } from "@/components/service-picker";
 import type { LocationPickerOption } from "@/lib/locations-data";
+import { formatDateTime } from "@/lib/format";
 import { ROUTES } from "@/lib/routes";
 import type { ServiceCategoryWithServices } from "@/lib/services-data";
 import { toastError, toastSuccess } from "@/lib/toast";
@@ -47,6 +48,9 @@ export type CreateTenderInitialDraft = {
   isBlindBidding: boolean;
   images: { id: string; url: string }[];
   documents: { id: string; url: string; originalFileName: string }[];
+  /** Խմբարկման էջ՝ սերվերից */
+  tenderStatus?: "DRAFT" | "REVIEW" | "ACTIVE";
+  endsAtIso?: string | null;
 };
 
 type WizardStep =
@@ -149,12 +153,15 @@ type CreateTenderFormProps = {
   categories: ServiceCategoryWithServices[];
   locationOptions: LocationPickerOption[];
   initialDraft?: CreateTenderInitialDraft | null;
+  /** `edit`՝ /tenders/[id]/edit, `create`՝ /tenders/new */
+  variant?: "create" | "edit";
 };
 
 export function CreateTenderForm({
   categories,
   locationOptions,
   initialDraft = null,
+  variant = "create",
 }: CreateTenderFormProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -183,6 +190,9 @@ export function CreateTenderForm({
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMode, setSubmitMode] = useState<"publish" | "draft" | null>(null);
+  const [liveTenderStatus, setLiveTenderStatus] = useState<
+    "DRAFT" | "REVIEW" | "ACTIVE"
+  >("DRAFT");
 
   useEffect(() => {
     if (!initialDraft || hydratedRef.current) {
@@ -190,6 +200,7 @@ export function CreateTenderForm({
     }
     hydratedRef.current = true;
     setDraftTenderId(initialDraft.id);
+    setLiveTenderStatus(initialDraft.tenderStatus ?? "DRAFT");
     setServices(initialDraft.services);
     setTitle(initialDraft.title);
     setDescription(initialDraft.description);
@@ -416,11 +427,15 @@ export function CreateTenderForm({
 
   type TenderPersistResponse = {
     id: string;
+    status?: string;
     images?: { id: string; url: string }[];
     documents?: { id: string; url: string; originalFileName: string }[];
   };
 
   const mergePersistedAttachments = useCallback((tender: TenderPersistResponse) => {
+    if (tender.status === "DRAFT" || tender.status === "REVIEW" || tender.status === "ACTIVE") {
+      setLiveTenderStatus(tender.status);
+    }
     const nextRemoteImgs =
       tender.images?.map((im) => ({ id: im.id, url: im.url })) ?? [];
     setRemoteImages(nextRemoteImgs);
@@ -532,6 +547,12 @@ export function CreateTenderForm({
   );
 
   const silentPersistDraft = useCallback(async () => {
+    if (
+      variant === "edit" &&
+      (liveTenderStatus === "REVIEW" || liveTenderStatus === "ACTIVE")
+    ) {
+      return;
+    }
     if (services.length < 1 || isSubmitting || persistLockRef.current) {
       return;
     }
@@ -558,7 +579,10 @@ export function CreateTenderForm({
         return;
       }
       mergePersistedAttachments(payload.tender);
-      const nextUrl = `${ROUTES.createTender}?draft=${encodeURIComponent(payload.tender.id)}`;
+      const nextUrl =
+        variant === "edit"
+          ? ROUTES.editTender(payload.tender.id)
+          : `${ROUTES.createTender}?draft=${encodeURIComponent(payload.tender.id)}`;
       window.history.replaceState(null, "", nextUrl);
     } finally {
       persistLockRef.current = false;
@@ -570,6 +594,8 @@ export function CreateTenderForm({
     persistTenderRequest,
     persistTenderCreateRequest,
     mergePersistedAttachments,
+    variant,
+    liveTenderStatus,
   ]);
 
   const silentPersistDraftRef = useRef(silentPersistDraft);
@@ -611,6 +637,8 @@ export function CreateTenderForm({
     isSubmitting,
     buildPersistFormData,
     persistTenderRequest,
+    variant,
+    liveTenderStatus,
   ]);
 
   function firstIncompletePublishStep(): WizardStep {
@@ -713,6 +741,32 @@ export function CreateTenderForm({
 
       if (mode === "draft") {
         mergePersistedAttachments(payload.tender);
+      } else if (variant === "edit" && liveTenderStatus === "ACTIVE") {
+        mergePersistedAttachments(payload.tender);
+      }
+
+      if (variant === "edit") {
+        if (mode === "draft") {
+          toastSuccess(
+            "Սևագիրը պահպանվեց",
+            "Փոփոխությունները պահպանված են որպես սևագիր։",
+          );
+          router.refresh();
+          return;
+        }
+        if (liveTenderStatus === "ACTIVE") {
+          toastSuccess("Պահպանվեց", "Գործող մրցույթի տվյալները թարմացվել են։");
+          router.push(ROUTES.tenderDetail(payload.tender.id));
+          router.refresh();
+          return;
+        }
+        toastSuccess(
+          "Մրցույթը թարմացվեց",
+          "Փոփոխությունները ուղարկվել են մոդերացիայի (կամ մնում են հերթում)։",
+        );
+        router.push(ROUTES.account);
+        router.refresh();
+        return;
       }
 
       toastSuccess(
@@ -887,6 +941,14 @@ export function CreateTenderForm({
                   onDurationChange={setDurationDays}
                   isBlindBidding={isBlindBidding}
                   onBlindBiddingChange={setIsBlindBidding}
+                  deadlineReadOnly={liveTenderStatus === "ACTIVE"}
+                  deadlineReadOnlyHint={
+                    liveTenderStatus === "ACTIVE"
+                      ? initialDraft?.endsAtIso
+                        ? `Գործող վերջնաժամկետ՝ ${formatDateTime(initialDraft.endsAtIso)}։ Ակտիվ մրցույթում ժամկետը չի փոխվում խմբագրմամբ։`
+                        : "Ակտիվ մրցույթում մրցույթի տևողությունը չի փոխվում խմբագրմամբ։"
+                      : null
+                  }
                 />
               ) : null}
 
@@ -935,21 +997,53 @@ export function CreateTenderForm({
                 Հաջորդ քայլ
                 <ArrowRight className="size-5 shrink-0 transition group-hover:translate-x-0.5" />
               </button>
-            ) : (
+            ) : liveTenderStatus === "ACTIVE" ? (
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:justify-end">
                 <button
                   type="button"
-                  onClick={() => handleSubmit("draft")}
-                  disabled={isSubmitting}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-slate-300 bg-white px-6 py-3 text-sm font-black text-slate-900 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 sm:text-base"
+                  onClick={() => handleSubmit("publish")}
+                  disabled={isSubmitting || !agreedToTerms}
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-amber-400 px-8 py-3 text-sm font-black text-slate-950 shadow-lg shadow-amber-500/30 transition hover:-translate-y-0.5 hover:bg-amber-300 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 sm:text-base"
                 >
-                  {isSubmitting && submitMode === "draft" ? (
+                  {isSubmitting && submitMode === "publish" ? (
                     <Loader2 className="size-5 animate-spin" />
                   ) : (
-                    <PenLine className="size-5 shrink-0" />
+                    <Check className="size-5 shrink-0" />
                   )}
-                  Պահպանել որպես սևագիր
+                  Պահպանել փոփոխությունները
                 </button>
+              </div>
+            ) : (
+              <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:justify-end">
+                {liveTenderStatus === "REVIEW" ? (
+                  <button
+                    type="button"
+                    onClick={() => handleSubmit("draft")}
+                    disabled={isSubmitting}
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-slate-300 bg-white px-6 py-3 text-sm font-black text-slate-900 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 sm:text-base"
+                  >
+                    {isSubmitting && submitMode === "draft" ? (
+                      <Loader2 className="size-5 animate-spin" />
+                    ) : (
+                      <PenLine className="size-5 shrink-0" />
+                    )}
+                    Հանել մոդերացիայից (սևագիր)
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleSubmit("draft")}
+                    disabled={isSubmitting}
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-slate-300 bg-white px-6 py-3 text-sm font-black text-slate-900 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 sm:text-base"
+                  >
+                    {isSubmitting && submitMode === "draft" ? (
+                      <Loader2 className="size-5 animate-spin" />
+                    ) : (
+                      <PenLine className="size-5 shrink-0" />
+                    )}
+                    Պահպանել որպես սևագիր
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => handleSubmit("publish")}
@@ -961,7 +1055,9 @@ export function CreateTenderForm({
                   ) : (
                     <Send className="size-5 shrink-0" />
                   )}
-                  Հրապարակել մրցույթը
+                  {liveTenderStatus === "REVIEW"
+                    ? "Վերաիմաստավորել մոդերացիային"
+                    : "Հրապարակել մրցույթը"}
                 </button>
               </div>
             )}
@@ -1034,8 +1130,8 @@ function mapErrorMessage(code: string): string {
   switch (code) {
     case "UNAUTHORIZED":
       return "Անհրաժեշտ է մուտք գործել։";
-    case "TELEGRAM_REQUIRED":
-      return "Մրցույթ տեղադրելու համար նախ ավարտեք Telegram վերիֆիկացիան։";
+    case "VERIFICATION_REQUIRED":
+      return "Մրցույթ տեղադրելու համար նախ հաստատեք հաշիվը (Telegram կամ էլ․ փոստ)։";
     case "BLOCKED":
       return "Հաշիվը արգելափակված է։";
     case "COMPANY_PROFILE_REQUIRED":
@@ -1061,7 +1157,9 @@ function mapErrorMessage(code: string): string {
     case "INVALID_LOCATION":
       return "Ընտրված բնակավայրը այլևս անվավեր է։ Թարմացրեք էջը և ընտրեք նորից։";
     case "NOT_FOUND_OR_NOT_EDITABLE":
-      return "Սևագիրը գտնվեց չվ կամ խմբարկման ենթակա չէ։ Թարմացրեք էջը։";
+      return "Մրցույթը չի գտնվել կամ խմբարկման ենթակա չէ (օր.՝ արդեն կան առաջարկներ)։ Թարմացրեք էջը։";
+    case "ACTIVE_TENDER_REQUIRES_PUBLISH_SAVE":
+      return "Ակտիվ մրցույթը պետք է պահպանվի «Պահպանել փոփոխությունները» կոճակով։";
     case "INVALID_IMAGE_REFERENCE":
       return "Նկարի հղումները չեն համընկնում՝ թարմացրեք էջը։";
     case "INVALID_DOCUMENT_REFERENCE":
@@ -1606,6 +1704,8 @@ function StepThree({
   onDurationChange,
   isBlindBidding,
   onBlindBiddingChange,
+  deadlineReadOnly = false,
+  deadlineReadOnlyHint = null,
 }: {
   slice: 5 | 6 | 7 | 8;
   budgetMin: string;
@@ -1622,6 +1722,8 @@ function StepThree({
   onDurationChange: (value: number) => void;
   isBlindBidding: boolean;
   onBlindBiddingChange: (value: boolean) => void;
+  deadlineReadOnly?: boolean;
+  deadlineReadOnlyHint?: string | null;
 }) {
   const meta = STEPS[slice - 1];
 
@@ -1707,56 +1809,67 @@ function StepThree({
 
       {slice === 8 ? (
         <>
-          <section className="space-y-4">
-            <div className="flex items-center gap-2">
-              <CalendarDays className="size-5 shrink-0 text-slate-500" />
-              <h3 className="text-xs font-black uppercase tracking-[0.16em] text-slate-500 sm:text-[0.78rem]">
-                Ստանդարտ ժամկետներ
-              </h3>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {DURATION_PRESETS.map((preset) => {
-                const isActive = preset.value === durationDays;
-                return (
-                  <button
-                    type="button"
-                    key={preset.value}
-                    onClick={() => onDurationChange(preset.value)}
-                    className={`rounded-full px-4 py-2 text-sm font-black transition sm:px-5 sm:py-2.5 sm:text-base ${
-                      isActive
-                        ? "bg-slate-950 text-white shadow-md"
-                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                    }`}
-                  >
-                    {preset.label}
-                  </button>
-                );
-              })}
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <label
-                htmlFor="custom-days"
-                className="text-xs font-black uppercase tracking-[0.12em] text-slate-500"
-              >
-                Կամ օրերի քանակ
-              </label>
-              <input
-                id="custom-days"
-                type="number"
-                min={1}
-                max={90}
-                value={durationDays}
-                onChange={(event) => {
-                  const next = Number(event.target.value);
-                  if (Number.isFinite(next)) {
-                    onDurationChange(Math.min(Math.max(next, 1), 90));
-                  }
-                }}
-                className="w-24 rounded-2xl border-2 border-slate-200 bg-white px-3 py-2.5 text-base font-black text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus-visible:border-slate-900 focus-visible:shadow-[0_0_0_4px_rgba(251,191,36,0.18)] sm:w-28 sm:px-4 sm:py-3"
-              />
-              <span className="text-sm font-bold text-slate-500 sm:text-base">օր (1–90)</span>
-            </div>
-          </section>
+          {deadlineReadOnly && deadlineReadOnlyHint != null && deadlineReadOnlyHint !== "" ? (
+            <section className="rounded-2xl border border-amber-200/80 bg-amber-50/90 p-5 sm:rounded-3xl sm:p-6">
+              <div className="flex items-start gap-3">
+                <CalendarDays className="mt-0.5 size-5 shrink-0 text-amber-700" />
+                <p className="text-sm font-semibold leading-relaxed text-amber-950 sm:text-base">
+                  {deadlineReadOnlyHint}
+                </p>
+              </div>
+            </section>
+          ) : (
+            <section className="space-y-4">
+              <div className="flex items-center gap-2">
+                <CalendarDays className="size-5 shrink-0 text-slate-500" />
+                <h3 className="text-xs font-black uppercase tracking-[0.16em] text-slate-500 sm:text-[0.78rem]">
+                  Ստանդարտ ժամկետներ
+                </h3>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {DURATION_PRESETS.map((preset) => {
+                  const isActive = preset.value === durationDays;
+                  return (
+                    <button
+                      type="button"
+                      key={preset.value}
+                      onClick={() => onDurationChange(preset.value)}
+                      className={`rounded-full px-4 py-2 text-sm font-black transition sm:px-5 sm:py-2.5 sm:text-base ${
+                        isActive
+                          ? "bg-slate-950 text-white shadow-md"
+                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      }`}
+                    >
+                      {preset.label}
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <label
+                  htmlFor="custom-days"
+                  className="text-xs font-black uppercase tracking-[0.12em] text-slate-500"
+                >
+                  Կամ օրերի քանակ
+                </label>
+                <input
+                  id="custom-days"
+                  type="number"
+                  min={1}
+                  max={90}
+                  value={durationDays}
+                  onChange={(event) => {
+                    const next = Number(event.target.value);
+                    if (Number.isFinite(next)) {
+                      onDurationChange(Math.min(Math.max(next, 1), 90));
+                    }
+                  }}
+                  className="w-24 rounded-2xl border-2 border-slate-200 bg-white px-3 py-2.5 text-base font-black text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus-visible:border-slate-900 focus-visible:shadow-[0_0_0_4px_rgba(251,191,36,0.18)] sm:w-28 sm:px-4 sm:py-3"
+                />
+                <span className="text-sm font-bold text-slate-500 sm:text-base">օր (1–90)</span>
+              </div>
+            </section>
+          )}
 
           <section className="rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-200 sm:rounded-3xl sm:p-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

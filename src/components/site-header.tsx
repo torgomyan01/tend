@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { AuthDropdown } from "@/components/auth-dropdown";
+import { TelegramConnectBanner } from "@/components/telegram-connect-banner";
 import { LanguageDropdown } from "@/components/language-dropdown";
 import { MobileMenu } from "@/components/mobile-menu";
 import { SiteNav } from "@/components/site-nav";
 import { WalletDropdown } from "@/components/wallet-dropdown";
 import { authOptions } from "@/lib/auth";
 import { ROUTES } from "@/lib/routes";
+import Image from "next/image";
 
 export async function SiteHeader() {
   const session = await getServerSession(authOptions);
@@ -19,15 +21,18 @@ export async function SiteHeader() {
     "Մուտք եղած եք";
 
   return (
+    <>
+    <TelegramConnectBanner />
     <header className="relative mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
       <Link
         href={ROUTES.home}
         className="flex items-center gap-3"
         aria-label="Tend.am"
       >
-        <span className="flex size-11 items-center justify-center rounded-2xl bg-slate-950 text-lg font-black text-white shadow-xl shadow-slate-950/20">
+        {/* <span className="flex size-11 items-center justify-center rounded-2xl bg-slate-950 text-lg font-black text-white shadow-xl shadow-slate-950/20">
           T
-        </span>
+        </span> */}
+        <Image src="/icons/logo.svg" alt="Tend.am" width={100} height={100} className="size-11" />
         <span className="text-xl font-black tracking-tight">Tend.am</span>
       </Link>
       <SiteNav />
@@ -55,5 +60,6 @@ export async function SiteHeader() {
         <MobileMenu isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
       </div>
     </header>
+    </>
   );
 }

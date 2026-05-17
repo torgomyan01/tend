@@ -37,7 +37,7 @@ export async function PATCH(
       status: true,
       tenderId: true,
       tender: { select: { title: true } },
-      reporter: { select: { telegramChatId: true } },
+      reporter: { select: { id: true } },
     },
   });
 
@@ -59,7 +59,7 @@ export async function PATCH(
   });
 
   await notifyTenderComplaintReporterDecision({
-    chatId: complaint.reporter.telegramChatId,
+    userId: complaint.reporter.id,
     tenderTitle: complaint.tender.title,
     tenderId: complaint.tenderId,
     decision: parsed.data.action,

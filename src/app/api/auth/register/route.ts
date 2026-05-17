@@ -1,4 +1,3 @@
-import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import {
@@ -6,8 +5,24 @@ import {
   LEGAL_FORM_VALUES,
 } from "@/lib/account-type";
 import { hashPassword } from "@/lib/password";
+import {
+  formatArmenianPhoneDisplay,
+  isValidArmenianPhone,
+  maskArmenianPhone,
+  phonesMatch,
+} from "@/lib/phone";
 import { prisma } from "@/lib/prisma";
+import { isAccountVerified } from "@/lib/account-verification";
+import { issueAndSendEmailVerification } from "@/lib/email/verify-email";
+import {
+  createTelegramLinkToken,
+  TELEGRAM_LINK_TTL_MS,
+} from "@/lib/telegram-link";
 import { getTelegramBotUrl } from "@/lib/telegram";
+import {
+  notificationChannelSchema,
+  verificationChannelSchema,
+} from "@/lib/verification-channels";
 
 const interestSchema = z.object({
   category: z.string().trim().min(1).max(160),
@@ -29,6 +44,8 @@ const registerSchema = z
     legalAddress: z.string().trim().max(500).optional().nullable(),
     directorName: z.string().trim().max(200).optional().nullable(),
     companyPhone: z.string().trim().max(32).optional().nullable(),
+    verificationChannel: verificationChannelSchema,
+    notificationChannel: notificationChannelSchema,
   })
   .superRefine((data, ctx) => {
     if (data.accountType !== "LEGAL_ENTITY") return;
@@ -50,10 +67,6 @@ const registerSchema = z
       }
     }
   });
-
-function createTelegramToken() {
-  return randomBytes(24).toString("hex");
-}
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -79,8 +92,20 @@ export async function POST(request: Request) {
     legalAddress,
     directorName,
     companyPhone,
+    verificationChannel,
+    notificationChannel,
   } = parsedBody.data;
   const normalizedEmail = email.toLowerCase();
+  if (!isValidArmenianPhone(phone)) {
+    return NextResponse.json(
+      {
+        error: "INVALID_PHONE",
+        issues: { phone: ["Օգտագործեք հայկական ձևաչափը՝ +374 77 123 456"] },
+      },
+      { status: 400 },
+    );
+  }
+  const normalizedPhone = formatArmenianPhoneDisplay(phone);
   const isLegal = accountType === "LEGAL_ENTITY";
   const legalFields = {
     accountType,
@@ -99,15 +124,22 @@ export async function POST(request: Request) {
       ]),
     ).values(),
   );
-  const telegramLinkToken = createTelegramToken();
-  const telegramLinkTokenExpiresAt = new Date(Date.now() + 30 * 60 * 1000);
+  const telegramLinkToken = createTelegramLinkToken();
+  const telegramLinkTokenExpiresAt = new Date(Date.now() + TELEGRAM_LINK_TTL_MS);
   const existingUser = await prisma.user.findFirst({
     where: {
-      OR: [{ email: normalizedEmail }, { phone }],
+      OR: [{ email: normalizedEmail }, { phone: normalizedPhone }],
+    },
+    select: {
+      id: true,
+      email: true,
+      phone: true,
+      telegramVerifiedAt: true,
+      emailVerified: true,
     },
   });
 
-  if (existingUser?.telegramVerifiedAt) {
+  if (existingUser && isAccountVerified(existingUser)) {
     return NextResponse.json(
       { error: "USER_ALREADY_EXISTS" },
       { status: 409 },
@@ -116,7 +148,8 @@ export async function POST(request: Request) {
 
   if (
     existingUser &&
-    (existingUser.email !== normalizedEmail || existingUser.phone !== phone)
+    (existingUser.email !== normalizedEmail ||
+      !(existingUser.phone && phonesMatch(existingUser.phone, normalizedPhone)))
   ) {
     return NextResponse.json(
       { error: "EMAIL_OR_PHONE_ALREADY_USED" },
@@ -124,31 +157,36 @@ export async function POST(request: Request) {
     );
   }
 
+  const sharedUserData = {
+    name,
+    phone: normalizedPhone,
+    email: normalizedEmail,
+    passwordHash: hashPassword(password),
+    verificationChannel,
+    notificationChannel,
+    emailVerified: null,
+    emailVerifyToken: null,
+    emailVerifyTokenExpiresAt: null,
+    telegramLinkToken:
+      verificationChannel === "TELEGRAM" ? telegramLinkToken : null,
+    telegramLinkTokenExpiresAt:
+      verificationChannel === "TELEGRAM"
+        ? telegramLinkTokenExpiresAt
+        : null,
+    telegramChatId: null,
+    telegramVerifiedAt: null,
+    ...legalFields,
+  };
+
   const user = existingUser
     ? await prisma.user.update({
         where: { id: existingUser.id },
-        data: {
-          name,
-          phone,
-          email: normalizedEmail,
-          passwordHash: hashPassword(password),
-          telegramLinkToken,
-          telegramLinkTokenExpiresAt,
-          ...legalFields,
-        },
-        select: { id: true },
+        data: sharedUserData,
+        select: { id: true, email: true },
       })
     : await prisma.user.create({
-        data: {
-          name,
-          phone,
-          email: normalizedEmail,
-          passwordHash: hashPassword(password),
-          telegramLinkToken,
-          telegramLinkTokenExpiresAt,
-          ...legalFields,
-        },
-        select: { id: true },
+        data: sharedUserData,
+        select: { id: true, email: true },
       });
 
   if (existingUser) {
@@ -165,9 +203,29 @@ export async function POST(request: Request) {
     });
   }
 
+  if (verificationChannel === "EMAIL") {
+    const emailResult = await issueAndSendEmailVerification(user.id);
+    if (!emailResult.ok) {
+      return NextResponse.json(
+        { error: emailResult.error === "SEND_FAILED" ? "EMAIL_SEND_FAILED" : emailResult.error },
+        { status: 500 },
+      );
+    }
+
+    return NextResponse.json({
+      userId: user.id,
+      verificationChannel: "EMAIL",
+      email: user.email,
+      emailSent: true,
+      phoneMasked: maskArmenianPhone(normalizedPhone),
+    });
+  }
+
   return NextResponse.json({
     userId: user.id,
+    verificationChannel: "TELEGRAM",
     telegramBotUrl: getTelegramBotUrl(telegramLinkToken),
     expiresAt: telegramLinkTokenExpiresAt.toISOString(),
+    phoneMasked: maskArmenianPhone(normalizedPhone),
   });
 }

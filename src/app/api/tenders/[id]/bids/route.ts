@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { computeBidFee } from "@/lib/bid-fee";
+import { isAccountVerified } from "@/lib/account-verification";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -86,6 +87,7 @@ export async function POST(
           walletBalance: true,
           isBlocked: true,
           telegramVerifiedAt: true,
+          emailVerified: true,
           name: true,
           email: true,
           phone: true,
@@ -110,9 +112,9 @@ export async function POST(
         });
       }
 
-      if (!provider.telegramVerifiedAt) {
-        throw Object.assign(new Error("TELEGRAM_REQUIRED"), {
-          code: "TELEGRAM_REQUIRED" as const,
+      if (!isAccountVerified(provider)) {
+        throw Object.assign(new Error("VERIFICATION_REQUIRED"), {
+          code: "VERIFICATION_REQUIRED" as const,
         });
       }
 
@@ -269,9 +271,9 @@ export async function POST(
     if (code === "USER_BLOCKED") {
       return NextResponse.json({ error: "USER_BLOCKED" }, { status: 403 });
     }
-    if (code === "TELEGRAM_REQUIRED") {
+    if (code === "VERIFICATION_REQUIRED") {
       return NextResponse.json(
-        { error: "TELEGRAM_REQUIRED" },
+        { error: "VERIFICATION_REQUIRED" },
         { status: 403 },
       );
     }

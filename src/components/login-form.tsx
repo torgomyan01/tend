@@ -2,7 +2,7 @@
 
 import { Loader2, LockKeyhole, Phone } from "lucide-react";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { PhoneInput } from "@/components/phone-input";
@@ -43,16 +43,21 @@ export function LoginForm() {
     setIsSubmitting(false);
 
     if (!result || result.error) {
-      if (result?.error === "TELEGRAM_NOT_VERIFIED") {
-        const msg =
-          "Ձեր հաշիվը դեռ Telegram-ով վերիֆիկացված չէ։ Խնդրում ենք ավարտել վերիֆիկացիան գրանցման էջից։";
-        setError(msg);
-        toastError("Մուտքը չհաջողվեց", msg);
-        return;
-      }
-
       setError("Սխալ հեռախոսահամար կամ գաղտնաբառ։");
       toastError("Մուտքը չհաջողվեց", "Սխալ հեռախոսահամար կամ գաղտնաբառ։");
+      return;
+    }
+
+    const session = await getSession();
+    if (session?.user && !session.user.accountVerified) {
+      toastSuccess(
+        "Մուտքը հաջողվեց",
+        "Ավարտեք հաշվի վերիֆիկացիան՝ հարթակը օգտագործելու համար։",
+      );
+      router.push(
+        `${ROUTES.accountVerify}?callbackUrl=${encodeURIComponent(callbackUrl)}`,
+      );
+      router.refresh();
       return;
     }
 

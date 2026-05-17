@@ -8,6 +8,8 @@ declare module "next-auth" {
       role: UserRole;
       /** Հեռախոս՝ մուտքի համար (նույն ֆորմատով, ինչ գրանցմանը)։ */
       phone?: string | null;
+      telegramVerified?: boolean;
+      accountVerified?: boolean;
     } & DefaultSession["user"];
   }
 
@@ -15,6 +17,8 @@ declare module "next-auth" {
     role?: UserRole;
     phone?: string | null;
     image?: string | null;
+    telegramVerified?: boolean;
+    accountVerified?: boolean;
   }
 }
 
@@ -22,5 +26,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     role?: UserRole;
     phone?: string | null;
+    telegramVerified?: boolean;
+    accountVerified?: boolean;
   }
 }

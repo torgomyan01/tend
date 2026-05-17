@@ -1,7 +1,7 @@
 import { tenderReviewUrlForNotify } from "@/lib/absolute-app-url";
+import { notifyUserById } from "@/lib/notifications/notify-user";
 import {
   escapeTelegramHtml,
-  trySendTelegramMessage,
   type TelegramSendOptions,
 } from "@/lib/telegram";
 
@@ -46,12 +46,12 @@ function buildCompletedNotifyMessage(params: {
   return lines.join("\n");
 }
 
-/** Մրցույթը COMPLETED — Telegram երկու կողմին։ */
+/** Մրցույթը COMPLETED — ծանուցում երկու կողմին (Telegram + Email)։ */
 export async function notifyPartiesTenderWorkCompleted(params: {
   tenderTitle: string;
   tenderId: string;
-  providerChatId: string | null | undefined;
-  clientChatId: string | null | undefined;
+  providerUserId: string;
+  clientUserId: string;
   /** Կանչող բրաուզերի հասցեն (localhost vs live դոմեն)՝ հղման համար։ */
   request?: Request | null;
 }) {
@@ -83,12 +83,22 @@ export async function notifyPartiesTenderWorkCompleted(params: {
     includeUrlInMessageBody: !useUrlButton,
   });
 
+  const payloadBase = {
+    emailSubject: `Աշխատանքն ավարտված է՝ ${params.tenderTitle}`,
+    emailTitle: "Մրցույթն ավարտված է",
+    ctaLabel: "Գնահատման էջ",
+    ctaUrl: urlRaw || undefined,
+    telegramOptions: msgOpts,
+  };
+
   await Promise.all([
-    params.providerChatId
-      ? trySendTelegramMessage(params.providerChatId, toProvider, msgOpts)
-      : Promise.resolve(false),
-    params.clientChatId
-      ? trySendTelegramMessage(params.clientChatId, toClient, msgOpts)
-      : Promise.resolve(false),
+    notifyUserById(params.providerUserId, {
+      ...payloadBase,
+      telegramText: toProvider,
+    }),
+    notifyUserById(params.clientUserId, {
+      ...payloadBase,
+      telegramText: toClient,
+    }),
   ]);
 }

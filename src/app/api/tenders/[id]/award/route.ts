@@ -94,7 +94,7 @@ export async function POST(
 
   try {
     await notifyProviderAwarded({
-      chatId: bid.provider.telegramChatId,
+      userId: bid.providerId,
       tenderTitle: tender.title,
       tenderId,
     });

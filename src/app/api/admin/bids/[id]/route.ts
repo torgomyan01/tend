@@ -46,7 +46,7 @@ export async function PATCH(
       coverLetter: true,
       provider: {
         select: {
-          telegramChatId: true,
+          id: true,
           name: true,
           email: true,
           phone: true,
@@ -56,7 +56,7 @@ export async function PATCH(
         select: {
           id: true,
           title: true,
-          client: { select: { telegramChatId: true } },
+          client: { select: { id: true } },
         },
       },
     },
@@ -97,7 +97,7 @@ export async function PATCH(
   if (isApprove) {
     try {
       await notifyTenderOwnerNewBid({
-        chatId: bid.tender.client.telegramChatId,
+        userId: bid.tender.client.id,
         tenderTitle: bid.tender.title,
         tenderId: bid.tender.id,
         providerDisplayName:
@@ -109,7 +109,7 @@ export async function PATCH(
         coverLetter: bid.coverLetter,
       });
       await notifyProviderBidModerationApproved({
-        chatId: bid.provider.telegramChatId,
+        userId: bid.provider.id,
         tenderTitle: bid.tender.title,
         tenderId: bid.tender.id,
       });

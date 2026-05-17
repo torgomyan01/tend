@@ -154,7 +154,7 @@ export async function PATCH(
     return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
   }
 
-  const chatId = tender.client.telegramChatId;
+  const publisherUserId = tender.clientId;
   const statusCtx = {
     status: tender.status,
     startsAt: tender.startsAt,
@@ -191,7 +191,7 @@ export async function PATCH(
     await notifyRefundedProviders(refunded, "TENDER_REJECTED");
 
     await notifyTenderPublisherStatusChange({
-      chatId,
+      userId: publisherUserId,
       tenderTitle: tender.title,
       tenderId: tender.id,
       previousStatus: prevStatus,
@@ -239,7 +239,7 @@ export async function PATCH(
     await notifyRefundedProviders(refunded, "TENDER_CANCELLED");
 
     await notifyTenderPublisherStatusChange({
-      chatId,
+      userId: publisherUserId,
       tenderTitle: tender.title,
       tenderId: tender.id,
       previousStatus: prevStatus,
@@ -346,7 +346,7 @@ export async function PATCH(
 
     if (statusChanged && payload.status !== undefined) {
       await notifyTenderPublisherStatusChange({
-        chatId,
+        userId: publisherUserId,
         tenderTitle:
           typeof data.title === "string" ? data.title : tender.title,
         tenderId: tender.id,
@@ -374,7 +374,7 @@ export async function PATCH(
 
   if (payload.action === "SEND_TELEGRAM") {
     const delivered = await notifyTenderPublisherAdminMessage({
-      chatId,
+      userId: publisherUserId,
       tenderTitle: tender.title,
       body: payload.message,
     });
@@ -392,11 +392,12 @@ export async function PATCH(
       data: { isBlocked: payload.blocked },
     });
 
-    if (chatId) {
+    const clientChatId = tender.client.telegramChatId;
+    if (clientChatId) {
       const text = payload.blocked
         ? `<b>Tend.am</b>\nՁեր հաշիվը արգելափակվել է մոդերատորի կողմից։`
         : `<b>Tend.am</b>\nՁեր հաշվի արգելափակումը հանված է։`;
-      await trySendTelegramMessage(chatId, text);
+      await trySendTelegramMessage(clientChatId, text);
     }
 
     return NextResponse.json({ ok: true });
@@ -422,7 +423,7 @@ export async function DELETE(
     select: {
       id: true,
       title: true,
-      client: { select: { telegramChatId: true } },
+      clientId: true,
     },
   });
 
@@ -448,7 +449,7 @@ export async function DELETE(
   await notifyRefundedProviders(refunded, "TENDER_DELETED");
 
   await notifyTenderPublisherDeleted({
-    chatId: tender.client.telegramChatId,
+    userId: tender.clientId,
     tenderTitle: tender.title,
   });
 
