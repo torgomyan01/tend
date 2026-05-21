@@ -188,48 +188,86 @@ export function RegisterForm({ categories }: RegisterFormProps) {
 
   return (
     <div className="space-y-6">
-      <div className="-mx-1 flex items-center gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:overflow-visible sm:px-0 sm:pb-0">
+      {/* Mobile: compact progress — no horizontal scroll */}
+      <div className="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200/80 md:hidden">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-amber-700">
+            Քայլ {currentStepIndex + 1} / {steps.length}
+          </p>
+          <p className="min-w-0 truncate text-right text-sm font-black text-slate-950">
+            {steps[currentStepIndex]?.label}
+          </p>
+        </div>
+        <div className="mt-3 grid grid-cols-4 gap-1.5">
+          {steps.map((stepItem, index) => {
+            const isActive = step === stepItem.value;
+            const isComplete = index < currentStepIndex;
+            return (
+              <div
+                key={stepItem.value}
+                className="flex min-w-0 flex-col items-center gap-2"
+              >
+                <div
+                  className={`h-1.5 w-full rounded-full transition-colors ${
+                    isComplete
+                      ? "bg-emerald-500"
+                      : isActive
+                        ? "bg-slate-950"
+                        : "bg-slate-200"
+                  }`}
+                  aria-hidden
+                />
+                <span
+                  className={`grid size-7 shrink-0 place-items-center rounded-full text-xs font-black transition-colors ${
+                    isActive
+                      ? "bg-slate-950 text-white shadow-md shadow-slate-950/20"
+                      : isComplete
+                        ? "bg-emerald-500 text-white"
+                        : "bg-white text-slate-400 ring-1 ring-slate-200"
+                  }`}
+                >
+                  {isComplete ? (
+                    <CheckCircle2 className="size-4" aria-hidden />
+                  ) : (
+                    index + 1
+                  )}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Desktop: full step labels */}
+      <div className="hidden items-center gap-2 md:flex">
         {steps.map((stepItem, index) => {
           const isActive = step === stepItem.value;
           const isComplete = index < currentStepIndex;
           return (
             <div
               key={stepItem.value}
-              className="flex flex-none items-center gap-2 sm:flex-1"
+              className="flex min-w-0 flex-1 items-center gap-2"
             >
               <span
-                className={`grid size-7 place-items-center rounded-full text-xs font-black ${
+                className={`grid size-7 shrink-0 place-items-center rounded-full text-xs font-black ${
                   isActive
                     ? "bg-slate-950 text-white"
                     : isComplete
-                    ? "bg-emerald-500 text-white"
-                    : "bg-slate-200 text-slate-500"
+                      ? "bg-emerald-500 text-white"
+                      : "bg-slate-200 text-slate-500"
                 }`}
               >
                 {isComplete ? <CheckCircle2 className="size-4" /> : index + 1}
               </span>
               <span
-                className={`hidden text-xs font-black uppercase tracking-[0.16em] sm:inline ${
+                className={`min-w-0 truncate text-xs font-black uppercase tracking-[0.16em] ${
                   isActive ? "text-slate-950" : "text-slate-400"
                 }`}
               >
                 {stepItem.label}
               </span>
-              <span
-                className={`text-[10px] font-black uppercase tracking-[0.16em] sm:hidden ${
-                  isActive ? "text-slate-950" : "text-slate-400"
-                }`}
-              >
-                {stepItem.value === "type"
-                  ? "Տիպ"
-                  : stepItem.value === "interests"
-                    ? "Ոլորտ"
-                    : stepItem.value === "info"
-                      ? "Տվյալներ"
-                      : "Հաստատում"}
-              </span>
               {index < steps.length - 1 ? (
-                <span className="ml-2 hidden h-px flex-1 bg-slate-200 sm:block" />
+                <span className="ml-2 h-px min-w-3 flex-1 bg-slate-200" />
               ) : null}
             </div>
           );
