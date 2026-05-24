@@ -68,8 +68,10 @@ export default function RootLayout({
       lang="hy"
       className={`${roboto.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full">
+      <head>
         <GoogleAnalytics />
+      </head>
+      <body className="min-h-full">
         <NextTopLoader
           color="#f59e0b"
           height={3}
