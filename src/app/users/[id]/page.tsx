@@ -1,24 +1,40 @@
 import {
+  ArrowLeft,
   Award,
-  BadgeCheck,
-  CalendarClock,
+  ExternalLink,
   FileText,
+  FolderOpen,
   Image as ImageIcon,
+  Quote,
   ShieldCheck,
   Sparkles,
-  Star,
+  UserRound,
 } from "lucide-react";
 import type { Metadata } from "next";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AccountTypeBadge } from "@/components/account-type-badge";
+import {
+  ProfileContactUnlockPanel,
+  type ProfileContactData,
+} from "@/components/profile-contact-unlock-panel";
+import { PublicProfileHero } from "@/components/public-profile/profile-hero";
+import { PublicProfileSectionHeader } from "@/components/public-profile/section-header";
+import {
+  PublicProfileReviews,
+  type PublicProfileReview,
+} from "@/components/public-profile-reviews";
 import { SiteHeader } from "@/components/site-header";
 import {
   type AccountTypeValue,
   isLegalEntity,
 } from "@/lib/account-type";
-import { initialsFromMasked, maskApplicantDisplayName } from "@/lib/bid-teaser";
-import { formatDateTime } from "@/lib/format";
+import { authOptions } from "@/lib/auth";
+import {
+  initialsFromMasked,
+  initialsFromName,
+  maskApplicantDisplayName,
+} from "@/lib/bid-teaser";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
 
@@ -59,6 +75,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PublicUserProfilePage({ params }: Props) {
   const { id } = await params;
+  const session = await getServerSession(authOptions);
+  const viewerId = session?.user?.id ?? null;
 
   const user = await prisma.user.findUnique({
     where: { id },
@@ -74,11 +92,16 @@ export default async function PublicUserProfilePage({ params }: Props) {
       accountType: true,
       companyName: true,
       legalForm: true,
+      phone: true,
+      email: true,
+      companyPhone: true,
       _count: {
         select: {
           tenders: true,
           bids: true,
-          reviewsReceived: { where: { moderationStatus: "APPROVED" } },
+          reviewsReceived: {
+            where: { moderationStatus: "APPROVED", isPlatformPenalty: false },
+          },
         },
       },
       credentials: {
@@ -89,6 +112,9 @@ export default async function PublicUserProfilePage({ params }: Props) {
           title: true,
           issuer: true,
           description: true,
+          fileUrl: true,
+          originalFileName: true,
+          mimeType: true,
           createdAt: true,
         },
       },
@@ -115,229 +141,311 @@ export default async function PublicUserProfilePage({ params }: Props) {
   const accountType = user.accountType as AccountTypeValue;
   const isLegal = isLegalEntity(accountType);
 
-  // Հանրային անունը — ընկերության դեպքում companyName, ֆիզիկական անձի դեպքում՝ MASK
-  const publicHeading = isLegal && user.companyName?.trim()
-    ? user.companyName.trim()
-    : maskApplicantDisplayName(user.name);
-  const subheading = isLegal && user.companyName?.trim()
-    ? maskApplicantDisplayName(user.name)
-    : null;
+  const isOwnProfile = viewerId === user.id;
+  let contactUnlocked = isOwnProfile;
+  let viewerBalance: number | null = null;
 
-  const initials = initialsFromMasked(maskApplicantDisplayName(user.name));
+  if (viewerId && !isOwnProfile) {
+    const [unlock, viewer] = await Promise.all([
+      prisma.profileContactUnlock.findUnique({
+        where: {
+          viewerId_profileUserId: {
+            viewerId,
+            profileUserId: user.id,
+          },
+        },
+        select: { id: true },
+      }),
+      prisma.user.findUnique({
+        where: { id: viewerId },
+        select: { walletBalance: true, isBlocked: true },
+      }),
+    ]);
+    contactUnlocked = Boolean(unlock);
+    if (viewer && !viewer.isBlocked) {
+      viewerBalance = Number(viewer.walletBalance);
+    }
+  }
 
-  const ratingAgg = await prisma.review.aggregate({
-    where: { revieweeId: user.id, moderationStatus: "APPROVED" },
-    _avg: { rating: true },
-  });
+  const maskedPersonName = maskApplicantDisplayName(user.name);
+  const fullPersonName = user.name?.trim() || maskedPersonName;
+  const showFullIdentity = contactUnlocked;
+
+  const publicHeading =
+    isLegal && user.companyName?.trim()
+      ? user.companyName.trim()
+      : showFullIdentity
+        ? fullPersonName
+        : maskedPersonName;
+  const subheading =
+    isLegal && user.companyName?.trim()
+      ? showFullIdentity
+        ? fullPersonName
+        : maskedPersonName
+      : null;
+
+  const initials = showFullIdentity
+    ? initialsFromName(user.name)
+    : initialsFromMasked(maskedPersonName);
+
+  const [ratingAgg, reviewRows] = await Promise.all([
+    prisma.review.aggregate({
+      where: {
+        revieweeId: user.id,
+        moderationStatus: "APPROVED",
+        isPlatformPenalty: false,
+      },
+      _avg: { rating: true },
+    }),
+    prisma.review.findMany({
+      where: {
+        revieweeId: user.id,
+        moderationStatus: "APPROVED",
+        isPlatformPenalty: false,
+      },
+      orderBy: { createdAt: "desc" },
+      take: 50,
+      select: {
+        id: true,
+        rating: true,
+        comment: true,
+        createdAt: true,
+        tender: { select: { id: true, title: true } },
+        reviewer: { select: { name: true } },
+      },
+    }),
+  ]);
+
   const avgRating = ratingAgg._avg.rating
     ? Number(ratingAgg._avg.rating)
     : null;
 
-  const memberSince = user.createdAt;
+  const publicReviews: PublicProfileReview[] = reviewRows.map((row) => ({
+    id: row.id,
+    rating: row.rating,
+    comment: row.comment,
+    createdAt: row.createdAt,
+    tender: row.tender,
+    reviewerName: row.reviewer.name,
+  }));
+
+  const contactForPanel: ProfileContactData | null = contactUnlocked
+    ? {
+        phone: user.phone,
+        email: user.email,
+        companyPhone: user.companyPhone,
+        isLegalEntity: isLegal,
+      }
+    : null;
+
+  const loginHref = `${ROUTES.login}?callbackUrl=${encodeURIComponent(ROUTES.userProfile(user.id))}`;
+
+  const hasBio = Boolean(user.bio?.trim());
+  const hasCredentials = user.credentials.length > 0;
+  const hasPortfolio = user.portfolioItems.length > 0;
+  const hasReviews = publicReviews.length > 0;
 
   return (
-    <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
+    <div className="min-h-screen bg-[#f4f1ea] text-slate-950">
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 opacity-40"
+        aria-hidden
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 20% 10%, rgba(251,191,36,0.15), transparent 40%), radial-gradient(circle at 80% 0%, rgba(15,23,42,0.06), transparent 35%)",
+        }}
+      />
+
       <SiteHeader />
 
-      <main className="mx-auto w-full max-w-5xl px-4 pb-14 pt-4 sm:px-6 sm:pb-20 sm:pt-6 lg:px-8">
+      <main className="mx-auto w-full max-w-6xl px-4 pb-16 pt-4 sm:px-6 sm:pb-24 sm:pt-6 lg:px-8">
         <Link
           href={ROUTES.tenders}
-          className="inline-flex items-center gap-2 text-sm font-black text-slate-600 transition hover:text-slate-950"
+          className="group inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-black text-slate-600 shadow-sm ring-1 ring-slate-200/80 backdrop-blur-sm transition hover:bg-white hover:text-slate-950"
         >
-          ← Բոլոր մրցույթները
+          <ArrowLeft className="size-4 transition group-hover:-translate-x-0.5" />
+          Բոլոր մրցույթները
         </Link>
 
-        <section className="mt-4 overflow-hidden rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:rounded-4xl sm:p-8">
-          <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center">
-            <div className="relative size-24 shrink-0 overflow-hidden rounded-3xl bg-slate-100 ring-1 ring-slate-200 sm:size-28">
-              {user.image ? (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
-                  src={user.image}
-                  alt=""
-                  className="size-full object-cover"
+        <div className="mt-5 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(280px,340px)] lg:items-start lg:gap-8">
+          <div className="min-w-0 space-y-6">
+            <PublicProfileHero
+              accountType={accountType}
+              publicHeading={publicHeading}
+              subheading={subheading}
+              initials={initials}
+              image={user.image}
+              isVerified={user.isVerified}
+              telegramVerifiedAt={user.telegramVerifiedAt}
+              memberSince={user.createdAt}
+              avgRating={avgRating}
+              reviewCount={user._count.reviewsReceived}
+              tenderCount={user._count.tenders}
+              bidCount={user._count.bids}
+            />
+
+            {hasBio ? (
+              <section className="rounded-4xl bg-white p-6 shadow-sm ring-1 ring-slate-200/80 sm:p-8">
+                <PublicProfileSectionHeader icon={UserRound} title="Իմ մասին" />
+                <div className="relative mt-5">
+                  <Quote
+                    className="absolute -left-1 -top-2 size-8 text-amber-200/80"
+                    aria-hidden
+                  />
+                  <p className="relative whitespace-pre-line pl-6 text-sm font-semibold leading-8 text-slate-700 sm:text-[15px]">
+                    {user.bio!.trim()}
+                  </p>
+                </div>
+              </section>
+            ) : null}
+
+            {hasCredentials ? (
+              <section className="rounded-4xl bg-white p-6 shadow-sm ring-1 ring-slate-200/80 sm:p-8">
+                <PublicProfileSectionHeader
+                  icon={FileText}
+                  title="Փաստաթղթեր և հավաստագրեր"
+                  count={user.credentials.length}
                 />
-              ) : (
-                <span className="flex size-full items-center justify-center text-3xl font-black text-slate-500">
-                  {initials}
-                </span>
-              )}
-            </div>
+                <ul className="mt-5 grid gap-4 sm:grid-cols-2">
+                  {user.credentials.map((credential) => {
+                    const Icon = KIND_ICON[credential.kind] ?? FileText;
+                    const isImage = credential.mimeType?.startsWith("image/");
+                    return (
+                      <li
+                        key={credential.id}
+                        className="group flex flex-col overflow-hidden rounded-3xl bg-slate-50/80 ring-1 ring-slate-200/80 transition hover:shadow-md hover:ring-amber-200/60"
+                      >
+                        {isImage && credential.fileUrl ? (
+                          <div className="relative aspect-[16/9] overflow-hidden bg-slate-200">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={credential.fileUrl}
+                              alt=""
+                              className="size-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                            />
+                            <div className="absolute inset-0 bg-linear-to-t from-slate-950/50 to-transparent" />
+                            <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-slate-700 backdrop-blur-sm">
+                              <Icon className="size-3 text-amber-700" />
+                              {KIND_LABEL[credential.kind] ?? "Փաստաթուղթ"}
+                            </span>
+                          </div>
+                        ) : null}
 
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <AccountTypeBadge accountType={accountType} size="md" />
-                {user.isVerified ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-black text-emerald-800 ring-1 ring-emerald-200">
-                    <BadgeCheck className="size-3.5" />
-                    Հաստատված
-                  </span>
-                ) : null}
-                {user.telegramVerifiedAt ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-sky-100 px-3 py-1 text-xs font-black text-sky-800 ring-1 ring-sky-200">
-                    <ShieldCheck className="size-3.5" />
-                    Telegram
-                  </span>
-                ) : null}
-              </div>
+                        <div className="flex flex-1 flex-col p-4">
+                          {!isImage ? (
+                            <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 ring-1 ring-slate-200">
+                              <Icon className="size-3 text-amber-700" />
+                              {KIND_LABEL[credential.kind] ?? "Փաստաթուղթ"}
+                            </span>
+                          ) : null}
+                          <p className="mt-2 text-base font-black text-slate-900">
+                            {credential.title}
+                          </p>
+                          {credential.issuer ? (
+                            <p className="mt-0.5 text-xs font-bold text-slate-500">
+                              {credential.issuer}
+                            </p>
+                          ) : null}
+                          {credential.description ? (
+                            <p className="mt-2 line-clamp-3 text-xs font-semibold leading-6 text-slate-600">
+                              {credential.description}
+                            </p>
+                          ) : null}
+                          {credential.fileUrl ? (
+                            <a
+                              href={credential.fileUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="mt-auto inline-flex items-center gap-1.5 pt-3 text-xs font-black text-amber-800 transition hover:text-amber-950 hover:underline"
+                            >
+                              <ExternalLink className="size-3.5 shrink-0" />
+                              {credential.originalFileName || "Դիտել ֆայլը"}
+                            </a>
+                          ) : null}
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            ) : null}
 
-              <h1 className="mt-3 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
-                {publicHeading}
-              </h1>
-              {subheading ? (
-                <p className="mt-1 text-sm font-bold text-slate-500">
-                  Կոնտակտային անձ՝ {subheading}
+            {hasPortfolio ? (
+              <section className="rounded-4xl bg-white p-6 shadow-sm ring-1 ring-slate-200/80 sm:p-8">
+                <PublicProfileSectionHeader
+                  icon={FolderOpen}
+                  title="Պորտֆոլիո"
+                  count={user.portfolioItems.length}
+                />
+                <ul className="mt-5 grid gap-5 sm:grid-cols-2">
+                  {user.portfolioItems.map((item) => (
+                    <li
+                      key={item.id}
+                      className="group overflow-hidden rounded-3xl bg-slate-50/80 ring-1 ring-slate-200/80 transition hover:shadow-lg hover:ring-amber-200/50"
+                    >
+                      <div className="relative overflow-hidden">
+                        {item.images.length > 0 ? (
+                          <div className="grid grid-cols-2 gap-0.5">
+                            {item.images.slice(0, 4).map((img) => (
+                              /* eslint-disable-next-line @next/next/no-img-element */
+                              <img
+                                key={img.id}
+                                src={img.url}
+                                alt=""
+                                className="aspect-square w-full object-cover first:col-span-2 first:aspect-[2/1]"
+                              />
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="flex aspect-[16/10] items-center justify-center bg-linear-to-br from-slate-100 to-slate-50 text-slate-300">
+                            <ImageIcon className="size-10" />
+                          </div>
+                        )}
+                        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-slate-950/30 via-transparent to-transparent opacity-0 transition group-hover:opacity-100" />
+                      </div>
+                      <div className="space-y-1.5 p-4 sm:p-5">
+                        <p className="text-base font-black text-slate-900">
+                          {item.title}
+                        </p>
+                        {item.description ? (
+                          <p className="line-clamp-2 text-xs font-semibold leading-6 text-slate-600">
+                            {item.description}
+                          </p>
+                        ) : null}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
+            {hasReviews ? (
+              <PublicProfileReviews reviews={publicReviews} />
+            ) : null}
+
+            {!hasBio && !hasCredentials && !hasPortfolio && !hasReviews ? (
+              <section className="rounded-4xl border border-dashed border-slate-300 bg-white/60 p-10 text-center">
+                <p className="text-sm font-semibold text-slate-500">
+                  Այս պրոֆիլում դեռ լրացուցիչ տեղեկություն չկա։
                 </p>
-              ) : null}
-
-              <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-semibold text-slate-500">
-                <span className="inline-flex items-center gap-1.5">
-                  <CalendarClock className="size-3.5 shrink-0 text-slate-400" />
-                  Միացել է՝ {formatDateTime(memberSince)}
-                </span>
-                {avgRating !== null ? (
-                  <span className="inline-flex items-center gap-1.5 text-amber-700">
-                    <Star className="size-3.5 fill-amber-400" />
-                    {avgRating.toFixed(1)} ({user._count.reviewsReceived})
-                  </span>
-                ) : null}
-              </div>
-            </div>
+              </section>
+            ) : null}
           </div>
 
-          <div className="mt-6 grid grid-cols-3 gap-3 border-t border-slate-100 pt-5 text-center">
-            <Stat label="Մրցույթներ" value={user._count.tenders} />
-            <Stat label="Առաջարկներ" value={user._count.bids} />
-            <Stat label="Կարծիքներ" value={user._count.reviewsReceived} />
-          </div>
-        </section>
-
-        {user.bio?.trim() ? (
-          <section className="mt-6 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:rounded-4xl sm:p-8">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-700">
-              Իմ մասին
-            </p>
-            <p className="mt-3 whitespace-pre-line text-sm font-semibold leading-7 text-slate-700">
-              {user.bio.trim()}
-            </p>
-          </section>
-        ) : null}
-
-        {user.credentials.length > 0 ? (
-          <section className="mt-6 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:rounded-4xl sm:p-8">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-700">
-                Փաստաթղթեր և հավաստագրեր
-              </p>
-              <span className="text-xs font-bold text-slate-400">
-                {user.credentials.length}
-              </span>
-            </div>
-
-            <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-              {user.credentials.map((credential) => {
-                const Icon = KIND_ICON[credential.kind] ?? FileText;
-                return (
-                  <li
-                    key={credential.id}
-                    className="rounded-3xl bg-slate-50 p-4 ring-1 ring-slate-200"
-                  >
-                    <div className="flex items-start gap-3">
-                      <span className="grid size-10 shrink-0 place-items-center rounded-2xl bg-white text-amber-700 ring-1 ring-slate-200">
-                        <Icon className="size-5" />
-                      </span>
-                      <div className="min-w-0">
-                        <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">
-                          {KIND_LABEL[credential.kind] ?? "Փաստաթուղթ"}
-                        </p>
-                        <p className="mt-1 truncate text-sm font-black text-slate-900">
-                          {credential.title}
-                        </p>
-                        {credential.issuer ? (
-                          <p className="text-xs font-bold text-slate-500">
-                            {credential.issuer}
-                          </p>
-                        ) : null}
-                        {credential.description ? (
-                          <p className="mt-2 text-xs font-semibold leading-6 text-slate-600">
-                            {credential.description}
-                          </p>
-                        ) : null}
-                      </div>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-            <p className="mt-3 text-[11px] font-semibold text-slate-400">
-              Ֆայլերը տեսանելի են միայն հաստատված համագործակցության ժամանակ։
-            </p>
-          </section>
-        ) : null}
-
-        {user.portfolioItems.length > 0 ? (
-          <section className="mt-6 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:rounded-4xl sm:p-8">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-700">
-                Պորտֆոլիո
-              </p>
-              <span className="text-xs font-bold text-slate-400">
-                {user.portfolioItems.length}
-              </span>
-            </div>
-
-            <ul className="mt-4 grid gap-5 sm:grid-cols-2">
-              {user.portfolioItems.map((item) => (
-                <li
-                  key={item.id}
-                  className="overflow-hidden rounded-3xl bg-slate-50 ring-1 ring-slate-200"
-                >
-                  <div className="grid grid-cols-2 gap-1 p-1">
-                    {item.images.slice(0, 4).map((img) => (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img
-                        key={img.id}
-                        src={img.url}
-                        alt=""
-                        className="aspect-square w-full rounded-2xl object-cover"
-                      />
-                    ))}
-                    {item.images.length === 0 ? (
-                      <div className="col-span-2 flex aspect-video items-center justify-center rounded-2xl bg-white text-slate-400">
-                        <ImageIcon className="size-8" />
-                      </div>
-                    ) : null}
-                  </div>
-                  <div className="space-y-1 px-4 pb-4">
-                    <p className="text-base font-black text-slate-900">
-                      {item.title}
-                    </p>
-                    {item.description ? (
-                      <p className="line-clamp-3 text-xs font-semibold leading-6 text-slate-600">
-                        {item.description}
-                      </p>
-                    ) : null}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-
+          <aside className="mt-6 lg:sticky lg:top-24 lg:mt-5 lg:self-start">
+            <ProfileContactUnlockPanel
+              profileUserId={user.id}
+              loginHref={loginHref}
+              initialUnlocked={contactUnlocked}
+              initialAuthenticated={Boolean(viewerId)}
+              isOwnProfile={isOwnProfile}
+              contact={contactForPanel}
+              initialBalance={viewerBalance}
+              variant="sidebar"
+            />
+          </aside>
+        </div>
       </main>
-    </div>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: number | bigint }) {
-  return (
-    <div className="rounded-2xl bg-slate-50 px-3 py-3 ring-1 ring-slate-200">
-      <p className="text-lg font-black tabular-nums text-slate-900">
-        {Number(value)}
-      </p>
-      <p className="mt-0.5 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">
-        {label}
-      </p>
     </div>
   );
 }

@@ -32,6 +32,8 @@ enum TransactionType {
   SUBSCRIPTION
   REFUND
   ADJUSTMENT
+  /** Հանրային պրոֆիլի կոնտակտներ բացելու վճար */
+  PROFILE_CONTACT_UNLOCK
 }
 
 enum TransactionStatus {
@@ -156,6 +158,8 @@ model User {
   notifications     UserNotification[]
   supportConversation SupportConversation?
   supportMessagesSent SupportMessage[] @relation("SupportMessagesSent")
+  profileContactUnlocksMade     ProfileContactUnlock[] @relation("ProfileContactUnlockViewer")
+  profileContactUnlocksReceived ProfileContactUnlock[] @relation("ProfileContactUnlockTarget")
 
   @@index([email])
   @@index([phone])
@@ -188,6 +192,21 @@ model UserCredential {
 
   @@index([userId, sortOrder])
   @@map("usercredential")
+}
+
+/** Վճարով բացված կոնտակտային տվյալներ՝ հանրային պրոֆիլից */
+model ProfileContactUnlock {
+  id            String   @id @default(cuid())
+  viewerId      String   @map("viewer_id")
+  profileUserId String   @map("profile_user_id")
+  amount        Decimal  @db.Decimal(12, 2)
+  createdAt     DateTime @default(now())
+  viewer        User     @relation("ProfileContactUnlockViewer", fields: [viewerId], references: [id], onDelete: Cascade)
+  profileUser   User     @relation("ProfileContactUnlockTarget", fields: [profileUserId], references: [id], onDelete: Cascade)
+
+  @@unique([viewerId, profileUserId])
+  @@index([profileUserId])
+  @@map("profilecontactunlock")
 }
 
 model UserPortfolioItem {

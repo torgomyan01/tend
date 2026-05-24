@@ -441,6 +441,8 @@ export type UserWhereInput = {
   notifications?: Prisma.UserNotificationListRelationFilter
   supportConversation?: Prisma.XOR<Prisma.SupportConversationNullableScalarRelationFilter, Prisma.SupportConversationWhereInput> | null
   supportMessagesSent?: Prisma.SupportMessageListRelationFilter
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockListRelationFilter
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -492,6 +494,8 @@ export type UserOrderByWithRelationInput = {
   notifications?: Prisma.UserNotificationOrderByRelationAggregateInput
   supportConversation?: Prisma.SupportConversationOrderByWithRelationInput
   supportMessagesSent?: Prisma.SupportMessageOrderByRelationAggregateInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockOrderByRelationAggregateInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -547,6 +551,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   notifications?: Prisma.UserNotificationListRelationFilter
   supportConversation?: Prisma.XOR<Prisma.SupportConversationNullableScalarRelationFilter, Prisma.SupportConversationWhereInput> | null
   supportMessagesSent?: Prisma.SupportMessageListRelationFilter
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockListRelationFilter
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockListRelationFilter
 }, "id" | "email" | "emailVerifyToken" | "phone" | "telegramChatId" | "telegramLinkToken" | "passwordResetToken">
 
 export type UserOrderByWithAggregationInput = {
@@ -674,6 +680,8 @@ export type UserCreateInput = {
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -725,6 +733,8 @@ export type UserUncheckedCreateInput = {
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUpdateInput = {
@@ -776,6 +786,8 @@ export type UserUpdateInput = {
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -827,6 +839,8 @@ export type UserUncheckedUpdateInput = {
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1119,6 +1133,34 @@ export type UserUpdateOneRequiredWithoutCredentialsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCredentialsInput, Prisma.UserUpdateWithoutCredentialsInput>, Prisma.UserUncheckedUpdateWithoutCredentialsInput>
 }
 
+export type UserCreateNestedOneWithoutProfileContactUnlocksMadeInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProfileContactUnlocksMadeInput, Prisma.UserUncheckedCreateWithoutProfileContactUnlocksMadeInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProfileContactUnlocksMadeInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutProfileContactUnlocksReceivedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProfileContactUnlocksReceivedInput, Prisma.UserUncheckedCreateWithoutProfileContactUnlocksReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProfileContactUnlocksReceivedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutProfileContactUnlocksMadeNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProfileContactUnlocksMadeInput, Prisma.UserUncheckedCreateWithoutProfileContactUnlocksMadeInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProfileContactUnlocksMadeInput
+  upsert?: Prisma.UserUpsertWithoutProfileContactUnlocksMadeInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProfileContactUnlocksMadeInput, Prisma.UserUpdateWithoutProfileContactUnlocksMadeInput>, Prisma.UserUncheckedUpdateWithoutProfileContactUnlocksMadeInput>
+}
+
+export type UserUpdateOneRequiredWithoutProfileContactUnlocksReceivedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProfileContactUnlocksReceivedInput, Prisma.UserUncheckedCreateWithoutProfileContactUnlocksReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProfileContactUnlocksReceivedInput
+  upsert?: Prisma.UserUpsertWithoutProfileContactUnlocksReceivedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProfileContactUnlocksReceivedInput, Prisma.UserUpdateWithoutProfileContactUnlocksReceivedInput>, Prisma.UserUncheckedUpdateWithoutProfileContactUnlocksReceivedInput>
+}
+
 export type UserCreateNestedOneWithoutPortfolioItemsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutPortfolioItemsInput, Prisma.UserUncheckedCreateWithoutPortfolioItemsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutPortfolioItemsInput
@@ -1393,6 +1435,8 @@ export type UserCreateWithoutCredentialsInput = {
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutCredentialsInput = {
@@ -1443,6 +1487,8 @@ export type UserUncheckedCreateWithoutCredentialsInput = {
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutCredentialsInput = {
@@ -1509,6 +1555,8 @@ export type UserUpdateWithoutCredentialsInput = {
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCredentialsInput = {
@@ -1559,6 +1607,456 @@ export type UserUncheckedUpdateWithoutCredentialsInput = {
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
+}
+
+export type UserCreateWithoutProfileContactUnlocksMadeInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
+}
+
+export type UserUncheckedCreateWithoutProfileContactUnlocksMadeInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderUncheckedCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
+}
+
+export type UserCreateOrConnectWithoutProfileContactUnlocksMadeInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProfileContactUnlocksMadeInput, Prisma.UserUncheckedCreateWithoutProfileContactUnlocksMadeInput>
+}
+
+export type UserCreateWithoutProfileContactUnlocksReceivedInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+}
+
+export type UserUncheckedCreateWithoutProfileContactUnlocksReceivedInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderUncheckedCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+}
+
+export type UserCreateOrConnectWithoutProfileContactUnlocksReceivedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProfileContactUnlocksReceivedInput, Prisma.UserUncheckedCreateWithoutProfileContactUnlocksReceivedInput>
+}
+
+export type UserUpsertWithoutProfileContactUnlocksMadeInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProfileContactUnlocksMadeInput, Prisma.UserUncheckedUpdateWithoutProfileContactUnlocksMadeInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProfileContactUnlocksMadeInput, Prisma.UserUncheckedCreateWithoutProfileContactUnlocksMadeInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProfileContactUnlocksMadeInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProfileContactUnlocksMadeInput, Prisma.UserUncheckedUpdateWithoutProfileContactUnlocksMadeInput>
+}
+
+export type UserUpdateWithoutProfileContactUnlocksMadeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProfileContactUnlocksMadeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUncheckedUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
+}
+
+export type UserUpsertWithoutProfileContactUnlocksReceivedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProfileContactUnlocksReceivedInput, Prisma.UserUncheckedUpdateWithoutProfileContactUnlocksReceivedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProfileContactUnlocksReceivedInput, Prisma.UserUncheckedCreateWithoutProfileContactUnlocksReceivedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProfileContactUnlocksReceivedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProfileContactUnlocksReceivedInput, Prisma.UserUncheckedUpdateWithoutProfileContactUnlocksReceivedInput>
+}
+
+export type UserUpdateWithoutProfileContactUnlocksReceivedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProfileContactUnlocksReceivedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUncheckedUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
 }
 
 export type UserCreateWithoutPortfolioItemsInput = {
@@ -1609,6 +2107,8 @@ export type UserCreateWithoutPortfolioItemsInput = {
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutPortfolioItemsInput = {
@@ -1659,6 +2159,8 @@ export type UserUncheckedCreateWithoutPortfolioItemsInput = {
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutPortfolioItemsInput = {
@@ -1725,6 +2227,8 @@ export type UserUpdateWithoutPortfolioItemsInput = {
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPortfolioItemsInput = {
@@ -1775,6 +2279,8 @@ export type UserUncheckedUpdateWithoutPortfolioItemsInput = {
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserCreateWithoutInterestsInput = {
@@ -1825,6 +2331,8 @@ export type UserCreateWithoutInterestsInput = {
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutInterestsInput = {
@@ -1875,6 +2383,8 @@ export type UserUncheckedCreateWithoutInterestsInput = {
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutInterestsInput = {
@@ -1941,6 +2451,8 @@ export type UserUpdateWithoutInterestsInput = {
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInterestsInput = {
@@ -1991,6 +2503,8 @@ export type UserUncheckedUpdateWithoutInterestsInput = {
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserCreateWithoutVerificationRequestsInput = {
@@ -2041,6 +2555,8 @@ export type UserCreateWithoutVerificationRequestsInput = {
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutVerificationRequestsInput = {
@@ -2091,6 +2607,8 @@ export type UserUncheckedCreateWithoutVerificationRequestsInput = {
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutVerificationRequestsInput = {
@@ -2157,6 +2675,8 @@ export type UserUpdateWithoutVerificationRequestsInput = {
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVerificationRequestsInput = {
@@ -2207,6 +2727,8 @@ export type UserUncheckedUpdateWithoutVerificationRequestsInput = {
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -2257,6 +2779,8 @@ export type UserCreateWithoutAccountsInput = {
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -2307,6 +2831,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -2373,6 +2899,8 @@ export type UserUpdateWithoutAccountsInput = {
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -2423,6 +2951,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -2473,6 +3003,8 @@ export type UserCreateWithoutSessionsInput = {
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -2523,6 +3055,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -2589,6 +3123,8 @@ export type UserUpdateWithoutSessionsInput = {
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -2639,6 +3175,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserCreateWithoutTendersInput = {
@@ -2689,6 +3227,8 @@ export type UserCreateWithoutTendersInput = {
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutTendersInput = {
@@ -2739,6 +3279,8 @@ export type UserUncheckedCreateWithoutTendersInput = {
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutTendersInput = {
@@ -2805,6 +3347,8 @@ export type UserUpdateWithoutTendersInput = {
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTendersInput = {
@@ -2855,6 +3399,8 @@ export type UserUncheckedUpdateWithoutTendersInput = {
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserCreateWithoutTenderLikesInput = {
@@ -2905,6 +3451,8 @@ export type UserCreateWithoutTenderLikesInput = {
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutTenderLikesInput = {
@@ -2955,6 +3503,8 @@ export type UserUncheckedCreateWithoutTenderLikesInput = {
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutTenderLikesInput = {
@@ -3021,6 +3571,8 @@ export type UserUpdateWithoutTenderLikesInput = {
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTenderLikesInput = {
@@ -3071,6 +3623,8 @@ export type UserUncheckedUpdateWithoutTenderLikesInput = {
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserCreateWithoutTenderComplaintsFiledInput = {
@@ -3121,6 +3675,8 @@ export type UserCreateWithoutTenderComplaintsFiledInput = {
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutTenderComplaintsFiledInput = {
@@ -3171,6 +3727,8 @@ export type UserUncheckedCreateWithoutTenderComplaintsFiledInput = {
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutTenderComplaintsFiledInput = {
@@ -3237,6 +3795,8 @@ export type UserUpdateWithoutTenderComplaintsFiledInput = {
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTenderComplaintsFiledInput = {
@@ -3287,6 +3847,8 @@ export type UserUncheckedUpdateWithoutTenderComplaintsFiledInput = {
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserCreateWithoutBidsInput = {
@@ -3337,6 +3899,8 @@ export type UserCreateWithoutBidsInput = {
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutBidsInput = {
@@ -3387,6 +3951,8 @@ export type UserUncheckedCreateWithoutBidsInput = {
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutBidsInput = {
@@ -3453,6 +4019,8 @@ export type UserUpdateWithoutBidsInput = {
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBidsInput = {
@@ -3503,6 +4071,8 @@ export type UserUncheckedUpdateWithoutBidsInput = {
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserCreateWithoutTransactionsInput = {
@@ -3553,6 +4123,8 @@ export type UserCreateWithoutTransactionsInput = {
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -3603,6 +4175,8 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -3669,6 +4243,8 @@ export type UserUpdateWithoutTransactionsInput = {
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -3719,6 +4295,8 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserCreateWithoutSubscriptionsInput = {
@@ -3769,6 +4347,8 @@ export type UserCreateWithoutSubscriptionsInput = {
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutSubscriptionsInput = {
@@ -3819,6 +4399,8 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutSubscriptionsInput = {
@@ -3885,6 +4467,8 @@ export type UserUpdateWithoutSubscriptionsInput = {
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSubscriptionsInput = {
@@ -3935,6 +4519,8 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserCreateWithoutReviewsGivenInput = {
@@ -3985,6 +4571,8 @@ export type UserCreateWithoutReviewsGivenInput = {
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsGivenInput = {
@@ -4035,6 +4623,8 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsGivenInput = {
@@ -4090,6 +4680,8 @@ export type UserCreateWithoutReviewsReceivedInput = {
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsReceivedInput = {
@@ -4140,6 +4732,8 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsReceivedInput = {
@@ -4206,6 +4800,8 @@ export type UserUpdateWithoutReviewsGivenInput = {
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsGivenInput = {
@@ -4256,6 +4852,8 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUpsertWithoutReviewsReceivedInput = {
@@ -4317,6 +4915,8 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
@@ -4367,6 +4967,8 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -4417,6 +5019,8 @@ export type UserCreateWithoutNotificationsInput = {
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -4467,6 +5071,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -4533,6 +5139,8 @@ export type UserUpdateWithoutNotificationsInput = {
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -4583,6 +5191,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserCreateWithoutSupportConversationInput = {
@@ -4633,6 +5243,8 @@ export type UserCreateWithoutSupportConversationInput = {
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutSupportConversationInput = {
@@ -4683,6 +5295,8 @@ export type UserUncheckedCreateWithoutSupportConversationInput = {
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutSupportConversationInput = {
@@ -4749,6 +5363,8 @@ export type UserUpdateWithoutSupportConversationInput = {
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSupportConversationInput = {
@@ -4799,6 +5415,8 @@ export type UserUncheckedUpdateWithoutSupportConversationInput = {
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserCreateWithoutSupportMessagesSentInput = {
@@ -4849,6 +5467,8 @@ export type UserCreateWithoutSupportMessagesSentInput = {
   tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
   notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserUncheckedCreateWithoutSupportMessagesSentInput = {
@@ -4899,6 +5519,8 @@ export type UserUncheckedCreateWithoutSupportMessagesSentInput = {
   tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
   supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
 }
 
 export type UserCreateOrConnectWithoutSupportMessagesSentInput = {
@@ -4965,6 +5587,8 @@ export type UserUpdateWithoutSupportMessagesSentInput = {
   tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
   notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSupportMessagesSentInput = {
@@ -5015,6 +5639,8 @@ export type UserUncheckedUpdateWithoutSupportMessagesSentInput = {
   tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
   supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
 }
 
 
@@ -5039,6 +5665,8 @@ export type UserCountOutputType = {
   tenderLikes: number
   notifications: number
   supportMessagesSent: number
+  profileContactUnlocksMade: number
+  profileContactUnlocksReceived: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -5058,6 +5686,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   tenderLikes?: boolean | UserCountOutputTypeCountTenderLikesArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   supportMessagesSent?: boolean | UserCountOutputTypeCountSupportMessagesSentArgs
+  profileContactUnlocksMade?: boolean | UserCountOutputTypeCountProfileContactUnlocksMadeArgs
+  profileContactUnlocksReceived?: boolean | UserCountOutputTypeCountProfileContactUnlocksReceivedArgs
 }
 
 /**
@@ -5182,6 +5812,20 @@ export type UserCountOutputTypeCountSupportMessagesSentArgs<ExtArgs extends runt
   where?: Prisma.SupportMessageWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProfileContactUnlocksMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProfileContactUnlockWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProfileContactUnlocksReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProfileContactUnlockWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -5232,6 +5876,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   supportConversation?: boolean | Prisma.User$supportConversationArgs<ExtArgs>
   supportMessagesSent?: boolean | Prisma.User$supportMessagesSentArgs<ExtArgs>
+  profileContactUnlocksMade?: boolean | Prisma.User$profileContactUnlocksMadeArgs<ExtArgs>
+  profileContactUnlocksReceived?: boolean | Prisma.User$profileContactUnlocksReceivedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -5290,6 +5936,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   supportConversation?: boolean | Prisma.User$supportConversationArgs<ExtArgs>
   supportMessagesSent?: boolean | Prisma.User$supportMessagesSentArgs<ExtArgs>
+  profileContactUnlocksMade?: boolean | Prisma.User$profileContactUnlocksMadeArgs<ExtArgs>
+  profileContactUnlocksReceived?: boolean | Prisma.User$profileContactUnlocksReceivedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -5313,6 +5961,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     notifications: Prisma.$UserNotificationPayload<ExtArgs>[]
     supportConversation: Prisma.$SupportConversationPayload<ExtArgs> | null
     supportMessagesSent: Prisma.$SupportMessagePayload<ExtArgs>[]
+    profileContactUnlocksMade: Prisma.$ProfileContactUnlockPayload<ExtArgs>[]
+    profileContactUnlocksReceived: Prisma.$ProfileContactUnlockPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -5703,6 +6353,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   supportConversation<T extends Prisma.User$supportConversationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supportConversationArgs<ExtArgs>>): Prisma.Prisma__SupportConversationClient<runtime.Types.Result.GetResult<Prisma.$SupportConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   supportMessagesSent<T extends Prisma.User$supportMessagesSentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supportMessagesSentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  profileContactUnlocksMade<T extends Prisma.User$profileContactUnlocksMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileContactUnlocksMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfileContactUnlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  profileContactUnlocksReceived<T extends Prisma.User$profileContactUnlocksReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileContactUnlocksReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfileContactUnlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6511,6 +7163,54 @@ export type User$supportMessagesSentArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.SupportMessageScalarFieldEnum | Prisma.SupportMessageScalarFieldEnum[]
+}
+
+/**
+ * User.profileContactUnlocksMade
+ */
+export type User$profileContactUnlocksMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProfileContactUnlock
+   */
+  select?: Prisma.ProfileContactUnlockSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProfileContactUnlock
+   */
+  omit?: Prisma.ProfileContactUnlockOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProfileContactUnlockInclude<ExtArgs> | null
+  where?: Prisma.ProfileContactUnlockWhereInput
+  orderBy?: Prisma.ProfileContactUnlockOrderByWithRelationInput | Prisma.ProfileContactUnlockOrderByWithRelationInput[]
+  cursor?: Prisma.ProfileContactUnlockWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProfileContactUnlockScalarFieldEnum | Prisma.ProfileContactUnlockScalarFieldEnum[]
+}
+
+/**
+ * User.profileContactUnlocksReceived
+ */
+export type User$profileContactUnlocksReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProfileContactUnlock
+   */
+  select?: Prisma.ProfileContactUnlockSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProfileContactUnlock
+   */
+  omit?: Prisma.ProfileContactUnlockOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProfileContactUnlockInclude<ExtArgs> | null
+  where?: Prisma.ProfileContactUnlockWhereInput
+  orderBy?: Prisma.ProfileContactUnlockOrderByWithRelationInput | Prisma.ProfileContactUnlockOrderByWithRelationInput[]
+  cursor?: Prisma.ProfileContactUnlockWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProfileContactUnlockScalarFieldEnum | Prisma.ProfileContactUnlockScalarFieldEnum[]
 }
 
 /**

@@ -10,6 +10,7 @@
  */
 export type * from './models/User'
 export type * from './models/UserCredential'
+export type * from './models/ProfileContactUnlock'
 export type * from './models/UserPortfolioItem'
 export type * from './models/UserPortfolioImage'
 export type * from './models/UserInterest'

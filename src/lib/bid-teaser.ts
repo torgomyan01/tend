@@ -30,6 +30,21 @@ export function initialsFromMasked(masked: string): string {
   return first ? first.toUpperCase() : "?";
 }
 
+/** Անուն ազգանունից՝ ավատարի համարակալ (մինչև 2 տառ)։ */
+export function initialsFromName(name: string | null | undefined): string {
+  const parts = name?.trim().split(/\s+/).filter(Boolean) ?? [];
+  if (parts.length === 0) {
+    return "?";
+  }
+  if (parts.length === 1) {
+    const ch = parts[0][0];
+    return ch ? ch.toUpperCase() : "?";
+  }
+  const a = parts[0][0];
+  const b = parts[1][0];
+  return a && b ? `${a}${b}`.toUpperCase() : "?";
+}
+
 /** Ուղեկից նամակից առաջին բառերը՝ առանց լրիվ բովանդակության։ */
 export function coverLetterSnippet(
   text: string,

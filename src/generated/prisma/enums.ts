@@ -38,7 +38,8 @@ export const TransactionType = {
   BID_FEE: 'BID_FEE',
   SUBSCRIPTION: 'SUBSCRIPTION',
   REFUND: 'REFUND',
-  ADJUSTMENT: 'ADJUSTMENT'
+  ADJUSTMENT: 'ADJUSTMENT',
+  PROFILE_CONTACT_UNLOCK: 'PROFILE_CONTACT_UNLOCK'
 } as const
 
 export type TransactionType = (typeof TransactionType)[keyof typeof TransactionType]

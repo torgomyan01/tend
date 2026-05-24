@@ -28,6 +28,11 @@ export type User = Prisma.UserModel
  */
 export type UserCredential = Prisma.UserCredentialModel
 /**
+ * Model ProfileContactUnlock
+ * * Վճարով բացված կոնտակտային տվյալներ՝ հանրային պրոֆիլից
+ */
+export type ProfileContactUnlock = Prisma.ProfileContactUnlockModel
+/**
  * Model UserPortfolioItem
  * 
  */

@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   UserCredential: 'UserCredential',
+  ProfileContactUnlock: 'ProfileContactUnlock',
   UserPortfolioItem: 'UserPortfolioItem',
   UserPortfolioImage: 'UserPortfolioImage',
   UserInterest: 'UserInterest',
@@ -425,7 +426,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userCredential" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderLike" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "transaction" | "subscription" | "review" | "userNotification" | "supportConversation" | "supportMessage" | "supportAttachment"
+    modelProps: "user" | "userCredential" | "profileContactUnlock" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderLike" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "transaction" | "subscription" | "review" | "userNotification" | "supportConversation" | "supportMessage" | "supportAttachment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -558,6 +559,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCredentialCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCredentialCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProfileContactUnlock: {
+      payload: Prisma.$ProfileContactUnlockPayload<ExtArgs>
+      fields: Prisma.ProfileContactUnlockFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProfileContactUnlockFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileContactUnlockPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProfileContactUnlockFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileContactUnlockPayload>
+        }
+        findFirst: {
+          args: Prisma.ProfileContactUnlockFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileContactUnlockPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProfileContactUnlockFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileContactUnlockPayload>
+        }
+        findMany: {
+          args: Prisma.ProfileContactUnlockFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileContactUnlockPayload>[]
+        }
+        create: {
+          args: Prisma.ProfileContactUnlockCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileContactUnlockPayload>
+        }
+        createMany: {
+          args: Prisma.ProfileContactUnlockCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ProfileContactUnlockDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileContactUnlockPayload>
+        }
+        update: {
+          args: Prisma.ProfileContactUnlockUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileContactUnlockPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProfileContactUnlockDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProfileContactUnlockUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ProfileContactUnlockUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileContactUnlockPayload>
+        }
+        aggregate: {
+          args: Prisma.ProfileContactUnlockAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProfileContactUnlock>
+        }
+        groupBy: {
+          args: Prisma.ProfileContactUnlockGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProfileContactUnlockGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProfileContactUnlockCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProfileContactUnlockCountAggregateOutputType> | number
         }
       }
     }
@@ -2239,6 +2306,17 @@ export const UserCredentialScalarFieldEnum = {
 export type UserCredentialScalarFieldEnum = (typeof UserCredentialScalarFieldEnum)[keyof typeof UserCredentialScalarFieldEnum]
 
 
+export const ProfileContactUnlockScalarFieldEnum = {
+  id: 'id',
+  viewerId: 'viewerId',
+  profileUserId: 'profileUserId',
+  amount: 'amount',
+  createdAt: 'createdAt'
+} as const
+
+export type ProfileContactUnlockScalarFieldEnum = (typeof ProfileContactUnlockScalarFieldEnum)[keyof typeof ProfileContactUnlockScalarFieldEnum]
+
+
 export const UserPortfolioItemScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -2628,6 +2706,15 @@ export const UserCredentialOrderByRelevanceFieldEnum = {
 } as const
 
 export type UserCredentialOrderByRelevanceFieldEnum = (typeof UserCredentialOrderByRelevanceFieldEnum)[keyof typeof UserCredentialOrderByRelevanceFieldEnum]
+
+
+export const ProfileContactUnlockOrderByRelevanceFieldEnum = {
+  id: 'id',
+  viewerId: 'viewerId',
+  profileUserId: 'profileUserId'
+} as const
+
+export type ProfileContactUnlockOrderByRelevanceFieldEnum = (typeof ProfileContactUnlockOrderByRelevanceFieldEnum)[keyof typeof ProfileContactUnlockOrderByRelevanceFieldEnum]
 
 
 export const UserPortfolioItemOrderByRelevanceFieldEnum = {
@@ -3153,6 +3240,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   userCredential?: Prisma.UserCredentialOmit
+  profileContactUnlock?: Prisma.ProfileContactUnlockOmit
   userPortfolioItem?: Prisma.UserPortfolioItemOmit
   userPortfolioImage?: Prisma.UserPortfolioImageOmit
   userInterest?: Prisma.UserInterestOmit

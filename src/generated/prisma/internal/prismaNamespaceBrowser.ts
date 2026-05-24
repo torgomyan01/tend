@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   UserCredential: 'UserCredential',
+  ProfileContactUnlock: 'ProfileContactUnlock',
   UserPortfolioItem: 'UserPortfolioItem',
   UserPortfolioImage: 'UserPortfolioImage',
   UserInterest: 'UserInterest',
@@ -148,6 +149,17 @@ export const UserCredentialScalarFieldEnum = {
 } as const
 
 export type UserCredentialScalarFieldEnum = (typeof UserCredentialScalarFieldEnum)[keyof typeof UserCredentialScalarFieldEnum]
+
+
+export const ProfileContactUnlockScalarFieldEnum = {
+  id: 'id',
+  viewerId: 'viewerId',
+  profileUserId: 'profileUserId',
+  amount: 'amount',
+  createdAt: 'createdAt'
+} as const
+
+export type ProfileContactUnlockScalarFieldEnum = (typeof ProfileContactUnlockScalarFieldEnum)[keyof typeof ProfileContactUnlockScalarFieldEnum]
 
 
 export const UserPortfolioItemScalarFieldEnum = {
@@ -539,6 +551,15 @@ export const UserCredentialOrderByRelevanceFieldEnum = {
 } as const
 
 export type UserCredentialOrderByRelevanceFieldEnum = (typeof UserCredentialOrderByRelevanceFieldEnum)[keyof typeof UserCredentialOrderByRelevanceFieldEnum]
+
+
+export const ProfileContactUnlockOrderByRelevanceFieldEnum = {
+  id: 'id',
+  viewerId: 'viewerId',
+  profileUserId: 'profileUserId'
+} as const
+
+export type ProfileContactUnlockOrderByRelevanceFieldEnum = (typeof ProfileContactUnlockOrderByRelevanceFieldEnum)[keyof typeof ProfileContactUnlockOrderByRelevanceFieldEnum]
 
 
 export const UserPortfolioItemOrderByRelevanceFieldEnum = {
