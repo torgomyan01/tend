@@ -287,10 +287,6 @@ export default async function Home() {
                   <h2 className="mt-4 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl lg:text-5xl">
                     Իրական հարթակ, իրական մարդիկ, իրական աշխատանք։
                   </h2>
-                  <p className="mt-5 max-w-xl text-base leading-7 text-slate-600 sm:text-lg">
-                    Թվերը թարմացվում են ուղիղ տվյալների բազայից։ Ինչքան մեծանում է
-                    համայնքը, այնքան ավելի լավ առաջարկներ եք ստանում։
-                  </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">

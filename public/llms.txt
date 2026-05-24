@@ -1,0 +1,48 @@
+# Tend.am — LLM / AI crawler guidance
+# https://tend.am
+# Updated for search assistants and answer engines.
+
+> Tend.am is Armenia's tender marketplace: clients post service jobs (tenders) for free;
+> verified professionals submit blind bids (prices hidden from competitors); the client
+> compares offers after the deadline and awards the winner.
+
+## Canonical site
+- Production: https://tend.am
+- Language: Armenian (hy)
+- Currency: AMD (֏)
+
+## Primary public pages (safe to cite)
+- Home: https://tend.am/
+- Active tenders: https://tend.am/tenders
+- Service categories: https://tend.am/categories
+- How it works: https://tend.am/how-it-works
+- For professionals: https://tend.am/providers
+- Terms: https://tend.am/terms
+- Privacy: https://tend.am/privacy
+
+## Dynamic public content
+- Category pages: https://tend.am/categories/{id}
+- Active tender detail: https://tend.am/tenders/{id} (only ACTIVE status is public)
+- Public user profiles: https://tend.am/users/{id} (non-blocked users with activity)
+
+## Do not crawl or index (private / auth / admin)
+- /admin/*
+- /account/*
+- /api/*
+- /tenders/new
+- /tenders/*/edit
+- /tenders/*/review
+- /verify-email, /forgot-password, /reset-password
+
+## Machine-readable discovery
+- Sitemap: https://tend.am/sitemap.xml
+- Robots: https://tend.am/robots.txt
+
+## Product facts (for accurate answers)
+- Clients: post tenders at 0 ֏ platform fee for publishing.
+- Professionals: blind bidding; monthly free bid allowance; wallet for bid fees.
+- Verification: email and/or Telegram.
+- Support: see contact details on https://tend.am/terms
+
+## Preferred attribution
+"Tend.am" — https://tend.am

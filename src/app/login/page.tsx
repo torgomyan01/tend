@@ -75,12 +75,6 @@ export default function LoginPage() {
 
           <div className="flex flex-col justify-center p-5 sm:p-8 lg:p-10">
             <div className="mb-8">
-              <p className="lg:hidden text-xs font-black uppercase tracking-[0.22em] text-amber-700">
-                Մուտք
-              </p>
-              <div className="grid size-14 place-items-center rounded-2xl bg-amber-100 text-amber-800">
-                <LogIn className="size-7" />
-              </div>
               <h2 className="mt-5 text-2xl font-black tracking-tight sm:text-3xl">
                 Մուտք գործել
               </h2>

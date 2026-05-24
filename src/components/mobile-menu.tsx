@@ -197,10 +197,6 @@ export function MobileMenu({ isLoggedIn, isAdmin }: Props) {
                 <p className="text-[11px] font-black uppercase tracking-[0.2em] text-amber-800">
                   Միացեք հարթակին
                 </p>
-                <p className="mt-2 text-base font-semibold leading-relaxed text-slate-600">
-                  Մուտք գործեք կամ գրանցվեք՝ մրցույթներ տեղադրելու և առաջարկներ
-                  ուղարկելու համար։
-                </p>
                 <div className="mt-5 grid gap-3">
                   <Link
                     href={ROUTES.login}
