@@ -39,10 +39,10 @@ export default async function CategoriesPage() {
                 <CheckCircle2 className="size-4" />
                 Մրցույթ կարելի է հայտարարել գրեթե ցանկացած ծառայության համար
               </div>
-              <h1 className="mt-6 max-w-4xl text-4xl font-black leading-tight tracking-tight sm:text-6xl">
+              <h1 className="mt-6 max-w-4xl text-3xl font-black leading-tight tracking-tight sm:text-6xl">
                 Բոլոր հիմնական ոլորտները մեկ տեղում։
               </h1>
-              <p className="mt-5 max-w-3xl text-base leading-8 text-slate-300 sm:text-lg">
+              <p className="mt-5 max-w-3xl text-base sm:leading-8 text-slate-300 sm:text-lg">
                 Tend.am-ում պատվիրատուն կարող է մրցույթ հայտարարել տան,
                 բիզնեսի, տեխնոլոգիայի, իրավական, կրթական, ստեղծագործական և
                 առօրյա ծառայությունների համար։

@@ -124,7 +124,7 @@ function BrowseFiltersForm({
 
       <label className="block">
         <span className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">
-          Բառային որոնում
+          Որոնում
         </span>
         <span className="mt-2 flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
           <Search className="size-4 shrink-0 text-slate-400" />

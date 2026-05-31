@@ -54,7 +54,7 @@ export default async function CategoryDetailPage({ params }: Props) {
         </Link>
 
         <section className="mt-4 overflow-hidden rounded-4xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
-          <h1 className="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
+          <h1 className="text-2xl font-black tracking-tight text-slate-950 sm:text-4xl">
             {category.title}
           </h1>
           <p className="mt-3 text-sm font-semibold leading-7 text-slate-600">
@@ -75,7 +75,7 @@ export default async function CategoryDetailPage({ params }: Props) {
                 className="group flex items-center justify-between gap-3 rounded-4xl bg-white px-5 py-4 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-xl"
               >
                 <span className="min-w-0">
-                  <span className="block truncate text-sm font-black text-slate-950">
+                  <span className="block text-sm font-black text-slate-950">
                     {service.title}
                   </span>
                   <span className="mt-1 block text-xs font-semibold text-slate-500">
