@@ -1,4 +1,4 @@
-import { ArrowRight, Layers3, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2, Layers3 } from "lucide-react";
 import Link from "next/link";
 import { ServiceSearch } from "@/components/service-search";
 import { SiteHeader } from "@/components/site-header";
@@ -35,7 +35,7 @@ export default async function CategoriesPage() {
           <div className="relative grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-end">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-black text-amber-200 ring-1 ring-white/10 sm:text-sm">
-                <Sparkles className="size-4" />
+                <CheckCircle2 className="size-4" />
                 Մրցույթ կարելի է հայտարարել գրեթե ցանկացած ծառայության համար
               </div>
               <h1 className="mt-6 max-w-4xl text-4xl font-black leading-tight tracking-tight sm:text-6xl">
