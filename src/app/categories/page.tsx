@@ -1,7 +1,8 @@
-import { ArrowRight, CheckCircle2, Layers3 } from "lucide-react";
+import { ArrowRight, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { ServiceSearch } from "@/components/service-search";
 import { SiteHeader } from "@/components/site-header";
+import { getCategoryVisual } from "@/lib/category-visuals";
 import { ROUTES } from "@/lib/routes";
 import { getServiceCategories } from "@/lib/services-data";
 
@@ -73,35 +74,62 @@ export default async function CategoriesPage() {
           <ServiceSearch categories={categories} />
         </section>
 
-        <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {categories.map((category) => (
-            <article
-              key={category.id}
-              className="rounded-4xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6"
-            >
+        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {categories.map((category) => {
+            const { icon: Icon, tile } = getCategoryVisual(category.title);
+            const preview = category.services.slice(0, 3);
+            return (
               <Link
+                key={category.id}
                 href={ROUTES.categoryDetail(category.id)}
-                className="group flex items-center justify-between gap-3 rounded-3xl bg-slate-50 px-4 py-4 ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:bg-white hover:ring-slate-300"
+                className="group relative flex flex-col overflow-hidden rounded-4xl bg-white p-6 pt-7 shadow-sm ring-1 ring-slate-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-950/5 hover:ring-amber-200"
               >
-                <span className="flex min-w-0 items-center gap-3">
-                  <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-amber-100 text-amber-800 transition group-hover:bg-amber-200">
-                    <Layers3 className="size-5" />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block truncate text-base font-black text-slate-950">
-                      {category.title}
-                    </span>
-                    <span className="mt-0.5 block text-xs font-semibold text-slate-500">
-                      {category.services.length} ծառայություն
-                    </span>
-                  </span>
+                <div
+                  className="pointer-events-none absolute -right-12 -top-12 size-40 rounded-full bg-amber-100/0 blur-2xl transition duration-500 group-hover:bg-amber-200/50"
+                  aria-hidden
+                />
+
+                {/* Մեծ իկոնկա՝ վերին աջ անկյունում */}
+                <span
+                  className={`absolute right-5 top-5 grid size-20 place-items-center rounded-3xl ${tile} shadow-sm ring-1 ring-black/5 transition duration-300 group-hover:-rotate-6 group-hover:scale-110 group-hover:shadow-lg`}
+                >
+                  <Icon className="size-10" strokeWidth={1.75} />
                 </span>
-                <span className="text-sm font-black text-slate-400 transition group-hover:text-amber-700">
-                  →
-                </span>
+
+                <div className="relative max-w-[calc(100%-5.5rem)]">
+                  <h3 className="text-lg font-black leading-tight tracking-tight text-slate-950">
+                    {category.title}
+                  </h3>
+                  <p className="mt-1.5 line-clamp-2 text-sm font-semibold leading-6 text-slate-500">
+                    {category.description}
+                  </p>
+                </div>
+
+                {preview.length > 0 ? (
+                  <div className="relative mt-4 flex flex-wrap gap-1.5">
+                    {preview.map((service) => (
+                      <span
+                        key={service.id}
+                        className="rounded-full bg-slate-50 px-2.5 py-1 text-[11px] font-bold text-slate-600 ring-1 ring-slate-200"
+                      >
+                        {service.title}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+
+                <div className="relative mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
+                  <span className="text-xs font-black uppercase tracking-[0.14em] text-amber-700">
+                    {category.services.length} ծառայություն
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-sm font-black text-slate-400 transition group-hover:text-amber-700">
+                    Դիտել
+                    <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </span>
+                </div>
               </Link>
-            </article>
-          ))}
+            );
+          })}
         </section>
         </div>
       </main>
