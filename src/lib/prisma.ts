@@ -1,12 +1,11 @@
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
-import type { PoolConfig } from "mariadb";
 import { PrismaClient } from "@/generated/prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
 };
 
-function getMariaDbConfig(): PoolConfig {
+function getMariaDbConfig() {
   const databaseUrl = process.env.DATABASE_URL;
 
   if (!databaseUrl) {
