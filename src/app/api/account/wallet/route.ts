@@ -1,20 +1,46 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getServerSession } from "next-auth";
+import { absoluteAppUrl } from "@/lib/absolute-app-url";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { ROUTES } from "@/lib/routes";
+import { vposCreateOrder, vposRegisterCustomer } from "@/lib/vpos/client";
+import {
+  VPOS_DEPOSIT_MAX,
+  VPOS_DEPOSIT_MIN,
+  VPOS_GATEWAY,
+} from "@/lib/vpos/config";
+import { reconcilePendingVposDeposits } from "@/lib/vpos/settle-deposit";
 
 export const dynamic = "force-dynamic";
 
 const depositSchema = z.object({
-  amount: z.number().int().min(500).max(50_000_000),
+  amount: z.number().int().min(VPOS_DEPOSIT_MIN).max(VPOS_DEPOSIT_MAX),
 });
+
+function splitName(name: string | null | undefined) {
+  const parts = (name ?? "").trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) {
+    return { firstName: "Tend", lastName: undefined as string | undefined };
+  }
+  return {
+    firstName: parts[0]!,
+    lastName: parts.length > 1 ? parts.slice(1).join(" ") : undefined,
+  };
+}
 
 export async function GET() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
     return NextResponse.json({ error: "UNAUTHENTICATED" }, { status: 401 });
+  }
+
+  try {
+    await reconcilePendingVposDeposits(session.user.id);
+  } catch (error) {
+    console.error("[GET /api/account/wallet] reconcile", error);
   }
 
   const user = await prisma.user.findUnique({
@@ -47,67 +73,143 @@ export async function POST(request: Request) {
   }
 
   const amount = parsed.data.amount;
+  const userId = session.user.id;
 
   try {
-    const userId = session.user.id;
-
-    const result = await prisma.$transaction(async (tx) => {
-      const user = await tx.user.findUnique({
-        where: { id: userId },
-        select: { id: true, isBlocked: true },
-      });
-
-      if (!user) {
-        throw Object.assign(new Error("NOT_FOUND"), { code: "NOT_FOUND" });
-      }
-
-      if (user.isBlocked) {
-        throw Object.assign(new Error("USER_BLOCKED"), {
-          code: "USER_BLOCKED",
-        });
-      }
-
-      await tx.user.update({
-        where: { id: userId },
-        data: {
-          walletBalance: { increment: amount },
-        },
-      });
-
-      await tx.transaction.create({
-        data: {
-          userId,
-          type: "DEPOSIT",
-          status: "SUCCEEDED",
-          amount,
-          currency: "AMD",
-          description: "Դրամապանակի լիցքավորում",
-        },
-      });
-
-      const updated = await tx.user.findUnique({
-        where: { id: userId },
-        select: { walletBalance: true },
-      });
-
-      return { balance: Number(updated!.walletBalance) };
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        isBlocked: true,
+      },
     });
 
-    return NextResponse.json({ ok: true, balance: result.balance });
-  } catch (error: unknown) {
-    const code =
-      error &&
-      typeof error === "object" &&
-      "code" in error &&
-      typeof (error as { code: unknown }).code === "string"
-        ? (error as { code: string }).code
-        : null;
+    if (!user) {
+      return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
+    }
 
-    if (code === "USER_BLOCKED") {
+    if (user.isBlocked) {
       return NextResponse.json({ error: "USER_BLOCKED" }, { status: 403 });
     }
-    if (code === "NOT_FOUND") {
-      return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
+
+    if (!user.phone?.trim()) {
+      return NextResponse.json({ error: "PHONE_REQUIRED" }, { status: 400 });
+    }
+
+    const { firstName, lastName } = splitName(user.name);
+
+    let customerRes;
+    try {
+      customerRes = await vposRegisterCustomer({
+        customerID: user.id,
+        firstName,
+        lastName,
+        phoneNumber: user.phone.trim(),
+        email: user.email,
+      });
+    } catch (error) {
+      console.error("[POST /api/account/wallet] customer register", error);
+      return NextResponse.json({ error: "VPOS_UNAVAILABLE" }, { status: 502 });
+    }
+
+    const customerOk =
+      customerRes.body?.status === true ||
+      /already exists/i.test(customerRes.raw);
+    if (!customerOk) {
+      console.error(
+        "[POST /api/account/wallet] customer register failed",
+        customerRes.raw,
+      );
+      return NextResponse.json(
+        {
+          error: "VPOS_CUSTOMER_FAILED",
+          message: customerRes.body?.message ?? "Customer register failed",
+        },
+        { status: 502 },
+      );
+    }
+
+    const seq = await prisma.vposOrderSequence.create({ data: {} });
+    const orderNumber = seq.id;
+
+    const pending = await prisma.transaction.create({
+      data: {
+        userId,
+        type: "DEPOSIT",
+        status: "PENDING",
+        amount,
+        currency: "AMD",
+        gateway: VPOS_GATEWAY,
+        orderNumber,
+        description: "Դրամապանակի լիցքավորում (VPOS, սպասում)",
+      },
+      select: { id: true, orderNumber: true },
+    });
+
+    const backURL = absoluteAppUrl(ROUTES.accountWalletReturn(orderNumber));
+
+    let orderRes;
+    try {
+      orderRes = await vposCreateOrder({
+        customerID: user.id,
+        amount,
+        orderID: orderNumber,
+        backURL,
+        description: "Tend դրամապանակի լիցքավորում",
+        lang: "hy",
+      });
+    } catch (error) {
+      console.error("[POST /api/account/wallet] order/new", error);
+      await prisma.transaction.update({
+        where: { id: pending.id },
+        data: { status: "FAILED", description: "VPOS կապի սխալ" },
+      });
+      return NextResponse.json({ error: "VPOS_UNAVAILABLE" }, { status: 502 });
+    }
+
+    const redirectURL = orderRes.body?.data?.redirectURL;
+    const itfOrderId = orderRes.body?.data?.itfOrderId;
+
+    if (!orderRes.body?.status || !redirectURL) {
+      console.error("[POST /api/account/wallet] bad VPOS response", orderRes.raw);
+      await prisma.transaction.update({
+        where: { id: pending.id },
+        data: {
+          status: "FAILED",
+          description: orderRes.body?.message ?? "VPOS պատասխանը անվավեր է",
+        },
+      });
+      return NextResponse.json(
+        {
+          error: "VPOS_ORDER_FAILED",
+          message: orderRes.body?.message ?? "VPOS order failed",
+        },
+        { status: 502 },
+      );
+    }
+
+    await prisma.transaction.update({
+      where: { id: pending.id },
+      data: {
+        gatewayRef: itfOrderId != null ? String(itfOrderId) : undefined,
+      },
+    });
+
+    return NextResponse.json({
+      ok: true,
+      redirectURL,
+      orderNumber,
+      needToRedirect: orderRes.body.data?.needToRedirect ?? true,
+    });
+  } catch (error: unknown) {
+    if (
+      error instanceof Error &&
+      error.message === "VPOS_KEYS_MISSING"
+    ) {
+      return NextResponse.json({ error: "VPOS_NOT_CONFIGURED" }, { status: 503 });
     }
 
     console.error("[POST /api/account/wallet]", error);

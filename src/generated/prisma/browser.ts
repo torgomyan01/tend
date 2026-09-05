@@ -123,6 +123,11 @@ export type Bid = Prisma.BidModel
  */
 export type Transaction = Prisma.TransactionModel
 /**
+ * Model VposOrderSequence
+ * * Monotonic integer IDs for VPOS orderID (MySQL allows one AUTO_INCREMENT per table).
+ */
+export type VposOrderSequence = Prisma.VposOrderSequenceModel
+/**
  * Model Subscription
  * 
  */

@@ -405,6 +405,7 @@ export const ModelName = {
   TenderComplaint: 'TenderComplaint',
   Bid: 'Bid',
   Transaction: 'Transaction',
+  VposOrderSequence: 'VposOrderSequence',
   Subscription: 'Subscription',
   Review: 'Review',
   UserNotification: 'UserNotification',
@@ -426,7 +427,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userCredential" | "profileContactUnlock" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderLike" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "transaction" | "subscription" | "review" | "userNotification" | "supportConversation" | "supportMessage" | "supportAttachment"
+    modelProps: "user" | "userCredential" | "profileContactUnlock" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderLike" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "transaction" | "vposOrderSequence" | "subscription" | "review" | "userNotification" | "supportConversation" | "supportMessage" | "supportAttachment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1816,6 +1817,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    VposOrderSequence: {
+      payload: Prisma.$VposOrderSequencePayload<ExtArgs>
+      fields: Prisma.VposOrderSequenceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VposOrderSequenceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VposOrderSequencePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VposOrderSequenceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VposOrderSequencePayload>
+        }
+        findFirst: {
+          args: Prisma.VposOrderSequenceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VposOrderSequencePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VposOrderSequenceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VposOrderSequencePayload>
+        }
+        findMany: {
+          args: Prisma.VposOrderSequenceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VposOrderSequencePayload>[]
+        }
+        create: {
+          args: Prisma.VposOrderSequenceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VposOrderSequencePayload>
+        }
+        createMany: {
+          args: Prisma.VposOrderSequenceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.VposOrderSequenceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VposOrderSequencePayload>
+        }
+        update: {
+          args: Prisma.VposOrderSequenceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VposOrderSequencePayload>
+        }
+        deleteMany: {
+          args: Prisma.VposOrderSequenceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VposOrderSequenceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.VposOrderSequenceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VposOrderSequencePayload>
+        }
+        aggregate: {
+          args: Prisma.VposOrderSequenceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVposOrderSequence>
+        }
+        groupBy: {
+          args: Prisma.VposOrderSequenceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VposOrderSequenceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VposOrderSequenceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VposOrderSequenceCountAggregateOutputType> | number
+        }
+      }
+    }
     Subscription: {
       payload: Prisma.$SubscriptionPayload<ExtArgs>
       fields: Prisma.SubscriptionFieldRefs
@@ -2561,12 +2628,20 @@ export const TransactionScalarFieldEnum = {
   currency: 'currency',
   gateway: 'gateway',
   gatewayRef: 'gatewayRef',
+  orderNumber: 'orderNumber',
   description: 'description',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
+
+
+export const VposOrderSequenceScalarFieldEnum = {
+  id: 'id'
+} as const
+
+export type VposOrderSequenceScalarFieldEnum = (typeof VposOrderSequenceScalarFieldEnum)[keyof typeof VposOrderSequenceScalarFieldEnum]
 
 
 export const SubscriptionScalarFieldEnum = {
@@ -3259,6 +3334,7 @@ export type GlobalOmitConfig = {
   tenderComplaint?: Prisma.TenderComplaintOmit
   bid?: Prisma.BidOmit
   transaction?: Prisma.TransactionOmit
+  vposOrderSequence?: Prisma.VposOrderSequenceOmit
   subscription?: Prisma.SubscriptionOmit
   review?: Prisma.ReviewOmit
   userNotification?: Prisma.UserNotificationOmit

@@ -508,6 +508,8 @@ model Transaction {
   currency        String            @default("AMD")
   gateway         String?
   gatewayRef      String?
+  /** VPOS partner orderID (integer from VposOrderSequence) */
+  orderNumber     Int?              @unique
   description     String?
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
@@ -519,6 +521,13 @@ model Transaction {
   @@index([gateway, gatewayRef])
   @@index([bidId, type])
   @@map("transaction")
+}
+
+/** Monotonic integer IDs for VPOS orderID (MySQL allows one AUTO_INCREMENT per table). */
+model VposOrderSequence {
+  id Int @id @default(autoincrement())
+
+  @@map("vpos_order_sequence")
 }
 
 model Subscription {

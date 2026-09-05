@@ -13,6 +13,8 @@ export const ROUTES = {
   accountVerification: "/account/verification",
   accountVerifyTelegram: "/account/verify-telegram",
   accountVerify: "/account/verify",
+  accountWalletReturn: (orderNumber: string | number) =>
+    `/account/wallet/return/${orderNumber}`,
   verifyEmail: "/verify-email",
   myTenders: "/tenders?scope=my",
   bidHistory: "/tenders?scope=bids",

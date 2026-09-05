@@ -3,41 +3,49 @@
 import { Loader2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { formatAmd } from "@/lib/format";
-import { toastError, toastSuccess } from "@/lib/toast";
+import { toastError } from "@/lib/toast";
 
-const PRESETS = [5000, 10_000, 25_000, 50_000] as const;
+const PRESETS = [10, 5000, 10_000, 25_000, 50_000, 100_000] as const;
+const MIN_AMOUNT = 10;
+const MAX_AMOUNT = 100_000;
 
 type Props = {
-  /** Called after successful deposit */
+  /** Called after successful deposit (unused for redirect flow; kept for API compat) */
   onDeposited?: () => void;
   compact?: boolean;
 };
 
-export function WalletDepositPanel({ onDeposited, compact }: Props) {
+export function WalletDepositPanel({ compact }: Props) {
   const [amountText, setAmountText] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
 
   const parseAmount = useCallback(() => {
     const digits = amountText.replace(/\D/g, "");
     if (!digits) return null;
     const n = Number(digits);
-    if (!Number.isFinite(n) || n < 500) return null;
-    if (n > 50_000_000) return null;
+    if (!Number.isFinite(n) || n < MIN_AMOUNT || n > MAX_AMOUNT) return null;
     return Math.floor(n);
   }, [amountText]);
 
   const formatDepositInput = (raw: string) => {
-    const digits = raw.replace(/\D/g, "").slice(0, 10);
+    const digits = raw.replace(/\D/g, "").slice(0, 6);
     if (!digits) return "";
     return new Intl.NumberFormat("hy-AM").format(Number(digits));
   };
 
   const deposit = async (amount: number) => {
+    if (amount < MIN_AMOUNT || amount > MAX_AMOUNT) {
+      setError(`Գումարը պետք է լինի ${MIN_AMOUNT}–${MAX_AMOUNT} ֏։`);
+      toastError(
+        "Սխալ գումար",
+        `Գումարը պետք է լինի ${MIN_AMOUNT}–${MAX_AMOUNT} ֏։`,
+      );
+      return;
+    }
+
     setPending(true);
     setError(null);
-    setSuccess(null);
 
     try {
       const res = await fetch("/api/account/wallet", {
@@ -48,34 +56,44 @@ export function WalletDepositPanel({ onDeposited, compact }: Props) {
 
       const data = (await res.json().catch(() => null)) as {
         error?: string;
-        balance?: number;
+        message?: string;
+        redirectURL?: string;
       } | null;
 
       if (!res.ok) {
+        let message = "Լիցքավորումը ձախողվեց։";
         if (data?.error === "USER_BLOCKED") {
-          setError("Հաշիվը արգելափակված է։");
-          toastError("Լիցքավորումը չհաջողվեց", "Հաշիվը արգելափակված է։");
+          message = "Հաշիվը արգելափակված է։";
         } else if (data?.error === "INVALID_PAYLOAD") {
-          setError("Գումարի չափը սխալ է (մին․ 500 ֏)։");
-          toastError("Լիցքավորումը չհաջողվեց", "Գումարի չափը սխալ է (մին․ 500 ֏)։");
-        } else {
-          setError("Լիցքավորումը ձախողվեց։");
-          toastError("Լիցքավորումը չհաջողվեց", "Լիցքավորումը ձախողվեց։");
+          message = `Գումարի չափը սխալ է (${MIN_AMOUNT}–${MAX_AMOUNT} ֏)։`;
+        } else if (data?.error === "PHONE_REQUIRED") {
+          message = "Լիցքավորման համար անհրաժեշտ է հեռախոսահամար։";
+        } else if (data?.error === "VPOS_CUSTOMER_FAILED") {
+          message = data.message ?? "Չհաջողվեց գրանցել հաճախորդին վճարային համակարգում։";
+        } else if (
+          data?.error === "VPOS_UNAVAILABLE" ||
+          data?.error === "VPOS_ORDER_FAILED" ||
+          data?.error === "VPOS_NOT_CONFIGURED"
+        ) {
+          message =
+            data.message ??
+            "Վճարային համակարգը ժամանակավորապես անհասանելի է։";
         }
+        setError(message);
+        toastError("Լիցքավորումը չհաջողվեց", message);
         return;
       }
 
-      const bal = typeof data?.balance === "number" ? data.balance : null;
-      setSuccess(
-        bal !== null ? `Հաշվեկշիռ՝ ${formatAmd(bal)}` : "Լիցքավորված է։",
-      );
-      toastSuccess("Դրամապանակը լիցքավորվեց", bal !== null ? `Հաշվեկշիռ՝ ${formatAmd(bal)}` : "Լիցքավորված է։");
-      onDeposited?.();
-      setAmountText("");
+      if (!data?.redirectURL) {
+        setError("Վճարման հասցեն չստացվեց։");
+        toastError("Լիցքավորումը չհաջողվեց", "Վճարման հասցեն չստացվեց։");
+        return;
+      }
+
+      window.location.assign(data.redirectURL);
     } catch {
       setError("Ցանցի խնդիր։");
-      toastError("Ցանցի խնդիր", "Չհաջողվեց լիցքավորել։ Փորձեք նորից։");
-    } finally {
+      toastError("Ցանցի խնդիր", "Չհաջողվեց սկսել վճարումը։ Փորձեք նորից։");
       setPending(false);
     }
   };
@@ -83,8 +101,11 @@ export function WalletDepositPanel({ onDeposited, compact }: Props) {
   const submitCustom = () => {
     const n = parseAmount();
     if (n === null) {
-      setError("Մուտքագրեք ամբողջ թիվ՝ նվազագույնը 500 ֏։");
-      toastError("Սխալ գումար", "Մուտքագրեք ամբողջ թիվ՝ նվազագույնը 500 ֏։");
+      setError(`Մուտքագրեք ամբողջ թիվ՝ ${MIN_AMOUNT}–${MAX_AMOUNT} ֏։`);
+      toastError(
+        "Սխալ գումար",
+        `Մուտքագրեք ամբողջ թիվ՝ ${MIN_AMOUNT}–${MAX_AMOUNT} ֏։`,
+      );
       return;
     }
     void deposit(n);
@@ -96,7 +117,13 @@ export function WalletDepositPanel({ onDeposited, compact }: Props) {
 
   return (
     <div className="space-y-3">
-      <p className={compact ? "text-[10px] font-black uppercase tracking-wide text-slate-500" : "text-[10px] font-black uppercase tracking-[0.14em] text-slate-500"}>
+      <p
+        className={
+          compact
+            ? "text-[10px] font-black uppercase tracking-wide text-slate-500"
+            : "text-[10px] font-black uppercase tracking-[0.14em] text-slate-500"
+        }
+      >
         Արագ գումարներ
       </p>
       <div className="flex flex-wrap gap-2">
@@ -119,7 +146,7 @@ export function WalletDepositPanel({ onDeposited, compact }: Props) {
         </label>
         <input
           inputMode="numeric"
-          placeholder="օրինակ՝ 15000"
+          placeholder="օրինակ՝ 10 կամ 15000"
           value={amountText}
           disabled={pending}
           onChange={(e) => setAmountText(formatDepositInput(e.target.value))}
@@ -132,7 +159,7 @@ export function WalletDepositPanel({ onDeposited, compact }: Props) {
           className="flex w-full items-center justify-center gap-2 rounded-2xl bg-amber-600 px-4 py-2.5 text-sm font-black text-white transition hover:bg-amber-500 disabled:opacity-50"
         >
           {pending ? <Loader2 className="size-4 animate-spin" /> : null}
-          Լիցքավորել
+          Վճարել քարտով
         </button>
       </div>
 
@@ -141,15 +168,10 @@ export function WalletDepositPanel({ onDeposited, compact }: Props) {
           {error}
         </p>
       ) : null}
-      {success ? (
-        <p className="rounded-xl bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-900 ring-1 ring-emerald-200">
-          {success}
-        </p>
-      ) : null}
 
       <p className="text-[10px] font-semibold leading-relaxed text-slate-500">
-        Այս փուլում վճարումը սիմուլացված է՝ զարգացման համար։ Ապագայում այստեղ
-        կմիացվի իրական վճարային համակարգ։
+        Վճարումը կատարվում է ITF VPOS-ով ({MIN_AMOUNT}–{MAX_AMOUNT} ֏)։
+        Գումարը գանձվում է անմիջապես։
       </p>
     </div>
   );

@@ -28,10 +28,12 @@ export type AggregateTransaction = {
 
 export type TransactionAvgAggregateOutputType = {
   amount: runtime.Decimal | null
+  orderNumber: number | null
 }
 
 export type TransactionSumAggregateOutputType = {
   amount: runtime.Decimal | null
+  orderNumber: number | null
 }
 
 export type TransactionMinAggregateOutputType = {
@@ -44,6 +46,7 @@ export type TransactionMinAggregateOutputType = {
   currency: string | null
   gateway: string | null
   gatewayRef: string | null
+  orderNumber: number | null
   description: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -59,6 +62,7 @@ export type TransactionMaxAggregateOutputType = {
   currency: string | null
   gateway: string | null
   gatewayRef: string | null
+  orderNumber: number | null
   description: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -74,6 +78,7 @@ export type TransactionCountAggregateOutputType = {
   currency: number
   gateway: number
   gatewayRef: number
+  orderNumber: number
   description: number
   createdAt: number
   updatedAt: number
@@ -83,10 +88,12 @@ export type TransactionCountAggregateOutputType = {
 
 export type TransactionAvgAggregateInputType = {
   amount?: true
+  orderNumber?: true
 }
 
 export type TransactionSumAggregateInputType = {
   amount?: true
+  orderNumber?: true
 }
 
 export type TransactionMinAggregateInputType = {
@@ -99,6 +106,7 @@ export type TransactionMinAggregateInputType = {
   currency?: true
   gateway?: true
   gatewayRef?: true
+  orderNumber?: true
   description?: true
   createdAt?: true
   updatedAt?: true
@@ -114,6 +122,7 @@ export type TransactionMaxAggregateInputType = {
   currency?: true
   gateway?: true
   gatewayRef?: true
+  orderNumber?: true
   description?: true
   createdAt?: true
   updatedAt?: true
@@ -129,6 +138,7 @@ export type TransactionCountAggregateInputType = {
   currency?: true
   gateway?: true
   gatewayRef?: true
+  orderNumber?: true
   description?: true
   createdAt?: true
   updatedAt?: true
@@ -231,6 +241,7 @@ export type TransactionGroupByOutputType = {
   currency: string
   gateway: string | null
   gatewayRef: string | null
+  orderNumber: number | null
   description: string | null
   createdAt: Date
   updatedAt: Date
@@ -269,6 +280,7 @@ export type TransactionWhereInput = {
   currency?: Prisma.StringFilter<"Transaction"> | string
   gateway?: Prisma.StringNullableFilter<"Transaction"> | string | null
   gatewayRef?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  orderNumber?: Prisma.IntNullableFilter<"Transaction"> | number | null
   description?: Prisma.StringNullableFilter<"Transaction"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
@@ -286,6 +298,7 @@ export type TransactionOrderByWithRelationInput = {
   currency?: Prisma.SortOrder
   gateway?: Prisma.SortOrderInput | Prisma.SortOrder
   gatewayRef?: Prisma.SortOrderInput | Prisma.SortOrder
+  orderNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -296,6 +309,7 @@ export type TransactionOrderByWithRelationInput = {
 
 export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  orderNumber?: number
   AND?: Prisma.TransactionWhereInput | Prisma.TransactionWhereInput[]
   OR?: Prisma.TransactionWhereInput[]
   NOT?: Prisma.TransactionWhereInput | Prisma.TransactionWhereInput[]
@@ -312,7 +326,7 @@ export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   bid?: Prisma.XOR<Prisma.BidNullableScalarRelationFilter, Prisma.BidWhereInput> | null
-}, "id">
+}, "id" | "orderNumber">
 
 export type TransactionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -324,6 +338,7 @@ export type TransactionOrderByWithAggregationInput = {
   currency?: Prisma.SortOrder
   gateway?: Prisma.SortOrderInput | Prisma.SortOrder
   gatewayRef?: Prisma.SortOrderInput | Prisma.SortOrder
+  orderNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -347,6 +362,7 @@ export type TransactionScalarWhereWithAggregatesInput = {
   currency?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
   gateway?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   gatewayRef?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
+  orderNumber?: Prisma.IntNullableWithAggregatesFilter<"Transaction"> | number | null
   description?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
@@ -360,6 +376,7 @@ export type TransactionCreateInput = {
   currency?: string
   gateway?: string | null
   gatewayRef?: string | null
+  orderNumber?: number | null
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -377,6 +394,7 @@ export type TransactionUncheckedCreateInput = {
   currency?: string
   gateway?: string | null
   gatewayRef?: string | null
+  orderNumber?: number | null
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -390,6 +408,7 @@ export type TransactionUpdateInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   gateway?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -407,6 +426,7 @@ export type TransactionUncheckedUpdateInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   gateway?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -422,6 +442,7 @@ export type TransactionCreateManyInput = {
   currency?: string
   gateway?: string | null
   gatewayRef?: string | null
+  orderNumber?: number | null
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -435,6 +456,7 @@ export type TransactionUpdateManyMutationInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   gateway?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -450,6 +472,7 @@ export type TransactionUncheckedUpdateManyInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   gateway?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -481,6 +504,7 @@ export type TransactionCountOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   gateway?: Prisma.SortOrder
   gatewayRef?: Prisma.SortOrder
+  orderNumber?: Prisma.SortOrder
   description?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -488,6 +512,7 @@ export type TransactionCountOrderByAggregateInput = {
 
 export type TransactionAvgOrderByAggregateInput = {
   amount?: Prisma.SortOrder
+  orderNumber?: Prisma.SortOrder
 }
 
 export type TransactionMaxOrderByAggregateInput = {
@@ -500,6 +525,7 @@ export type TransactionMaxOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   gateway?: Prisma.SortOrder
   gatewayRef?: Prisma.SortOrder
+  orderNumber?: Prisma.SortOrder
   description?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -515,6 +541,7 @@ export type TransactionMinOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   gateway?: Prisma.SortOrder
   gatewayRef?: Prisma.SortOrder
+  orderNumber?: Prisma.SortOrder
   description?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -522,6 +549,7 @@ export type TransactionMinOrderByAggregateInput = {
 
 export type TransactionSumOrderByAggregateInput = {
   amount?: Prisma.SortOrder
+  orderNumber?: Prisma.SortOrder
 }
 
 export type TransactionCreateNestedManyWithoutUserInput = {
@@ -624,6 +652,7 @@ export type TransactionCreateWithoutUserInput = {
   currency?: string
   gateway?: string | null
   gatewayRef?: string | null
+  orderNumber?: number | null
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -639,6 +668,7 @@ export type TransactionUncheckedCreateWithoutUserInput = {
   currency?: string
   gateway?: string | null
   gatewayRef?: string | null
+  orderNumber?: number | null
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -683,6 +713,7 @@ export type TransactionScalarWhereInput = {
   currency?: Prisma.StringFilter<"Transaction"> | string
   gateway?: Prisma.StringNullableFilter<"Transaction"> | string | null
   gatewayRef?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  orderNumber?: Prisma.IntNullableFilter<"Transaction"> | number | null
   description?: Prisma.StringNullableFilter<"Transaction"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
@@ -696,6 +727,7 @@ export type TransactionCreateWithoutBidInput = {
   currency?: string
   gateway?: string | null
   gatewayRef?: string | null
+  orderNumber?: number | null
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -711,6 +743,7 @@ export type TransactionUncheckedCreateWithoutBidInput = {
   currency?: string
   gateway?: string | null
   gatewayRef?: string | null
+  orderNumber?: number | null
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -751,6 +784,7 @@ export type TransactionCreateManyUserInput = {
   currency?: string
   gateway?: string | null
   gatewayRef?: string | null
+  orderNumber?: number | null
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -764,6 +798,7 @@ export type TransactionUpdateWithoutUserInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   gateway?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -779,6 +814,7 @@ export type TransactionUncheckedUpdateWithoutUserInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   gateway?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -793,6 +829,7 @@ export type TransactionUncheckedUpdateManyWithoutUserInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   gateway?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -807,6 +844,7 @@ export type TransactionCreateManyBidInput = {
   currency?: string
   gateway?: string | null
   gatewayRef?: string | null
+  orderNumber?: number | null
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -820,6 +858,7 @@ export type TransactionUpdateWithoutBidInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   gateway?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -835,6 +874,7 @@ export type TransactionUncheckedUpdateWithoutBidInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   gateway?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -849,6 +889,7 @@ export type TransactionUncheckedUpdateManyWithoutBidInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   gateway?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -866,6 +907,7 @@ export type TransactionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   currency?: boolean
   gateway?: boolean
   gatewayRef?: boolean
+  orderNumber?: boolean
   description?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -885,12 +927,13 @@ export type TransactionSelectScalar = {
   currency?: boolean
   gateway?: boolean
   gatewayRef?: boolean
+  orderNumber?: boolean
   description?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "bidId" | "type" | "status" | "amount" | "currency" | "gateway" | "gatewayRef" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["transaction"]>
+export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "bidId" | "type" | "status" | "amount" | "currency" | "gateway" | "gatewayRef" | "orderNumber" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["transaction"]>
 export type TransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   bid?: boolean | Prisma.Transaction$bidArgs<ExtArgs>
@@ -912,6 +955,10 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     currency: string
     gateway: string | null
     gatewayRef: string | null
+    /**
+     * * VPOS partner orderID (integer from VposOrderSequence)
+     */
+    orderNumber: number | null
     description: string | null
     createdAt: Date
     updatedAt: Date
@@ -1295,6 +1342,7 @@ export interface TransactionFieldRefs {
   readonly currency: Prisma.FieldRef<"Transaction", 'String'>
   readonly gateway: Prisma.FieldRef<"Transaction", 'String'>
   readonly gatewayRef: Prisma.FieldRef<"Transaction", 'String'>
+  readonly orderNumber: Prisma.FieldRef<"Transaction", 'Int'>
   readonly description: Prisma.FieldRef<"Transaction", 'String'>
   readonly createdAt: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Transaction", 'DateTime'>

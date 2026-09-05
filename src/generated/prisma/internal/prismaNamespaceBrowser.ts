@@ -72,6 +72,7 @@ export const ModelName = {
   TenderComplaint: 'TenderComplaint',
   Bid: 'Bid',
   Transaction: 'Transaction',
+  VposOrderSequence: 'VposOrderSequence',
   Subscription: 'Subscription',
   Review: 'Review',
   UserNotification: 'UserNotification',
@@ -406,12 +407,20 @@ export const TransactionScalarFieldEnum = {
   currency: 'currency',
   gateway: 'gateway',
   gatewayRef: 'gatewayRef',
+  orderNumber: 'orderNumber',
   description: 'description',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
+
+
+export const VposOrderSequenceScalarFieldEnum = {
+  id: 'id'
+} as const
+
+export type VposOrderSequenceScalarFieldEnum = (typeof VposOrderSequenceScalarFieldEnum)[keyof typeof VposOrderSequenceScalarFieldEnum]
 
 
 export const SubscriptionScalarFieldEnum = {
