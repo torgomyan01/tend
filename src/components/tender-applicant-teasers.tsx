@@ -1,6 +1,7 @@
 import { AccountTypeBadge } from "@/components/account-type-badge";
 import type { AccountTypeValue } from "@/lib/account-type";
 import {
+  coverLetterCharSnippet,
   coverLetterSnippet,
   initialsFromMasked,
   maskApplicantDisplayName,
@@ -20,9 +21,15 @@ type Props = {
   bids: TenderApplicantTeaserBid[];
   /** Ընդհանուր առաջարկների թիվը (կարող է գերազանցել bids երկարությունը take-ից հետո) */
   totalBidCount: number;
+  /** Փակ մրցույթում նամակի տեքստը՝ միայն 15 տառ */
+  isBlindBidding?: boolean;
 };
 
-export function TenderApplicantTeasers({ bids, totalBidCount }: Props) {
+export function TenderApplicantTeasers({
+  bids,
+  totalBidCount,
+  isBlindBidding = false,
+}: Props) {
   if (totalBidCount === 0) {
     return (
       <section className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/80 px-5 py-8 text-center ring-1 ring-slate-100">
@@ -54,15 +61,18 @@ export function TenderApplicantTeasers({ bids, totalBidCount }: Props) {
       </div>
 
       <p className="text-[11px] font-semibold leading-relaxed text-slate-500">
-        Անունները, լուսանկարները և նամակները ցուցադրվում են ընդհատված՝
-        գաղտնիության համար։
+        {isBlindBidding
+          ? "Փակ առաջարկներ՝ անունները և նամակները ցուցադրվում են խիստ ընդհատված։"
+          : "Անունները, լուսանկարները և նամակները ցուցադրվում են ընդհատված՝ գաղտնիության համար։"}
       </p>
 
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {bids.map((bid) => {
           const masked = maskApplicantDisplayName(bid.provider.name);
           const letter = initialsFromMasked(masked);
-          const snippet = coverLetterSnippet(bid.coverLetter, 8);
+          const snippet = isBlindBidding
+            ? coverLetterCharSnippet(bid.coverLetter, 15)
+            : coverLetterSnippet(bid.coverLetter, 8);
 
           return (
             <li
@@ -90,7 +100,7 @@ export function TenderApplicantTeasers({ bids, totalBidCount }: Props) {
                   </p>
                   <AccountTypeBadge accountType={bid.provider.accountType} />
                 </div>
-                <p className="mt-1 line-clamp-2 text-xs font-semibold leading-snug text-slate-600">
+                <p className="mt-1 truncate text-xs font-semibold leading-snug text-slate-600">
                   «{snippet}»
                 </p>
               </div>

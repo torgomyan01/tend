@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  FileText,
   Loader2,
   Mail,
   Phone,
@@ -26,6 +27,13 @@ type ApplicantBid = {
   bidFeeAmount: number;
   ownerContactSharedAt: string | null;
   createdAt: string;
+  attachments?: Array<{
+    id: string;
+    kind: string;
+    url: string;
+    originalFileName: string;
+    mimeType: string | null;
+  }>;
   provider: {
     id: string;
     name: string | null;
@@ -377,6 +385,49 @@ export function TenderOwnerApplicantsModal({
                             {bid.coverLetter}
                           </p>
                         </div>
+
+                        {bid.attachments && bid.attachments.length > 0 ? (
+                          <div className="mt-3 space-y-2">
+                            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">
+                              Կցված ֆայլեր
+                            </p>
+                            <ul className="flex flex-wrap gap-2">
+                              {bid.attachments.map((att) =>
+                                att.kind === "IMAGE" ? (
+                                  <li key={att.id}>
+                                    <a
+                                      href={att.url}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="block size-16 overflow-hidden rounded-xl ring-1 ring-slate-200"
+                                    >
+                                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                                      <img
+                                        src={att.url}
+                                        alt=""
+                                        className="size-full object-cover"
+                                      />
+                                    </a>
+                                  </li>
+                                ) : (
+                                  <li key={att.id}>
+                                    <a
+                                      href={att.url}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="inline-flex max-w-[12rem] items-center gap-1.5 rounded-xl bg-white px-3 py-2 text-[11px] font-bold text-slate-800 ring-1 ring-slate-200 hover:bg-slate-50"
+                                    >
+                                      <FileText className="size-3.5 shrink-0 text-amber-700" />
+                                      <span className="truncate">
+                                        {att.originalFileName}
+                                      </span>
+                                    </a>
+                                  </li>
+                                ),
+                              )}
+                            </ul>
+                          </div>
+                        ) : null}
 
                         <div className="mt-4 flex flex-wrap gap-2">
                           {bid.status === "SHORTLISTED" &&

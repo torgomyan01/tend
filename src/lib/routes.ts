@@ -10,9 +10,11 @@ export const ROUTES = {
   privacy: "/privacy",
   account: "/account",
   accountSettings: "/account/settings",
+  accountPortfolio: "/account/portfolio",
   accountVerification: "/account/verification",
   accountVerifyTelegram: "/account/verify-telegram",
   accountVerify: "/account/verify",
+  accountWallet: "/account/wallet",
   accountWalletReturn: (orderNumber: string | number) =>
     `/account/wallet/return/${orderNumber}`,
   verifyEmail: "/verify-email",
@@ -21,6 +23,7 @@ export const ROUTES = {
   likedTenders: "/tenders?scope=liked",
   tenders: "/tenders",
   tenderDetail: (id: string) => `/tenders/${id}`,
+  tenderApply: (id: string) => `/tenders/${id}/apply`,
   editTender: (id: string) => `/tenders/${id}/edit`,
   /** Միայն COMPLETED AWARDED զույգ՝ փոխադարձ գնահատական։ */
   tenderReview: (id: string) => `/tenders/${id}/review`,

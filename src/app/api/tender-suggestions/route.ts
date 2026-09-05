@@ -227,113 +227,22 @@ async function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-/** Static fallbacks — 1.x / بعض 2.x ids are retired for “new API key” users per Google notices. */
-const DEFAULT_MODEL_IDS = [
-  "gemini-2.5-flash",
-  "gemini-2.5-flash-lite",
-  "gemini-2.5-pro",
-  "gemini-2.0-flash",
-];
+/** Primary + one fallback if the preferred model id is unknown (404). */
+const FALLBACK_MODEL_ID = "gemini-2.0-flash";
+const DEFAULT_MODEL_ID = "gemini-2.5-flash-lite";
 
 function normalizeModelNames(): string[] {
-  const preferred = process.env.GEMINI_MODEL?.trim();
-  const candidates = [...(preferred ? [preferred] : []), ...DEFAULT_MODEL_IDS].filter((x): x is string =>
-    Boolean(x && x.trim()),
-  );
-
+  const preferred = process.env.GEMINI_MODEL?.trim() || DEFAULT_MODEL_ID;
+  const candidates = [preferred, FALLBACK_MODEL_ID];
   const seen = new Set<string>();
   const unique: string[] = [];
   for (const name of candidates) {
     const trimmed = name.trim();
-    if (seen.has(trimmed)) continue;
+    if (!trimmed || seen.has(trimmed)) continue;
     seen.add(trimmed);
     unique.push(trimmed);
   }
   return unique;
-}
-
-type ListModelsPage = {
-  models?: Array<{
-    name?: string;
-    supportedGenerationMethods?: string[];
-  }>;
-  nextPageToken?: string;
-};
-
-function modelIdFromResourceName(name: string): string | null {
-  const trimmed = name.trim();
-  if (!trimmed) return null;
-  return trimmed.startsWith("models/") ? trimmed.slice("models/".length) : trimmed;
-}
-
-function scoreModelForTitle(id: string): number {
-  const lower = id.toLowerCase();
-  if (lower.includes("embedding") || lower.includes("tts") || lower.includes("aqa")) return -1000;
-  if (lower.includes("image") && lower.includes("flash")) return -50;
-  let s = 0;
-  if (lower.includes("2.5") && lower.includes("flash")) s += 120;
-  if (lower.includes("2.5") && lower.includes("pro")) s += 80;
-  if (lower.includes("2.0") && lower.includes("flash")) s += 50;
-  if (lower.endsWith("-lite") || lower.includes("-flash-lite")) s -= 8;
-  if (lower.includes("exp") || lower.includes("preview")) s -= 3;
-  return s;
-}
-
-/** Lists models exposed for this API key and keeps those that advertise generateContent. */
-async function listGeminiGenerateContentModelIds(apiKey: string): Promise<string[]> {
-  const listUrl = "https://generativelanguage.googleapis.com/v1beta/models";
-  const collected: string[] = [];
-  let pageToken: string | undefined;
-
-  try {
-    for (let guard = 0; guard < 25; guard += 1) {
-      const url = new URL(listUrl);
-      url.searchParams.set("key", apiKey);
-      url.searchParams.set("pageSize", "100");
-      if (pageToken) url.searchParams.set("pageToken", pageToken);
-
-      const res = await fetch(url.toString(), { method: "GET" });
-      if (!res.ok) break;
-
-      const data = (await res.json()) as ListModelsPage;
-      for (const m of data.models ?? []) {
-        if (!m.supportedGenerationMethods?.includes("generateContent")) continue;
-        const id = modelIdFromResourceName(m.name ?? "");
-        if (id) collected.push(id);
-      }
-      pageToken = data.nextPageToken;
-      if (!pageToken) break;
-    }
-  } catch {
-    return [];
-  }
-
-  const uniq = [...new Set(collected)];
-  uniq.sort((a, b) => scoreModelForTitle(b) - scoreModelForTitle(a));
-  return uniq;
-}
-
-function mergeModelOrder(params: {
-  preferred?: string | null;
-  fromApi: string[];
-  fallback: string[];
-}): string[] {
-  const { preferred, fromApi, fallback } = params;
-  const out: string[] = [];
-  const seen = new Set<string>();
-
-  const push = (id: string) => {
-    const t = id.trim();
-    if (!t || seen.has(t)) return;
-    seen.add(t);
-    out.push(t);
-  };
-
-  if (preferred) push(preferred);
-  // Prefer IDs the key actually exposes (fixes “wrong default model forever” issues).
-  for (const id of fromApi) push(id);
-  for (const id of fallback) push(id);
-  return out;
 }
 
 function normalizeBases(): string[] {
@@ -341,7 +250,6 @@ function normalizeBases(): string[] {
   const bases = [
     preferred,
     "https://generativelanguage.googleapis.com/v1beta",
-    "https://generativelanguage.googleapis.com/v1",
   ].filter((x): x is string => Boolean(x && x.trim()));
 
   const seen = new Set<string>();
@@ -366,25 +274,54 @@ function safeJsonStringify(value: unknown) {
 type GeminiGenerateResponse = {
   candidates?: Array<{
     content?: {
-      parts?: Array<{ text?: string }>;
+      parts?: Array<{ text?: string; thought?: boolean }>;
     };
   }>;
   promptFeedback?: unknown;
   error?: { message?: string; status?: string };
 };
 
+type GenerateKind = "title" | "description";
+
+function isBillingExhausted(status: number, bodyText: string): boolean {
+  if (status !== 429 && status !== 403) return false;
+  return /prepayment credits are depleted|credits are depleted|manage your project and billing|billing#prepay/i.test(
+    bodyText,
+  );
+}
+
+function generationConfigFor(
+  kind: GenerateKind,
+  modelName: string,
+  opts?: { disableThinking?: boolean },
+) {
+  const maxOutputTokens = kind === "title" ? 128 : 1400;
+  const config: Record<string, unknown> = {
+    temperature: kind === "title" ? 0.55 : 0.65,
+    maxOutputTokens,
+  };
+  // Gemini 2.5 thinking adds multi-second latency — disable unless unsupported.
+  if (!opts?.disableThinking && /2\.5/i.test(modelName)) {
+    config.thinkingConfig = { thinkingBudget: 0 };
+  }
+  return config;
+}
+
 async function callGeminiREST(params: {
   base: string;
   apiKey: string;
   modelName: string;
   prompt: string;
+  kind: GenerateKind;
+  disableThinking?: boolean;
 }): Promise<{ ok: true; text: string } | { ok: false; status: number; bodyText: string }> {
-  const { base, apiKey, modelName, prompt } = params;
+  const { base, apiKey, modelName, prompt, kind, disableThinking } = params;
   const modelPath = modelName.startsWith("models/") ? modelName : `models/${modelName}`;
   const url = `${base}/${modelPath}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
   const payload = {
     contents: [{ role: "user", parts: [{ text: prompt }] }],
+    generationConfig: generationConfigFor(kind, modelName, { disableThinking }),
   };
 
   const res = await fetch(url, {
@@ -404,10 +341,13 @@ async function callGeminiREST(params: {
   }
 
   const text =
-    data?.candidates?.[0]?.content?.parts?.map((p) => p.text ?? "").join("")?.trim() ?? "";
+    data?.candidates?.[0]?.content?.parts
+      ?.filter((p) => !p.thought)
+      .map((p) => p.text ?? "")
+      .join("")
+      ?.trim() ?? "";
 
   if (!text) {
-    // If the response shape differs, return a soft failure with details.
     return {
       ok: false,
       status: 502,
@@ -418,68 +358,91 @@ async function callGeminiREST(params: {
   return { ok: true, text };
 }
 
-async function generateWithRetry(prompt: string): Promise<string> {
+/**
+ * Fast path: one primary model, one fallback.
+ * No model-list round-trip. Billing exhaustion fails immediately.
+ */
+async function generateWithRetry(
+  prompt: string,
+  kind: GenerateKind,
+): Promise<string> {
   const apiKey = process.env.GEMINI_API_KEY?.trim();
   if (!apiKey) throw new Error("GEMINI_API_KEY_NOT_SET");
 
-  const preferred = process.env.GEMINI_MODEL?.trim();
-  const fromApi = await listGeminiGenerateContentModelIds(apiKey);
-  const modelNames = mergeModelOrder({
-    preferred: preferred ?? null,
-    fromApi,
-    fallback: normalizeModelNames(),
-  });
+  const modelNames = normalizeModelNames();
   if (modelNames.length === 0) throw new Error("GEMINI_MODEL_NOT_SET");
 
-  if (process.env.NODE_ENV !== "production" && fromApi.length > 0) {
-    console.debug("[tender-suggestions] Gemini models (generateContent):", fromApi.slice(0, 12));
-  }
   const bases = normalizeBases();
-
-  const maxAttempts = 3;
   let lastStatus: number | null = null;
   let lastBody = "";
 
+  const fail = (code: string): never => {
+    const err = new Error(code);
+    (err as Error & { status?: number; body?: string }).status =
+      lastStatus ?? undefined;
+    (err as Error & { status?: number; body?: string }).body = lastBody;
+    throw err;
+  };
+
   for (const base of bases) {
     for (const modelName of modelNames) {
-      for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      let disableThinking = false;
+
+      for (let attempt = 1; attempt <= 2; attempt += 1) {
         if (process.env.NODE_ENV !== "production") {
           console.debug("[tender-suggestions] Gemini REST attempt:", {
             base,
             modelName,
+            kind,
             attempt,
+            disableThinking,
           });
         }
 
-        const result = await callGeminiREST({ base, apiKey, modelName, prompt });
+        const result = await callGeminiREST({
+          base,
+          apiKey,
+          modelName,
+          prompt,
+          kind,
+          disableThinking,
+        });
         if (result.ok) return result.text;
 
         lastStatus = result.status;
         lastBody = result.bodyText;
 
-        // Model/base not found → try next combination immediately
-        if (result.status === 404) break;
+        if (isBillingExhausted(result.status, result.bodyText)) {
+          fail("GEMINI_QUOTA_EXHAUSTED");
+        }
 
-        // High demand / transient → retry
-        if (result.status === 429 || result.status === 500 || result.status === 503) {
-          if (attempt === maxAttempts) break;
-          const delay = 600 * Math.pow(2, attempt - 1) + Math.floor(Math.random() * 250);
-          await sleep(delay);
+        // thinkingConfig unsupported → same model once without it
+        if (
+          result.status === 400 &&
+          !disableThinking &&
+          /thinking|Thinking|unknown name/i.test(result.bodyText)
+        ) {
+          disableThinking = true;
           continue;
         }
 
-        // Other errors (401/403/etc.) shouldn't loop forever
+        if (result.status === 404) break;
+
+        // Transient rate limit (not billing) — one short retry, then next model
+        if (result.status === 429 || result.status === 500 || result.status === 503) {
+          if (attempt === 2) break;
+          await sleep(400 + Math.floor(Math.random() * 200));
+          continue;
+        }
+
+        if (result.status === 400) break;
+
         break;
       }
     }
   }
 
-  const err = new Error(
-    lastStatus ? `GEMINI_REST_FAILED_${lastStatus}` : "GEMINI_REST_FAILED",
-  );
-  (err as Error & { status?: number; body?: string }).status = lastStatus ?? undefined;
-  (err as Error & { status?: number; body?: string }).body = lastBody;
-  throw err;
+  return fail(lastStatus ? `GEMINI_REST_FAILED_${lastStatus}` : "GEMINI_REST_FAILED");
 }
 
 export async function POST(req: Request) {
@@ -511,14 +474,14 @@ export async function POST(req: Request) {
           ? buildRewriteDescriptionPrompt(services, draft, ctxTitle || undefined, urgency)
           : buildGenerateDescriptionPrompt(services, ctxTitle || undefined, urgency);
 
-      const rawDesc = await generateWithRetry(promptDesc);
+      const rawDesc = await generateWithRetry(promptDesc, "description");
       if (process.env.NODE_ENV !== "production") {
         console.debug("[tender-suggestions] description raw(full):", { descMode, rawDesc });
       }
       let cleanedDesc = cleanDescriptionText(rawDesc);
       if (!cleanedDesc || isBadDescription(cleanedDesc)) {
         const strictDesc = `${promptDesc}\n\nՊարտադիր՝ պահպանիր պահանջները, տուր ամբողջական բազմատող նկարագրություն, առնվազն ${DESCRIPTION_MIN_CHARS} նիշ։ Պատվիրատուի տոն, ոչ թե կատարողի։`;
-        const raw2d = await generateWithRetry(strictDesc);
+        const raw2d = await generateWithRetry(strictDesc, "description");
         if (process.env.NODE_ENV !== "production") {
           console.debug("[tender-suggestions] description raw(retry):", { descMode, raw2d });
         }
@@ -544,14 +507,14 @@ export async function POST(req: Request) {
         ? buildRewritePrompt(services, title!, urgency)
         : buildGeneratePrompt(services, urgency);
 
-    const raw = await generateWithRetry(prompt);
+    const raw = await generateWithRetry(prompt, "title");
     if (process.env.NODE_ENV !== "production") {
       console.debug("[tender-suggestions] raw(full):", { mode, raw });
     }
     const cleaned = cleanTitle(raw);
     if (!cleaned || isBadTitle(cleaned)) {
       const strictPrompt = `${prompt}\n\nՊարտադիր՝ տուր լիարժեք վերնագիր (առնվազն 4 բառ), ոչ մի կիսատ բառ չլինի։ Պատվիրատուի տոնով՝ «Անհրաժեշտ է / Կարիք կա», ոչ թե «Իրականացնում եմ / Կատարում եմ»։`;
-      const raw2 = await generateWithRetry(strictPrompt);
+      const raw2 = await generateWithRetry(strictPrompt, "title");
       if (process.env.NODE_ENV !== "production") {
         console.debug("[tender-suggestions] raw(full retry):", { mode, raw: raw2 });
       }
@@ -577,6 +540,9 @@ export async function POST(req: Request) {
           ? (e as { status?: unknown; body?: unknown }).status || (e as { body?: unknown }).body
           : null;
       console.warn("[tender-suggestions] Gemini failed:", msg, extra, e);
+    }
+    if (msg === "GEMINI_QUOTA_EXHAUSTED") {
+      return NextResponse.json({ error: "AI_QUOTA_EXCEEDED" }, { status: 402 });
     }
     return NextResponse.json({ error: "AI_UNAVAILABLE" }, { status: 503 });
   }

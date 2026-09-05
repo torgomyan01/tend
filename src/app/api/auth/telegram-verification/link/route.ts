@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { isAccountVerified } from "@/lib/account-verification";
 import { maskArmenianPhone } from "@/lib/phone";
 import { prisma } from "@/lib/prisma";
 import { issueTelegramLinkForUser } from "@/lib/telegram-link";
@@ -27,12 +26,12 @@ export async function POST() {
     return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
   }
 
-  if (!user.phone) {
-    return NextResponse.json({ error: "PHONE_REQUIRED" }, { status: 400 });
+  if (user.telegramVerifiedAt) {
+    return NextResponse.json({ error: "ALREADY_VERIFIED" }, { status: 400 });
   }
 
-  if (isAccountVerified(user)) {
-    return NextResponse.json({ error: "ALREADY_VERIFIED" }, { status: 400 });
+  if (!user.phone) {
+    return NextResponse.json({ error: "PHONE_REQUIRED" }, { status: 400 });
   }
 
   const link = await issueTelegramLinkForUser(user.id);

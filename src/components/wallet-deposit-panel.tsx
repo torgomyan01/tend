@@ -156,10 +156,10 @@ export function WalletDepositPanel({ compact }: Props) {
           type="button"
           disabled={pending}
           onClick={() => void submitCustom()}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-amber-600 px-4 py-2.5 text-sm font-black text-white transition hover:bg-amber-500 disabled:opacity-50"
+          className="flex w-full items-center cursor-pointer justify-center gap-2 rounded-2xl bg-amber-600 px-4 py-2.5 text-sm font-black text-white transition hover:bg-amber-500 disabled:opacity-50"
         >
           {pending ? <Loader2 className="size-4 animate-spin" /> : null}
-          Վճարել քարտով
+          Լիցքավորել հաշիվը
         </button>
       </div>
 
@@ -168,11 +168,6 @@ export function WalletDepositPanel({ compact }: Props) {
           {error}
         </p>
       ) : null}
-
-      <p className="text-[10px] font-semibold leading-relaxed text-slate-500">
-        Վճարումը կատարվում է ITF VPOS-ով ({MIN_AMOUNT}–{MAX_AMOUNT} ֏)։
-        Գումարը գանձվում է անմիջապես։
-      </p>
     </div>
   );
 }

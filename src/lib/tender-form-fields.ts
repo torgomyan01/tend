@@ -1,5 +1,19 @@
 import { z } from "zod";
 
+/**
+ * FormData booleans arrive as "true"/"false" strings.
+ * `z.coerce.boolean()` uses Boolean(), so "false" wrongly becomes true.
+ */
+export const formDataBoolean = z.preprocess((val) => {
+  if (typeof val === "boolean") return val;
+  if (typeof val === "number") return val === 1;
+  if (val == null) return false;
+  const s = String(val).trim().toLowerCase();
+  if (s === "true" || s === "1" || s === "yes") return true;
+  if (s === "false" || s === "0" || s === "no" || s === "") return false;
+  return val;
+}, z.boolean());
+
 /** Common FormData fields excluding title, description, location, files. */
 export const tenderNumericFieldsSchema = z
   .object({
@@ -7,8 +21,8 @@ export const tenderNumericFieldsSchema = z
     budgetMin: z.string().optional().nullable(),
     budgetMax: z.string().optional().nullable(),
     durationDays: z.coerce.number().int().min(1).max(90),
-    isBlindBidding: z.coerce.boolean(),
-    publish: z.coerce.boolean(),
+    isBlindBidding: formDataBoolean,
+    publish: formDataBoolean,
   })
   .superRefine((data, ctx) => {
     const min = data.budgetMin ? Number(data.budgetMin) : null;

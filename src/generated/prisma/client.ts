@@ -142,6 +142,11 @@ export type TenderComplaint = Prisma.TenderComplaintModel
  */
 export type Bid = Prisma.BidModel
 /**
+ * Model BidAttachment
+ * 
+ */
+export type BidAttachment = Prisma.BidAttachmentModel
+/**
  * Model Transaction
  * 
  */

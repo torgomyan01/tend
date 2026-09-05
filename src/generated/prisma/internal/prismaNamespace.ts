@@ -404,6 +404,7 @@ export const ModelName = {
   TenderSelectedService: 'TenderSelectedService',
   TenderComplaint: 'TenderComplaint',
   Bid: 'Bid',
+  BidAttachment: 'BidAttachment',
   Transaction: 'Transaction',
   VposOrderSequence: 'VposOrderSequence',
   Subscription: 'Subscription',
@@ -427,7 +428,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userCredential" | "profileContactUnlock" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderLike" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "transaction" | "vposOrderSequence" | "subscription" | "review" | "userNotification" | "supportConversation" | "supportMessage" | "supportAttachment"
+    modelProps: "user" | "userCredential" | "profileContactUnlock" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderLike" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "bidAttachment" | "transaction" | "vposOrderSequence" | "subscription" | "review" | "userNotification" | "supportConversation" | "supportMessage" | "supportAttachment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1751,6 +1752,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BidAttachment: {
+      payload: Prisma.$BidAttachmentPayload<ExtArgs>
+      fields: Prisma.BidAttachmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BidAttachmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BidAttachmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BidAttachmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BidAttachmentPayload>
+        }
+        findFirst: {
+          args: Prisma.BidAttachmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BidAttachmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BidAttachmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BidAttachmentPayload>
+        }
+        findMany: {
+          args: Prisma.BidAttachmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BidAttachmentPayload>[]
+        }
+        create: {
+          args: Prisma.BidAttachmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BidAttachmentPayload>
+        }
+        createMany: {
+          args: Prisma.BidAttachmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.BidAttachmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BidAttachmentPayload>
+        }
+        update: {
+          args: Prisma.BidAttachmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BidAttachmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.BidAttachmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BidAttachmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.BidAttachmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BidAttachmentPayload>
+        }
+        aggregate: {
+          args: Prisma.BidAttachmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBidAttachment>
+        }
+        groupBy: {
+          args: Prisma.BidAttachmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BidAttachmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BidAttachmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BidAttachmentCountAggregateOutputType> | number
+        }
+      }
+    }
     Transaction: {
       payload: Prisma.$TransactionPayload<ExtArgs>
       fields: Prisma.TransactionFieldRefs
@@ -2618,6 +2685,21 @@ export const BidScalarFieldEnum = {
 export type BidScalarFieldEnum = (typeof BidScalarFieldEnum)[keyof typeof BidScalarFieldEnum]
 
 
+export const BidAttachmentScalarFieldEnum = {
+  id: 'id',
+  bidId: 'bidId',
+  kind: 'kind',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type BidAttachmentScalarFieldEnum = (typeof BidAttachmentScalarFieldEnum)[keyof typeof BidAttachmentScalarFieldEnum]
+
+
 export const TransactionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -2967,6 +3049,18 @@ export const BidOrderByRelevanceFieldEnum = {
 } as const
 
 export type BidOrderByRelevanceFieldEnum = (typeof BidOrderByRelevanceFieldEnum)[keyof typeof BidOrderByRelevanceFieldEnum]
+
+
+export const BidAttachmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  bidId: 'bidId',
+  kind: 'kind',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType'
+} as const
+
+export type BidAttachmentOrderByRelevanceFieldEnum = (typeof BidAttachmentOrderByRelevanceFieldEnum)[keyof typeof BidAttachmentOrderByRelevanceFieldEnum]
 
 
 export const TransactionOrderByRelevanceFieldEnum = {
@@ -3333,6 +3427,7 @@ export type GlobalOmitConfig = {
   tenderSelectedService?: Prisma.TenderSelectedServiceOmit
   tenderComplaint?: Prisma.TenderComplaintOmit
   bid?: Prisma.BidOmit
+  bidAttachment?: Prisma.BidAttachmentOmit
   transaction?: Prisma.TransactionOmit
   vposOrderSequence?: Prisma.VposOrderSequenceOmit
   subscription?: Prisma.SubscriptionOmit

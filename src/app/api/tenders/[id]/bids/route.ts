@@ -3,8 +3,20 @@ import { z } from "zod";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { computeBidFee } from "@/lib/bid-fee";
+import {
+  BID_MAX_DOCUMENTS,
+  BID_MAX_DOCUMENT_BYTES,
+  BID_MAX_IMAGES,
+  BID_MAX_IMAGE_BYTES,
+  saveBidDocument,
+  saveBidImage,
+} from "@/lib/bid-attachment-upload";
 import { isAccountVerified } from "@/lib/account-verification";
 import { prisma } from "@/lib/prisma";
+import {
+  ALLOWED_IMAGE_TYPES,
+  isAllowedDocument,
+} from "@/lib/tender-form-upload";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +25,59 @@ const bodySchema = z.object({
   timelineDays: z.number().int().min(1).max(3650),
   coverLetter: z.string().trim().min(30).max(20000),
 });
+
+type BidPayload = z.infer<typeof bodySchema>;
+
+async function parseBidRequest(request: Request): Promise<
+  | { ok: true; data: BidPayload; images: File[]; documents: File[] }
+  | { ok: false; error: string }
+> {
+  const contentType = request.headers.get("content-type") ?? "";
+
+  if (contentType.includes("multipart/form-data")) {
+    let formData: FormData;
+    try {
+      formData = await request.formData();
+    } catch {
+      return { ok: false, error: "INVALID_PAYLOAD" };
+    }
+
+    const priceRaw = String(formData.get("price") ?? "").trim();
+    const daysRaw = String(formData.get("timelineDays") ?? "").trim();
+    const coverLetter = String(formData.get("coverLetter") ?? "");
+    const price = Number(priceRaw);
+    const timelineDays = Number(daysRaw);
+
+    const parsed = bodySchema.safeParse({
+      price,
+      timelineDays,
+      coverLetter,
+    });
+    if (!parsed.success) {
+      return { ok: false, error: "INVALID_PAYLOAD" };
+    }
+
+    const images = formData
+      .getAll("images")
+      .filter((v): v is File => v instanceof File && v.size > 0);
+    const documents = formData
+      .getAll("documents")
+      .filter((v): v is File => v instanceof File && v.size > 0);
+
+    if (images.length > BID_MAX_IMAGES || documents.length > BID_MAX_DOCUMENTS) {
+      return { ok: false, error: "INVALID_PAYLOAD" };
+    }
+
+    return { ok: true, data: parsed.data, images, documents };
+  }
+
+  const raw = await request.json().catch(() => null);
+  const parsed = bodySchema.safeParse(raw);
+  if (!parsed.success) {
+    return { ok: false, error: "INVALID_PAYLOAD" };
+  }
+  return { ok: true, data: parsed.data, images: [], documents: [] };
+}
 
 export async function POST(
   request: Request,
@@ -25,14 +90,29 @@ export async function POST(
   }
 
   const { id: tenderId } = await context.params;
-  const raw = await request.json().catch(() => null);
-  const parsed = bodySchema.safeParse(raw);
-
-  if (!parsed.success) {
-    return NextResponse.json({ error: "INVALID_PAYLOAD" }, { status: 400 });
+  const parsedReq = await parseBidRequest(request);
+  if (!parsedReq.ok) {
+    return NextResponse.json({ error: parsedReq.error }, { status: 400 });
   }
 
+  const { data: bidFields, images, documents } = parsedReq;
   const providerId = session.user.id;
+
+  for (const file of images) {
+    if (
+      !ALLOWED_IMAGE_TYPES.includes(
+        file.type as (typeof ALLOWED_IMAGE_TYPES)[number],
+      ) ||
+      file.size > BID_MAX_IMAGE_BYTES
+    ) {
+      return NextResponse.json({ error: "INVALID_ATTACHMENT" }, { status: 400 });
+    }
+  }
+  for (const file of documents) {
+    if (!isAllowedDocument(file) || file.size > BID_MAX_DOCUMENT_BYTES) {
+      return NextResponse.json({ error: "INVALID_ATTACHMENT" }, { status: 400 });
+    }
+  }
 
   try {
     const result = await prisma.$transaction(async (tx) => {
@@ -176,22 +256,7 @@ export async function POST(
         }
       }
 
-      const minB =
-        tender.budgetMin !== null ? Number(tender.budgetMin) : null;
-      const maxB =
-        tender.budgetMax !== null ? Number(tender.budgetMax) : null;
-      const price = parsed.data.price;
-
-      if (minB !== null && price < minB) {
-        throw Object.assign(new Error("PRICE_OUT_OF_RANGE"), {
-          code: "PRICE_OUT_OF_RANGE" as const,
-        });
-      }
-      if (maxB !== null && price > maxB) {
-        throw Object.assign(new Error("PRICE_OUT_OF_RANGE"), {
-          code: "PRICE_OUT_OF_RANGE" as const,
-        });
-      }
+      const price = bidFields.price;
 
       if (feeToCharge > 0) {
         await tx.user.update({
@@ -209,8 +274,8 @@ export async function POST(
           tenderId,
           providerId,
           price,
-          timelineDays: parsed.data.timelineDays,
-          coverLetter: parsed.data.coverLetter,
+          timelineDays: bidFields.timelineDays,
+          coverLetter: bidFields.coverLetter,
           bidFeeAmount: feeToCharge,
           status: "PENDING",
         },
@@ -239,10 +304,56 @@ export async function POST(
       };
     });
 
+    // Files outside the DB transaction (filesystem I/O)
+    const attachmentRows: Array<{
+      bidId: string;
+      kind: string;
+      url: string;
+      originalFileName: string;
+      mimeType: string | null;
+      sizeBytes: number;
+      sortOrder: number;
+    }> = [];
+
+    try {
+      let sort = 0;
+      for (const file of images) {
+        const saved = await saveBidImage(file, result.bidId);
+        attachmentRows.push({
+          bidId: result.bidId,
+          kind: "IMAGE",
+          url: saved.url,
+          originalFileName: saved.originalFileName,
+          mimeType: saved.mimeType,
+          sizeBytes: saved.sizeBytes,
+          sortOrder: sort++,
+        });
+      }
+      for (const file of documents) {
+        const saved = await saveBidDocument(file, result.bidId);
+        attachmentRows.push({
+          bidId: result.bidId,
+          kind: "DOCUMENT",
+          url: saved.url,
+          originalFileName: saved.originalFileName,
+          mimeType: saved.mimeType,
+          sizeBytes: saved.sizeBytes,
+          sortOrder: sort++,
+        });
+      }
+
+      if (attachmentRows.length > 0) {
+        await prisma.bidAttachment.createMany({ data: attachmentRows });
+      }
+    } catch (fileError) {
+      console.error("[POST /api/tenders/[id]/bids] attachments", fileError);
+    }
+
     return NextResponse.json({
       ok: true,
       bidId: result.bidId,
       feeCharged: result.fee,
+      attachmentCount: attachmentRows.length,
     });
   } catch (error: unknown) {
     const code =

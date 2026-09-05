@@ -39,6 +39,16 @@ export async function GET(
       bidFeeAmount: true,
       ownerContactSharedAt: true,
       createdAt: true,
+      attachments: {
+        orderBy: { sortOrder: "asc" },
+        select: {
+          id: true,
+          kind: true,
+          url: true,
+          originalFileName: true,
+          mimeType: true,
+        },
+      },
       provider: {
         select: {
           id: true,
@@ -65,6 +75,7 @@ export async function GET(
       bidFeeAmount: Number(b.bidFeeAmount),
       ownerContactSharedAt: b.ownerContactSharedAt?.toISOString() ?? null,
       createdAt: b.createdAt.toISOString(),
+      attachments: b.attachments,
       provider: {
         ...b.provider,
         telegramVerifiedAt: b.provider.telegramVerifiedAt?.toISOString() ?? null,

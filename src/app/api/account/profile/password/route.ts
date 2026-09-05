@@ -7,8 +7,13 @@ import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
-const bodySchema = z.object({
+const changeSchema = z.object({
   currentPassword: z.string().min(1),
+  newPassword: z.string().min(8).max(128),
+});
+
+/** Google / OAuth users have no password yet — set one without currentPassword. */
+const setSchema = z.object({
   newPassword: z.string().min(8).max(128),
 });
 
@@ -24,13 +29,28 @@ export async function PATCH(request: Request) {
     select: { id: true, isBlocked: true, passwordHash: true },
   });
 
-  if (!me || me.isBlocked || !me.passwordHash) {
+  if (!me || me.isBlocked) {
     return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
   }
 
   const body: unknown = await request.json().catch(() => null);
-  const parsed = bodySchema.safeParse(body);
 
+  // First-time password for Google-only accounts
+  if (!me.passwordHash) {
+    const parsed = setSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: "INVALID_PAYLOAD" }, { status: 400 });
+    }
+
+    await prisma.user.update({
+      where: { id: me.id },
+      data: { passwordHash: hashPassword(parsed.data.newPassword) },
+    });
+
+    return NextResponse.json({ ok: true, mode: "set" });
+  }
+
+  const parsed = changeSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: "INVALID_PAYLOAD" }, { status: 400 });
   }
@@ -44,5 +64,5 @@ export async function PATCH(request: Request) {
     data: { passwordHash: hashPassword(parsed.data.newPassword) },
   });
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, mode: "change" });
 }

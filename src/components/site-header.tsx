@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { AuthDropdown } from "@/components/auth-dropdown";
 import { TelegramConnectBanner } from "@/components/telegram-connect-banner";
+import { TelegramNavbarNudge } from "@/components/telegram-navbar-nudge";
 import { LanguageDropdown } from "@/components/language-dropdown";
 import { MobileMenu } from "@/components/mobile-menu";
 import { SiteNav } from "@/components/site-nav";
@@ -40,11 +41,16 @@ export async function SiteHeader() {
       <div className="flex items-center gap-3">
         {isLoggedIn ? (
           <>
+            <div className="hidden md:contents">
+              <TelegramNavbarNudge />
+            </div>
             <NotificationsDropdown
               isLoggedIn={isLoggedIn}
               className="hidden md:block"
             />
-            <WalletDropdown isLoggedIn={isLoggedIn} />
+            <div className="hidden md:contents">
+              <WalletDropdown isLoggedIn={isLoggedIn} />
+            </div>
           </>
         ) : null}
         {/* <LanguageDropdown /> */}

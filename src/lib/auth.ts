@@ -181,6 +181,8 @@ export const authOptions: NextAuthOptions = {
           phone?: string | null;
           image?: string | null;
           removeAvatar?: boolean;
+          telegramVerified?: boolean;
+          accountVerified?: boolean;
         };
         if ("name" in patch) token.name = patch.name ?? undefined;
         if (patch.email !== undefined) token.email = patch.email;
@@ -190,9 +192,19 @@ export const authOptions: NextAuthOptions = {
         } else if (patch.image !== undefined && patch.image !== null) {
           token.picture = patch.image;
         }
+        if (typeof patch.telegramVerified === "boolean") {
+          token.telegramVerified = patch.telegramVerified;
+        }
+        if (typeof patch.accountVerified === "boolean") {
+          token.accountVerified = patch.accountVerified;
+        }
       }
 
-      if (token.sub && (!token.role || !token.accountVerified)) {
+      // Re-read DB until Telegram is linked (Google users are already accountVerified).
+      if (
+        token.sub &&
+        (!token.role || !token.accountVerified || !token.telegramVerified)
+      ) {
         await hydrateTokenFromDb(token.sub, token as Record<string, unknown>);
       }
 

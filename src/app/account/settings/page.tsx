@@ -1,4 +1,4 @@
-import { Album, ArrowLeft, BadgeCheck, Building2, Settings2 } from "lucide-react";
+import { ArrowLeft, BadgeCheck, Building2, Settings2 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
@@ -9,7 +9,6 @@ import {
   type AccountCredential,
   type CredentialKind,
 } from "@/components/account-credentials-manager";
-import { AccountPortfolioManager } from "@/components/account-portfolio-manager";
 import { AccountProfileSettings } from "@/components/account-profile-settings";
 import { AccountSettingsInterests } from "@/components/account-settings-interests";
 import { SiteHeader } from "@/components/site-header";
@@ -37,7 +36,7 @@ export default async function AccountSettingsPage() {
 
   const userId = session.user.id;
 
-  const [profileUser, categories, interestRows, credentialRows, portfolioRows] =
+  const [profileUser, categories, interestRows, credentialRows] =
     await Promise.all([
       prisma.user.findUnique({
         where: { id: userId },
@@ -47,6 +46,7 @@ export default async function AccountSettingsPage() {
           phone: true,
           image: true,
           bio: true,
+          passwordHash: true,
           accountType: true,
           companyName: true,
           legalForm: true,
@@ -78,21 +78,6 @@ export default async function AccountSettingsPage() {
           createdAt: true,
         },
       }),
-      prisma.userPortfolioItem.findMany({
-        where: { userId },
-        orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          sortOrder: true,
-          createdAt: true,
-          images: {
-            orderBy: { sortOrder: "asc" },
-            select: { id: true, url: true, sortOrder: true },
-          },
-        },
-      }),
     ]);
 
   if (!profileUser) {
@@ -111,6 +96,7 @@ export default async function AccountSettingsPage() {
     image: profileUser.image,
     bio: profileUser.bio,
   };
+  const hasPassword = Boolean(profileUser.passwordHash);
 
   const initialCompany = {
     accountType: profileUser.accountType as AccountTypeValue,
@@ -133,19 +119,6 @@ export default async function AccountSettingsPage() {
     mimeType: row.mimeType,
     sortOrder: row.sortOrder,
     createdAt: row.createdAt.toISOString(),
-  }));
-
-  const initialPortfolio = portfolioRows.map((row) => ({
-    id: row.id,
-    title: row.title,
-    description: row.description,
-    sortOrder: row.sortOrder,
-    createdAt: row.createdAt.toISOString(),
-    images: row.images.map((img) => ({
-      id: img.id,
-      url: img.url,
-      sortOrder: img.sortOrder,
-    })),
   }));
 
   return (
@@ -180,7 +153,10 @@ export default async function AccountSettingsPage() {
             </div>
 
             <div className="mt-10">
-              <AccountProfileSettings initialProfile={initialProfile} />
+              <AccountProfileSettings
+                initialProfile={initialProfile}
+                hasPassword={hasPassword}
+              />
             </div>
           </section>
 
@@ -225,25 +201,6 @@ export default async function AccountSettingsPage() {
               <AccountCredentialsManager
                 initialCredentials={initialCredentials}
               />
-            </div>
-          </section>
-
-          <section className="rounded-4xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-8">
-            <div className="flex items-start gap-3">
-              <div className="grid size-11 shrink-0 place-items-center rounded-2xl bg-amber-100 text-amber-800">
-                <Album className="size-5" />
-              </div>
-              <div>
-                <h2 className="text-sm font-black uppercase tracking-[0.18em] text-slate-500">
-                  Իմ պորտֆոլիոն
-                </h2>
-                <p className="mt-2 text-sm font-semibold text-slate-600">
-                  Ավելացրեք ձեր ավարտած աշխատանքները՝ նկարներով և կարճ նկարագրությամբ։
-                </p>
-              </div>
-            </div>
-            <div className="mt-6">
-              <AccountPortfolioManager initialItems={initialPortfolio} />
             </div>
           </section>
 

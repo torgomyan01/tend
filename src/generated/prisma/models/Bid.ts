@@ -304,6 +304,7 @@ export type BidWhereInput = {
   provider?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   awardedTender?: Prisma.XOR<Prisma.TenderNullableScalarRelationFilter, Prisma.TenderWhereInput> | null
   transactions?: Prisma.TransactionListRelationFilter
+  attachments?: Prisma.BidAttachmentListRelationFilter
 }
 
 export type BidOrderByWithRelationInput = {
@@ -325,6 +326,7 @@ export type BidOrderByWithRelationInput = {
   provider?: Prisma.UserOrderByWithRelationInput
   awardedTender?: Prisma.TenderOrderByWithRelationInput
   transactions?: Prisma.TransactionOrderByRelationAggregateInput
+  attachments?: Prisma.BidAttachmentOrderByRelationAggregateInput
   _relevance?: Prisma.BidOrderByRelevanceInput
 }
 
@@ -351,6 +353,7 @@ export type BidWhereUniqueInput = Prisma.AtLeast<{
   provider?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   awardedTender?: Prisma.XOR<Prisma.TenderNullableScalarRelationFilter, Prisma.TenderWhereInput> | null
   transactions?: Prisma.TransactionListRelationFilter
+  attachments?: Prisma.BidAttachmentListRelationFilter
 }, "id" | "tenderId_providerId">
 
 export type BidOrderByWithAggregationInput = {
@@ -412,6 +415,7 @@ export type BidCreateInput = {
   provider: Prisma.UserCreateNestedOneWithoutBidsInput
   awardedTender?: Prisma.TenderCreateNestedOneWithoutAwardedBidInput
   transactions?: Prisma.TransactionCreateNestedManyWithoutBidInput
+  attachments?: Prisma.BidAttachmentCreateNestedManyWithoutBidInput
 }
 
 export type BidUncheckedCreateInput = {
@@ -431,6 +435,7 @@ export type BidUncheckedCreateInput = {
   updatedAt?: Date | string
   awardedTender?: Prisma.TenderUncheckedCreateNestedOneWithoutAwardedBidInput
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutBidInput
+  attachments?: Prisma.BidAttachmentUncheckedCreateNestedManyWithoutBidInput
 }
 
 export type BidUpdateInput = {
@@ -450,6 +455,7 @@ export type BidUpdateInput = {
   provider?: Prisma.UserUpdateOneRequiredWithoutBidsNestedInput
   awardedTender?: Prisma.TenderUpdateOneWithoutAwardedBidNestedInput
   transactions?: Prisma.TransactionUpdateManyWithoutBidNestedInput
+  attachments?: Prisma.BidAttachmentUpdateManyWithoutBidNestedInput
 }
 
 export type BidUncheckedUpdateInput = {
@@ -469,6 +475,7 @@ export type BidUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   awardedTender?: Prisma.TenderUncheckedUpdateOneWithoutAwardedBidNestedInput
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutBidNestedInput
+  attachments?: Prisma.BidAttachmentUncheckedUpdateManyWithoutBidNestedInput
 }
 
 export type BidCreateManyInput = {
@@ -611,6 +618,11 @@ export type BidSumOrderByAggregateInput = {
   bidFeeRefundedAmount?: Prisma.SortOrder
 }
 
+export type BidScalarRelationFilter = {
+  is?: Prisma.BidWhereInput
+  isNot?: Prisma.BidWhereInput
+}
+
 export type BidCreateNestedManyWithoutProviderInput = {
   create?: Prisma.XOR<Prisma.BidCreateWithoutProviderInput, Prisma.BidUncheckedCreateWithoutProviderInput> | Prisma.BidCreateWithoutProviderInput[] | Prisma.BidUncheckedCreateWithoutProviderInput[]
   connectOrCreate?: Prisma.BidCreateOrConnectWithoutProviderInput | Prisma.BidCreateOrConnectWithoutProviderInput[]
@@ -715,6 +727,20 @@ export type EnumBidStatusFieldUpdateOperationsInput = {
   set?: $Enums.BidStatus
 }
 
+export type BidCreateNestedOneWithoutAttachmentsInput = {
+  create?: Prisma.XOR<Prisma.BidCreateWithoutAttachmentsInput, Prisma.BidUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.BidCreateOrConnectWithoutAttachmentsInput
+  connect?: Prisma.BidWhereUniqueInput
+}
+
+export type BidUpdateOneRequiredWithoutAttachmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.BidCreateWithoutAttachmentsInput, Prisma.BidUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.BidCreateOrConnectWithoutAttachmentsInput
+  upsert?: Prisma.BidUpsertWithoutAttachmentsInput
+  connect?: Prisma.BidWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BidUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.BidUpdateWithoutAttachmentsInput>, Prisma.BidUncheckedUpdateWithoutAttachmentsInput>
+}
+
 export type BidCreateNestedOneWithoutTransactionsInput = {
   create?: Prisma.XOR<Prisma.BidCreateWithoutTransactionsInput, Prisma.BidUncheckedCreateWithoutTransactionsInput>
   connectOrCreate?: Prisma.BidCreateOrConnectWithoutTransactionsInput
@@ -747,6 +773,7 @@ export type BidCreateWithoutProviderInput = {
   tender: Prisma.TenderCreateNestedOneWithoutBidsInput
   awardedTender?: Prisma.TenderCreateNestedOneWithoutAwardedBidInput
   transactions?: Prisma.TransactionCreateNestedManyWithoutBidInput
+  attachments?: Prisma.BidAttachmentCreateNestedManyWithoutBidInput
 }
 
 export type BidUncheckedCreateWithoutProviderInput = {
@@ -765,6 +792,7 @@ export type BidUncheckedCreateWithoutProviderInput = {
   updatedAt?: Date | string
   awardedTender?: Prisma.TenderUncheckedCreateNestedOneWithoutAwardedBidInput
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutBidInput
+  attachments?: Prisma.BidAttachmentUncheckedCreateNestedManyWithoutBidInput
 }
 
 export type BidCreateOrConnectWithoutProviderInput = {
@@ -829,6 +857,7 @@ export type BidCreateWithoutAwardedTenderInput = {
   tender: Prisma.TenderCreateNestedOneWithoutBidsInput
   provider: Prisma.UserCreateNestedOneWithoutBidsInput
   transactions?: Prisma.TransactionCreateNestedManyWithoutBidInput
+  attachments?: Prisma.BidAttachmentCreateNestedManyWithoutBidInput
 }
 
 export type BidUncheckedCreateWithoutAwardedTenderInput = {
@@ -847,6 +876,7 @@ export type BidUncheckedCreateWithoutAwardedTenderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutBidInput
+  attachments?: Prisma.BidAttachmentUncheckedCreateNestedManyWithoutBidInput
 }
 
 export type BidCreateOrConnectWithoutAwardedTenderInput = {
@@ -870,6 +900,7 @@ export type BidCreateWithoutTenderInput = {
   provider: Prisma.UserCreateNestedOneWithoutBidsInput
   awardedTender?: Prisma.TenderCreateNestedOneWithoutAwardedBidInput
   transactions?: Prisma.TransactionCreateNestedManyWithoutBidInput
+  attachments?: Prisma.BidAttachmentCreateNestedManyWithoutBidInput
 }
 
 export type BidUncheckedCreateWithoutTenderInput = {
@@ -888,6 +919,7 @@ export type BidUncheckedCreateWithoutTenderInput = {
   updatedAt?: Date | string
   awardedTender?: Prisma.TenderUncheckedCreateNestedOneWithoutAwardedBidInput
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutBidInput
+  attachments?: Prisma.BidAttachmentUncheckedCreateNestedManyWithoutBidInput
 }
 
 export type BidCreateOrConnectWithoutTenderInput = {
@@ -927,6 +959,7 @@ export type BidUpdateWithoutAwardedTenderInput = {
   tender?: Prisma.TenderUpdateOneRequiredWithoutBidsNestedInput
   provider?: Prisma.UserUpdateOneRequiredWithoutBidsNestedInput
   transactions?: Prisma.TransactionUpdateManyWithoutBidNestedInput
+  attachments?: Prisma.BidAttachmentUpdateManyWithoutBidNestedInput
 }
 
 export type BidUncheckedUpdateWithoutAwardedTenderInput = {
@@ -945,6 +978,7 @@ export type BidUncheckedUpdateWithoutAwardedTenderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutBidNestedInput
+  attachments?: Prisma.BidAttachmentUncheckedUpdateManyWithoutBidNestedInput
 }
 
 export type BidUpsertWithWhereUniqueWithoutTenderInput = {
@@ -963,6 +997,98 @@ export type BidUpdateManyWithWhereWithoutTenderInput = {
   data: Prisma.XOR<Prisma.BidUpdateManyMutationInput, Prisma.BidUncheckedUpdateManyWithoutTenderInput>
 }
 
+export type BidCreateWithoutAttachmentsInput = {
+  id?: string
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  timelineDays?: number | null
+  coverLetter: string
+  status?: $Enums.BidStatus
+  bidFeeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  ownerContactSharedAt?: Date | string | null
+  bidFeeRefundedAt?: Date | string | null
+  bidFeeRefundedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tender: Prisma.TenderCreateNestedOneWithoutBidsInput
+  provider: Prisma.UserCreateNestedOneWithoutBidsInput
+  awardedTender?: Prisma.TenderCreateNestedOneWithoutAwardedBidInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutBidInput
+}
+
+export type BidUncheckedCreateWithoutAttachmentsInput = {
+  id?: string
+  tenderId: string
+  providerId: string
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  timelineDays?: number | null
+  coverLetter: string
+  status?: $Enums.BidStatus
+  bidFeeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  ownerContactSharedAt?: Date | string | null
+  bidFeeRefundedAt?: Date | string | null
+  bidFeeRefundedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  awardedTender?: Prisma.TenderUncheckedCreateNestedOneWithoutAwardedBidInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutBidInput
+}
+
+export type BidCreateOrConnectWithoutAttachmentsInput = {
+  where: Prisma.BidWhereUniqueInput
+  create: Prisma.XOR<Prisma.BidCreateWithoutAttachmentsInput, Prisma.BidUncheckedCreateWithoutAttachmentsInput>
+}
+
+export type BidUpsertWithoutAttachmentsInput = {
+  update: Prisma.XOR<Prisma.BidUpdateWithoutAttachmentsInput, Prisma.BidUncheckedUpdateWithoutAttachmentsInput>
+  create: Prisma.XOR<Prisma.BidCreateWithoutAttachmentsInput, Prisma.BidUncheckedCreateWithoutAttachmentsInput>
+  where?: Prisma.BidWhereInput
+}
+
+export type BidUpdateToOneWithWhereWithoutAttachmentsInput = {
+  where?: Prisma.BidWhereInput
+  data: Prisma.XOR<Prisma.BidUpdateWithoutAttachmentsInput, Prisma.BidUncheckedUpdateWithoutAttachmentsInput>
+}
+
+export type BidUpdateWithoutAttachmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  timelineDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  coverLetter?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
+  bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tender?: Prisma.TenderUpdateOneRequiredWithoutBidsNestedInput
+  provider?: Prisma.UserUpdateOneRequiredWithoutBidsNestedInput
+  awardedTender?: Prisma.TenderUpdateOneWithoutAwardedBidNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutBidNestedInput
+}
+
+export type BidUncheckedUpdateWithoutAttachmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenderId?: Prisma.StringFieldUpdateOperationsInput | string
+  providerId?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  timelineDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  coverLetter?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBidStatusFieldUpdateOperationsInput | $Enums.BidStatus
+  bidFeeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  ownerContactSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bidFeeRefundedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bidFeeRefundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  awardedTender?: Prisma.TenderUncheckedUpdateOneWithoutAwardedBidNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutBidNestedInput
+}
+
 export type BidCreateWithoutTransactionsInput = {
   id?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -979,6 +1105,7 @@ export type BidCreateWithoutTransactionsInput = {
   tender: Prisma.TenderCreateNestedOneWithoutBidsInput
   provider: Prisma.UserCreateNestedOneWithoutBidsInput
   awardedTender?: Prisma.TenderCreateNestedOneWithoutAwardedBidInput
+  attachments?: Prisma.BidAttachmentCreateNestedManyWithoutBidInput
 }
 
 export type BidUncheckedCreateWithoutTransactionsInput = {
@@ -997,6 +1124,7 @@ export type BidUncheckedCreateWithoutTransactionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   awardedTender?: Prisma.TenderUncheckedCreateNestedOneWithoutAwardedBidInput
+  attachments?: Prisma.BidAttachmentUncheckedCreateNestedManyWithoutBidInput
 }
 
 export type BidCreateOrConnectWithoutTransactionsInput = {
@@ -1031,6 +1159,7 @@ export type BidUpdateWithoutTransactionsInput = {
   tender?: Prisma.TenderUpdateOneRequiredWithoutBidsNestedInput
   provider?: Prisma.UserUpdateOneRequiredWithoutBidsNestedInput
   awardedTender?: Prisma.TenderUpdateOneWithoutAwardedBidNestedInput
+  attachments?: Prisma.BidAttachmentUpdateManyWithoutBidNestedInput
 }
 
 export type BidUncheckedUpdateWithoutTransactionsInput = {
@@ -1049,6 +1178,7 @@ export type BidUncheckedUpdateWithoutTransactionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   awardedTender?: Prisma.TenderUncheckedUpdateOneWithoutAwardedBidNestedInput
+  attachments?: Prisma.BidAttachmentUncheckedUpdateManyWithoutBidNestedInput
 }
 
 export type BidCreateManyProviderInput = {
@@ -1083,6 +1213,7 @@ export type BidUpdateWithoutProviderInput = {
   tender?: Prisma.TenderUpdateOneRequiredWithoutBidsNestedInput
   awardedTender?: Prisma.TenderUpdateOneWithoutAwardedBidNestedInput
   transactions?: Prisma.TransactionUpdateManyWithoutBidNestedInput
+  attachments?: Prisma.BidAttachmentUpdateManyWithoutBidNestedInput
 }
 
 export type BidUncheckedUpdateWithoutProviderInput = {
@@ -1101,6 +1232,7 @@ export type BidUncheckedUpdateWithoutProviderInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   awardedTender?: Prisma.TenderUncheckedUpdateOneWithoutAwardedBidNestedInput
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutBidNestedInput
+  attachments?: Prisma.BidAttachmentUncheckedUpdateManyWithoutBidNestedInput
 }
 
 export type BidUncheckedUpdateManyWithoutProviderInput = {
@@ -1151,6 +1283,7 @@ export type BidUpdateWithoutTenderInput = {
   provider?: Prisma.UserUpdateOneRequiredWithoutBidsNestedInput
   awardedTender?: Prisma.TenderUpdateOneWithoutAwardedBidNestedInput
   transactions?: Prisma.TransactionUpdateManyWithoutBidNestedInput
+  attachments?: Prisma.BidAttachmentUpdateManyWithoutBidNestedInput
 }
 
 export type BidUncheckedUpdateWithoutTenderInput = {
@@ -1169,6 +1302,7 @@ export type BidUncheckedUpdateWithoutTenderInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   awardedTender?: Prisma.TenderUncheckedUpdateOneWithoutAwardedBidNestedInput
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutBidNestedInput
+  attachments?: Prisma.BidAttachmentUncheckedUpdateManyWithoutBidNestedInput
 }
 
 export type BidUncheckedUpdateManyWithoutTenderInput = {
@@ -1194,10 +1328,12 @@ export type BidUncheckedUpdateManyWithoutTenderInput = {
 
 export type BidCountOutputType = {
   transactions: number
+  attachments: number
 }
 
 export type BidCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | BidCountOutputTypeCountTransactionsArgs
+  attachments?: boolean | BidCountOutputTypeCountAttachmentsArgs
 }
 
 /**
@@ -1215,6 +1351,13 @@ export type BidCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensio
  */
 export type BidCountOutputTypeCountTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TransactionWhereInput
+}
+
+/**
+ * BidCountOutputType without action
+ */
+export type BidCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BidAttachmentWhereInput
 }
 
 
@@ -1237,6 +1380,7 @@ export type BidSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   provider?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   awardedTender?: boolean | Prisma.Bid$awardedTenderArgs<ExtArgs>
   transactions?: boolean | Prisma.Bid$transactionsArgs<ExtArgs>
+  attachments?: boolean | Prisma.Bid$attachmentsArgs<ExtArgs>
   _count?: boolean | Prisma.BidCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bid"]>
 
@@ -1265,6 +1409,7 @@ export type BidInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   provider?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   awardedTender?: boolean | Prisma.Bid$awardedTenderArgs<ExtArgs>
   transactions?: boolean | Prisma.Bid$transactionsArgs<ExtArgs>
+  attachments?: boolean | Prisma.Bid$attachmentsArgs<ExtArgs>
   _count?: boolean | Prisma.BidCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1275,6 +1420,7 @@ export type $BidPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     provider: Prisma.$UserPayload<ExtArgs>
     awardedTender: Prisma.$TenderPayload<ExtArgs> | null
     transactions: Prisma.$TransactionPayload<ExtArgs>[]
+    attachments: Prisma.$BidAttachmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1647,6 +1793,7 @@ export interface Prisma__BidClient<T, Null = never, ExtArgs extends runtime.Type
   provider<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   awardedTender<T extends Prisma.Bid$awardedTenderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Bid$awardedTenderArgs<ExtArgs>>): Prisma.Prisma__TenderClient<runtime.Types.Result.GetResult<Prisma.$TenderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   transactions<T extends Prisma.Bid$transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Bid$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attachments<T extends Prisma.Bid$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Bid$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BidAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2078,6 +2225,30 @@ export type Bid$transactionsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.TransactionScalarFieldEnum | Prisma.TransactionScalarFieldEnum[]
+}
+
+/**
+ * Bid.attachments
+ */
+export type Bid$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BidAttachment
+   */
+  select?: Prisma.BidAttachmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BidAttachment
+   */
+  omit?: Prisma.BidAttachmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BidAttachmentInclude<ExtArgs> | null
+  where?: Prisma.BidAttachmentWhereInput
+  orderBy?: Prisma.BidAttachmentOrderByWithRelationInput | Prisma.BidAttachmentOrderByWithRelationInput[]
+  cursor?: Prisma.BidAttachmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BidAttachmentScalarFieldEnum | Prisma.BidAttachmentScalarFieldEnum[]
 }
 
 /**

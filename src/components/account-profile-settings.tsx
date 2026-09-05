@@ -25,9 +25,14 @@ export type AccountProfileInitial = {
 
 type Props = {
   initialProfile: AccountProfileInitial;
+  /** false for Google-only accounts that never set a password */
+  hasPassword: boolean;
 };
 
-export function AccountProfileSettings({ initialProfile }: Props) {
+export function AccountProfileSettings({
+  initialProfile,
+  hasPassword: hasPasswordInitial,
+}: Props) {
   const router = useRouter();
   const { update } = useSession();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -38,6 +43,7 @@ export function AccountProfileSettings({ initialProfile }: Props) {
   const [phone, setPhone] = useState(initialProfile.phone ?? "");
   const [imageUrl, setImageUrl] = useState(initialProfile.image);
   const [bio, setBio] = useState(initialProfile.bio ?? "");
+  const [hasPassword, setHasPassword] = useState(hasPasswordInitial);
 
   const [profileSaving, setProfileSaving] = useState(false);
   const [avatarBusy, setAvatarBusy] = useState(false);
@@ -89,6 +95,10 @@ export function AccountProfileSettings({ initialProfile }: Props) {
     setImageUrl(p.image);
     setBio(p.bio ?? "");
   }, [snapshot]);
+
+  useEffect(() => {
+    setHasPassword(hasPasswordInitial);
+  }, [hasPasswordInitial]);
 
   const initialLetter = (
     name.trim().charAt(0) ||
@@ -258,13 +268,15 @@ export function AccountProfileSettings({ initialProfile }: Props) {
       const res = await fetch("/api/account/profile/password", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          currentPassword,
-          newPassword,
-        }),
+        body: JSON.stringify(
+          hasPassword
+            ? { currentPassword, newPassword }
+            : { newPassword },
+        ),
       });
       const data = (await res.json().catch(() => null)) as {
         error?: string;
+        mode?: string;
       } | null;
       if (!res.ok) {
         if (data?.error === "WRONG_PASSWORD") {
@@ -272,12 +284,26 @@ export function AccountProfileSettings({ initialProfile }: Props) {
           setPasswordError(msg);
           toastError("Գաղտնաբառ", msg);
         } else {
-          const msg = "Չհաջողվեց փոխել գաղտնաբառը։";
+          const msg = hasPassword
+            ? "Չհաջողվեց փոխել գաղտնաբառը։"
+            : "Չհաջողվեց սահմանել գաղտնաբառը։";
           setPasswordError(msg);
           toastError("Սխալ", msg);
         }
         return;
       }
+
+      if (!hasPassword) {
+        setHasPassword(true);
+        toastSuccess(
+          "Գաղտնաբառը սահմանված է",
+          "Այժմ կարող եք մուտք գործել նաև հեռախոսով/email-ով և գաղտնաբառով։",
+        );
+        closePasswordModal();
+        router.refresh();
+        return;
+      }
+
       toastSuccess(
         "Գաղտնաբառը փոխվեց",
         "Անվտանգության համար մուտք գործեք նորից։",
@@ -457,8 +483,9 @@ export function AccountProfileSettings({ initialProfile }: Props) {
               Գաղտնաբառ
             </h2>
             <p className="mt-2 text-sm font-semibold text-slate-600">
-              Առաջարկվում է ուժեղ գաղտնաբառ՝ առնվազն 8 նիշ։ Փոխելուց հետո դուրս կգաք
-              համակարգից և պետք է նորից մուտք գործեք։
+              {hasPassword
+                ? "Առաջարկվում է ուժեղ գաղտնաբառ՝ առնվազն 8 նիշ։ Փոխելուց հետո դուրս կգաք համակարգից և պետք է նորից մուտք գործեք։"
+                : "Դուք մուտք եք գործել Google-ով և դեռ գաղտնաբառ չունեք։ Կարող եք սահմանել գաղտնաբառ՝ հետագայում նաև հեռախոսով մուտք գործելու համար։"}
             </p>
           </div>
           <button
@@ -466,7 +493,7 @@ export function AccountProfileSettings({ initialProfile }: Props) {
             onClick={openPasswordModal}
             className="inline-flex shrink-0 items-center justify-center rounded-full bg-slate-950 px-6 py-3 text-sm font-black text-white transition hover:bg-slate-800"
           >
-            Փոխել գաղտնաբառը
+            {hasPassword ? "Փոխել գաղտնաբառը" : "Սահմանել գաղտնաբառ"}
           </button>
         </div>
       </div>
@@ -492,7 +519,7 @@ export function AccountProfileSettings({ initialProfile }: Props) {
                 id="password-modal-title"
                 className="text-lg font-black text-slate-900"
               >
-                Նոր գաղտնաբառ
+                {hasPassword ? "Նոր գաղտնաբառ" : "Սահմանել գաղտնաբառ"}
               </h3>
               <button
                 type="button"
@@ -510,22 +537,24 @@ export function AccountProfileSettings({ initialProfile }: Props) {
                 className="grid gap-4"
                 onSubmit={(e) => void savePassword(e)}
               >
+                  {hasPassword ? (
+                    <label className="block">
+                      <span className="text-xs font-black uppercase tracking-[0.14em] text-slate-600">
+                        Ընթացիկ գաղտնաբառ
+                      </span>
+                      <input
+                        type="password"
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        autoComplete="current-password"
+                        required
+                        className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                      />
+                    </label>
+                  ) : null}
                   <label className="block">
                     <span className="text-xs font-black uppercase tracking-[0.14em] text-slate-600">
-                      Ընթացիկ գաղտնաբառ
-                    </span>
-                    <input
-                      type="password"
-                      value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
-                      autoComplete="current-password"
-                      required
-                      className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="text-xs font-black uppercase tracking-[0.14em] text-slate-600">
-                      Նոր գաղտնաբառ
+                      {hasPassword ? "Նոր գաղտնաբառ" : "Գաղտնաբառ"}
                     </span>
                     <input
                       type="password"
@@ -540,7 +569,7 @@ export function AccountProfileSettings({ initialProfile }: Props) {
                   </label>
                   <label className="block">
                     <span className="text-xs font-black uppercase tracking-[0.14em] text-slate-600">
-                      Կրկնել նոր գաղտնաբառը
+                      Կրկնել գաղտնաբառը
                     </span>
                     <input
                       type="password"

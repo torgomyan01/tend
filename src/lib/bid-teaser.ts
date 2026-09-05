@@ -58,3 +58,18 @@ export function coverLetterSnippet(
   const slice = words.slice(0, maxWords).join(" ");
   return words.length > maxWords ? `${slice}…` : slice;
 }
+
+/** Ուղեկից նամակից առաջին տառերը՝ փակ մրցույթի համար։ */
+export function coverLetterCharSnippet(
+  text: string,
+  maxChars = 15,
+): string {
+  const cleaned = text.trim().replace(/\s+/g, " ");
+  if (!cleaned) {
+    return "…";
+  }
+  if (cleaned.length <= maxChars) {
+    return cleaned;
+  }
+  return `${cleaned.slice(0, maxChars)}…`;
+}

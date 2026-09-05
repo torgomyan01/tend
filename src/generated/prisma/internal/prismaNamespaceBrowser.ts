@@ -71,6 +71,7 @@ export const ModelName = {
   TenderSelectedService: 'TenderSelectedService',
   TenderComplaint: 'TenderComplaint',
   Bid: 'Bid',
+  BidAttachment: 'BidAttachment',
   Transaction: 'Transaction',
   VposOrderSequence: 'VposOrderSequence',
   Subscription: 'Subscription',
@@ -395,6 +396,21 @@ export const BidScalarFieldEnum = {
 } as const
 
 export type BidScalarFieldEnum = (typeof BidScalarFieldEnum)[keyof typeof BidScalarFieldEnum]
+
+
+export const BidAttachmentScalarFieldEnum = {
+  id: 'id',
+  bidId: 'bidId',
+  kind: 'kind',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type BidAttachmentScalarFieldEnum = (typeof BidAttachmentScalarFieldEnum)[keyof typeof BidAttachmentScalarFieldEnum]
 
 
 export const TransactionScalarFieldEnum = {
@@ -746,6 +762,18 @@ export const BidOrderByRelevanceFieldEnum = {
 } as const
 
 export type BidOrderByRelevanceFieldEnum = (typeof BidOrderByRelevanceFieldEnum)[keyof typeof BidOrderByRelevanceFieldEnum]
+
+
+export const BidAttachmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  bidId: 'bidId',
+  kind: 'kind',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType'
+} as const
+
+export type BidAttachmentOrderByRelevanceFieldEnum = (typeof BidAttachmentOrderByRelevanceFieldEnum)[keyof typeof BidAttachmentOrderByRelevanceFieldEnum]
 
 
 export const TransactionOrderByRelevanceFieldEnum = {

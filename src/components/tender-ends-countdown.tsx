@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Timer } from "lucide-react";
+import { CalendarOff, Timer } from "lucide-react";
 
 type Props = {
   endsAtIso: string | null;
@@ -11,6 +11,44 @@ type Props = {
 
 function pad(n: number) {
   return String(n).padStart(2, "0");
+}
+
+function Unit({
+  value,
+  label,
+  tick,
+}: {
+  value: string;
+  label: string;
+  tick?: boolean;
+}) {
+  return (
+    <div className="flex flex-col items-center">
+      <span
+        key={tick ? value : "static"}
+        className={[
+          "font-mono text-sm font-black tabular-nums leading-none text-slate-900 sm:text-base",
+          tick ? "animate-[tender-countdown-tick_0.32s_ease-out]" : "",
+        ].join(" ")}
+      >
+        {value}
+      </span>
+      <span className="mt-0.5 text-[8px] font-black uppercase tracking-wider text-amber-800/65">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+function Sep() {
+  return (
+    <span
+      className="pb-2.5 font-mono text-xs font-black text-amber-400"
+      aria-hidden
+    >
+      :
+    </span>
+  );
 }
 
 export function TenderEndsCountdown({
@@ -32,7 +70,6 @@ export function TenderEndsCountdown({
       return ms;
     };
 
-    // Մեկ անգամ սինխ՝ SPA navigation / ժամացույցի շեղում；ավարտված դեպքում interval չի բացվում
     const msAfterSync = update();
     if (msAfterSync <= 0) return;
 
@@ -47,31 +84,23 @@ export function TenderEndsCountdown({
 
   if (!endsAtIso) {
     return (
-      <div className="rounded-2xl bg-slate-100 px-4 py-3 ring-1 ring-slate-200">
-        <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">
-          Վերջնաժամկետ
-        </p>
-        <p className="mt-1 text-sm font-bold text-slate-600">Չի նշված</p>
+      <div className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 text-xs font-bold text-slate-500 shadow-sm ring-1 ring-slate-200/80 backdrop-blur-sm">
+        <CalendarOff className="size-3.5 shrink-0" />
+        Վերջնաժամկետ չկա
       </div>
     );
   }
 
   const end = new Date(endsAtIso).getTime();
-  if (Number.isNaN(end)) {
-    return null;
-  }
-
-  if (remainingMs === null) {
+  if (Number.isNaN(end) || remainingMs === null) {
     return null;
   }
 
   if (remainingMs <= 0) {
     return (
-      <div className="rounded-2xl bg-slate-800 px-4 py-3 text-slate-100 ring-1 ring-slate-700">
-        <p className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-slate-400">
-          <Timer className="size-3.5 shrink-0" />
-          Մրցույթը ավարտված է
-        </p>
+      <div className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-3 py-1.5 text-xs font-black text-white shadow-sm ring-1 ring-slate-800">
+        <Timer className="size-3.5 shrink-0 text-slate-400" />
+        Ավարտված է
       </div>
     );
   }
@@ -81,27 +110,30 @@ export function TenderEndsCountdown({
   const hours = Math.floor((totalSec % 86400) / 3600);
   const minutes = Math.floor((totalSec % 3600) / 60);
   const seconds = totalSec % 60;
+  const urgent = remainingMs < 24 * 3600 * 1000;
 
   return (
-    <div className="rounded-2xl bg-amber-950 px-4 py-4 text-amber-50 ring-1 ring-amber-800/80">
-      <p className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-amber-300/90">
-        <Timer className="size-3.5 shrink-0" />
-        Մնացել է մինչև վերջնաժամկետ
-      </p>
-      <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-mono text-lg font-black tabular-nums sm:text-xl">
+    <div
+      className={[
+        "inline-flex items-center gap-2 rounded-2xl px-3 py-2 shadow-sm ring-1 backdrop-blur-sm",
+        urgent
+          ? "bg-rose-50/95 ring-rose-200"
+          : "bg-white/90 ring-amber-200/90",
+      ].join(" ")}
+    >
+      <div className="flex items-end gap-1.5">
         {days > 0 ? (
-          <span>
-            <span className="text-2xl sm:text-3xl">{days}</span>
-            <span className="ml-1 text-xs font-bold uppercase text-amber-200/90">օր</span>
-          </span>
+          <>
+            <Unit value={String(days)} label="օր" />
+            <Sep />
+          </>
         ) : null}
-        <span>
-          {pad(hours)}:{pad(minutes)}:{pad(seconds)}
-        </span>
+        <Unit value={pad(hours)} label="ժամ" />
+        <Sep />
+        <Unit value={pad(minutes)} label="րոպե" />
+        <Sep />
+        <Unit value={pad(seconds)} label="վրկ" tick />
       </div>
-      <p className="mt-2 text-[11px] font-semibold text-amber-200/80">
-        {days > 0 ? "Ժամեր, րոպեներ, վայրկյաններ" : "Ժամ : րոպե : վայրկյան"}
-      </p>
     </div>
   );
 }

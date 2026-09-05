@@ -26,6 +26,8 @@ type Props = {
   clientId: string;
   winnerProviderId: string | null;
   clientDisplayName: string;
+  /** When false, patron name is not linked to their public profile. */
+  revealPatronIdentity?: boolean;
   winnerDisplayName: string;
   viewerId: string | null;
   reviews: TenderLifecycleReview[];
@@ -39,6 +41,7 @@ export function TenderAwardLifecyclePanel({
   clientId,
   winnerProviderId,
   clientDisplayName,
+  revealPatronIdentity = true,
   winnerDisplayName,
   viewerId,
   reviews,
@@ -172,12 +175,16 @@ export function TenderAwardLifecyclePanel({
       </h2>
 
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold text-slate-600">
-        <Link
-          href={ROUTES.userProfile(clientId)}
-          className="font-black text-slate-800 hover:underline"
-        >
-          {clientDisplayName}
-        </Link>
+        {revealPatronIdentity ? (
+          <Link
+            href={ROUTES.userProfile(clientId)}
+            className="font-black text-slate-800 hover:underline"
+          >
+            {clientDisplayName}
+          </Link>
+        ) : (
+          <span className="font-black text-slate-800">{clientDisplayName}</span>
+        )}
         {winnerProviderId ? (
           <>
             <span className="text-slate-300">·</span>

@@ -7,17 +7,15 @@ import {
   LogIn,
   Menu,
   UserPlus,
-  Wallet,
   Wrench,
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import { WalletDepositPanel } from "@/components/wallet-deposit-panel";
-import { formatAmd } from "@/lib/format";
+import { useEffect, useState } from "react";
 import { MobileProfileDropdown } from "@/components/mobile-profile-dropdown";
 import { NotificationsDropdown } from "@/components/notifications-dropdown";
+import { TelegramNavbarNudge } from "@/components/telegram-navbar-nudge";
+import { WalletDropdown } from "@/components/wallet-dropdown";
 import { ROUTES } from "@/lib/routes";
 
 const navItems = [
@@ -53,33 +51,7 @@ type Props = {
 };
 
 export function MobileMenu({ isLoggedIn, isAdmin }: Props) {
-  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [walletBalance, setWalletBalance] = useState<number | null>(null);
-  const [walletLoading, setWalletLoading] = useState(false);
-
-  const refreshWallet = useCallback(async () => {
-    if (!isLoggedIn) return;
-    setWalletLoading(true);
-    try {
-      const res = await fetch("/api/account/wallet", { cache: "no-store" });
-      if (!res.ok) {
-        setWalletBalance(null);
-        return;
-      }
-      const data = (await res.json()) as { balance?: number };
-      setWalletBalance(typeof data.balance === "number" ? data.balance : null);
-    } catch {
-      setWalletBalance(null);
-    } finally {
-      setWalletLoading(false);
-    }
-  }, [isLoggedIn]);
-
-  useEffect(() => {
-    if (!isOpen || !isLoggedIn) return;
-    void refreshWallet();
-  }, [isOpen, isLoggedIn, refreshWallet]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -95,7 +67,11 @@ export function MobileMenu({ isLoggedIn, isAdmin }: Props) {
   return (
     <div className="relative flex items-center gap-2 md:hidden">
       {isLoggedIn ? (
-        <NotificationsDropdown isLoggedIn={isLoggedIn} />
+        <>
+          <TelegramNavbarNudge />
+          <WalletDropdown isLoggedIn={isLoggedIn} />
+          <NotificationsDropdown isLoggedIn={isLoggedIn} />
+        </>
       ) : null}
       {isLoggedIn ? <MobileProfileDropdown isAdmin={isAdmin} /> : null}
       <button
@@ -126,7 +102,6 @@ export function MobileMenu({ isLoggedIn, isAdmin }: Props) {
                   Ինչ եք փնտրում
                 </p>
               </div>
-             
             </div>
 
             <nav className="grid min-w-0 gap-2 sm:gap-2.5">
@@ -152,47 +127,7 @@ export function MobileMenu({ isLoggedIn, isAdmin }: Props) {
               })}
             </nav>
 
-            {isLoggedIn ? (
-              <div className="relative mt-6 overflow-hidden rounded-[1.35rem] bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-5 text-white shadow-xl shadow-slate-950/25 ring-1 ring-slate-700/50">
-                <div
-                  className="pointer-events-none absolute -right-8 -top-8 size-32 rounded-full bg-amber-400/20 blur-2xl"
-                  aria-hidden
-                />
-                <div
-                  className="pointer-events-none absolute -bottom-10 left-6 size-24 rounded-full bg-amber-500/10 blur-2xl"
-                  aria-hidden
-                />
-                <div className="relative flex items-start gap-4">
-                  <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-amber-400/15 text-amber-300 ring-1 ring-amber-400/30">
-                    <Wallet className="size-7" aria-hidden />
-                  </span>
-                  <div className="min-w-0 flex-1 pt-0.5">
-                    <p className="text-[11px] font-black uppercase tracking-[0.2em] text-amber-300/90">
-                      Իմ դրամապանակը
-                    </p>
-                    <p className="mt-1 truncate text-3xl font-black tabular-nums tracking-tight">
-                      {walletLoading && walletBalance === null
-                        ? "…"
-                        : walletBalance !== null
-                          ? formatAmd(walletBalance)
-                          : "—"}
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-slate-400">
-                      Լիցքավորեք հաշիվը մրցույթներին մասնակցելու համար
-                    </p>
-                  </div>
-                </div>
-                <div className="relative mt-5 min-w-0 overflow-hidden rounded-2xl bg-white/10 p-4 ring-1 ring-white/10 backdrop-blur-sm">
-                  <WalletDepositPanel
-                    compact
-                    onDeposited={() => {
-                      void refreshWallet();
-                      router.refresh();
-                    }}
-                  />
-                </div>
-              </div>
-            ) : (
+            {!isLoggedIn ? (
               <div className="mt-6 overflow-hidden rounded-[1.35rem] bg-gradient-to-br from-amber-50 via-white to-white p-5 ring-1 ring-amber-200/70">
                 <p className="text-[11px] font-black uppercase tracking-[0.2em] text-amber-800">
                   Միացեք հարթակին
@@ -216,7 +151,7 @@ export function MobileMenu({ isLoggedIn, isAdmin }: Props) {
                   </Link>
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
         </>
       ) : null}

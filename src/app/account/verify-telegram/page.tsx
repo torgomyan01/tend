@@ -67,8 +67,9 @@ export default async function VerifyTelegramPage({ searchParams }: Props) {
             Ավարտեք Telegram վերիֆիկացիան
           </h1>
           <p className="mt-4 text-base leading-7 text-slate-600">
-            Մուտքը հաջող էր, բայց հաշիվը ակտիվ չէ մինչև հաստատեք գրանցման ժամանակ
-            նշած հեռախոսահամարը Telegram-ում։
+            Միացրեք Telegram-ը ծանուցումների համար։ Եթե գրանցվել եք Google-ով և
+            դեռ հեռախոսահամար չունեք, նախ կխնդրենք ավելացնել այն, ապա
+            կշարունակեք bot-ով հաստատումը։
           </p>
 
           <div className="mt-8">

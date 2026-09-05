@@ -82,7 +82,7 @@ export function AuthDropdown({ isLoggedIn, label, isAdmin }: Props) {
                 onClick={() => setIsOpen(false)}
               >
                 <LayoutDashboard className="size-4 text-amber-700" />
-                Իմ մրցույթներ
+                Իմ մրցույթները
               </Link>
               <Link
                 role="menuitem"

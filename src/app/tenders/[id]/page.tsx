@@ -1,13 +1,13 @@
 import Link from "next/link";
 import {
   ArrowLeft,
-  BadgeCheck,
   CalendarClock,
+  Check,
   FileDown,
   MapPin,
   Pencil,
   Phone,
-  Star,
+  Send,
   Trophy,
 } from "lucide-react";
 import type { Metadata } from "next";
@@ -16,11 +16,9 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { TenderApplicantTeasers } from "@/components/tender-applicant-teasers";
 import { TenderAwardLifecyclePanel } from "@/components/tender-award-lifecycle-panel";
-import { TenderApplyButton } from "@/components/tender-apply-button";
 import { TenderComplaintModal } from "@/components/tender-complaint-modal";
 import { TenderDetailImageGallery } from "@/components/tender-detail-image-gallery";
 import { TenderOwnerApplicantsModal } from "@/components/tender-owner-applicants-modal";
-import { AccountTypeBadge } from "@/components/account-type-badge";
 import { TenderEndsCountdown } from "@/components/tender-ends-countdown";
 import { TenderLiveStats } from "@/components/tender-live-stats";
 import { TenderLikeButton } from "@/components/tender-like-button";
@@ -67,19 +65,8 @@ export default async function TenderDetailPage({ params }: Props) {
           name: true,
           email: true,
           image: true,
-          isVerified: true,
-          telegramVerifiedAt: true,
-          createdAt: true,
           accountType: true,
           companyName: true,
-          _count: {
-            select: {
-              tenders: true,
-              reviewsReceived: {
-                where: { moderationStatus: "APPROVED" },
-              },
-            },
-          },
         },
       },
       locality: { select: { name: true } },
@@ -137,24 +124,9 @@ export default async function TenderDetailPage({ params }: Props) {
   );
 
   const [
-    reviewAgg,
-    reviewCount,
     existingBid,
     tenderReviewsRaw,
   ] = await Promise.all([
-    prisma.review.aggregate({
-      where: {
-        revieweeId: tender.clientId,
-        moderationStatus: "APPROVED",
-      },
-      _avg: { rating: true },
-    }),
-    prisma.review.count({
-      where: {
-        revieweeId: tender.clientId,
-        moderationStatus: "APPROVED",
-      },
-    }),
     providerId
       ? prisma.bid.findUnique({
           where: {
@@ -273,12 +245,6 @@ export default async function TenderDetailPage({ params }: Props) {
   const hasMockApplyCookie = mockApplyCookieValue === "1";
   const cannotApplyAgain = hasExistingBid || hasMockApplyCookie;
 
-  const avgRating = reviewAgg._avg.rating;
-  const avgRatingNum =
-    avgRating !== null && avgRating !== undefined
-      ? Number(avgRating)
-      : null;
-
   const placeLabel =
     tender.locality?.name?.trim() ||
     tender.city?.trim() ||
@@ -311,13 +277,11 @@ export default async function TenderDetailPage({ params }: Props) {
     tender.awardedBid?.provider.name?.trim() ||
     tender.awardedBid?.provider.email ||
     "Կատարող";
-  const clientInitial = (
-    clientDisplayName.replace(/\s+/g, " ").charAt(0) || "?"
-  ).toUpperCase();
 
-  const memberSinceYear = new Date(client.createdAt).getFullYear();
+  /** Identity stays private until the patron shares contact with this bidder. */
+  const revealPatronIdentity = isOwner || contactSharedWithMe;
 
-  const showContactCta =
+  const showParticipateCta =
     tender.status === "ACTIVE" && !isOwner;
 
   const tenderEndsAtMs = tender.endsAt?.getTime() ?? null;
@@ -341,7 +305,9 @@ export default async function TenderDetailPage({ params }: Props) {
   const isAuthenticated = Boolean(session?.user?.id);
   const viewerId = session?.user?.id ?? null;
   const loginHref = `${ROUTES.login}?callbackUrl=${encodeURIComponent(
-    ROUTES.tenderDetail(tender.id),
+    showParticipateCta && !cannotApplyAgain
+      ? ROUTES.tenderApply(tender.id)
+      : ROUTES.tenderDetail(tender.id),
   )}`;
 
   const initialLiked = viewerId
@@ -373,29 +339,30 @@ export default async function TenderDetailPage({ params }: Props) {
       <SiteHeader />
 
       <main className="px-4 pb-12 sm:px-6 lg:px-8">
-        <div className="mx-auto w-full max-w-6xl">
-          <Link
-            href={isOwner ? ROUTES.myTenders : ROUTES.tenders}
-            className="mb-6 inline-flex items-center gap-2 text-sm font-black text-slate-600 transition hover:text-slate-950"
-          >
-            <ArrowLeft className="size-4" />
-            {isOwner ? "Իմ մրցույթներ" : "Բոլոր մրցույթները"}
-          </Link>
+        <div className="mx-auto w-full max-w-4xl">
+          <div className="mb-6 flex items-center justify-between gap-3">
+            <Link
+              href={isOwner ? ROUTES.myTenders : ROUTES.tenders}
+              className="inline-flex items-center gap-2 text-sm font-black text-slate-600 transition hover:text-slate-950"
+            >
+              <ArrowLeft className="size-4" />
+              {isOwner ? "Իմ մրցույթներ" : "Բոլոր մրցույթները"}
+            </Link>
+            <TenderEndsCountdown
+              endsAtIso={tender.endsAt?.toISOString() ?? null}
+              initialRemainingMs={initialCountdownRemainingMs}
+            />
+          </div>
 
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(260px,320px)] lg:items-start">
             <article className="min-w-0 overflow-hidden rounded-4xl bg-white shadow-sm ring-1 ring-slate-200">
               <div className="border-b border-slate-100 p-6 sm:p-8">
                 <div className="flex items-start justify-between gap-4">
-                  <div className="flex flex-wrap items-center gap-2">
+                  <div className="flex min-w-0 flex-wrap items-center gap-2">
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-black ${TENDER_STATUS_BADGE[tender.status]}`}
                     >
                       {TENDER_STATUS_LABEL[tender.status]}
                     </span>
-                    <AccountTypeBadge
-                      accountType={client.accountType as AccountTypeValue}
-                      size="md"
-                    />
                     {isOwner ? (
                       <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-black text-amber-900 ring-1 ring-amber-200">
                         Ձեր հայտարարություն
@@ -417,7 +384,42 @@ export default async function TenderDetailPage({ params }: Props) {
                     ) : null}
                   </div>
 
-                  <div className="shrink-0">
+                  <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+                    {showParticipateCta ? (
+                      cannotApplyAgain ? (
+                        <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2.5 text-sm font-black text-emerald-900 ring-1 ring-emerald-200">
+                          <Check className="size-4" />
+                          Արդեն դիմել եք
+                        </div>
+                      ) : (
+                        <Link
+                          href={
+                            isAuthenticated
+                              ? ROUTES.tenderApply(tender.id)
+                              : loginHref
+                          }
+                          className="inline-flex items-center justify-center gap-2 rounded-full bg-amber-600 px-5 py-2.5 text-sm font-black text-white shadow-sm transition hover:bg-amber-700"
+                        >
+                          <Send className="size-4" />
+                          Մասնակցել
+                          <span className="hidden text-amber-100 sm:inline">
+                            ·{" "}
+                            {resolvedFreeRemaining > 0
+                              ? "անվճար"
+                              : formatAmd(bidFee)}
+                          </span>
+                        </Link>
+                      )
+                    ) : null}
+                    {isOwner ? (
+                      <TenderOwnerApplicantsModal
+                        tenderId={tender.id}
+                        tenderTitle={tender.title}
+                        totalBids={tender._count.bids}
+                        tenderStatus={tender.status}
+                        awardedBidId={tender.awardedBidId}
+                      />
+                    ) : null}
                     <TenderLikeButton
                       tenderId={tender.id}
                       initialLiked={initialLiked}
@@ -429,6 +431,36 @@ export default async function TenderDetailPage({ params }: Props) {
                 <h1 className="mt-4 text-2xl font-black leading-tight tracking-tight sm:text-3xl">
                   {tender.title}
                 </h1>
+
+                {viewerEligibleForPatronContact &&
+                hasExistingBid &&
+                contactSharedWithMe &&
+                patronPhoneForViewer ? (
+                  <div className="mt-5 rounded-2xl bg-emerald-50 px-4 py-3 text-left ring-1 ring-emerald-200">
+                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-emerald-900">
+                      Պատվիրատուն բացել է իր համարը ձեր համար
+                    </p>
+                    <a
+                      href={`tel:${patronPhoneForViewer.replace(/\s/g, "")}`}
+                      className="mt-2 inline-flex items-center gap-2 text-base font-black text-emerald-950 hover:underline"
+                    >
+                      <Phone className="size-5 shrink-0 text-emerald-700" />
+                      {patronPhoneForViewer}
+                    </a>
+                  </div>
+                ) : null}
+
+                {bidFeeRefundInfo ? (
+                  <div className="mt-5 rounded-2xl bg-amber-50 px-4 py-3 text-left ring-1 ring-amber-200">
+                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-amber-900">
+                      Մուտքի վճարը վերադարձված է կրեդիտով
+                    </p>
+                    <p className="mt-1 text-base font-black text-amber-950">
+                      {formatAmd(bidFeeRefundInfo.amount)}
+                    </p>
+                  </div>
+                ) : null}
+
                 <div className="mt-3 flex flex-wrap gap-2">
                   {servicesToShow.map((row) => (
                     <span
@@ -438,12 +470,6 @@ export default async function TenderDetailPage({ params }: Props) {
                       {row.category} · {row.service}
                     </span>
                   ))}
-                </div>
-                <div className="mt-5 max-w-xl">
-                  <TenderEndsCountdown
-                    endsAtIso={tender.endsAt?.toISOString() ?? null}
-                    initialRemainingMs={initialCountdownRemainingMs}
-                  />
                 </div>
                 <div className="mt-4">
                   <TenderLiveStats
@@ -599,7 +625,7 @@ export default async function TenderDetailPage({ params }: Props) {
                   </section>
                 ) : null}
 
-                {showContactCta ? (
+                {showParticipateCta ? (
                   <TenderComplaintModal
                     tenderId={tender.id}
                     tenderTitle={tender.title}
@@ -615,7 +641,10 @@ export default async function TenderDetailPage({ params }: Props) {
                   isWinner={isWinner}
                   clientId={tender.clientId}
                   winnerProviderId={awardedProviderId}
-                  clientDisplayName={clientDisplayName}
+                  clientDisplayName={
+                    revealPatronIdentity ? clientDisplayName : "Պատվիրատու"
+                  }
+                  revealPatronIdentity={revealPatronIdentity}
                   winnerDisplayName={winnerDisplayName}
                   viewerId={providerId ?? null}
                   reviews={tenderReviews}
@@ -626,199 +655,12 @@ export default async function TenderDetailPage({ params }: Props) {
                     <TenderApplicantTeasers
                       bids={applicantPreviewBids}
                       totalBidCount={visibleApplicantCount}
+                      isBlindBidding={tender.isBlindBidding}
                     />
                   </div>
                 ) : null}
               </div>
             </article>
-
-            <aside className="min-w-0 space-y-4 lg:sticky lg:top-24">
-              <div className="overflow-hidden rounded-4xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <h2 className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">
-                  Պատվիրատու
-                </h2>
-                <div className="mt-5 flex flex-col items-center text-center">
-                  <div className="relative size-24 shrink-0 overflow-hidden rounded-full bg-slate-200 ring-2 ring-amber-200/80">
-                    {client.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={client.image}
-                        alt=""
-                        className="size-full object-cover"
-                      />
-                    ) : (
-                      <span className="flex size-full items-center justify-center text-3xl font-black text-slate-600">
-                        {clientInitial}
-                      </span>
-                    )}
-                  </div>
-                  <Link
-                    href={ROUTES.userProfile(client.id)}
-                    className="mt-4 text-lg font-black leading-tight text-slate-900 hover:underline"
-                  >
-                    {clientDisplayName}
-                  </Link>
-
-                  <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
-                    {client.isVerified ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-emerald-800 ring-1 ring-emerald-200">
-                        <BadgeCheck className="size-3.5" />
-                        Հաստատված
-                      </span>
-                    ) : null}
-                    {client.telegramVerifiedAt ? (
-                      <span className="rounded-full bg-sky-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-sky-900 ring-1 ring-sky-200">
-                        Telegram
-                      </span>
-                    ) : null}
-                  </div>
-
-                  <div className="mt-5 w-full rounded-2xl bg-slate-50 px-4 py-3 ring-1 ring-slate-200">
-                    {avgRatingNum !== null &&
-                    !Number.isNaN(avgRatingNum) &&
-                    reviewCount > 0 ? (
-                      <div className="flex flex-col items-center gap-1">
-                        <div className="flex items-center gap-1.5 text-amber-600">
-                          <Star className="size-5 fill-current" />
-                          <span className="text-2xl font-black tabular-nums text-slate-900">
-                            {avgRatingNum.toFixed(1)}
-                          </span>
-                          <span className="text-sm font-bold text-slate-500">
-                            / 5
-                          </span>
-                        </div>
-                        <p className="text-xs font-semibold text-slate-600">
-                          {reviewCount} գնահատական
-                        </p>
-                      </div>
-                    ) : (
-                      <p className="text-center text-xs font-semibold text-slate-500">
-                        Դեռ գնահատականներ չկան
-                      </p>
-                    )}
-                  </div>
-
-                  <dl className="mt-5 w-full space-y-3 text-left text-sm">
-                    <div className="flex justify-between gap-3 border-b border-slate-100 pb-3">
-                      <dt className="font-semibold text-slate-500">
-                        Հրապարակված մրցույթներ
-                      </dt>
-                      <dd className="font-black tabular-nums text-slate-900">
-                        {client._count.tenders}
-                      </dd>
-                    </div>
-                    <div className="flex justify-between gap-3">
-                      <dt className="font-semibold text-slate-500">
-                        Հարթակում՝ սկսած
-                      </dt>
-                      <dd className="text-right font-bold text-slate-900">
-                        {memberSinceYear}
-                      </dd>
-                    </div>
-                  </dl>
-
-                  {viewerEligibleForPatronContact &&
-                  hasExistingBid &&
-                  contactSharedWithMe &&
-                  patronPhoneForViewer ? (
-                    <div className="mt-6 w-full rounded-2xl bg-emerald-50 px-4 py-3 text-left ring-1 ring-emerald-200">
-                      <p className="text-[10px] font-black uppercase tracking-[0.14em] text-emerald-900">
-                        Պատվիրատուն բացել է իր համարը ձեր համար
-                      </p>
-                      <a
-                        href={`tel:${patronPhoneForViewer.replace(/\s/g, "")}`}
-                        className="mt-2 inline-flex items-center gap-2 text-base font-black text-emerald-950 hover:underline"
-                      >
-                        <Phone className="size-5 shrink-0 text-emerald-700" />
-                        {patronPhoneForViewer}
-                      </a>
-                      <p className="mt-2 text-[11px] font-semibold leading-snug text-emerald-900/90">
-                        Telegram ծանուցումը ուղարկվում է առաջին բացման պահին։
-                      </p>
-                    </div>
-                  ) : null}
-
-                  {bidFeeRefundInfo ? (
-                    <div className="mt-6 w-full rounded-2xl bg-amber-50 px-4 py-3 text-left ring-1 ring-amber-200">
-                      <p className="text-[10px] font-black uppercase tracking-[0.14em] text-amber-900">
-                        Մուտքի վճարը վերադարձված է կրեդիտով
-                      </p>
-                      <p className="mt-1 text-base font-black text-amber-950">
-                        {formatAmd(bidFeeRefundInfo.amount)}
-                      </p>
-                      <p className="mt-1 text-[11px] font-semibold leading-snug text-amber-900/90">
-                        {bidFeeRefundInfo.reason === "BID_REJECTED_BY_MODERATOR"
-                          ? "Ձեր առաջարկը մերժվել է մոդերացիայի կողմից, մուտքի վճարը հասանելի է դրամապանակում։"
-                          : bidFeeRefundInfo.reason === "TENDER_DELETED"
-                            ? "Մրցույթը հեռացվել է, մուտքի վճարը հասանելի է դրամապանակում նոր դիմումի համար։"
-                            : "Մրցույթը չեղարկվել է, մուտքի վճարը հասանելի է դրամապանակում նոր դիմումի համար։"}
-                      </p>
-                    </div>
-                  ) : null}
-
-                  {showContactCta ? (
-                    <div className="mt-6 w-full">
-                      <TenderApplyButton
-                        tender={{
-                          id: tender.id,
-                          title: tender.title,
-                          isBlindBidding: tender.isBlindBidding,
-                          budgetMin:
-                            tender.budgetMin !== null
-                              ? Number(tender.budgetMin)
-                              : null,
-                          budgetMax:
-                            tender.budgetMax !== null
-                              ? Number(tender.budgetMax)
-                              : null,
-                        }}
-                        fee={bidFee}
-                        freeRemaining={resolvedFreeRemaining}
-                        isAuthenticated={isAuthenticated}
-                        loginHref={loginHref}
-                        cannotApplyAgain={cannotApplyAgain}
-                        viewerId={viewerId}
-                      />
-                      <p className="mt-2 text-center text-[11px] font-semibold text-slate-500">
-                        {resolvedFreeRemaining > 0
-                          ? `Ամսական անվճար դիմումներ՝ ${resolvedFreeRemaining} մնացել է · `
-                          : "Մուտքի վճարը դրամապանակից · "}
-                        {tender._count.bids} մասնակից արդեն դիմել է
-                      </p>
-                    </div>
-                  ) : isOwner ? (
-                    <div className="mt-6 w-full space-y-3">
-                      <p className="rounded-2xl bg-slate-100 px-4 py-3 text-center text-xs font-semibold text-slate-600">
-                        Սա ձեր հրապարակած մրցույթն է։
-                      </p>
-                      <TenderOwnerApplicantsModal
-                        tenderId={tender.id}
-                        tenderTitle={tender.title}
-                        totalBids={tender._count.bids}
-                        tenderStatus={tender.status}
-                        awardedBidId={tender.awardedBidId}
-                      />
-                    </div>
-                  ) : isWinner ? (
-                    <div className="mt-6 space-y-3">
-                      <p className="rounded-2xl bg-indigo-50 px-4 py-3 text-center text-xs font-bold text-indigo-950 ring-1 ring-indigo-200">
-                        Դուք ընտրվել եք որպես այս մրցույթի կատարող։
-                      </p>
-                      {tender.status === "AWARDED" || tender.status === "COMPLETED" ? (
-                        <p className="text-center text-[11px] font-semibold text-slate-500">
-                          Մանրամասները տեսնեք վերևի բաժնում։
-                        </p>
-                      ) : null}
-                    </div>
-                  ) : (
-                    <p className="mt-6 rounded-2xl bg-slate-100 px-4 py-3 text-center text-xs font-semibold text-slate-600">
-                      Ակտիվ մրցույթներում կարող եք դիմել պատվիրատուին։
-                    </p>
-                  )}
-                </div>
-              </div>
-            </aside>
-          </div>
         </div>
       </main>
     </div>

@@ -487,15 +487,33 @@ model Bid {
   bidFeeRefundReason     String?       @db.VarChar(120)
   createdAt              DateTime      @default(now())
   updatedAt              DateTime      @updatedAt
-  tender         Tender        @relation("TenderBids", fields: [tenderId], references: [id], onDelete: Cascade)
-  provider       User          @relation("ProviderBids", fields: [providerId], references: [id], onDelete: Cascade)
-  awardedTender  Tender?       @relation("AwardedBid")
+  tender         Tender           @relation("TenderBids", fields: [tenderId], references: [id], onDelete: Cascade)
+  provider       User             @relation("ProviderBids", fields: [providerId], references: [id], onDelete: Cascade)
+  awardedTender  Tender?          @relation("AwardedBid")
   transactions   Transaction[]
+  attachments    BidAttachment[]
 
   @@unique([tenderId, providerId])
   @@index([providerId])
   @@index([tenderId, status])
   @@map("bid")
+}
+
+model BidAttachment {
+  id               String   @id @default(cuid())
+  bidId            String
+  /** IMAGE | DOCUMENT */
+  kind             String   @db.VarChar(20)
+  url              String
+  originalFileName String   @db.VarChar(255)
+  mimeType         String?  @db.VarChar(120)
+  sizeBytes        Int?
+  sortOrder        Int      @default(0)
+  createdAt        DateTime @default(now())
+  bid              Bid      @relation(fields: [bidId], references: [id], onDelete: Cascade)
+
+  @@index([bidId])
+  @@map("bid_attachment")
 }
 
 model Transaction {

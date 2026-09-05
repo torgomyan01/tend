@@ -1,5 +1,6 @@
 import {
   AlertTriangle,
+  Album,
   ArrowDownLeft,
   ArrowUpRight,
   BadgeCheck,
@@ -296,13 +297,21 @@ export default async function AccountPage() {
                   backgroundSize: "26px 26px",
                 }}
               />
-               <div className="absolute top-4 right-4">
+               <div className="absolute top-4 right-4 flex items-center gap-2">
                 <Link
-                    href={ROUTES.userProfile(user.id)}
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-4 py-3 text-sm font-black text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-50"
-                  >
-                    <ExternalLink className="size-4" />
-                  </Link>
+                  href={ROUTES.accountPortfolio}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white/95 px-4 py-2.5 text-sm font-black text-slate-800 shadow-sm ring-1 ring-white/40 backdrop-blur-sm transition hover:bg-white"
+                >
+                  <Album className="size-4" />
+                  Պորտֆոլիո
+                </Link>
+                <Link
+                  href={ROUTES.userProfile(user.id)}
+                  aria-label="Հանրային պրոֆիլ"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white/95 px-4 py-2.5 text-sm font-black text-slate-800 shadow-sm ring-1 ring-white/40 backdrop-blur-sm transition hover:bg-white"
+                >
+                  <ExternalLink className="size-4" />
+                </Link>
                </div>
             </div>
 
@@ -391,12 +400,11 @@ export default async function AccountPage() {
                       Տեղադրել մրցույթ
                     </Link>
                   </div>
-                
-                   
+
                   <Link
                     href={ROUTES.accountSettings}
                     aria-label="Կարգավորումներ"
-                    className="inline-flex items-center justify-center w-[179px] gap-2 rounded-full bg-white px-4 py-3 text-sm font-black text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-50"
+                    className="hidden sm:inline-flex items-center justify-center w-[179px] gap-2 rounded-full bg-white px-4 py-3 text-sm font-black text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-50"
                   >
                     <Settings className="size-4" />
                     <span className="hidden sm:inline">Կարգավորումներ</span>
@@ -408,13 +416,15 @@ export default async function AccountPage() {
 
           {/* STAT CARDS */}
           <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <StatCard
-              icon={WalletCards}
-              label="Դրամապանակ"
-              value={formatAmd(walletBalance)}
-              hint="Հասանելի մնացորդ"
-              accent
-            />
+            <Link href={ROUTES.accountWallet} className="block">
+              <StatCard
+                icon={WalletCards}
+                label="Դրամապանակ"
+                value={formatAmd(walletBalance)}
+                hint="Հասանելի մնացորդ · Բացել"
+                accent
+              />
+            </Link>
             <StatCard
               icon={BriefcaseBusiness}
               label="Իմ մրցույթներ"
