@@ -8,6 +8,9 @@ import {
 } from "@/lib/vpos/client";
 import { VPOS_GATEWAY } from "@/lib/vpos/config";
 
+/** How long an unfinished checkout stays eligible for settlement. */
+const ABANDON_AFTER_MS = 60 * 60 * 1000;
+
 export type SettleDepositResult =
   | { status: "SUCCEEDED"; balance: number; amount: number }
   | { status: "PENDING"; amount: number }
@@ -37,7 +40,13 @@ export async function settleVposDeposit(input: {
       type: "DEPOSIT",
       gateway: VPOS_GATEWAY,
     },
-    select: { id: true, userId: true, status: true, amount: true },
+    select: {
+      id: true,
+      userId: true,
+      status: true,
+      amount: true,
+      createdAt: true,
+    },
   });
 
   if (!existing) {
@@ -62,16 +71,25 @@ export async function settleVposDeposit(input: {
     return { status: "FAILED", amount };
   }
 
+  /** Abandoned checkouts are given up on so they stop being re-polled. */
+  const isStale =
+    Date.now() - existing.createdAt.getTime() > ABANDON_AFTER_MS;
+
   const listRes = await vposTransactionsList({ orderID: input.orderNumber });
   const item = listRes.body?.data?.list?.[0];
+  const authState = item ? vposAuthState(item) : "pending";
 
-  if (!item) {
-    return { status: "PENDING", amount };
-  }
-
-  const authState = vposAuthState(item);
-
-  if (authState === "pending") {
+  if (!item || authState === "pending") {
+    if (isStale) {
+      await prisma.transaction.update({
+        where: { id: existing.id },
+        data: {
+          status: "CANCELLED",
+          description: "VPOS վճարումը չի ավարտվել",
+        },
+      });
+      return { status: "FAILED", amount, reason: "Վճարումը չի ավարտվել" };
+    }
     return { status: "PENDING", amount };
   }
 
@@ -147,7 +165,7 @@ export async function settleVposDeposit(input: {
  * returned to the callback page.
  */
 export async function reconcilePendingVposDeposits(userId: string) {
-  const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const cutoff = new Date(Date.now() - 2 * ABANDON_AFTER_MS);
 
   const pending = await prisma.transaction.findMany({
     where: {
