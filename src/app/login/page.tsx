@@ -6,6 +6,7 @@ import {
 import Link from "next/link";
 import { Suspense } from "react";
 import { LoginForm } from "@/components/login-form";
+import { isGoogleAuthEnabled } from "@/lib/auth";
 import { ROUTES } from "@/lib/routes";
 
 const benefits = [
@@ -90,7 +91,7 @@ export default function LoginPage() {
             </div>
 
             <Suspense fallback={<div className="h-48 animate-pulse rounded-2xl bg-slate-100" />}>
-              <LoginForm />
+              <LoginForm googleEnabled={isGoogleAuthEnabled} />
             </Suspense>
           </div>
         </section>

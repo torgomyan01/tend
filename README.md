@@ -2,6 +2,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+`ssh -L 3306:127.0.0.1:3306 root@31.187.74.6`
+
 First, run the development server:
 
 ```bash

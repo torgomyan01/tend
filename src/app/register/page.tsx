@@ -3,7 +3,9 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 import { RegisterForm } from "@/components/register-form";
+import { isGoogleAuthEnabled } from "@/lib/auth";
 import { ROUTES } from "@/lib/routes";
 import { getServiceCategories } from "@/lib/services-data";
 
@@ -51,7 +53,7 @@ export default async function RegisterPage() {
               <p className="mt-8 text-sm font-black uppercase tracking-[0.2em] text-amber-300 sm:mt-10">
                 Գրանցում
               </p>
-              <h1 className="mt-4 max-w-xl text-3xl font-black leading-tight tracking-tight sm:text-5xl">
+              <h1 className="mt-4 max-w-xl text-3xl font-black leading-tight tracking-tight sm:text-4xl">
                 Սկսեք պատվիրել կամ հաղթել մրցույթներում մեկ հարթակում։
               </h1>
               <p className="mt-5 max-w-lg text-base leading-8 text-slate-300 sm:text-lg">
@@ -89,7 +91,16 @@ export default async function RegisterPage() {
               </p>
             </div>
 
-            <RegisterForm categories={categories} />
+            <Suspense
+              fallback={
+                <div className="h-64 animate-pulse rounded-2xl bg-slate-100" />
+              }
+            >
+              <RegisterForm
+                categories={categories}
+                googleEnabled={isGoogleAuthEnabled}
+              />
+            </Suspense>
           </div>
         </section>
       </div>

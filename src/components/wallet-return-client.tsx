@@ -3,7 +3,7 @@
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { formatAmd } from "@/lib/format";
 import { ROUTES } from "@/lib/routes";
 import { toastError, toastSuccess } from "@/lib/toast";
@@ -24,6 +24,8 @@ export function WalletReturnClient({ orderNumber: orderNumberRaw }: Props) {
   const orderNumber = Number(orderNumberRaw);
 
   const [state, setState] = useState<ConfirmState>({ kind: "loading" });
+  const startedRef = useRef(false);
+  const toastShownRef = useRef(false);
 
   const confirm = useCallback(async () => {
     if (!Number.isFinite(orderNumber) || orderNumber <= 0) {
@@ -62,10 +64,13 @@ export function WalletReturnClient({ orderNumber: orderNumberRaw }: Props) {
           balance: Number(data.balance ?? 0),
           amount: Number(data.amount ?? 0),
         });
-        toastSuccess(
-          "Դրամապանակը լիցքավորվեց",
-          `Հաշվեկշիռ՝ ${formatAmd(Number(data.balance ?? 0))}`,
-        );
+        if (!toastShownRef.current) {
+          toastShownRef.current = true;
+          toastSuccess(
+            "Դրամապանակը լիցքավորվեց",
+            `Հաշվեկշիռ՝ ${formatAmd(Number(data.balance ?? 0))}`,
+          );
+        }
         router.refresh();
         return;
       }
@@ -93,6 +98,8 @@ export function WalletReturnClient({ orderNumber: orderNumberRaw }: Props) {
   }, [orderNumber, router]);
 
   useEffect(() => {
+    if (startedRef.current) return;
+    startedRef.current = true;
     void confirm();
   }, [confirm]);
 

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getServerSession } from "next-auth";
-import { absoluteAppUrl } from "@/lib/absolute-app-url";
+import { absoluteAppUrlFromRequest } from "@/lib/absolute-app-url";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
@@ -11,7 +11,6 @@ import {
   VPOS_DEPOSIT_MIN,
   VPOS_GATEWAY,
 } from "@/lib/vpos/config";
-import { reconcilePendingVposDeposits } from "@/lib/vpos/settle-deposit";
 
 export const dynamic = "force-dynamic";
 
@@ -35,12 +34,6 @@ export async function GET() {
 
   if (!session?.user?.id) {
     return NextResponse.json({ error: "UNAUTHENTICATED" }, { status: 401 });
-  }
-
-  try {
-    await reconcilePendingVposDeposits(session.user.id);
-  } catch (error) {
-    console.error("[GET /api/account/wallet] reconcile", error);
   }
 
   const user = await prisma.user.findUnique({
@@ -149,7 +142,10 @@ export async function POST(request: Request) {
       select: { id: true, orderNumber: true },
     });
 
-    const backURL = absoluteAppUrl(ROUTES.accountWalletReturn(orderNumber));
+    const backURL = absoluteAppUrlFromRequest(
+      ROUTES.accountWalletReturn(orderNumber),
+      request,
+    );
 
     let orderRes;
     try {

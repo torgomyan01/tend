@@ -64,6 +64,38 @@ export function absoluteAppUrl(path: string): string {
   return `${origin.replace(/\/$/, "")}${normalized}`;
 }
 
+/**
+ * Origin for the current browser request — keeps localhost in local/dev.
+ * Used for VPOS backURL so payment return lands on the same host the user came from.
+ */
+export function resolveAppOriginFromRequest(request: Request): string {
+  const fromReq = resolveBrowserOriginFromRequest(request);
+  if (fromReq) {
+    return fromReq;
+  }
+
+  if (process.env.NODE_ENV !== "production") {
+    for (const c of [
+      process.env.NEXT_PUBLIC_APP_URL,
+      process.env.NEXTAUTH_URL,
+    ]) {
+      const o = normalizeOrigin(c ?? "");
+      if (o) {
+        return o;
+      }
+    }
+  }
+
+  return resolvePublicAppOrigin();
+}
+
+/** Absolute URL on the same host as the request (localhost locally, tend.am in prod). */
+export function absoluteAppUrlFromRequest(path: string, request: Request): string {
+  const origin = resolveAppOriginFromRequest(request);
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  return `${origin.replace(/\/$/, "")}${normalized}`;
+}
+
 export function tenderReviewAbsoluteUrl(tenderId: string): string {
   return absoluteAppUrl(ROUTES.tenderReview(tenderId));
 }

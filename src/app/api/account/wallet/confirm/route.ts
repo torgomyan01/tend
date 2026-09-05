@@ -25,6 +25,9 @@ export async function POST(request: Request) {
   }
 
   try {
+    // Settle ONLY this order. Do not auto-credit other pending deposits here —
+    // that previously made a 10֏ top-up look like +20 when an older paid-but-
+    // unsettled order was reconciled in the same request cycle.
     const result = await settleVposDeposit({
       userId: session.user.id,
       orderNumber: parsed.data.orderNumber,

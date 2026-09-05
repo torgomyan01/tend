@@ -27,6 +27,43 @@ async function currentBalance(userId: string) {
 }
 
 /**
+ * Credits the wallet at most once for a PENDING deposit.
+ * Relies on atomic `updateMany(... status: PENDING → SUCCEEDED)` so concurrent
+ * confirm/reconcile/StrictMode calls cannot double-increment.
+ */
+async function creditPendingDepositOnce(input: {
+  transactionId: string;
+  userId: string;
+  amount: number;
+}): Promise<{ credited: boolean; balance: number }> {
+  const credited = await prisma.$transaction(async (tx) => {
+    const claimed = await tx.transaction.updateMany({
+      where: { id: input.transactionId, status: "PENDING" },
+      data: {
+        status: "SUCCEEDED",
+        description: "Դրամապանակի լիցքավորում (VPOS)",
+      },
+    });
+
+    if (claimed.count !== 1) {
+      return false;
+    }
+
+    await tx.user.update({
+      where: { id: input.userId },
+      data: { walletBalance: { increment: input.amount } },
+    });
+
+    return true;
+  });
+
+  return {
+    credited,
+    balance: await currentBalance(input.userId),
+  };
+}
+
+/**
  * Checks the VPOS order, captures held funds when the merchant account runs in
  * two-phase mode, then credits the wallet exactly once.
  */
@@ -71,7 +108,6 @@ export async function settleVposDeposit(input: {
     return { status: "FAILED", amount };
   }
 
-  /** Abandoned checkouts are given up on so they stop being re-polled. */
   const isStale =
     Date.now() - existing.createdAt.getTime() > ABANDON_AFTER_MS;
 
@@ -81,8 +117,8 @@ export async function settleVposDeposit(input: {
 
   if (!item || authState === "pending") {
     if (isStale) {
-      await prisma.transaction.update({
-        where: { id: existing.id },
+      await prisma.transaction.updateMany({
+        where: { id: existing.id, status: "PENDING" },
         data: {
           status: "CANCELLED",
           description: "VPOS վճարումը չի ավարտվել",
@@ -94,8 +130,8 @@ export async function settleVposDeposit(input: {
   }
 
   if (authState === "declined") {
-    await prisma.transaction.update({
-      where: { id: existing.id },
+    await prisma.transaction.updateMany({
+      where: { id: existing.id, status: "PENDING" },
       data: {
         status: "FAILED",
         description: item.response?.Description ?? "VPOS վճարումը մերժվել է",
@@ -108,8 +144,7 @@ export async function settleVposDeposit(input: {
     };
   }
 
-  // Authorized. In two-phase mode the money is only held, so capture it before
-  // crediting the wallet — the deposit must debit the card immediately.
+  // Two-phase merchant: capture hold before wallet credit.
   if (vposNeedsCapture(item)) {
     const captureRes = await vposConfirmPayment({
       orderID: input.orderNumber,
@@ -127,42 +162,18 @@ export async function settleVposDeposit(input: {
     }
   }
 
-  const result = await prisma.$transaction(async (tx) => {
-    const row = await tx.transaction.findUnique({
-      where: { id: existing.id },
-      select: { id: true, status: true, amount: true },
-    });
-
-    if (!row || row.status !== "PENDING") {
-      return null;
-    }
-
-    await tx.user.update({
-      where: { id: input.userId },
-      data: { walletBalance: { increment: row.amount } },
-    });
-
-    await tx.transaction.update({
-      where: { id: row.id },
-      data: {
-        status: "SUCCEEDED",
-        description: "Դրամապանակի լիցքավորում (VPOS)",
-      },
-    });
-
-    return { amount: Number(row.amount) };
+  const { balance } = await creditPendingDepositOnce({
+    transactionId: existing.id,
+    userId: input.userId,
+    amount,
   });
 
-  return {
-    status: "SUCCEEDED",
-    balance: await currentBalance(input.userId),
-    amount: result?.amount ?? amount,
-  };
+  return { status: "SUCCEEDED", balance, amount };
 }
 
 /**
  * Self-healing: settles deposits whose payment finished but whose browser never
- * returned to the callback page.
+ * returned to the callback page. Safe to call often — credit is atomic.
  */
 export async function reconcilePendingVposDeposits(userId: string) {
   const cutoff = new Date(Date.now() - 2 * ABANDON_AFTER_MS);
@@ -177,6 +188,7 @@ export async function reconcilePendingVposDeposits(userId: string) {
       orderNumber: { not: null },
     },
     select: { orderNumber: true },
+    orderBy: { createdAt: "asc" },
     take: 10,
   });
 

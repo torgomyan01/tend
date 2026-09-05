@@ -1,5 +1,4 @@
 import {
-  ArrowRight,
   BadgeCheck,
   EyeOff,
   ShieldCheck,
@@ -7,7 +6,10 @@ import {
   WalletCards,
 } from "lucide-react";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { ProvidersRegisterCta } from "@/components/providers-register-cta";
 import { SiteHeader } from "@/components/site-header";
+import { authOptions } from "@/lib/auth";
 import { ROUTES } from "@/lib/routes";
 
 const valueProps = [
@@ -67,6 +69,9 @@ const steps = [
 ];
 
 export default async function ProvidersPage() {
+  const session = await getServerSession(authOptions);
+  const isLoggedIn = Boolean(session?.user?.id);
+
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
       <SiteHeader />
@@ -87,13 +92,7 @@ export default async function ProvidersPage() {
             </p>
 
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Link
-                href={ROUTES.register}
-                className="inline-flex items-center justify-center gap-3 rounded-full bg-amber-300 px-7 py-4 text-base font-black text-slate-950 shadow-xl shadow-amber-300/15 transition hover:-translate-y-1 hover:bg-amber-200"
-              >
-                Գրանցվել որպես մասնագետ
-                <ArrowRight className="size-5" />
-              </Link>
+              <ProvidersRegisterCta isLoggedIn={isLoggedIn} />
               <Link
                 href={ROUTES.tenders}
                 className="inline-flex items-center justify-center rounded-full bg-white/10 px-7 py-4 text-base font-black text-white ring-1 ring-white/15 transition hover:bg-white/15"

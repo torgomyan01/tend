@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { AuthDivider, GoogleAuthButton } from "@/components/google-auth-button";
 import { EmailVerificationPanel } from "@/components/email-verification-panel";
 import { RegisterOnboardingPreferences } from "@/components/register-onboarding-preferences";
 import { TelegramVerificationPanel } from "@/components/telegram-verification-panel";
@@ -52,9 +53,13 @@ type Step =
 
 type RegisterFormProps = {
   categories: ServiceCategoryWithServices[];
+  googleEnabled?: boolean;
 };
 
-export function RegisterForm({ categories }: RegisterFormProps) {
+export function RegisterForm({
+  categories,
+  googleEnabled = false,
+}: RegisterFormProps) {
   const [step, setStep] = useState<Step>("type");
   const [interests, setInterests] = useState<InterestSelection[]>([]);
   const [name, setName] = useState("");
@@ -188,6 +193,20 @@ export function RegisterForm({ categories }: RegisterFormProps) {
 
   return (
     <div className="space-y-6">
+      {step === "type" && googleEnabled ? (
+        <div>
+          <GoogleAuthButton
+            enabled={googleEnabled}
+            label="Գրանցվել Google-ով"
+            callbackUrl={ROUTES.home}
+          />
+          <AuthDivider />
+          <p className="mb-2 text-center text-xs font-bold text-slate-500">
+            Կամ լրացրեք ձևը հեռախոսահամարով
+          </p>
+        </div>
+      ) : null}
+
       {/* Mobile: compact progress — no horizontal scroll */}
       <div className="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200/80 md:hidden">
         <div className="flex items-center justify-between gap-3">
