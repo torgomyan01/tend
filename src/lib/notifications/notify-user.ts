@@ -5,7 +5,6 @@ import {
   renderNotificationEmailTemplate,
 } from "@/lib/email/templates/notification";
 import { trySendEmail } from "@/lib/email/send";
-import { isEmailVerified } from "@/lib/account-verification";
 import type { InAppNotificationInput } from "@/lib/notifications/in-app";
 import {
   trySendTelegramMessage,
@@ -27,7 +26,7 @@ export type NotifyPayload = {
   inApp: InAppNotificationInput;
   /** true — Telegram չուղարկել (օր. աջակցության պատասխան) */
   skipTelegram?: boolean;
-  /** true — ուղարկել Telegram + Email (անկախ notificationChannel-ից) */
+  /** @deprecated Այլևս պետք չէ · Telegram + Email միշտ փորձվում են հասանելի լինելու դեպքում */
   forceAllChannels?: boolean;
 };
 
@@ -78,7 +77,7 @@ async function persistInAppNotification(
   });
 }
 
-/** Ուղարկում է Telegram, Email և պահում կայքի ծանուցումների ցանկում։ */
+/** Ուղարկում է Telegram (եթե կապված է), Email (եթե կա գրանցված հասցե) և պահում in-app ծանուցում։ */
 export async function notifyUserById(
   userId: string,
   payload: NotifyPayload,
@@ -110,16 +109,11 @@ export async function notifyUserDirect(
   },
   payload: NotifyPayload,
 ): Promise<{ sentTelegram: boolean; sentEmail: boolean }> {
-  const channel = target.notificationChannel ?? "TELEGRAM";
-  const emailOk = isEmailVerified(target);
-  const hasTelegram = Boolean(target.telegramChatId);
   let sentTelegram = false;
   let sentEmail = false;
 
   const tryTelegram =
-    !payload.skipTelegram &&
-    target.telegramChatId &&
-    (payload.forceAllChannels || allowsTelegram(channel, hasTelegram));
+    !payload.skipTelegram && Boolean(target.telegramChatId?.trim());
 
   if (tryTelegram && target.telegramChatId) {
     sentTelegram = await trySendTelegramMessage(
@@ -129,13 +123,11 @@ export async function notifyUserDirect(
     );
   }
 
-  const tryEmail =
-    target.email &&
-    (payload.forceAllChannels
-      ? Boolean(target.email)
-      : allowsEmail(channel, emailOk));
+  const email = target.email?.trim() || "";
+  // Գրանցված email → միշտ փորձել ուղարկել (նույն ծանուցումը, ինչ Telegram-ում)
+  const tryEmail = Boolean(email);
 
-  if (tryEmail && target.email) {
+  if (tryEmail) {
     const bodyHtml =
       payload.emailBodyHtml ??
       (payload.emailPlainText
@@ -151,7 +143,7 @@ export async function notifyUserDirect(
     });
 
     sentEmail = await trySendEmail({
-      to: target.email,
+      to: email,
       subject: payload.emailSubject,
       html,
     });
@@ -165,20 +157,4 @@ export async function notifyUserDirect(
   }
 
   return { sentTelegram, sentEmail };
-}
-
-function allowsTelegram(
-  channel: NotificationChannel,
-  hasTelegram: boolean,
-): boolean {
-  if (!hasTelegram) return false;
-  return channel === "TELEGRAM" || channel === "BOTH";
-}
-
-function allowsEmail(
-  channel: NotificationChannel,
-  emailVerified: boolean,
-): boolean {
-  if (!emailVerified) return false;
-  return channel === "EMAIL" || channel === "BOTH";
 }
