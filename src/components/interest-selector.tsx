@@ -7,7 +7,6 @@ import {
   Layers,
   Plus,
   Search,
-  Sparkles,
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -148,7 +147,7 @@ export function InterestSelector({
       <div className="rounded-3xl bg-amber-50 p-4 ring-1 ring-amber-200">
         <div className="flex items-start gap-3">
           <div className="grid size-10 shrink-0 place-items-center rounded-2xl bg-amber-200/70 text-amber-800">
-            <Sparkles className="size-5" />
+            <Layers className="size-5" />
           </div>
           <div>
             <p className="text-sm font-black text-amber-900">
@@ -432,7 +431,7 @@ function InterestModal({
                 : "bg-slate-100 text-slate-500"
             }`}
           >
-            <Sparkles
+            <Check
               className={`size-3.5 ${
                 draft.length > 0 ? "text-amber-300" : "text-slate-400"
               }`}

@@ -7,6 +7,7 @@ import { LanguageDropdown } from "@/components/language-dropdown";
 import { MobileMenu } from "@/components/mobile-menu";
 import { SiteNav } from "@/components/site-nav";
 import { NotificationsDropdown } from "@/components/notifications-dropdown";
+import { MessagesNavLink } from "@/components/messages-unread-badge";
 import { WalletDropdown } from "@/components/wallet-dropdown";
 import { authOptions } from "@/lib/auth";
 import { ROUTES } from "@/lib/routes";
@@ -47,6 +48,10 @@ export async function SiteHeader() {
             <NotificationsDropdown
               isLoggedIn={isLoggedIn}
               className="hidden md:block"
+            />
+            <MessagesNavLink
+              isLoggedIn={isLoggedIn}
+              className="hidden md:grid"
             />
             <div className="hidden md:contents">
               <WalletDropdown isLoggedIn={isLoggedIn} />

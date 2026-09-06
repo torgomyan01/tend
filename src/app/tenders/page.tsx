@@ -11,6 +11,7 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
@@ -22,6 +23,8 @@ import { authOptions } from "@/lib/auth";
 import { formatAmd, formatDateTime, formatNumber } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import { NOINDEX_FOLLOW } from "@/lib/seo/site";
 import {
   mergeCatalogPicksFromLegacy,
   parseCatalogPicksParam,
@@ -42,12 +45,87 @@ import type {
   TenderStatus,
 } from "@/generated/prisma/client";
 import { AccountTypeBadge } from "@/components/account-type-badge";
+import { JsonLd } from "@/components/json-ld";
 import { TenderLikeButton } from "@/components/tender-like-button";
 import type { AccountTypeValue } from "@/lib/account-type";
+import { collectionPage, breadcrumbList } from "@/lib/seo/json-ld";
 
 export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 24;
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    scope?: string;
+    status?: string;
+    q?: string;
+    picks?: string;
+    category?: string;
+    service?: string;
+    city?: string;
+    sort?: string;
+    page?: string;
+    budgetMin?: string;
+    budgetMax?: string;
+    deadline?: string;
+    blind?: string;
+  }>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const scope =
+    params.scope === "my" || params.scope === "bids" || params.scope === "liked"
+      ? params.scope
+      : undefined;
+
+  if (scope === "my") {
+    return buildPageMetadata({
+      title: "Իմ մրցույթներ",
+      description: "Ձեր տեղադրած մրցույթները Tend.am հաշվում։",
+      path: ROUTES.myTenders,
+      robots: NOINDEX_FOLLOW,
+    });
+  }
+  if (scope === "bids") {
+    return buildPageMetadata({
+      title: "Իմ առաջարկներ",
+      description: "Ձեր ուղարկած առաջարկները Tend.am-ում։",
+      path: ROUTES.bidHistory,
+      robots: NOINDEX_FOLLOW,
+    });
+  }
+  if (scope === "liked") {
+    return buildPageMetadata({
+      title: "Իմ հավանածները",
+      description: "Ձեր հավանած մրցույթները Tend.am-ում։",
+      path: ROUTES.likedTenders,
+      robots: NOINDEX_FOLLOW,
+    });
+  }
+
+  const hasFilters = Boolean(
+    params.q ||
+      params.picks ||
+      params.category ||
+      params.service ||
+      params.city ||
+      params.sort ||
+      params.budgetMin ||
+      params.budgetMax ||
+      params.deadline ||
+      params.blind ||
+      (params.page && params.page !== "1"),
+  );
+
+  return buildPageMetadata({
+    title: "Մրցույթներ",
+    description:
+      "Ակտիվ մրցույթների կատալոգ Հայաստանում՝ որոնումով, ոլորտի ու բնակավայրի ֆիլտրերով։ Մասնակցեք որպես մասնագետ կամ հետևեք նոր առաջադրաններին։",
+    path: ROUTES.tenders,
+    robots: hasFilters ? NOINDEX_FOLLOW : undefined,
+  });
+}
 
 const MY_FILTERS: { value: "ALL" | TenderStatus; label: string }[] = [
   { value: "ALL", label: "Բոլորը" },
@@ -533,31 +611,6 @@ export default async function TendersPage({
       )
     : new Set<string>();
 
-  const eyebrow =
-    view.type === "my"
-      ? "Պատվիրատու"
-      : view.type === "bids"
-        ? "Մասնագետ"
-        : view.type === "liked"
-          ? "Պահված"
-        : "Հարթակ";
-  const title =
-    view.type === "my"
-      ? "Իմ մրցույթներ"
-      : view.type === "bids"
-        ? "Իմ առաջարկներ"
-        : view.type === "liked"
-          ? "Իմ հավանածները"
-        : "Մրցույթներ";
-  const description =
-    view.type === "my"
-      ? "Դուք տեղադրած հայտարարությունները՝ կարգավիճակով, առաջարկների թվով և արագ հղումով մանրամասների էջ։"
-      : view.type === "bids"
-        ? "Ձեր ուղարկած առաջարկները՝ կապված մրցույթների հետ։"
-        : view.type === "liked"
-          ? "Ձեր պահպանած (հավանած) մրցույթները՝ արագ վերադառնալու համար։"
-        : "Ակտիվ մրցույթների կատալոգ՝ որոնումով, ոլորտի ու բնակավայրի ֆիլտրերով և տեսակավորմամբ։ Մասնակցեք որպես մասնագետ կամ հետևեք նոր առաջադրաններին։";
-
   const hasBrowseFilters =
     !!browseState.q ||
     browseState.catalogPicks.length > 0 ||
@@ -575,105 +628,26 @@ export default async function TendersPage({
 
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
+      {view.type === "public" && !hasBrowseFilters ? (
+        <JsonLd
+          data={[
+            collectionPage({
+              name: "Մրցույթներ",
+              description:
+                "Ակտիվ մրցույթների կատալոգ Հայաստանում՝ որոնումով և ֆիլտրերով։",
+              path: ROUTES.tenders,
+            }),
+            breadcrumbList([
+              { name: "Գլխավոր", path: ROUTES.home },
+              { name: "Մրցույթներ", path: ROUTES.tenders },
+            ]),
+          ]}
+        />
+      ) : null}
       <SiteHeader />
 
       <main className="px-4 pb-12 sm:px-6 lg:px-8">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
-          <section className="rounded-4xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-700">
-              {eyebrow}
-            </p>
-            <h1 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">
-              {title}
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm font-semibold text-slate-600">
-              {description}
-            </p>
-
-            <nav
-              className="mt-6 flex flex-wrap gap-2"
-              aria-label="Մրցույթների տեսք"
-            >
-              <Link
-                href={ROUTES.tenders}
-                className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-black transition ${
-                  view.type === "public"
-                    ? "bg-slate-950 text-white shadow-lg shadow-slate-950/20"
-                    : "bg-slate-50 text-slate-700 ring-1 ring-slate-200 hover:bg-slate-100"
-                }`}
-              >
-                Բոլորը
-              </Link>
-              <Link
-                href={ROUTES.myTenders}
-                className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-black transition ${
-                  view.type === "my"
-                    ? "bg-slate-950 text-white shadow-lg shadow-slate-950/20"
-                    : "bg-slate-50 text-slate-700 ring-1 ring-slate-200 hover:bg-slate-100"
-                }`}
-              >
-                Իմ մրցույթներ
-              </Link>
-              <Link
-                href={ROUTES.bidHistory}
-                className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-black transition ${
-                  view.type === "bids"
-                    ? "bg-slate-950 text-white shadow-lg shadow-slate-950/20"
-                    : "bg-slate-50 text-slate-700 ring-1 ring-slate-200 hover:bg-slate-100"
-                }`}
-              >
-                Իմ առաջարկներ
-              </Link>
-              <Link
-                href={ROUTES.likedTenders}
-                className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-black transition ${
-                  view.type === "liked"
-                    ? "bg-slate-950 text-white shadow-lg shadow-slate-950/20"
-                    : "bg-slate-50 text-slate-700 ring-1 ring-slate-200 hover:bg-slate-100"
-                }`}
-              >
-                Իմ հավանածները
-              </Link>
-            </nav>
-
-            {view.type === "my" ? (
-              <div className="mt-4 flex flex-wrap gap-2">
-                {MY_FILTERS.map((filter) => {
-                  const isActive = view.statusParam === filter.value;
-                  return (
-                    <Link
-                      key={filter.value}
-                      href={buildMyTendersHref(filter.value)}
-                      className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-black transition ${
-                        isActive
-                          ? "bg-amber-100 text-amber-900 ring-1 ring-amber-200"
-                          : "bg-slate-50 text-slate-600 ring-1 ring-slate-200 hover:bg-slate-100"
-                      }`}
-                    >
-                      {filter.label}
-                    </Link>
-                  );
-                })}
-              </div>
-            ) : null}
-
-            {view.type === "my" ? (
-              <p className="mt-4 text-xs font-semibold text-slate-500">
-                Ընդհանուր՝ {formatNumber(myCount)} մրցույթ ձեր հաշվում։
-              </p>
-            ) : null}
-            {view.type === "bids" ? (
-              <p className="mt-4 text-xs font-semibold text-slate-500">
-                Ընդհանուր՝ {formatNumber(bidCount)} առաջարկ։
-              </p>
-            ) : null}
-            {view.type === "liked" ? (
-              <p className="mt-4 text-xs font-semibold text-slate-500">
-                Ընդհանուր՝ {formatNumber(likedCount)} հավանում։
-              </p>
-            ) : null}
-          </section>
-
           {view.type === "public" ? (
             <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(280px,340px)_minmax(0,1fr)] lg:items-start lg:gap-8">
               <aside className="hidden lg:sticky lg:top-24 lg:z-10 lg:block lg:self-start">
@@ -841,10 +815,36 @@ export default async function TendersPage({
 
           {view.type === "my" ? (
             <section className="space-y-3">
-              <div className="flex flex-wrap justify-end gap-2">
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+                <div className="space-y-2">
+                  <h1 className="text-2xl font-black tracking-tight text-slate-950">
+                    Իմ մրցույթներ
+                  </h1>
+                  <p className="text-xs font-semibold text-slate-500">
+                    Ընդհանուր՝ {formatNumber(myCount)} մրցույթ ձեր հաշվում։
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {MY_FILTERS.map((filter) => {
+                      const isActive = view.statusParam === filter.value;
+                      return (
+                        <Link
+                          key={filter.value}
+                          href={buildMyTendersHref(filter.value)}
+                          className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-black transition ${
+                            isActive
+                              ? "bg-amber-100 text-amber-900 ring-1 ring-amber-200"
+                              : "bg-slate-50 text-slate-600 ring-1 ring-slate-200 hover:bg-slate-100"
+                          }`}
+                        >
+                          {filter.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
                 <Link
                   href={ROUTES.createTender}
-                  className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+                  className="inline-flex items-center gap-2 self-start rounded-full bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
                 >
                   <PlusCircle className="size-4" />
                   Նոր մրցույթ
@@ -899,6 +899,14 @@ export default async function TendersPage({
 
           {view.type === "bids" ? (
             <section className="space-y-3">
+              <div>
+                <h1 className="text-2xl font-black tracking-tight text-slate-950">
+                  Իմ առաջարկներ
+                </h1>
+                <p className="mt-1 text-xs font-semibold text-slate-500">
+                  Ընդհանուր՝ {formatNumber(bidCount)} առաջարկ։
+                </p>
+              </div>
               {bidsList.length === 0 ? (
                 <EmptyState
                   icon={<BriefcaseBusiness className="mx-auto size-10 text-slate-300" />}
@@ -992,6 +1000,14 @@ export default async function TendersPage({
 
           {view.type === "liked" ? (
             <section className="space-y-3">
+              <div>
+                <h1 className="text-2xl font-black tracking-tight text-slate-950">
+                  Իմ հավանածները
+                </h1>
+                <p className="mt-1 text-xs font-semibold text-slate-500">
+                  Ընդհանուր՝ {formatNumber(likedCount)} հավանում։
+                </p>
+              </div>
               {likedRows.length === 0 ? (
                 <EmptyState
                   icon={<BriefcaseBusiness className="mx-auto size-10 text-slate-300" />}

@@ -112,6 +112,11 @@ export type Location = Prisma.LocationModel
  */
 export type Tender = Prisma.TenderModel
 /**
+ * Model TenderContract
+ * * Պայմանագիր պատվիրատու ↔ առաջարկված կատարող (մինչև երկու հաստատում՝ կատարողը դեռ ընտրված չէ)
+ */
+export type TenderContract = Prisma.TenderContractModel
+/**
  * Model TenderLike
  * 
  */
@@ -186,3 +191,18 @@ export type SupportMessage = Prisma.SupportMessageModel
  * 
  */
 export type SupportAttachment = Prisma.SupportAttachmentModel
+/**
+ * Model TenderConversation
+ * * Պատվիրատու ↔ կատարող զրույց (կապված պայմանագրի առաջարկի հետ)
+ */
+export type TenderConversation = Prisma.TenderConversationModel
+/**
+ * Model TenderMessage
+ * 
+ */
+export type TenderMessage = Prisma.TenderMessageModel
+/**
+ * Model TenderMessageAttachment
+ * 
+ */
+export type TenderMessageAttachment = Prisma.TenderMessageAttachmentModel

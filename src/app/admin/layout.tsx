@@ -1,10 +1,13 @@
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { requireAdmin } from "@/lib/admin";
 import { getAdminModerationCounts } from "@/lib/admin-moderation-counts";
+import { NOINDEX_NOFOLLOW } from "@/lib/seo/site";
 
-export const metadata = {
-  title: "Tend.am · Կառավարման վահանակ",
+export const metadata: Metadata = {
+  title: "Կառավարման վահանակ",
+  robots: NOINDEX_NOFOLLOW,
 };
 
 export default async function AdminLayout({

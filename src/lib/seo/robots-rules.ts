@@ -5,12 +5,17 @@ export const ROBOTS_DISALLOW_PATHS = [
   "/admin",
   "/account",
   "/api",
+  "/messages",
+  "/contracts",
   "/tenders/new",
   "/verify-email",
   "/forgot-password",
   "/reset-password",
+  "/login",
+  "/register",
   "/*/edit",
   "/*/review",
+  "/*/apply",
 ] as const;
 
 /** Միայն ուսուցման/սքրեյպի training bot-ներ — հանրային բովանդակությունը թույլատրել չենք։ */

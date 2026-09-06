@@ -2,12 +2,22 @@ import {
   ArrowLeft,
   CheckCircle2,
 } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { RegisterForm } from "@/components/register-form";
 import { isGoogleAuthEnabled } from "@/lib/auth";
 import { ROUTES } from "@/lib/routes";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import { NOINDEX_FOLLOW } from "@/lib/seo/site";
 import { getServiceCategories } from "@/lib/services-data";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "Գրանցում",
+  description: "Ստեղծեք Tend.am հաշիվ՝ մրցույթ հայտարարելու կամ առաջարկներ ուղարկելու համար։",
+  path: ROUTES.register,
+  robots: NOINDEX_FOLLOW,
+});
 
 const benefits = [
   "Մրցույթ տեղադրելն անվճար է",

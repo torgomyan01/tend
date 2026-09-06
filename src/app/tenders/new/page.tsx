@@ -14,8 +14,15 @@ import { prisma } from "@/lib/prisma";
 import { getLocationPickerOptions } from "@/lib/locations-data";
 import { ROUTES } from "@/lib/routes";
 import { getServiceCategories } from "@/lib/services-data";
+import { NOINDEX_NOFOLLOW } from "@/lib/seo/site";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Նոր մրցույթ",
+  robots: NOINDEX_NOFOLLOW,
+};
 
 function decimalToBudgetInput(value: unknown): string {
   if (value === null || value === undefined) {

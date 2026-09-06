@@ -13,7 +13,7 @@ export async function notifyProviderAwarded(params: {
 
   let text = `<b>Tend.am</b>\n<b>Շնորհավորում ենք՝ ընտրվել եք որպես կատարող։</b>\n\n`;
   text += `<b>${title}</b>\n\n`;
-  text += `Պատվիրատուն ընտրել է ձեզ այս մրցույթի համար։ Կարող եք բացել մրցույթը և շարունակել կապը։`;
+  text += `Երկու կողմն էլ հաստատել են էլեկտրոնային պայմանագիրը։ Կարող եք բացել մրցույթը և շարունակել աշխատանքը։`;
 
   const tenderPath = ROUTES.tenderDetail(params.tenderId);
   const url = absoluteAppUrl(tenderPath);
@@ -31,7 +31,7 @@ export async function notifyProviderAwarded(params: {
       category: "APPROVED",
       kind: NOTIFICATION_KINDS.PROVIDER_AWARDED,
       title: "Ընտրվել եք որպես կատարող",
-      body: `Պատվիրատուն ընտրել է ձեզ «${params.tenderTitle}» մրցույթի համար։`,
+      body: `Պայմանագիրը հաստատված է «${params.tenderTitle}» մրցույթի համար։ Դուք ընտրված կատարող եք։`,
       href: tenderPath,
       tenderId: params.tenderId,
     },

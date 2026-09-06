@@ -26,12 +26,36 @@ function getMariaDbConfig() {
   };
 }
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
+function createPrismaClient() {
+  return new PrismaClient({
     adapter: new PrismaMariaDb(getMariaDbConfig()),
   });
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
 }
+
+function isClientCurrent(client: PrismaClient): boolean {
+  // After `prisma generate`, HMR can keep a stale singleton without new models.
+  const contracts = (client as { tenderContract?: { updateMany?: unknown } })
+    .tenderContract;
+  return typeof contracts?.updateMany === "function";
+}
+
+function resolvePrismaClient(): PrismaClient {
+  const existing = globalForPrisma.prisma;
+  if (existing && isClientCurrent(existing)) {
+    return existing;
+  }
+  const created = createPrismaClient();
+  globalForPrisma.prisma = created;
+  return created;
+}
+
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_target, prop, _receiver) {
+    const client = resolvePrismaClient();
+    const value = Reflect.get(client, prop, client);
+    if (typeof value === "function") {
+      return value.bind(client);
+    }
+    return value;
+  },
+});

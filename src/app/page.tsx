@@ -12,7 +12,6 @@ import {
   MessageCircle,
   Send,
   ShieldCheck,
-  Sparkles,
   Star,
   TrendingUp,
   Users,
@@ -23,7 +22,8 @@ import {
 import Link from "next/link";
 import { FeaturedTenderSlider } from "@/components/featured-tender-slider";
 import { HomeCategoriesMarquee } from "@/components/home-categories-marquee";
-import { HomeFaq } from "@/components/home-faq";
+import { HOME_FAQ_ITEMS, HomeFaq } from "@/components/home-faq";
+import { JsonLd } from "@/components/json-ld";
 import { SupportContactLinks } from "@/components/support-contact-links";
 import { HomeStatsCounter } from "@/components/home-stats-counter";
 import { ServiceSearch } from "@/components/service-search";
@@ -31,8 +31,18 @@ import { SiteHeader } from "@/components/site-header";
 import { getFeaturedHomeTenders } from "@/lib/home-featured-tenders";
 import { getHomeStats } from "@/lib/home-stats";
 import { ROUTES } from "@/lib/routes";
+import { faqPage } from "@/lib/seo/json-ld";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import { SITE_DEFAULT_DESCRIPTION, SITE_DEFAULT_TITLE } from "@/lib/seo/site";
 import { getServiceCategories } from "@/lib/services-data";
+import type { Metadata } from "next";
 import Image from "next/image";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: SITE_DEFAULT_TITLE,
+  description: SITE_DEFAULT_DESCRIPTION,
+  path: ROUTES.home,
+});
 
 const heroBadges = [
   { icon: ShieldCheck, label: "Փակ առաջարկներ" },
@@ -144,6 +154,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen overflow-hidden bg-[#f7f4ee] text-slate-950">
+      <JsonLd data={faqPage([...HOME_FAQ_ITEMS])} />
       <SiteHeader />
 
       <main>
@@ -871,7 +882,18 @@ export default async function Home() {
 
           <div className="mt-10 flex flex-col gap-3 border-t border-slate-200 pt-6 text-sm font-semibold text-slate-500 sm:flex-row sm:items-center sm:justify-between">
             <p>© 2026 Tend.am. Բոլոր իրավունքները պաշտպանված են։</p>
-            <p>Պատրաստված է Հայաստանի շուկայի համար ❤︎</p>
+            <p>
+              Կայքը սպասարկվում է{" "}
+              <a
+                href="https://torgomyan-studio.am/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-black text-slate-700 underline decoration-amber-400/70 underline-offset-2 transition hover:text-slate-950"
+              >
+                TorgomyanStudio
+              </a>
+              -ի կողմից
+            </p>
           </div>
         </div>
       </footer>

@@ -1,4 +1,4 @@
-import { Sparkles } from "lucide-react";
+import { Package } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { prisma } from "@/lib/prisma";
 import { formatDate, formatNumber } from "@/lib/format";
@@ -72,7 +72,7 @@ export default async function AdminSubscriptionsPage() {
                   colSpan={4}
                   className="px-4 py-10 text-center text-sm font-semibold text-slate-500"
                 >
-                  <Sparkles className="mx-auto mb-2 size-8 text-slate-300" />
+                  <Package className="mx-auto mb-2 size-8 text-slate-300" />
                   Բաժանորդագրություններ չկան։
                 </td>
               </tr>

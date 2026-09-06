@@ -3,11 +3,21 @@ import {
   CheckCircle2,
   LogIn,
 } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { LoginForm } from "@/components/login-form";
 import { isGoogleAuthEnabled } from "@/lib/auth";
 import { ROUTES } from "@/lib/routes";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import { NOINDEX_FOLLOW } from "@/lib/seo/site";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "Մուտք",
+  description: "Մուտք գործեք Tend.am հաշիվ՝ մրցույթներ և առաջարկներ կառավարելու համար։",
+  path: ROUTES.login,
+  robots: NOINDEX_FOLLOW,
+});
 
 const benefits = [
   "Կառավարեք ձեր մրցույթները մեկ հաշվից",

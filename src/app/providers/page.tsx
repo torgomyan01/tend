@@ -5,12 +5,23 @@ import {
   Star,
   WalletCards,
 } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
+import { JsonLd } from "@/components/json-ld";
 import { ProvidersRegisterCta } from "@/components/providers-register-cta";
 import { SiteHeader } from "@/components/site-header";
 import { authOptions } from "@/lib/auth";
 import { ROUTES } from "@/lib/routes";
+import { breadcrumbList, webPage } from "@/lib/seo/json-ld";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "Մասնագետների համար",
+  description:
+    "Գտեք նոր պատվերներ Tend.am-ում՝ փակ առաջարկներով, պրոֆիլով, պորտֆոլիոյով և վարկանիշով։ Սկսեք մասնակցել մրցույթներին։",
+  path: ROUTES.sections.providers,
+});
 
 const valueProps = [
   {
@@ -74,6 +85,20 @@ export default async function ProvidersPage() {
 
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
+      <JsonLd
+        data={[
+          webPage({
+            name: "Մասնագետների համար",
+            description:
+              "Գտեք նոր պատվերներ Tend.am-ում՝ փակ առաջարկներով և վարկանիշով։",
+            path: ROUTES.sections.providers,
+          }),
+          breadcrumbList([
+            { name: "Գլխավոր", path: ROUTES.home },
+            { name: "Մասնագետների համար", path: ROUTES.sections.providers },
+          ]),
+        ]}
+      />
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-7xl px-4 pb-14 pt-8 sm:px-6 sm:pb-20 sm:pt-12 lg:px-8">

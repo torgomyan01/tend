@@ -14,8 +14,15 @@ import { prisma } from "@/lib/prisma";
 import { getLocationPickerOptions } from "@/lib/locations-data";
 import { ROUTES } from "@/lib/routes";
 import { getServiceCategories } from "@/lib/services-data";
+import { NOINDEX_NOFOLLOW } from "@/lib/seo/site";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Խմբագրել մրցույթ",
+  robots: NOINDEX_NOFOLLOW,
+};
 
 type Props = {
   params: Promise<{ id: string }>;

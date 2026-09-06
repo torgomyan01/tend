@@ -8,14 +8,16 @@ import {
   EyeOff,
   FileText,
   Image as ImageIcon,
+  Lightbulb,
+  ListOrdered,
   Loader2,
   MapPin,
   PenLine,
   Plus,
   Send,
-  Sparkles,
   Trash2,
   Wallet,
+  Wand2,
   X,
 } from "lucide-react";
 import Image from "next/image";
@@ -1087,7 +1089,7 @@ function WizardPhaseHeader({ step }: { step: WizardStep }) {
               {TOTAL_STEPS}
             </span>
             <span className="hidden items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5 text-xs font-black text-amber-900 sm:inline-flex">
-              <Sparkles className="size-3.5 text-amber-600" aria-hidden />
+              <ListOrdered className="size-3.5 text-amber-600" aria-hidden />
               Քայլ առ քայլ
             </span>
           </div>
@@ -1323,7 +1325,7 @@ function StepTitleOnly({
             {titleAiLoading ? (
               <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
             ) : (
-              <Sparkles className="size-4 shrink-0 text-amber-500" aria-hidden />
+              <Wand2 className="size-4 shrink-0 text-amber-500" aria-hidden />
             )}
             {title.trim() ? "Բարելավել վերնագիր" : "AI գեներացիա վերնագրի համար"}
           </button>
@@ -1443,7 +1445,7 @@ function StepDescriptionOnly({
             {descriptionAiLoading ? (
               <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
             ) : (
-              <Sparkles className="size-4 shrink-0 text-amber-500" aria-hidden />
+              <Wand2 className="size-4 shrink-0 text-amber-500" aria-hidden />
             )}
             {description.trim() ? "Բարելավել նկարագրություն" : "AI գեներացիա նկարագրության համար"}
           </button>
@@ -2326,7 +2328,7 @@ function SidebarTips({ step }: { step: number }) {
         <div className="pointer-events-none absolute -right-16 -top-12 size-48 rounded-full bg-amber-500/20 blur-3xl" />
         <div className="relative flex items-start gap-3 border-b border-white/10 pb-4">
           <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-amber-400 text-slate-950">
-            <Sparkles className="size-5" strokeWidth={2.5} />
+            <Lightbulb className="size-5" strokeWidth={2.5} />
           </span>
           <div>
             <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-300">

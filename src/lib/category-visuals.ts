@@ -20,7 +20,6 @@ import {
   Plane,
   Scale,
   ShieldCheck,
-  Sparkles,
   Sprout,
   Truck,
   Wrench,

@@ -7,6 +7,7 @@ import {
   Phone,
   Trophy,
   UserCircle2,
+  UserMinus,
   Users,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -14,6 +15,7 @@ import { useCallback, useState } from "react";
 import { AccountTypeBadge } from "@/components/account-type-badge";
 import type { AccountTypeValue } from "@/lib/account-type";
 import { formatAmd, formatDateTime } from "@/lib/format";
+import { ROUTES } from "@/lib/routes";
 import { BID_STATUS_BADGE, BID_STATUS_LABEL } from "@/lib/tender-status";
 import type { BidStatus, TenderStatus } from "@/generated/prisma/client";
 import { toastError, toastSuccess } from "@/lib/toast";
@@ -53,6 +55,10 @@ type Props = {
   totalBids: number;
   tenderStatus: TenderStatus;
   awardedBidId: string | null;
+  /** Ընթացիկ պայմանագիր կա · նոր ընտրություն չի կարելի */
+  hasPendingContract?: boolean;
+  /** Պայմանագրի առաջարկված bid-ի id (եթե կա) */
+  pendingContractBidId?: string | null;
 };
 
 export function TenderOwnerApplicantsModal({
@@ -61,6 +67,8 @@ export function TenderOwnerApplicantsModal({
   totalBids,
   tenderStatus,
   awardedBidId,
+  hasPendingContract = false,
+  pendingContractBidId = null,
 }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -74,9 +82,18 @@ export function TenderOwnerApplicantsModal({
     null,
   );
   const [awardingId, setAwardingId] = useState<string | null>(null);
+  const [removingId, setRemovingId] = useState<string | null>(null);
+  const [removeConfirmForId, setRemoveConfirmForId] = useState<string | null>(
+    null,
+  );
 
   const canSelectPerformer =
-    tenderStatus === "ACTIVE" && awardedBidId === null;
+    tenderStatus === "ACTIVE" &&
+    awardedBidId === null &&
+    !hasPendingContract;
+
+  const canRemoveAwarded =
+    tenderStatus === "AWARDED" && awardedBidId !== null;
 
   const loadBids = useCallback(async () => {
     setLoading(true);
@@ -109,7 +126,51 @@ export function TenderOwnerApplicantsModal({
     setShareError(null);
     setAwardError(null);
     setAwardConfirmForId(null);
+    setRemoveConfirmForId(null);
     void loadBids();
+  };
+
+  const removePerformer = async (bidId: string) => {
+    setRemovingId(bidId);
+    setAwardError(null);
+    try {
+      const isPendingProposal = pendingContractBidId === bidId;
+      const res = await fetch(
+        isPendingProposal
+          ? `/api/tenders/${tenderId}/contract/cancel`
+          : `/api/tenders/${tenderId}/unaward`,
+        { method: "POST" },
+      );
+      const data = (await res.json().catch(() => null)) as {
+        error?: string;
+      } | null;
+
+      if (!res.ok) {
+        if (data?.error === "NOT_AWARDED") {
+          toastError(
+            "Չի հաջողվել",
+            "Կատարողը այլևս ընտրված չէ։ Թարմացրեք էջը։",
+          );
+        } else {
+          toastError("Սխալ", "Չհաջողվեց հանել կատարողին։");
+        }
+        return;
+      }
+
+      setRemoveConfirmForId(null);
+      toastSuccess(
+        "Հանված է",
+        isPendingProposal
+          ? "Պայմանագրի առաջարկը չեղարկված է։ Կարող եք այլ կատարող ընտրել։"
+          : "Կատարողի ընտրությունը հանված է։ Մրցույթը նորից ակտիվ է։",
+      );
+      await loadBids();
+      router.refresh();
+    } catch {
+      toastError("Ցանցի խնդիր", "Փորձեք նորից։");
+    } finally {
+      setRemovingId(null);
+    }
   };
 
   const awardBid = async (bidId: string) => {
@@ -123,6 +184,7 @@ export function TenderOwnerApplicantsModal({
       });
       const data = (await res.json().catch(() => null)) as {
         error?: string;
+        conversationId?: string | null;
       } | null;
 
       if (!res.ok) {
@@ -130,12 +192,17 @@ export function TenderOwnerApplicantsModal({
           const msg = "Կատարողն արդեն ընտրված է։ Թարմացրեք էջը։";
           setAwardError(msg);
           toastError("Արդեն ընտրված է", msg);
+        } else if (data?.error === "CONTRACT_ALREADY_PENDING") {
+          const msg =
+            "Արդեն կա ընթացիկ պայմանագիր։ Նախ հաստատեք կամ չեղարկեք այն։";
+          setAwardError(msg);
+          toastError("Պայմանագիր ընթացքում է", msg);
         } else if (data?.error === "TENDER_NOT_ACTIVE") {
           const msg = "Մրցույթը այլևս ակտիվ չէ։";
           setAwardError(msg);
           toastError("Չի կարող ընտրել", msg);
         } else {
-          const msg = "Չհաջողվեց ընտրել կատարողը։";
+          const msg = "Չհաջողվեց սկսել պայմանագիրը։";
           setAwardError(msg);
           toastError("Սխալ", msg);
         }
@@ -143,9 +210,17 @@ export function TenderOwnerApplicantsModal({
       }
 
       setAwardConfirmForId(null);
-      toastSuccess("Կատարողը ընտրված է", "Նոր կարգավիճակով մրցույթը թարմացվեց։");
-      await loadBids();
-      router.refresh();
+      setOpen(false);
+      toastSuccess(
+        "Պայմանագիրը պատրաստ է",
+        "Զրույցում կգտնեք պայմանագրի հղումը։ Հաստատեք՝ ապա կատարողը կստանա հրավեր։",
+      );
+      if (data?.conversationId) {
+        router.push(ROUTES.messageThread(data.conversationId));
+      } else {
+        await loadBids();
+        router.refresh();
+      }
     } catch {
       const msg = "Ցանցի խնդիր։";
       setAwardError(msg);
@@ -284,12 +359,18 @@ export function TenderOwnerApplicantsModal({
                       bid.status !== "REJECTED" && bid.status !== "WITHDRAWN";
                     const isWinningBid =
                       awardedBidId !== null && bid.id === awardedBidId;
+                    const isPendingProposal =
+                      pendingContractBidId !== null &&
+                      bid.id === pendingContractBidId;
+                    const canRemoveThis =
+                      (canRemoveAwarded && isWinningBid) ||
+                      (hasPendingContract && isPendingProposal);
 
                     return (
                       <li
                         key={bid.id}
                         className={`rounded-3xl p-4 ring-1 ring-slate-200 ${
-                          isWinningBid
+                          isWinningBid || isPendingProposal
                             ? "bg-indigo-50/90 ring-indigo-200"
                             : "bg-slate-50"
                         }`}
@@ -315,6 +396,11 @@ export function TenderOwnerApplicantsModal({
                                 <span className="inline-flex items-center gap-1 rounded-full bg-indigo-600 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-white">
                                   <Trophy className="size-3" />
                                   Կատարող
+                                </span>
+                              ) : null}
+                              {isPendingProposal ? (
+                                <span className="inline-flex items-center gap-1 rounded-full bg-amber-600 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-white">
+                                  Պայմանագիր ընթացքում
                                 </span>
                               ) : null}
                               <span
@@ -430,14 +516,62 @@ export function TenderOwnerApplicantsModal({
                         ) : null}
 
                         <div className="mt-4 flex flex-wrap gap-2">
+                          {canRemoveThis ? (
+                            removeConfirmForId === bid.id ? (
+                              <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
+                                <p className="w-full text-xs font-bold text-slate-700 sm:flex-1">
+                                  {isWinningBid
+                                    ? "Հանե՞լ կատարողին։ Մրցույթը կդառնա ակտիվ, կարող եք այլ մեկին ընտրել։"
+                                    : "Չեղարկե՞լ պայմանագրի առաջարկը այս դիմողի համար։"}
+                                </p>
+                                <div className="flex shrink-0 gap-2">
+                                  <button
+                                    type="button"
+                                    disabled={removingId !== null}
+                                    onClick={() => void removePerformer(bid.id)}
+                                    className="inline-flex items-center gap-2 rounded-2xl bg-rose-700 px-4 py-2.5 text-xs font-black text-white transition hover:bg-rose-600 disabled:opacity-50"
+                                  >
+                                    {removingId === bid.id ? (
+                                      <Loader2 className="size-4 animate-spin" />
+                                    ) : (
+                                      <UserMinus className="size-4" />
+                                    )}
+                                    Հանել
+                                  </button>
+                                  <button
+                                    type="button"
+                                    disabled={removingId !== null}
+                                    onClick={() => setRemoveConfirmForId(null)}
+                                    className="rounded-2xl bg-slate-200 px-4 py-2.5 text-xs font-black text-slate-800 hover:bg-slate-300 disabled:opacity-50"
+                                  >
+                                    Ոչ
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <button
+                                type="button"
+                                disabled={removingId !== null}
+                                onClick={() => setRemoveConfirmForId(bid.id)}
+                                className="inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2.5 text-xs font-black text-rose-800 ring-1 ring-rose-200 transition hover:bg-rose-50 disabled:opacity-50"
+                              >
+                                <UserMinus className="size-4" />
+                                {isWinningBid
+                                  ? "Հանել կատարողին"
+                                  : "Չեղարկել առաջարկը"}
+                              </button>
+                            )
+                          ) : null}
                           {bid.status === "SHORTLISTED" &&
                           canSelectPerformer &&
-                          !isWinningBid ? (
+                          !isWinningBid &&
+                          !isPendingProposal ? (
                             awardConfirmForId === bid.id ? (
                               <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
                                 <p className="w-full text-xs font-bold text-slate-700 sm:flex-1">
-                                  Հաստատե՞լ ընտրությունը՝ այս դիմողը կդառնա վերջնական
-                                  կատարող, Telegram ծանուցում կուղարկվի նրան։
+                                  Կգեներացվի էլեկտրոնային պայմանագիր։ Դուք կհաստատեք
+                                  նախ, ապա կատարողը։ Միայն երկու հաստատումից հետո
+                                  կհամարվի ընտրված։
                                 </p>
                                 <div className="flex shrink-0 gap-2">
                                   <button
@@ -451,7 +585,7 @@ export function TenderOwnerApplicantsModal({
                                     ) : (
                                       <Trophy className="size-4" />
                                     )}
-                                    Հաստատել
+                                    Սկսել պայմանագիրը
                                   </button>
                                   <button
                                     type="button"
@@ -471,7 +605,7 @@ export function TenderOwnerApplicantsModal({
                                 className="inline-flex items-center gap-2 rounded-2xl bg-indigo-600 px-4 py-2.5 text-xs font-black text-white transition hover:bg-indigo-500 disabled:opacity-50"
                               >
                                 <Trophy className="size-4" />
-                                Ընտրել որպես կատարող
+                                Առաջարկել որպես կատարող
                               </button>
                             )
                           ) : null}

@@ -52,16 +52,6 @@ function staticPublicEntries(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     }),
-    entry(ROUTES.login, {
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.35,
-    }),
-    entry(ROUTES.register, {
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.4,
-    }),
     entry(ROUTES.terms, {
       lastModified: now,
       changeFrequency: "yearly",

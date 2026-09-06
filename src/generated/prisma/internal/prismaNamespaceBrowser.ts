@@ -65,6 +65,7 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   Location: 'Location',
   Tender: 'Tender',
+  TenderContract: 'TenderContract',
   TenderLike: 'TenderLike',
   TenderImage: 'TenderImage',
   TenderDocument: 'TenderDocument',
@@ -79,7 +80,10 @@ export const ModelName = {
   UserNotification: 'UserNotification',
   SupportConversation: 'SupportConversation',
   SupportMessage: 'SupportMessage',
-  SupportAttachment: 'SupportAttachment'
+  SupportAttachment: 'SupportAttachment',
+  TenderConversation: 'TenderConversation',
+  TenderMessage: 'TenderMessage',
+  TenderMessageAttachment: 'TenderMessageAttachment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -316,6 +320,24 @@ export const TenderScalarFieldEnum = {
 export type TenderScalarFieldEnum = (typeof TenderScalarFieldEnum)[keyof typeof TenderScalarFieldEnum]
 
 
+export const TenderContractScalarFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  bidId: 'bidId',
+  status: 'status',
+  bodyText: 'bodyText',
+  templateVersion: 'templateVersion',
+  clientAcceptedAt: 'clientAcceptedAt',
+  providerAcceptedAt: 'providerAcceptedAt',
+  cancelledAt: 'cancelledAt',
+  cancelledById: 'cancelledById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TenderContractScalarFieldEnum = (typeof TenderContractScalarFieldEnum)[keyof typeof TenderContractScalarFieldEnum]
+
+
 export const TenderLikeScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -526,6 +548,49 @@ export const SupportAttachmentScalarFieldEnum = {
 export type SupportAttachmentScalarFieldEnum = (typeof SupportAttachmentScalarFieldEnum)[keyof typeof SupportAttachmentScalarFieldEnum]
 
 
+export const TenderConversationScalarFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  clientId: 'clientId',
+  providerId: 'providerId',
+  contractId: 'contractId',
+  status: 'status',
+  archivedAt: 'archivedAt',
+  lastMessageAt: 'lastMessageAt',
+  clientLastReadAt: 'clientLastReadAt',
+  providerLastReadAt: 'providerLastReadAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TenderConversationScalarFieldEnum = (typeof TenderConversationScalarFieldEnum)[keyof typeof TenderConversationScalarFieldEnum]
+
+
+export const TenderMessageScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  senderUserId: 'senderUserId',
+  kind: 'kind',
+  body: 'body',
+  contractId: 'contractId',
+  createdAt: 'createdAt'
+} as const
+
+export type TenderMessageScalarFieldEnum = (typeof TenderMessageScalarFieldEnum)[keyof typeof TenderMessageScalarFieldEnum]
+
+
+export const TenderMessageAttachmentScalarFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes'
+} as const
+
+export type TenderMessageAttachmentScalarFieldEnum = (typeof TenderMessageAttachmentScalarFieldEnum)[keyof typeof TenderMessageAttachmentScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -701,6 +766,18 @@ export const TenderOrderByRelevanceFieldEnum = {
 export type TenderOrderByRelevanceFieldEnum = (typeof TenderOrderByRelevanceFieldEnum)[keyof typeof TenderOrderByRelevanceFieldEnum]
 
 
+export const TenderContractOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  bidId: 'bidId',
+  bodyText: 'bodyText',
+  templateVersion: 'templateVersion',
+  cancelledById: 'cancelledById'
+} as const
+
+export type TenderContractOrderByRelevanceFieldEnum = (typeof TenderContractOrderByRelevanceFieldEnum)[keyof typeof TenderContractOrderByRelevanceFieldEnum]
+
+
 export const TenderLikeOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -849,4 +926,37 @@ export const SupportAttachmentOrderByRelevanceFieldEnum = {
 } as const
 
 export type SupportAttachmentOrderByRelevanceFieldEnum = (typeof SupportAttachmentOrderByRelevanceFieldEnum)[keyof typeof SupportAttachmentOrderByRelevanceFieldEnum]
+
+
+export const TenderConversationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  clientId: 'clientId',
+  providerId: 'providerId',
+  contractId: 'contractId'
+} as const
+
+export type TenderConversationOrderByRelevanceFieldEnum = (typeof TenderConversationOrderByRelevanceFieldEnum)[keyof typeof TenderConversationOrderByRelevanceFieldEnum]
+
+
+export const TenderMessageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  senderUserId: 'senderUserId',
+  body: 'body',
+  contractId: 'contractId'
+} as const
+
+export type TenderMessageOrderByRelevanceFieldEnum = (typeof TenderMessageOrderByRelevanceFieldEnum)[keyof typeof TenderMessageOrderByRelevanceFieldEnum]
+
+
+export const TenderMessageAttachmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType'
+} as const
+
+export type TenderMessageAttachmentOrderByRelevanceFieldEnum = (typeof TenderMessageAttachmentOrderByRelevanceFieldEnum)[keyof typeof TenderMessageAttachmentOrderByRelevanceFieldEnum]
 

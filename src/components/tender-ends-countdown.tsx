@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CalendarOff, Timer } from "lucide-react";
+import { CalendarOff, Timer, Trophy } from "lucide-react";
 
 type Props = {
   endsAtIso: string | null;
   /** Server-computed ms until end; avoids hydration mismatch from `Date.now()` in render */
   initialRemainingMs: number | null;
+  /** Երբ կատարողն ընտրված է՝ հետհաշվարկի փոխարեն ցուցադրվում է կարճ կարգավիճակ */
+  performerSelected?: boolean;
 };
 
 function pad(n: number) {
@@ -54,13 +56,14 @@ function Sep() {
 export function TenderEndsCountdown({
   endsAtIso,
   initialRemainingMs,
+  performerSelected = false,
 }: Props) {
   const [remainingMs, setRemainingMs] = useState<number | null>(
     initialRemainingMs,
   );
 
   useEffect(() => {
-    if (!endsAtIso) return;
+    if (performerSelected || !endsAtIso) return;
     const endTime = new Date(endsAtIso).getTime();
     if (Number.isNaN(endTime)) return;
 
@@ -80,7 +83,16 @@ export function TenderEndsCountdown({
     }, 1000);
 
     return () => window.clearInterval(id);
-  }, [endsAtIso]);
+  }, [endsAtIso, performerSelected]);
+
+  if (performerSelected) {
+    return (
+      <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-black text-emerald-900 shadow-sm ring-1 ring-emerald-200">
+        <Trophy className="size-3.5 shrink-0 text-emerald-700" />
+        Կատարողը ընտրված է
+      </div>
+    );
+  }
 
   if (!endsAtIso) {
     return (

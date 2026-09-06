@@ -392,6 +392,23 @@ export type EnumTenderStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumTenderStatusFilter<$PrismaModel>
 }
 
+export type EnumTenderContractStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderContractStatus | Prisma.EnumTenderContractStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderContractStatus[]
+  notIn?: $Enums.TenderContractStatus[]
+  not?: Prisma.NestedEnumTenderContractStatusFilter<$PrismaModel> | $Enums.TenderContractStatus
+}
+
+export type EnumTenderContractStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderContractStatus | Prisma.EnumTenderContractStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderContractStatus[]
+  notIn?: $Enums.TenderContractStatus[]
+  not?: Prisma.NestedEnumTenderContractStatusWithAggregatesFilter<$PrismaModel> | $Enums.TenderContractStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTenderContractStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTenderContractStatusFilter<$PrismaModel>
+}
+
 export type EnumTenderComplaintStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.TenderComplaintStatus | Prisma.EnumTenderComplaintStatusFieldRefInput<$PrismaModel>
   in?: $Enums.TenderComplaintStatus[]
@@ -526,6 +543,40 @@ export type EnumSupportMessageSenderWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumSupportMessageSenderFilter<$PrismaModel>
   _max?: Prisma.NestedEnumSupportMessageSenderFilter<$PrismaModel>
+}
+
+export type EnumTenderConversationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderConversationStatus | Prisma.EnumTenderConversationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderConversationStatus[]
+  notIn?: $Enums.TenderConversationStatus[]
+  not?: Prisma.NestedEnumTenderConversationStatusFilter<$PrismaModel> | $Enums.TenderConversationStatus
+}
+
+export type EnumTenderConversationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderConversationStatus | Prisma.EnumTenderConversationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderConversationStatus[]
+  notIn?: $Enums.TenderConversationStatus[]
+  not?: Prisma.NestedEnumTenderConversationStatusWithAggregatesFilter<$PrismaModel> | $Enums.TenderConversationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTenderConversationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTenderConversationStatusFilter<$PrismaModel>
+}
+
+export type EnumTenderMessageKindFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderMessageKind | Prisma.EnumTenderMessageKindFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderMessageKind[]
+  notIn?: $Enums.TenderMessageKind[]
+  not?: Prisma.NestedEnumTenderMessageKindFilter<$PrismaModel> | $Enums.TenderMessageKind
+}
+
+export type EnumTenderMessageKindWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderMessageKind | Prisma.EnumTenderMessageKindFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderMessageKind[]
+  notIn?: $Enums.TenderMessageKind[]
+  not?: Prisma.NestedEnumTenderMessageKindWithAggregatesFilter<$PrismaModel> | $Enums.TenderMessageKind
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTenderMessageKindFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTenderMessageKindFilter<$PrismaModel>
 }
 
 export type NestedStringFilter<$PrismaModel = never> = {
@@ -923,6 +974,23 @@ export type NestedEnumTenderStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumTenderStatusFilter<$PrismaModel>
 }
 
+export type NestedEnumTenderContractStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderContractStatus | Prisma.EnumTenderContractStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderContractStatus[]
+  notIn?: $Enums.TenderContractStatus[]
+  not?: Prisma.NestedEnumTenderContractStatusFilter<$PrismaModel> | $Enums.TenderContractStatus
+}
+
+export type NestedEnumTenderContractStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderContractStatus | Prisma.EnumTenderContractStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderContractStatus[]
+  notIn?: $Enums.TenderContractStatus[]
+  not?: Prisma.NestedEnumTenderContractStatusWithAggregatesFilter<$PrismaModel> | $Enums.TenderContractStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTenderContractStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTenderContractStatusFilter<$PrismaModel>
+}
+
 export type NestedEnumTenderComplaintStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.TenderComplaintStatus | Prisma.EnumTenderComplaintStatusFieldRefInput<$PrismaModel>
   in?: $Enums.TenderComplaintStatus[]
@@ -1057,6 +1125,40 @@ export type NestedEnumSupportMessageSenderWithAggregatesFilter<$PrismaModel = ne
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumSupportMessageSenderFilter<$PrismaModel>
   _max?: Prisma.NestedEnumSupportMessageSenderFilter<$PrismaModel>
+}
+
+export type NestedEnumTenderConversationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderConversationStatus | Prisma.EnumTenderConversationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderConversationStatus[]
+  notIn?: $Enums.TenderConversationStatus[]
+  not?: Prisma.NestedEnumTenderConversationStatusFilter<$PrismaModel> | $Enums.TenderConversationStatus
+}
+
+export type NestedEnumTenderConversationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderConversationStatus | Prisma.EnumTenderConversationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderConversationStatus[]
+  notIn?: $Enums.TenderConversationStatus[]
+  not?: Prisma.NestedEnumTenderConversationStatusWithAggregatesFilter<$PrismaModel> | $Enums.TenderConversationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTenderConversationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTenderConversationStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumTenderMessageKindFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderMessageKind | Prisma.EnumTenderMessageKindFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderMessageKind[]
+  notIn?: $Enums.TenderMessageKind[]
+  not?: Prisma.NestedEnumTenderMessageKindFilter<$PrismaModel> | $Enums.TenderMessageKind
+}
+
+export type NestedEnumTenderMessageKindWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderMessageKind | Prisma.EnumTenderMessageKindFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderMessageKind[]
+  notIn?: $Enums.TenderMessageKind[]
+  not?: Prisma.NestedEnumTenderMessageKindWithAggregatesFilter<$PrismaModel> | $Enums.TenderMessageKind
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTenderMessageKindFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTenderMessageKindFilter<$PrismaModel>
 }
 
 

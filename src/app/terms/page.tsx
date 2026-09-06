@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { JsonLd } from "@/components/json-ld";
 import { SiteHeader } from "@/components/site-header";
 import { SupportContactLinks } from "@/components/support-contact-links";
 import { SITE_PUBLIC_ORIGIN } from "@/lib/absolute-app-url";
 import { EXPIRED_UNAWARDED_MIN_BIDS } from "@/lib/expired-unawarded";
 import { ROUTES } from "@/lib/routes";
+import { breadcrumbList, webPage } from "@/lib/seo/json-ld";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Օգտագործման պայմաններ | Tend.am",
+export const metadata: Metadata = buildPageMetadata({
+  title: "Օգտագործման պայմաններ",
   description:
     "Tend.am հարթակի բիզնես մոդելը, մրցույթների կանոնները, վճարները, մոդերացիան և պատասխանատվությունը։",
-};
+  path: ROUTES.terms,
+});
 
 function Section({
   title,
@@ -37,6 +41,20 @@ export default function TermsPage() {
 
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
+      <JsonLd
+        data={[
+          webPage({
+            name: "Օգտագործման պայմաններ",
+            description:
+              "Tend.am հարթակի կանոնները, վճարները և պատասխանատվությունը։",
+            path: ROUTES.terms,
+          }),
+          breadcrumbList([
+            { name: "Գլխավոր", path: ROUTES.home },
+            { name: "Պայմաններ", path: ROUTES.terms },
+          ]),
+        ]}
+      />
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-3xl px-4 pb-16 pt-8 sm:px-6 sm:pb-24 sm:pt-12 lg:px-8">

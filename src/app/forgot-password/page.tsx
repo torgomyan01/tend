@@ -1,7 +1,17 @@
 import { ArrowLeft, KeyRound, ShieldCheck } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { TelegramForgotPasswordForm } from "@/components/telegram-forgot-password-form";
 import { ROUTES } from "@/lib/routes";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import { NOINDEX_FOLLOW } from "@/lib/seo/site";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "Գաղտնաբառի վերականգնում",
+  description: "Վերականգնեք Tend.am հաշվի գաղտնաբառը անվտանգ եղանակով։",
+  path: ROUTES.forgotPassword,
+  robots: NOINDEX_FOLLOW,
+});
 
 const recoverySteps = [
   "Մուտքագրեք գրանցված էլ․ փոստը",

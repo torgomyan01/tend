@@ -1,7 +1,7 @@
 import { ChevronDown, HelpCircle } from "lucide-react";
 import { SupportContactLinks } from "@/components/support-contact-links";
 
-const faqItems = [
+export const HOME_FAQ_ITEMS = [
   {
     q: "Որքա՞ն արժե մրցույթ տեղադրելը։",
     a: "Մրցույթ տեղադրելը պատվիրատուի համար ամբողջությամբ անվճար է։ Դուք վճարում եք միայն այն ժամանակ, երբ ընտրում եք կատարողին և սկսում աշխատանքը։",
@@ -26,7 +26,9 @@ const faqItems = [
     q: "Կարո՞ղ եմ խմբագրել արդեն տեղադրված մրցույթը։",
     a: "Այո, քանի դեռ առաջարկներ չկան՝ կարող ես ազատ խմբագրել մրցույթը։ Առաջարկներից հետո՝ սահմանափակ դաշտերը մնում են խմբագրելի՝ խաբեության խուսափման համար։",
   },
-];
+] as const;
+
+const faqItems = HOME_FAQ_ITEMS;
 
 export function HomeFaq() {
   return (

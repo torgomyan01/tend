@@ -2,12 +2,12 @@
 
 import {
   Award,
+  BadgeCheck,
   ExternalLink,
   FileText,
   Loader2,
   Plus,
   ShieldCheck,
-  Sparkles,
   Trash2,
   X,
 } from "lucide-react";
@@ -44,7 +44,7 @@ const KIND_LABEL: Record<CredentialKind, string> = {
 const KIND_ICON: Record<CredentialKind, typeof Award> = {
   DIPLOMA: Award,
   LICENSE: ShieldCheck,
-  CERTIFICATE: Sparkles,
+  CERTIFICATE: BadgeCheck,
   OTHER: FileText,
 };
 

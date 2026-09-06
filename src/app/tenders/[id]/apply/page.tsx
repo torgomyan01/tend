@@ -13,6 +13,7 @@ import { authOptions } from "@/lib/auth";
 import { computeBidFee } from "@/lib/bid-fee";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
+import { NOINDEX_NOFOLLOW } from "@/lib/seo/site";
 
 export const dynamic = "force-dynamic";
 
@@ -26,8 +27,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     where: { id },
     select: { title: true },
   });
-  if (!tender) return { title: "Մասնակցություն | Tend.am" };
-  return { title: `Մասնակցել՝ ${tender.title} | Tend.am` };
+  if (!tender) {
+    return { title: "Մասնակցություն", robots: NOINDEX_NOFOLLOW };
+  }
+  return {
+    title: `Մասնակցել՝ ${tender.title}`,
+    robots: NOINDEX_NOFOLLOW,
+  };
 }
 
 export default async function TenderApplyPage({ params }: Props) {

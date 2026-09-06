@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { JsonLd } from "@/components/json-ld";
 import { SiteHeader } from "@/components/site-header";
 import { SupportContactLinks } from "@/components/support-contact-links";
 import { SITE_PUBLIC_ORIGIN } from "@/lib/absolute-app-url";
 import { ROUTES } from "@/lib/routes";
+import { breadcrumbList, webPage } from "@/lib/seo/json-ld";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Գաղտնիության քաղաքականություն | Tend.am",
+export const metadata: Metadata = buildPageMetadata({
+  title: "Գաղտնիության քաղաքականություն",
   description:
     "Tend.am հարթակում անձնական տվյալների մշակման սկզբունքները, իրավունքները և օգտագործման շրջանակը։",
-};
+  path: ROUTES.privacy,
+});
 
 function Section({
   title,
@@ -36,6 +40,20 @@ export default function PrivacyPage() {
 
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
+      <JsonLd
+        data={[
+          webPage({
+            name: "Գաղտնիության քաղաքականություն",
+            description:
+              "Tend.am հարթակում անձնական տվյալների մշակման սկզբունքները։",
+            path: ROUTES.privacy,
+          }),
+          breadcrumbList([
+            { name: "Գլխավոր", path: ROUTES.home },
+            { name: "Գաղտնիություն", path: ROUTES.privacy },
+          ]),
+        ]}
+      />
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-3xl px-4 pb-16 pt-8 sm:px-6 sm:pb-24 sm:pt-12 lg:px-8">

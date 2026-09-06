@@ -23,6 +23,7 @@ import { TenderEndsCountdown } from "@/components/tender-ends-countdown";
 import { TenderLiveStats } from "@/components/tender-live-stats";
 import { TenderLikeButton } from "@/components/tender-like-button";
 import { SiteHeader } from "@/components/site-header";
+import { JsonLd } from "@/components/json-ld";
 import type { AccountTypeValue } from "@/lib/account-type";
 import { authOptions } from "@/lib/auth";
 import { computeBidFee } from "@/lib/bid-fee";
@@ -30,6 +31,13 @@ import { tenderApplyMockCookieName } from "@/lib/tender-apply-mock-cookie";
 import { formatAmd, formatDateTime } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
+import {
+  breadcrumbList,
+  tenderService,
+} from "@/lib/seo/json-ld";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import { NOINDEX_FOLLOW } from "@/lib/seo/site";
+import { plainTextSnippet } from "@/lib/seo/truncate";
 import { TENDER_STATUS_BADGE, TENDER_STATUS_LABEL } from "@/lib/tender-status";
 
 export const dynamic = "force-dynamic";
@@ -42,12 +50,43 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const tender = await prisma.tender.findUnique({
     where: { id },
-    select: { title: true },
+    select: {
+      title: true,
+      description: true,
+      status: true,
+      city: true,
+      category: true,
+      images: {
+        orderBy: { sortOrder: "asc" },
+        take: 1,
+        select: { url: true },
+      },
+    },
   });
   if (!tender) {
-    return { title: "Մրցույթ չի գտնվել | Tend.am" };
+    return buildPageMetadata({
+      title: "Մրցույթ չի գտնվել",
+      path: ROUTES.tenders,
+      robots: NOINDEX_FOLLOW,
+    });
   }
-  return { title: `${tender.title} | Tend.am` };
+
+  const isPublic = tender.status === "ACTIVE";
+  const cityBit = tender.city ? ` · ${tender.city}` : "";
+  const description = plainTextSnippet(
+    `${tender.category}${cityBit}. ${tender.description}`,
+  );
+  const imageUrl = tender.images[0]?.url;
+
+  return buildPageMetadata({
+    title: tender.title,
+    description,
+    path: ROUTES.tenderDetail(id),
+    robots: isPublic ? undefined : NOINDEX_FOLLOW,
+    images: imageUrl
+      ? [{ url: imageUrl, alt: tender.title }]
+      : undefined,
+  });
 }
 
 export default async function TenderDetailPage({ params }: Props) {
@@ -159,6 +198,37 @@ export default async function TenderDetailPage({ params }: Props) {
         })
       : Promise.resolve([]),
   ]);
+
+  const pendingContractRow =
+    tender.status === "ACTIVE" && !tender.awardedBidId
+      ? await prisma.tenderContract.findFirst({
+          where: {
+            tenderId: tender.id,
+            status: { in: ["PENDING_CLIENT", "PENDING_PROVIDER"] },
+          },
+          select: {
+            id: true,
+            bidId: true,
+            bid: { select: { providerId: true } },
+            conversation: { select: { id: true } },
+          },
+        })
+      : null;
+
+  const pendingContract = pendingContractRow
+    ? {
+        id: pendingContractRow.id,
+        bidId: pendingContractRow.bidId,
+        providerId: pendingContractRow.bid.providerId,
+        conversationId: pendingContractRow.conversation?.id ?? null,
+      }
+    : null;
+
+  const isProposedProvider = Boolean(
+    providerId &&
+      pendingContract &&
+      pendingContract.providerId === providerId,
+  );
 
   let applicantPreviewBids: {
     id: string;
@@ -336,6 +406,35 @@ export default async function TenderDetailPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
+      {tender.status === "ACTIVE" ? (
+        <JsonLd
+          data={[
+            tenderService({
+              id: tender.id,
+              title: tender.title,
+              description: plainTextSnippet(tender.description, 300),
+              path: ROUTES.tenderDetail(tender.id),
+              imageUrl: tender.images[0]?.url ?? null,
+              city: tender.city ?? tender.locality?.name ?? null,
+              budgetMin:
+                tender.budgetMin != null ? Number(tender.budgetMin) : null,
+              budgetMax:
+                tender.budgetMax != null ? Number(tender.budgetMax) : null,
+              endsAt: tender.endsAt,
+              categoryName: tender.category,
+              datePublished: tender.createdAt,
+            }),
+            breadcrumbList([
+              { name: "Գլխավոր", path: ROUTES.home },
+              { name: "Մրցույթներ", path: ROUTES.tenders },
+              {
+                name: tender.title,
+                path: ROUTES.tenderDetail(tender.id),
+              },
+            ]),
+          ]}
+        />
+      ) : null}
       <SiteHeader />
 
       <main className="px-4 pb-12 sm:px-6 lg:px-8">
@@ -351,6 +450,11 @@ export default async function TenderDetailPage({ params }: Props) {
             <TenderEndsCountdown
               endsAtIso={tender.endsAt?.toISOString() ?? null}
               initialRemainingMs={initialCountdownRemainingMs}
+              performerSelected={Boolean(
+                tender.awardedBidId ||
+                  tender.status === "AWARDED" ||
+                  tender.status === "COMPLETED",
+              )}
             />
           </div>
 
@@ -381,6 +485,20 @@ export default async function TenderDetailPage({ params }: Props) {
                       <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700 ring-1 ring-slate-200">
                         Փակ առաջարկներ
                       </span>
+                    ) : null}
+                    {pendingContract && (isOwner || isProposedProvider) ? (
+                      <Link
+                        href={
+                          pendingContract.conversationId
+                            ? ROUTES.messageThread(
+                                pendingContract.conversationId,
+                              )
+                            : ROUTES.contract(pendingContract.id)
+                        }
+                        className="rounded-full bg-amber-100 px-3 py-1 text-xs font-black text-amber-950 ring-1 ring-amber-300 transition hover:bg-amber-200"
+                      >
+                        Պայմանագիր ընթացքում
+                      </Link>
                     ) : null}
                   </div>
 
@@ -418,6 +536,8 @@ export default async function TenderDetailPage({ params }: Props) {
                         totalBids={tender._count.bids}
                         tenderStatus={tender.status}
                         awardedBidId={tender.awardedBidId}
+                        hasPendingContract={Boolean(pendingContract)}
+                        pendingContractBidId={pendingContract?.bidId ?? null}
                       />
                     ) : null}
                     <TenderLikeButton
@@ -523,7 +643,7 @@ export default async function TenderDetailPage({ params }: Props) {
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-indigo-700">
+                      <p className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-indigo-700 mr-2">
                         <Trophy className="size-3.5 text-indigo-600" />
                         Վերջնական կատարող ընտրված է
                       </p>

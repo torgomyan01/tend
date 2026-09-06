@@ -26,6 +26,18 @@ enum BidStatus {
   WITHDRAWN
 }
 
+/** Երկկողմանի էլեկտրոնային պայմանագիր՝ կատարողի ընտրությունից առաջ */
+enum TenderContractStatus {
+  /** Ստեղծված է, սպասում է պատվիրատուի հաստատմանը */
+  PENDING_CLIENT
+  /** Պատվիրատուն հաստատել է, սպասում է կատարողին */
+  PENDING_PROVIDER
+  /** Երկուսն էլ հաստատել են · մրցույթը AWARDED */
+  ACCEPTED
+  /** Չեղարկված է (կարող է նոր առաջարկ սկսվել) */
+  CANCELLED
+}
+
 enum TransactionType {
   DEPOSIT
   BID_FEE
@@ -109,6 +121,16 @@ enum SupportMessageSender {
   STAFF
 }
 
+enum TenderConversationStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum TenderMessageKind {
+  TEXT
+  SYSTEM_CONTRACT
+}
+
 model User {
   id                String              @id @default(cuid())
   name              String?
@@ -160,6 +182,9 @@ model User {
   supportMessagesSent SupportMessage[] @relation("SupportMessagesSent")
   profileContactUnlocksMade     ProfileContactUnlock[] @relation("ProfileContactUnlockViewer")
   profileContactUnlocksReceived ProfileContactUnlock[] @relation("ProfileContactUnlockTarget")
+  tenderConversationsAsClient   TenderConversation[] @relation("TenderConversationClient")
+  tenderConversationsAsProvider TenderConversation[] @relation("TenderConversationProvider")
+  tenderMessagesSent            TenderMessage[]      @relation("TenderMessagesSent")
 
   @@index([email])
   @@index([phone])
@@ -385,6 +410,8 @@ model Tender {
   selectedServices TenderSelectedService[]
   complaints       TenderComplaint[]
   likes            TenderLike[]
+  contracts        TenderContract[]
+  conversations    TenderConversation[]
 
   @@index([clientId])
   @@index([status, endsAt])
@@ -392,6 +419,30 @@ model Tender {
   @@index([city])
   @@index([locationId])
   @@map("tender")
+}
+
+/** Պայմանագիր պատվիրատու ↔ առաջարկված կատարող (մինչև երկու հաստատում՝ կատարողը դեռ ընտրված չէ) */
+model TenderContract {
+  id                 String               @id @default(cuid())
+  tenderId           String
+  bidId              String
+  status             TenderContractStatus @default(PENDING_CLIENT)
+  /** Գեներացված պայմանագրի տեքստ (իրավական ուժ՝ էլեկտրոնային հաստատումով) */
+  bodyText           String               @db.LongText
+  templateVersion    String               @default("1") @db.VarChar(16)
+  clientAcceptedAt   DateTime?
+  providerAcceptedAt DateTime?
+  cancelledAt        DateTime?
+  cancelledById      String?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  tender             Tender               @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+  bid                Bid                  @relation(fields: [bidId], references: [id], onDelete: Cascade)
+  conversation       TenderConversation?
+
+  @@index([tenderId, status])
+  @@index([bidId])
+  @@map("tendercontract")
 }
 
 model TenderLike {
@@ -492,6 +543,7 @@ model Bid {
   awardedTender  Tender?          @relation("AwardedBid")
   transactions   Transaction[]
   attachments    BidAttachment[]
+  contracts      TenderContract[]
 
   @@unique([tenderId, providerId])
   @@index([providerId])
@@ -652,4 +704,59 @@ model SupportAttachment {
 
   @@index([messageId])
   @@map("supportattachment")
+}
+
+/** Պատվիրատու ↔ կատարող զրույց (կապված պայմանագրի առաջարկի հետ) */
+model TenderConversation {
+  id                String                   @id @default(cuid())
+  tenderId          String
+  clientId          String
+  providerId        String
+  contractId        String                   @unique
+  status            TenderConversationStatus @default(ACTIVE)
+  archivedAt        DateTime?
+  lastMessageAt     DateTime                 @default(now())
+  clientLastReadAt  DateTime?
+  providerLastReadAt DateTime?
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  tender            Tender                   @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+  client            User                     @relation("TenderConversationClient", fields: [clientId], references: [id], onDelete: Cascade)
+  provider          User                     @relation("TenderConversationProvider", fields: [providerId], references: [id], onDelete: Cascade)
+  contract          TenderContract           @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  messages          TenderMessage[]
+
+  @@index([clientId, lastMessageAt])
+  @@index([providerId, lastMessageAt])
+  @@index([tenderId, status])
+  @@map("tenderconversation")
+}
+
+model TenderMessage {
+  id             String            @id @default(cuid())
+  conversationId String
+  senderUserId   String?
+  kind           TenderMessageKind @default(TEXT)
+  body           String            @db.Text
+  contractId     String?
+  createdAt      DateTime          @default(now())
+  conversation   TenderConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderUser     User?             @relation("TenderMessagesSent", fields: [senderUserId], references: [id], onDelete: SetNull)
+  attachments    TenderMessageAttachment[]
+
+  @@index([conversationId, createdAt])
+  @@map("tendermessage")
+}
+
+model TenderMessageAttachment {
+  id               String        @id @default(cuid())
+  messageId        String
+  url              String        @db.VarChar(500)
+  originalFileName String        @db.VarChar(255)
+  mimeType         String        @db.VarChar(120)
+  sizeBytes        Int
+  message          TenderMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+  @@map("tendermessageattachment")
 }

@@ -5,8 +5,8 @@ import {
   Check,
   ChevronRight,
   Layers,
+  Plus,
   Search,
-  Sparkles,
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -356,7 +356,7 @@ function ServicePickerModal({
                         {isSelected ? (
                           <Check className="size-4 shrink-0 text-amber-300" />
                         ) : (
-                          <Sparkles className="size-4 shrink-0 opacity-60" />
+                          <Plus className="size-4 shrink-0 opacity-60" />
                         )}
                       </button>
                     </li>

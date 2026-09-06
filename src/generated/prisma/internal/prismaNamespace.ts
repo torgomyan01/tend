@@ -398,6 +398,7 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   Location: 'Location',
   Tender: 'Tender',
+  TenderContract: 'TenderContract',
   TenderLike: 'TenderLike',
   TenderImage: 'TenderImage',
   TenderDocument: 'TenderDocument',
@@ -412,7 +413,10 @@ export const ModelName = {
   UserNotification: 'UserNotification',
   SupportConversation: 'SupportConversation',
   SupportMessage: 'SupportMessage',
-  SupportAttachment: 'SupportAttachment'
+  SupportAttachment: 'SupportAttachment',
+  TenderConversation: 'TenderConversation',
+  TenderMessage: 'TenderMessage',
+  TenderMessageAttachment: 'TenderMessageAttachment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -428,7 +432,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userCredential" | "profileContactUnlock" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderLike" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "bidAttachment" | "transaction" | "vposOrderSequence" | "subscription" | "review" | "userNotification" | "supportConversation" | "supportMessage" | "supportAttachment"
+    modelProps: "user" | "userCredential" | "profileContactUnlock" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderContract" | "tenderLike" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "bidAttachment" | "transaction" | "vposOrderSequence" | "subscription" | "review" | "userNotification" | "supportConversation" | "supportMessage" | "supportAttachment" | "tenderConversation" | "tenderMessage" | "tenderMessageAttachment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1353,6 +1357,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TenderCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TenderCountAggregateOutputType> | number
+        }
+      }
+    }
+    TenderContract: {
+      payload: Prisma.$TenderContractPayload<ExtArgs>
+      fields: Prisma.TenderContractFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TenderContractFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderContractPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TenderContractFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderContractPayload>
+        }
+        findFirst: {
+          args: Prisma.TenderContractFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderContractPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TenderContractFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderContractPayload>
+        }
+        findMany: {
+          args: Prisma.TenderContractFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderContractPayload>[]
+        }
+        create: {
+          args: Prisma.TenderContractCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderContractPayload>
+        }
+        createMany: {
+          args: Prisma.TenderContractCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TenderContractDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderContractPayload>
+        }
+        update: {
+          args: Prisma.TenderContractUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderContractPayload>
+        }
+        deleteMany: {
+          args: Prisma.TenderContractDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TenderContractUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TenderContractUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderContractPayload>
+        }
+        aggregate: {
+          args: Prisma.TenderContractAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTenderContract>
+        }
+        groupBy: {
+          args: Prisma.TenderContractGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderContractGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TenderContractCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderContractCountAggregateOutputType> | number
         }
       }
     }
@@ -2346,6 +2416,204 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TenderConversation: {
+      payload: Prisma.$TenderConversationPayload<ExtArgs>
+      fields: Prisma.TenderConversationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TenderConversationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderConversationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TenderConversationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderConversationPayload>
+        }
+        findFirst: {
+          args: Prisma.TenderConversationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderConversationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TenderConversationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderConversationPayload>
+        }
+        findMany: {
+          args: Prisma.TenderConversationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderConversationPayload>[]
+        }
+        create: {
+          args: Prisma.TenderConversationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderConversationPayload>
+        }
+        createMany: {
+          args: Prisma.TenderConversationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TenderConversationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderConversationPayload>
+        }
+        update: {
+          args: Prisma.TenderConversationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderConversationPayload>
+        }
+        deleteMany: {
+          args: Prisma.TenderConversationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TenderConversationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TenderConversationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderConversationPayload>
+        }
+        aggregate: {
+          args: Prisma.TenderConversationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTenderConversation>
+        }
+        groupBy: {
+          args: Prisma.TenderConversationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderConversationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TenderConversationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderConversationCountAggregateOutputType> | number
+        }
+      }
+    }
+    TenderMessage: {
+      payload: Prisma.$TenderMessagePayload<ExtArgs>
+      fields: Prisma.TenderMessageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TenderMessageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TenderMessageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessagePayload>
+        }
+        findFirst: {
+          args: Prisma.TenderMessageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TenderMessageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessagePayload>
+        }
+        findMany: {
+          args: Prisma.TenderMessageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessagePayload>[]
+        }
+        create: {
+          args: Prisma.TenderMessageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessagePayload>
+        }
+        createMany: {
+          args: Prisma.TenderMessageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TenderMessageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessagePayload>
+        }
+        update: {
+          args: Prisma.TenderMessageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessagePayload>
+        }
+        deleteMany: {
+          args: Prisma.TenderMessageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TenderMessageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TenderMessageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessagePayload>
+        }
+        aggregate: {
+          args: Prisma.TenderMessageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTenderMessage>
+        }
+        groupBy: {
+          args: Prisma.TenderMessageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderMessageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TenderMessageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderMessageCountAggregateOutputType> | number
+        }
+      }
+    }
+    TenderMessageAttachment: {
+      payload: Prisma.$TenderMessageAttachmentPayload<ExtArgs>
+      fields: Prisma.TenderMessageAttachmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TenderMessageAttachmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessageAttachmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TenderMessageAttachmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessageAttachmentPayload>
+        }
+        findFirst: {
+          args: Prisma.TenderMessageAttachmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessageAttachmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TenderMessageAttachmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessageAttachmentPayload>
+        }
+        findMany: {
+          args: Prisma.TenderMessageAttachmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessageAttachmentPayload>[]
+        }
+        create: {
+          args: Prisma.TenderMessageAttachmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessageAttachmentPayload>
+        }
+        createMany: {
+          args: Prisma.TenderMessageAttachmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TenderMessageAttachmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessageAttachmentPayload>
+        }
+        update: {
+          args: Prisma.TenderMessageAttachmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessageAttachmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.TenderMessageAttachmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TenderMessageAttachmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TenderMessageAttachmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderMessageAttachmentPayload>
+        }
+        aggregate: {
+          args: Prisma.TenderMessageAttachmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTenderMessageAttachment>
+        }
+        groupBy: {
+          args: Prisma.TenderMessageAttachmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderMessageAttachmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TenderMessageAttachmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderMessageAttachmentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2603,6 +2871,24 @@ export const TenderScalarFieldEnum = {
 export type TenderScalarFieldEnum = (typeof TenderScalarFieldEnum)[keyof typeof TenderScalarFieldEnum]
 
 
+export const TenderContractScalarFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  bidId: 'bidId',
+  status: 'status',
+  bodyText: 'bodyText',
+  templateVersion: 'templateVersion',
+  clientAcceptedAt: 'clientAcceptedAt',
+  providerAcceptedAt: 'providerAcceptedAt',
+  cancelledAt: 'cancelledAt',
+  cancelledById: 'cancelledById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TenderContractScalarFieldEnum = (typeof TenderContractScalarFieldEnum)[keyof typeof TenderContractScalarFieldEnum]
+
+
 export const TenderLikeScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -2813,6 +3099,49 @@ export const SupportAttachmentScalarFieldEnum = {
 export type SupportAttachmentScalarFieldEnum = (typeof SupportAttachmentScalarFieldEnum)[keyof typeof SupportAttachmentScalarFieldEnum]
 
 
+export const TenderConversationScalarFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  clientId: 'clientId',
+  providerId: 'providerId',
+  contractId: 'contractId',
+  status: 'status',
+  archivedAt: 'archivedAt',
+  lastMessageAt: 'lastMessageAt',
+  clientLastReadAt: 'clientLastReadAt',
+  providerLastReadAt: 'providerLastReadAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TenderConversationScalarFieldEnum = (typeof TenderConversationScalarFieldEnum)[keyof typeof TenderConversationScalarFieldEnum]
+
+
+export const TenderMessageScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  senderUserId: 'senderUserId',
+  kind: 'kind',
+  body: 'body',
+  contractId: 'contractId',
+  createdAt: 'createdAt'
+} as const
+
+export type TenderMessageScalarFieldEnum = (typeof TenderMessageScalarFieldEnum)[keyof typeof TenderMessageScalarFieldEnum]
+
+
+export const TenderMessageAttachmentScalarFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes'
+} as const
+
+export type TenderMessageAttachmentScalarFieldEnum = (typeof TenderMessageAttachmentScalarFieldEnum)[keyof typeof TenderMessageAttachmentScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2988,6 +3317,18 @@ export const TenderOrderByRelevanceFieldEnum = {
 export type TenderOrderByRelevanceFieldEnum = (typeof TenderOrderByRelevanceFieldEnum)[keyof typeof TenderOrderByRelevanceFieldEnum]
 
 
+export const TenderContractOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  bidId: 'bidId',
+  bodyText: 'bodyText',
+  templateVersion: 'templateVersion',
+  cancelledById: 'cancelledById'
+} as const
+
+export type TenderContractOrderByRelevanceFieldEnum = (typeof TenderContractOrderByRelevanceFieldEnum)[keyof typeof TenderContractOrderByRelevanceFieldEnum]
+
+
 export const TenderLikeOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -3138,6 +3479,39 @@ export const SupportAttachmentOrderByRelevanceFieldEnum = {
 export type SupportAttachmentOrderByRelevanceFieldEnum = (typeof SupportAttachmentOrderByRelevanceFieldEnum)[keyof typeof SupportAttachmentOrderByRelevanceFieldEnum]
 
 
+export const TenderConversationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  clientId: 'clientId',
+  providerId: 'providerId',
+  contractId: 'contractId'
+} as const
+
+export type TenderConversationOrderByRelevanceFieldEnum = (typeof TenderConversationOrderByRelevanceFieldEnum)[keyof typeof TenderConversationOrderByRelevanceFieldEnum]
+
+
+export const TenderMessageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  senderUserId: 'senderUserId',
+  body: 'body',
+  contractId: 'contractId'
+} as const
+
+export type TenderMessageOrderByRelevanceFieldEnum = (typeof TenderMessageOrderByRelevanceFieldEnum)[keyof typeof TenderMessageOrderByRelevanceFieldEnum]
+
+
+export const TenderMessageAttachmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  url: 'url',
+  originalFileName: 'originalFileName',
+  mimeType: 'mimeType'
+} as const
+
+export type TenderMessageAttachmentOrderByRelevanceFieldEnum = (typeof TenderMessageAttachmentOrderByRelevanceFieldEnum)[keyof typeof TenderMessageAttachmentOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -3236,6 +3610,13 @@ export type EnumTenderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
+ * Reference to a field of type 'TenderContractStatus'
+ */
+export type EnumTenderContractStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TenderContractStatus'>
+    
+
+
+/**
  * Reference to a field of type 'TenderComplaintStatus'
  */
 export type EnumTenderComplaintStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TenderComplaintStatus'>
@@ -3288,6 +3669,20 @@ export type EnumUserNotificationCategoryFieldRefInput<$PrismaModel> = FieldRefIn
  * Reference to a field of type 'SupportMessageSender'
  */
 export type EnumSupportMessageSenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SupportMessageSender'>
+    
+
+
+/**
+ * Reference to a field of type 'TenderConversationStatus'
+ */
+export type EnumTenderConversationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TenderConversationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TenderMessageKind'
+ */
+export type EnumTenderMessageKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TenderMessageKind'>
     
 
 
@@ -3421,6 +3816,7 @@ export type GlobalOmitConfig = {
   verificationToken?: Prisma.VerificationTokenOmit
   location?: Prisma.LocationOmit
   tender?: Prisma.TenderOmit
+  tenderContract?: Prisma.TenderContractOmit
   tenderLike?: Prisma.TenderLikeOmit
   tenderImage?: Prisma.TenderImageOmit
   tenderDocument?: Prisma.TenderDocumentOmit
@@ -3436,6 +3832,9 @@ export type GlobalOmitConfig = {
   supportConversation?: Prisma.SupportConversationOmit
   supportMessage?: Prisma.SupportMessageOmit
   supportAttachment?: Prisma.SupportAttachmentOmit
+  tenderConversation?: Prisma.TenderConversationOmit
+  tenderMessage?: Prisma.TenderMessageOmit
+  tenderMessageAttachment?: Prisma.TenderMessageAttachmentOmit
 }
 
 /* Types for Logging */

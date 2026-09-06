@@ -386,6 +386,8 @@ export type TenderWhereInput = {
   selectedServices?: Prisma.TenderSelectedServiceListRelationFilter
   complaints?: Prisma.TenderComplaintListRelationFilter
   likes?: Prisma.TenderLikeListRelationFilter
+  contracts?: Prisma.TenderContractListRelationFilter
+  conversations?: Prisma.TenderConversationListRelationFilter
 }
 
 export type TenderOrderByWithRelationInput = {
@@ -422,6 +424,8 @@ export type TenderOrderByWithRelationInput = {
   selectedServices?: Prisma.TenderSelectedServiceOrderByRelationAggregateInput
   complaints?: Prisma.TenderComplaintOrderByRelationAggregateInput
   likes?: Prisma.TenderLikeOrderByRelationAggregateInput
+  contracts?: Prisma.TenderContractOrderByRelationAggregateInput
+  conversations?: Prisma.TenderConversationOrderByRelationAggregateInput
   _relevance?: Prisma.TenderOrderByRelevanceInput
 }
 
@@ -462,6 +466,8 @@ export type TenderWhereUniqueInput = Prisma.AtLeast<{
   selectedServices?: Prisma.TenderSelectedServiceListRelationFilter
   complaints?: Prisma.TenderComplaintListRelationFilter
   likes?: Prisma.TenderLikeListRelationFilter
+  contracts?: Prisma.TenderContractListRelationFilter
+  conversations?: Prisma.TenderConversationListRelationFilter
 }, "id" | "awardedBidId">
 
 export type TenderOrderByWithAggregationInput = {
@@ -555,6 +561,8 @@ export type TenderCreateInput = {
   selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateInput = {
@@ -588,6 +596,8 @@ export type TenderUncheckedCreateInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractUncheckedCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUpdateInput = {
@@ -621,6 +631,8 @@ export type TenderUpdateInput = {
   selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateInput = {
@@ -654,6 +666,8 @@ export type TenderUncheckedUpdateInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUncheckedUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUncheckedUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUncheckedUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderCreateManyInput = {
@@ -947,6 +961,20 @@ export type EnumTenderStatusFieldUpdateOperationsInput = {
   set?: $Enums.TenderStatus
 }
 
+export type TenderCreateNestedOneWithoutContractsInput = {
+  create?: Prisma.XOR<Prisma.TenderCreateWithoutContractsInput, Prisma.TenderUncheckedCreateWithoutContractsInput>
+  connectOrCreate?: Prisma.TenderCreateOrConnectWithoutContractsInput
+  connect?: Prisma.TenderWhereUniqueInput
+}
+
+export type TenderUpdateOneRequiredWithoutContractsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenderCreateWithoutContractsInput, Prisma.TenderUncheckedCreateWithoutContractsInput>
+  connectOrCreate?: Prisma.TenderCreateOrConnectWithoutContractsInput
+  upsert?: Prisma.TenderUpsertWithoutContractsInput
+  connect?: Prisma.TenderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenderUpdateToOneWithWhereWithoutContractsInput, Prisma.TenderUpdateWithoutContractsInput>, Prisma.TenderUncheckedUpdateWithoutContractsInput>
+}
+
 export type TenderCreateNestedOneWithoutLikesInput = {
   create?: Prisma.XOR<Prisma.TenderCreateWithoutLikesInput, Prisma.TenderUncheckedCreateWithoutLikesInput>
   connectOrCreate?: Prisma.TenderCreateOrConnectWithoutLikesInput
@@ -1077,6 +1105,20 @@ export type TenderUpdateOneRequiredWithoutReviewsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TenderUpdateToOneWithWhereWithoutReviewsInput, Prisma.TenderUpdateWithoutReviewsInput>, Prisma.TenderUncheckedUpdateWithoutReviewsInput>
 }
 
+export type TenderCreateNestedOneWithoutConversationsInput = {
+  create?: Prisma.XOR<Prisma.TenderCreateWithoutConversationsInput, Prisma.TenderUncheckedCreateWithoutConversationsInput>
+  connectOrCreate?: Prisma.TenderCreateOrConnectWithoutConversationsInput
+  connect?: Prisma.TenderWhereUniqueInput
+}
+
+export type TenderUpdateOneRequiredWithoutConversationsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenderCreateWithoutConversationsInput, Prisma.TenderUncheckedCreateWithoutConversationsInput>
+  connectOrCreate?: Prisma.TenderCreateOrConnectWithoutConversationsInput
+  upsert?: Prisma.TenderUpsertWithoutConversationsInput
+  connect?: Prisma.TenderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenderUpdateToOneWithWhereWithoutConversationsInput, Prisma.TenderUpdateWithoutConversationsInput>, Prisma.TenderUncheckedUpdateWithoutConversationsInput>
+}
+
 export type TenderCreateWithoutClientInput = {
   id?: string
   title: string
@@ -1107,6 +1149,8 @@ export type TenderCreateWithoutClientInput = {
   selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateWithoutClientInput = {
@@ -1139,6 +1183,8 @@ export type TenderUncheckedCreateWithoutClientInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractUncheckedCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderCreateOrConnectWithoutClientInput = {
@@ -1226,6 +1272,8 @@ export type TenderCreateWithoutLocalityInput = {
   selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateWithoutLocalityInput = {
@@ -1258,6 +1306,8 @@ export type TenderUncheckedCreateWithoutLocalityInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractUncheckedCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderCreateOrConnectWithoutLocalityInput = {
@@ -1284,6 +1334,158 @@ export type TenderUpdateWithWhereUniqueWithoutLocalityInput = {
 export type TenderUpdateManyWithWhereWithoutLocalityInput = {
   where: Prisma.TenderScalarWhereInput
   data: Prisma.XOR<Prisma.TenderUpdateManyMutationInput, Prisma.TenderUncheckedUpdateManyWithoutLocalityInput>
+}
+
+export type TenderCreateWithoutContractsInput = {
+  id?: string
+  title: string
+  description: string
+  category: string
+  service: string
+  city?: string | null
+  address?: string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
+  isBlindBidding?: boolean
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  awardedAt?: Date | string | null
+  completedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  locality?: Prisma.LocationCreateNestedOneWithoutTendersInput
+  client: Prisma.UserCreateNestedOneWithoutTendersInput
+  awardedBid?: Prisma.BidCreateNestedOneWithoutAwardedTenderInput
+  bids?: Prisma.BidCreateNestedManyWithoutTenderInput
+  images?: Prisma.TenderImageCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentCreateNestedManyWithoutTenderInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
+  complaints?: Prisma.TenderComplaintCreateNestedManyWithoutTenderInput
+  likes?: Prisma.TenderLikeCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationCreateNestedManyWithoutTenderInput
+}
+
+export type TenderUncheckedCreateWithoutContractsInput = {
+  id?: string
+  clientId: string
+  title: string
+  description: string
+  category: string
+  service: string
+  city?: string | null
+  locationId?: number | null
+  address?: string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
+  isBlindBidding?: boolean
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  awardedBidId?: string | null
+  awardedAt?: Date | string | null
+  completedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutTenderInput
+  images?: Prisma.TenderImageUncheckedCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentUncheckedCreateNestedManyWithoutTenderInput
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
+  complaints?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutTenderInput
+  likes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutTenderInput
+}
+
+export type TenderCreateOrConnectWithoutContractsInput = {
+  where: Prisma.TenderWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenderCreateWithoutContractsInput, Prisma.TenderUncheckedCreateWithoutContractsInput>
+}
+
+export type TenderUpsertWithoutContractsInput = {
+  update: Prisma.XOR<Prisma.TenderUpdateWithoutContractsInput, Prisma.TenderUncheckedUpdateWithoutContractsInput>
+  create: Prisma.XOR<Prisma.TenderCreateWithoutContractsInput, Prisma.TenderUncheckedCreateWithoutContractsInput>
+  where?: Prisma.TenderWhereInput
+}
+
+export type TenderUpdateToOneWithWhereWithoutContractsInput = {
+  where?: Prisma.TenderWhereInput
+  data: Prisma.XOR<Prisma.TenderUpdateWithoutContractsInput, Prisma.TenderUncheckedUpdateWithoutContractsInput>
+}
+
+export type TenderUpdateWithoutContractsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  locality?: Prisma.LocationUpdateOneWithoutTendersNestedInput
+  client?: Prisma.UserUpdateOneRequiredWithoutTendersNestedInput
+  awardedBid?: Prisma.BidUpdateOneWithoutAwardedTenderNestedInput
+  bids?: Prisma.BidUpdateManyWithoutTenderNestedInput
+  images?: Prisma.TenderImageUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUpdateManyWithoutTenderNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
+  complaints?: Prisma.TenderComplaintUpdateManyWithoutTenderNestedInput
+  likes?: Prisma.TenderLikeUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUpdateManyWithoutTenderNestedInput
+}
+
+export type TenderUncheckedUpdateWithoutContractsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bids?: Prisma.BidUncheckedUpdateManyWithoutTenderNestedInput
+  images?: Prisma.TenderImageUncheckedUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUncheckedUpdateManyWithoutTenderNestedInput
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
+  complaints?: Prisma.TenderComplaintUncheckedUpdateManyWithoutTenderNestedInput
+  likes?: Prisma.TenderLikeUncheckedUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderCreateWithoutLikesInput = {
@@ -1316,6 +1518,8 @@ export type TenderCreateWithoutLikesInput = {
   reviews?: Prisma.ReviewCreateNestedManyWithoutTenderInput
   selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateWithoutLikesInput = {
@@ -1348,6 +1552,8 @@ export type TenderUncheckedCreateWithoutLikesInput = {
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutTenderInput
   selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractUncheckedCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderCreateOrConnectWithoutLikesInput = {
@@ -1396,6 +1602,8 @@ export type TenderUpdateWithoutLikesInput = {
   reviews?: Prisma.ReviewUpdateManyWithoutTenderNestedInput
   selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateWithoutLikesInput = {
@@ -1428,6 +1636,8 @@ export type TenderUncheckedUpdateWithoutLikesInput = {
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutTenderNestedInput
   selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUncheckedUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUncheckedUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderCreateWithoutImagesInput = {
@@ -1460,6 +1670,8 @@ export type TenderCreateWithoutImagesInput = {
   selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateWithoutImagesInput = {
@@ -1492,6 +1704,8 @@ export type TenderUncheckedCreateWithoutImagesInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractUncheckedCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderCreateOrConnectWithoutImagesInput = {
@@ -1540,6 +1754,8 @@ export type TenderUpdateWithoutImagesInput = {
   selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateWithoutImagesInput = {
@@ -1572,6 +1788,8 @@ export type TenderUncheckedUpdateWithoutImagesInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUncheckedUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUncheckedUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUncheckedUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderCreateWithoutDocumentsInput = {
@@ -1604,6 +1822,8 @@ export type TenderCreateWithoutDocumentsInput = {
   selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateWithoutDocumentsInput = {
@@ -1636,6 +1856,8 @@ export type TenderUncheckedCreateWithoutDocumentsInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractUncheckedCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderCreateOrConnectWithoutDocumentsInput = {
@@ -1684,6 +1906,8 @@ export type TenderUpdateWithoutDocumentsInput = {
   selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateWithoutDocumentsInput = {
@@ -1716,6 +1940,8 @@ export type TenderUncheckedUpdateWithoutDocumentsInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUncheckedUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUncheckedUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUncheckedUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderCreateWithoutSelectedServicesInput = {
@@ -1748,6 +1974,8 @@ export type TenderCreateWithoutSelectedServicesInput = {
   reviews?: Prisma.ReviewCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateWithoutSelectedServicesInput = {
@@ -1780,6 +2008,8 @@ export type TenderUncheckedCreateWithoutSelectedServicesInput = {
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractUncheckedCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderCreateOrConnectWithoutSelectedServicesInput = {
@@ -1828,6 +2058,8 @@ export type TenderUpdateWithoutSelectedServicesInput = {
   reviews?: Prisma.ReviewUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateWithoutSelectedServicesInput = {
@@ -1860,6 +2092,8 @@ export type TenderUncheckedUpdateWithoutSelectedServicesInput = {
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUncheckedUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUncheckedUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUncheckedUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderCreateWithoutComplaintsInput = {
@@ -1892,6 +2126,8 @@ export type TenderCreateWithoutComplaintsInput = {
   reviews?: Prisma.ReviewCreateNestedManyWithoutTenderInput
   selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateWithoutComplaintsInput = {
@@ -1924,6 +2160,8 @@ export type TenderUncheckedCreateWithoutComplaintsInput = {
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutTenderInput
   selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractUncheckedCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderCreateOrConnectWithoutComplaintsInput = {
@@ -1972,6 +2210,8 @@ export type TenderUpdateWithoutComplaintsInput = {
   reviews?: Prisma.ReviewUpdateManyWithoutTenderNestedInput
   selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateWithoutComplaintsInput = {
@@ -2004,6 +2244,8 @@ export type TenderUncheckedUpdateWithoutComplaintsInput = {
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutTenderNestedInput
   selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUncheckedUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUncheckedUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderCreateWithoutBidsInput = {
@@ -2036,6 +2278,8 @@ export type TenderCreateWithoutBidsInput = {
   selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateWithoutBidsInput = {
@@ -2068,6 +2312,8 @@ export type TenderUncheckedCreateWithoutBidsInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractUncheckedCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderCreateOrConnectWithoutBidsInput = {
@@ -2105,6 +2351,8 @@ export type TenderCreateWithoutAwardedBidInput = {
   selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateWithoutAwardedBidInput = {
@@ -2137,6 +2385,8 @@ export type TenderUncheckedCreateWithoutAwardedBidInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractUncheckedCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderCreateOrConnectWithoutAwardedBidInput = {
@@ -2185,6 +2435,8 @@ export type TenderUpdateWithoutBidsInput = {
   selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateWithoutBidsInput = {
@@ -2217,6 +2469,8 @@ export type TenderUncheckedUpdateWithoutBidsInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUncheckedUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUncheckedUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUncheckedUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUpsertWithoutAwardedBidInput = {
@@ -2260,6 +2514,8 @@ export type TenderUpdateWithoutAwardedBidInput = {
   selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateWithoutAwardedBidInput = {
@@ -2292,6 +2548,8 @@ export type TenderUncheckedUpdateWithoutAwardedBidInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUncheckedUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUncheckedUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUncheckedUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderCreateWithoutReviewsInput = {
@@ -2324,6 +2582,8 @@ export type TenderCreateWithoutReviewsInput = {
   selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationCreateNestedManyWithoutTenderInput
 }
 
 export type TenderUncheckedCreateWithoutReviewsInput = {
@@ -2356,6 +2616,8 @@ export type TenderUncheckedCreateWithoutReviewsInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
   complaints?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutTenderInput
   likes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractUncheckedCreateNestedManyWithoutTenderInput
+  conversations?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutTenderInput
 }
 
 export type TenderCreateOrConnectWithoutReviewsInput = {
@@ -2404,6 +2666,8 @@ export type TenderUpdateWithoutReviewsInput = {
   selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateWithoutReviewsInput = {
@@ -2436,6 +2700,160 @@ export type TenderUncheckedUpdateWithoutReviewsInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUncheckedUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUncheckedUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUncheckedUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUncheckedUpdateManyWithoutTenderNestedInput
+}
+
+export type TenderCreateWithoutConversationsInput = {
+  id?: string
+  title: string
+  description: string
+  category: string
+  service: string
+  city?: string | null
+  address?: string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
+  isBlindBidding?: boolean
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  awardedAt?: Date | string | null
+  completedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  locality?: Prisma.LocationCreateNestedOneWithoutTendersInput
+  client: Prisma.UserCreateNestedOneWithoutTendersInput
+  awardedBid?: Prisma.BidCreateNestedOneWithoutAwardedTenderInput
+  bids?: Prisma.BidCreateNestedManyWithoutTenderInput
+  images?: Prisma.TenderImageCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentCreateNestedManyWithoutTenderInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceCreateNestedManyWithoutTenderInput
+  complaints?: Prisma.TenderComplaintCreateNestedManyWithoutTenderInput
+  likes?: Prisma.TenderLikeCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractCreateNestedManyWithoutTenderInput
+}
+
+export type TenderUncheckedCreateWithoutConversationsInput = {
+  id?: string
+  clientId: string
+  title: string
+  description: string
+  category: string
+  service: string
+  city?: string | null
+  locationId?: number | null
+  address?: string | null
+  budgetMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.TenderStatus
+  draftWizardStep?: number | null
+  draftDurationDays?: number | null
+  isBlindBidding?: boolean
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  awardedBidId?: string | null
+  awardedAt?: Date | string | null
+  completedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutTenderInput
+  images?: Prisma.TenderImageUncheckedCreateNestedManyWithoutTenderInput
+  documents?: Prisma.TenderDocumentUncheckedCreateNestedManyWithoutTenderInput
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutTenderInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedCreateNestedManyWithoutTenderInput
+  complaints?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutTenderInput
+  likes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutTenderInput
+  contracts?: Prisma.TenderContractUncheckedCreateNestedManyWithoutTenderInput
+}
+
+export type TenderCreateOrConnectWithoutConversationsInput = {
+  where: Prisma.TenderWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenderCreateWithoutConversationsInput, Prisma.TenderUncheckedCreateWithoutConversationsInput>
+}
+
+export type TenderUpsertWithoutConversationsInput = {
+  update: Prisma.XOR<Prisma.TenderUpdateWithoutConversationsInput, Prisma.TenderUncheckedUpdateWithoutConversationsInput>
+  create: Prisma.XOR<Prisma.TenderCreateWithoutConversationsInput, Prisma.TenderUncheckedCreateWithoutConversationsInput>
+  where?: Prisma.TenderWhereInput
+}
+
+export type TenderUpdateToOneWithWhereWithoutConversationsInput = {
+  where?: Prisma.TenderWhereInput
+  data: Prisma.XOR<Prisma.TenderUpdateWithoutConversationsInput, Prisma.TenderUncheckedUpdateWithoutConversationsInput>
+}
+
+export type TenderUpdateWithoutConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  locality?: Prisma.LocationUpdateOneWithoutTendersNestedInput
+  client?: Prisma.UserUpdateOneRequiredWithoutTendersNestedInput
+  awardedBid?: Prisma.BidUpdateOneWithoutAwardedTenderNestedInput
+  bids?: Prisma.BidUpdateManyWithoutTenderNestedInput
+  images?: Prisma.TenderImageUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUpdateManyWithoutTenderNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
+  complaints?: Prisma.TenderComplaintUpdateManyWithoutTenderNestedInput
+  likes?: Prisma.TenderLikeUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUpdateManyWithoutTenderNestedInput
+}
+
+export type TenderUncheckedUpdateWithoutConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budgetMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  budgetMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumTenderStatusFieldUpdateOperationsInput | $Enums.TenderStatus
+  draftWizardStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  draftDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isBlindBidding?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedBidId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bids?: Prisma.BidUncheckedUpdateManyWithoutTenderNestedInput
+  images?: Prisma.TenderImageUncheckedUpdateManyWithoutTenderNestedInput
+  documents?: Prisma.TenderDocumentUncheckedUpdateManyWithoutTenderNestedInput
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutTenderNestedInput
+  selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
+  complaints?: Prisma.TenderComplaintUncheckedUpdateManyWithoutTenderNestedInput
+  likes?: Prisma.TenderLikeUncheckedUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderCreateManyClientInput = {
@@ -2493,6 +2911,8 @@ export type TenderUpdateWithoutClientInput = {
   selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateWithoutClientInput = {
@@ -2525,6 +2945,8 @@ export type TenderUncheckedUpdateWithoutClientInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUncheckedUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUncheckedUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUncheckedUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateManyWithoutClientInput = {
@@ -2607,6 +3029,8 @@ export type TenderUpdateWithoutLocalityInput = {
   selectedServices?: Prisma.TenderSelectedServiceUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateWithoutLocalityInput = {
@@ -2639,6 +3063,8 @@ export type TenderUncheckedUpdateWithoutLocalityInput = {
   selectedServices?: Prisma.TenderSelectedServiceUncheckedUpdateManyWithoutTenderNestedInput
   complaints?: Prisma.TenderComplaintUncheckedUpdateManyWithoutTenderNestedInput
   likes?: Prisma.TenderLikeUncheckedUpdateManyWithoutTenderNestedInput
+  contracts?: Prisma.TenderContractUncheckedUpdateManyWithoutTenderNestedInput
+  conversations?: Prisma.TenderConversationUncheckedUpdateManyWithoutTenderNestedInput
 }
 
 export type TenderUncheckedUpdateManyWithoutLocalityInput = {
@@ -2679,6 +3105,8 @@ export type TenderCountOutputType = {
   selectedServices: number
   complaints: number
   likes: number
+  contracts: number
+  conversations: number
 }
 
 export type TenderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2689,6 +3117,8 @@ export type TenderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   selectedServices?: boolean | TenderCountOutputTypeCountSelectedServicesArgs
   complaints?: boolean | TenderCountOutputTypeCountComplaintsArgs
   likes?: boolean | TenderCountOutputTypeCountLikesArgs
+  contracts?: boolean | TenderCountOutputTypeCountContractsArgs
+  conversations?: boolean | TenderCountOutputTypeCountConversationsArgs
 }
 
 /**
@@ -2750,6 +3180,20 @@ export type TenderCountOutputTypeCountLikesArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.TenderLikeWhereInput
 }
 
+/**
+ * TenderCountOutputType without action
+ */
+export type TenderCountOutputTypeCountContractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TenderContractWhereInput
+}
+
+/**
+ * TenderCountOutputType without action
+ */
+export type TenderCountOutputTypeCountConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TenderConversationWhereInput
+}
+
 
 export type TenderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2785,6 +3229,8 @@ export type TenderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   selectedServices?: boolean | Prisma.Tender$selectedServicesArgs<ExtArgs>
   complaints?: boolean | Prisma.Tender$complaintsArgs<ExtArgs>
   likes?: boolean | Prisma.Tender$likesArgs<ExtArgs>
+  contracts?: boolean | Prisma.Tender$contractsArgs<ExtArgs>
+  conversations?: boolean | Prisma.Tender$conversationsArgs<ExtArgs>
   _count?: boolean | Prisma.TenderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tender"]>
 
@@ -2828,6 +3274,8 @@ export type TenderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   selectedServices?: boolean | Prisma.Tender$selectedServicesArgs<ExtArgs>
   complaints?: boolean | Prisma.Tender$complaintsArgs<ExtArgs>
   likes?: boolean | Prisma.Tender$likesArgs<ExtArgs>
+  contracts?: boolean | Prisma.Tender$contractsArgs<ExtArgs>
+  conversations?: boolean | Prisma.Tender$conversationsArgs<ExtArgs>
   _count?: boolean | Prisma.TenderCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -2844,6 +3292,8 @@ export type $TenderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     selectedServices: Prisma.$TenderSelectedServicePayload<ExtArgs>[]
     complaints: Prisma.$TenderComplaintPayload<ExtArgs>[]
     likes: Prisma.$TenderLikePayload<ExtArgs>[]
+    contracts: Prisma.$TenderContractPayload<ExtArgs>[]
+    conversations: Prisma.$TenderConversationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3219,6 +3669,8 @@ export interface Prisma__TenderClient<T, Null = never, ExtArgs extends runtime.T
   selectedServices<T extends Prisma.Tender$selectedServicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tender$selectedServicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderSelectedServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   complaints<T extends Prisma.Tender$complaintsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tender$complaintsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderComplaintPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   likes<T extends Prisma.Tender$likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tender$likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  contracts<T extends Prisma.Tender$contractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tender$contractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  conversations<T extends Prisma.Tender$conversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tender$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3822,6 +4274,54 @@ export type Tender$likesArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.TenderLikeScalarFieldEnum | Prisma.TenderLikeScalarFieldEnum[]
+}
+
+/**
+ * Tender.contracts
+ */
+export type Tender$contractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TenderContract
+   */
+  select?: Prisma.TenderContractSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TenderContract
+   */
+  omit?: Prisma.TenderContractOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TenderContractInclude<ExtArgs> | null
+  where?: Prisma.TenderContractWhereInput
+  orderBy?: Prisma.TenderContractOrderByWithRelationInput | Prisma.TenderContractOrderByWithRelationInput[]
+  cursor?: Prisma.TenderContractWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TenderContractScalarFieldEnum | Prisma.TenderContractScalarFieldEnum[]
+}
+
+/**
+ * Tender.conversations
+ */
+export type Tender$conversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TenderConversation
+   */
+  select?: Prisma.TenderConversationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TenderConversation
+   */
+  omit?: Prisma.TenderConversationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TenderConversationInclude<ExtArgs> | null
+  where?: Prisma.TenderConversationWhereInput
+  orderBy?: Prisma.TenderConversationOrderByWithRelationInput | Prisma.TenderConversationOrderByWithRelationInput[]
+  cursor?: Prisma.TenderConversationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TenderConversationScalarFieldEnum | Prisma.TenderConversationScalarFieldEnum[]
 }
 
 /**

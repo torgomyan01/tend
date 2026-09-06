@@ -10,14 +10,18 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { JsonLd } from "@/components/json-ld";
 import { SiteHeader } from "@/components/site-header";
 import { ROUTES } from "@/lib/routes";
+import { breadcrumbList, faqPage, webPage } from "@/lib/seo/json-ld";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Ինչպես է աշխատում | Tend.am",
+export const metadata: Metadata = buildPageMetadata({
+  title: "Ինչպես է աշխատում",
   description:
     "Tend.am-ը կապում է պատվիրատուներին և մասնագետներին փակ առաջարկների միջոցով։ Տեսեք քայլ առ քայլ ընթացքը և կարևոր կանոնները։",
-};
+  path: ROUTES.howItWorks,
+});
 
 const steps = [
   {
@@ -85,6 +89,21 @@ const faqs = [
 export default function HowItWorksPage() {
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
+      <JsonLd
+        data={[
+          webPage({
+            name: "Ինչպես է աշխատում",
+            description:
+              "Tend.am-ը կապում է պատվիրատուներին և մասնագետներին փակ առաջարկների միջոցով։",
+            path: ROUTES.howItWorks,
+          }),
+          breadcrumbList([
+            { name: "Գլխավոր", path: ROUTES.home },
+            { name: "Ինչպես է աշխատում", path: ROUTES.howItWorks },
+          ]),
+          faqPage(faqs),
+        ]}
+      />
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-7xl px-4 pb-14 pt-8 sm:px-6 sm:pb-20 sm:pt-12 lg:px-8">

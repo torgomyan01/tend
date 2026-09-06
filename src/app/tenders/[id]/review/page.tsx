@@ -8,6 +8,7 @@ import { SiteHeader } from "@/components/site-header";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
+import { NOINDEX_NOFOLLOW } from "@/lib/seo/site";
 
 export const dynamic = "force-dynamic";
 
@@ -22,9 +23,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     select: { title: true },
   });
   if (!tender) {
-    return { title: "Գնահատում | Tend.am" };
+    return { title: "Գնահատում", robots: NOINDEX_NOFOLLOW };
   }
-  return { title: `Գնահատում · ${tender.title} | Tend.am` };
+  return {
+    title: `Գնահատում · ${tender.title}`,
+    robots: NOINDEX_NOFOLLOW,
+  };
 }
 
 export default async function TenderReviewPage({ params }: Props) {

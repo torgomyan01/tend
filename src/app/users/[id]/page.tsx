@@ -1,13 +1,13 @@
 import {
   ArrowLeft,
   Award,
+  BadgeCheck,
   ExternalLink,
   FileText,
   FolderOpen,
   Image as ImageIcon,
   Quote,
   ShieldCheck,
-  Sparkles,
   UserRound,
 } from "lucide-react";
 import type { Metadata } from "next";
@@ -25,6 +25,7 @@ import {
   type PublicProfileReview,
 } from "@/components/public-profile-reviews";
 import { SiteHeader } from "@/components/site-header";
+import { JsonLd } from "@/components/json-ld";
 import {
   type AccountTypeValue,
   isLegalEntity,
@@ -37,6 +38,10 @@ import {
 } from "@/lib/bid-teaser";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
+import { breadcrumbList, profilePerson } from "@/lib/seo/json-ld";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import { NOINDEX_FOLLOW, NOINDEX_NOFOLLOW } from "@/lib/seo/site";
+import { plainTextSnippet } from "@/lib/seo/truncate";
 
 export const dynamic = "force-dynamic";
 
@@ -54,7 +59,7 @@ const KIND_LABEL: Record<string, string> = {
 const KIND_ICON: Record<string, typeof Award> = {
   DIPLOMA: Award,
   LICENSE: ShieldCheck,
-  CERTIFICATE: Sparkles,
+  CERTIFICATE: BadgeCheck,
   OTHER: FileText,
 };
 
@@ -62,15 +67,42 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const user = await prisma.user.findUnique({
     where: { id },
-    select: { name: true, accountType: true, companyName: true },
+    select: {
+      name: true,
+      accountType: true,
+      companyName: true,
+      bio: true,
+      image: true,
+      isBlocked: true,
+    },
   });
-  if (!user) return { title: "Մասնագետի էջ | Tend.am" };
+  if (!user) {
+    return buildPageMetadata({
+      title: "Մասնագետի էջ",
+      path: ROUTES.tenders,
+      robots: NOINDEX_FOLLOW,
+    });
+  }
 
   const display =
-    isLegalEntity(user.accountType as AccountTypeValue) && user.companyName?.trim()
+    isLegalEntity(user.accountType as AccountTypeValue) &&
+    user.companyName?.trim()
       ? user.companyName.trim()
       : maskApplicantDisplayName(user.name);
-  return { title: `${display} | Tend.am` };
+
+  return buildPageMetadata({
+    title: display,
+    description: plainTextSnippet(
+      user.bio?.trim() ||
+        `${display}՝ մասնագետի պրոֆիլ Tend.am հարթակում։`,
+    ),
+    path: ROUTES.userProfile(id),
+    ogType: "profile",
+    robots: user.isBlocked ? NOINDEX_NOFOLLOW : undefined,
+    images: user.image
+      ? [{ url: user.image, alt: display, width: 400, height: 400 }]
+      : undefined,
+  });
 }
 
 export default async function PublicUserProfilePage({ params }: Props) {
@@ -247,6 +279,27 @@ export default async function PublicUserProfilePage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-[#f4f1ea] text-slate-950">
+      <JsonLd
+        data={[
+          profilePerson({
+            name: publicHeading,
+            path: ROUTES.userProfile(user.id),
+            description: plainTextSnippet(
+              user.bio?.trim() ||
+                `${publicHeading}՝ մասնագետի պրոֆիլ Tend.am հարթակում։`,
+              300,
+            ),
+            imageUrl: user.image,
+            accountType: user.accountType,
+            companyName: user.companyName,
+          }),
+          breadcrumbList([
+            { name: "Գլխավոր", path: ROUTES.home },
+            { name: "Մրցույթներ", path: ROUTES.tenders },
+            { name: publicHeading, path: ROUTES.userProfile(user.id) },
+          ]),
+        ]}
+      />
       <div
         className="pointer-events-none fixed inset-0 -z-10 opacity-40"
         aria-hidden

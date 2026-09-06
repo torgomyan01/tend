@@ -2,12 +2,14 @@
 
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
+import { GoogleInterestsOnboarding } from "@/components/google-interests-onboarding";
 import { SupportChatWidget } from "@/components/support-chat-widget";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       {children}
+      <GoogleInterestsOnboarding />
       <SupportChatWidget />
       <Toaster
         position="top-right"

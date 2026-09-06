@@ -29,6 +29,9 @@ export const ROUTES = {
   tenderReview: (id: string) => `/tenders/${id}/review`,
   createTender: "/tenders/new",
   userProfile: (id: string) => `/users/${id}`,
+  messages: "/messages",
+  messageThread: (id: string) => `/messages/${id}`,
+  contract: (id: string) => `/contracts/${id}`,
   admin: {
     dashboard: "/admin",
     users: "/admin/users",

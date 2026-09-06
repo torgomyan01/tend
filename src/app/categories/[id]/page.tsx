@@ -1,9 +1,14 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/json-ld";
 import { SiteHeader } from "@/components/site-header";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
+import { breadcrumbList, collectionPage } from "@/lib/seo/json-ld";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import { plainTextSnippet } from "@/lib/seo/truncate";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +21,29 @@ function buildServiceTendersHref(categoryTitle: string, serviceTitle: string) {
   sp.set("category", categoryTitle);
   sp.set("service", serviceTitle);
   return `${ROUTES.tenders}?${sp.toString()}`;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const category = await prisma.serviceCategory.findUnique({
+    where: { id },
+    select: { title: true, description: true, isActive: true },
+  });
+  if (!category || !category.isActive) {
+    return buildPageMetadata({
+      title: "Ոլորտը չի գտնվել",
+      path: ROUTES.categories,
+      robots: { index: false, follow: true },
+    });
+  }
+  return buildPageMetadata({
+    title: category.title,
+    description: plainTextSnippet(
+      category.description ||
+        `${category.title}՝ մրցույթներ և ծառայություններ Tend.am հարթակում։`,
+    ),
+    path: ROUTES.categoryDetail(id),
+  });
 }
 
 export default async function CategoryDetailPage({ params }: Props) {
@@ -40,8 +68,27 @@ export default async function CategoryDetailPage({ params }: Props) {
     notFound();
   }
 
+  const path = ROUTES.categoryDetail(category.id);
+  const description =
+    category.description?.trim() ||
+    `${category.title}՝ մրցույթներ և ծառայություններ Tend.am հարթակում։`;
+
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
+      <JsonLd
+        data={[
+          collectionPage({
+            name: category.title,
+            description: plainTextSnippet(description, 300),
+            path,
+          }),
+          breadcrumbList([
+            { name: "Գլխավոր", path: ROUTES.home },
+            { name: "Ոլորտներ", path: ROUTES.categories },
+            { name: category.title, path },
+          ]),
+        ]}
+      />
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-5xl px-4 pb-12 pt-4 sm:px-6 sm:pb-16 sm:pt-6 lg:px-8">
@@ -91,4 +138,3 @@ export default async function CategoryDetailPage({ params }: Props) {
     </div>
   );
 }
-

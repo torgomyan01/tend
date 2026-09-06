@@ -4,7 +4,7 @@ import {
   Search,
   ShieldAlert,
   ShieldCheck,
-  Sparkles,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
@@ -89,7 +89,7 @@ export default async function AdminUsersPage({
     {
       label: "Ընդհանուր",
       value: formatNumber(totalUsers),
-      icon: Sparkles,
+      icon: Users,
       tone: "bg-amber-100 text-amber-800",
     },
     {

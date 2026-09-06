@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MobileProfileDropdown } from "@/components/mobile-profile-dropdown";
 import { NotificationsDropdown } from "@/components/notifications-dropdown";
+import { MessagesNavLink } from "@/components/messages-unread-badge";
 import { TelegramNavbarNudge } from "@/components/telegram-navbar-nudge";
 import { WalletDropdown } from "@/components/wallet-dropdown";
 import { ROUTES } from "@/lib/routes";
@@ -70,6 +71,7 @@ export function MobileMenu({ isLoggedIn, isAdmin }: Props) {
         <>
           <TelegramNavbarNudge />
           <WalletDropdown isLoggedIn={isLoggedIn} />
+          <MessagesNavLink isLoggedIn={isLoggedIn} />
           <NotificationsDropdown isLoggedIn={isLoggedIn} />
         </>
       ) : null}

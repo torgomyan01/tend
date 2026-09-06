@@ -1,8 +1,15 @@
 import { CheckCircle2, XCircle } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { verifyEmailByToken } from "@/lib/email/verify-email";
 import { ROUTES } from "@/lib/routes";
+import { NOINDEX_NOFOLLOW } from "@/lib/seo/site";
+
+export const metadata: Metadata = {
+  title: "Էլ․ փոստի հաստատում",
+  robots: NOINDEX_NOFOLLOW,
+};
 
 type Props = {
   searchParams: Promise<{ token?: string }>;

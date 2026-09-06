@@ -33,6 +33,16 @@ export const BidStatus = {
 export type BidStatus = (typeof BidStatus)[keyof typeof BidStatus]
 
 
+export const TenderContractStatus = {
+  PENDING_CLIENT: 'PENDING_CLIENT',
+  PENDING_PROVIDER: 'PENDING_PROVIDER',
+  ACCEPTED: 'ACCEPTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type TenderContractStatus = (typeof TenderContractStatus)[keyof typeof TenderContractStatus]
+
+
 export const TransactionType = {
   DEPOSIT: 'DEPOSIT',
   BID_FEE: 'BID_FEE',
@@ -152,6 +162,22 @@ export const SupportMessageSender = {
 } as const
 
 export type SupportMessageSender = (typeof SupportMessageSender)[keyof typeof SupportMessageSender]
+
+
+export const TenderConversationStatus = {
+  ACTIVE: 'ACTIVE',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type TenderConversationStatus = (typeof TenderConversationStatus)[keyof typeof TenderConversationStatus]
+
+
+export const TenderMessageKind = {
+  TEXT: 'TEXT',
+  SYSTEM_CONTRACT: 'SYSTEM_CONTRACT'
+} as const
+
+export type TenderMessageKind = (typeof TenderMessageKind)[keyof typeof TenderMessageKind]
 
 
 export const UserCredentialKind = {

@@ -5,7 +5,7 @@ import {
   CreditCard,
   Flag,
   Gavel,
-  Sparkles,
+  Package,
   Star,
   TrendingUp,
   Users,
@@ -189,7 +189,7 @@ export default async function AdminDashboardPage() {
       label: "Ակտիվ բաժանորդագրություններ",
       value: formatNumber(totalSubscriptions),
       hint: "Փաթեթներով օգտատերեր",
-      icon: Sparkles,
+      icon: Package,
       tone: "indigo",
     },
     {

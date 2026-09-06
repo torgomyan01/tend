@@ -1,12 +1,23 @@
 import { ArrowRight, ArrowUpRight, CheckCircle2 } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+import { JsonLd } from "@/components/json-ld";
 import { ServiceSearch } from "@/components/service-search";
 import { SiteHeader } from "@/components/site-header";
 import { getCategoryVisual } from "@/lib/category-visuals";
 import { ROUTES } from "@/lib/routes";
+import { breadcrumbList, collectionPage } from "@/lib/seo/json-ld";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 import { getServiceCategories } from "@/lib/services-data";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "Ոլորտներ և ծառայություններ",
+  description:
+    "Ընտրեք ոլորտ և ծառայություն Tend.am-ում՝ շինարարությունից մինչև IT։ Գտեք համապատասխան մրցույթներ կամ հայտարարեք ձեր աշխատանքը։",
+  path: ROUTES.categories,
+});
 
 export default async function CategoriesPage() {
   const categories = await getServiceCategories();
@@ -17,6 +28,20 @@ export default async function CategoriesPage() {
 
   return (
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
+      <JsonLd
+        data={[
+          collectionPage({
+            name: "Ոլորտներ և ծառայություններ",
+            description:
+              "Ընտրեք ոլորտ և ծառայություն Tend.am-ում և գտեք համապատասխան մրցույթներ։",
+            path: ROUTES.categories,
+          }),
+          breadcrumbList([
+            { name: "Գլխավոր", path: ROUTES.home },
+            { name: "Ոլորտներ", path: ROUTES.categories },
+          ]),
+        ]}
+      />
       <SiteHeader />
 
       <main className="px-4 pb-8 sm:px-6 lg:px-8">
