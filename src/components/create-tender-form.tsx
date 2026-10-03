@@ -1271,11 +1271,11 @@ function StepTitleOnly({
         if (code === "UNAUTHENTICATED") {
           toastError("Չեղավ", "Անհրաժեշտ է մուտք գործել։");
         } else if (code === "AI_NOT_CONFIGURED") {
-          toastError("AI-ը անջատված է", "Կարգավորված չէ գեներացիան (GEMINI_API_KEY)։");
+          toastError("AI-ը անջատված է", "Կարգավորված չէ գեներացիան (DEEPSEEK_API_KEY)։");
         } else if (code === "AI_QUOTA_EXCEEDED") {
           toastError(
             "AI լիմիտը սպառված է",
-            "Gemini prepaid credits-ը վերջացել է։ Լիցքավորեք AI Studio-ում։",
+            "DeepSeek credits-ը վերջացել է։ Լիցքավորեք platform.deepseek.com-ում։",
           );
         } else if (code === "MALFORMED_AI_RESPONSE") {
           toastError("Չհաջողվեց", "Մոդելը տվեց անսպասելի պատասխար։ Փորձեք կրկին։");
@@ -1393,11 +1393,11 @@ function StepDescriptionOnly({
         if (code === "UNAUTHENTICATED") {
           toastError("Չեղավ", "Անհրաժեշտ է մուտք գործել։");
         } else if (code === "AI_NOT_CONFIGURED") {
-          toastError("AI-ը անջատված է", "Կարգավորված չէ գեներացիան (GEMINI_API_KEY)։");
+          toastError("AI-ը անջատված է", "Կարգավորված չէ գեներացիան (DEEPSEEK_API_KEY)։");
         } else if (code === "AI_QUOTA_EXCEEDED") {
           toastError(
             "AI լիմիտը սպառված է",
-            "Gemini prepaid credits-ը վերջացել է։ Լիցքավորեք AI Studio-ում։",
+            "DeepSeek credits-ը վերջացել է։ Լիցքավորեք platform.deepseek.com-ում։",
           );
         } else if (code === "MALFORMED_AI_RESPONSE") {
           toastError("Չհաջողվեց", "Մոդելը տվեց անսպասելի պատասխար։ Փորձեք կրկին։");

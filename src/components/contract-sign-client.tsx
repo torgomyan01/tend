@@ -18,6 +18,7 @@ type Props = {
   conversationId: string | null;
   isOwner: boolean;
   isProposedProvider: boolean;
+  hasEscrow?: boolean;
 };
 
 export function ContractSignClient({
@@ -32,6 +33,7 @@ export function ContractSignClient({
   conversationId,
   isOwner,
   isProposedProvider,
+  hasEscrow = false,
 }: Props) {
   const router = useRouter();
   const [busy, setBusy] = useState<"accept" | "cancel" | null>(null);
@@ -79,7 +81,9 @@ export function ContractSignClient({
       if (data?.status === "ACCEPTED") {
         toastSuccess(
           "Պայմանագիրը կնքված է",
-          "Կատարողը պաշտոնապես ընտրված է։",
+          hasEscrow
+            ? "Կատարողը ընտրված է։ Հաջորդ քայլը՝ բանկային փոխանցում (տես վերևում)։"
+            : "Կատարողը պաշտոնապես ընտրված է։",
         );
       } else {
         toastSuccess("Հաստատված է", "Սպասում ենք կատարողի հաստատմանը։");

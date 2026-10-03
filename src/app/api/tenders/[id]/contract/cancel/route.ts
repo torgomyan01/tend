@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { notifyContractCancelled } from "@/lib/tender-contract-notify";
 import { archiveTenderConversationByContractId } from "@/lib/tender-conversation";
+import { cancelEscrowForContract } from "@/lib/escrow-service";
+import { postEscrowSystemMessage } from "@/lib/escrow-messages";
 import { ROUTES } from "@/lib/routes";
 
 export const dynamic = "force-dynamic";
@@ -73,6 +75,18 @@ export async function POST(
       cancelledById: userId,
     },
   });
+
+  try {
+    const cancelledEscrow = await cancelEscrowForContract(contract.id);
+    if (cancelledEscrow && cancelledEscrow.status === "CANCELLED") {
+      await postEscrowSystemMessage({
+        contractId: contract.id,
+        body: "Պաշտպանված գործարքը չեղարկված է (պայմանագրի առաջարկը չեղարկվեց)։",
+      });
+    }
+  } catch {
+    /* non-blocking */
+  }
 
   try {
     await archiveTenderConversationByContractId(contract.id);

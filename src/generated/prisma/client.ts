@@ -117,6 +117,13 @@ export type Tender = Prisma.TenderModel
  */
 export type TenderContract = Prisma.TenderContractModel
 /**
+ * Model TenderEscrow
+ * *
+ *  * Պաշտպանված գործարք՝ բանկային փոխանցումով escrow։
+ *  * Գումարը պահվում է Tend.am հաշվին մինչև ավարտ/վեճի որոշում։
+ */
+export type TenderEscrow = Prisma.TenderEscrowModel
+/**
  * Model TenderLike
  * 
  */

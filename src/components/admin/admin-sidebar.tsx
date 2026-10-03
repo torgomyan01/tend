@@ -13,6 +13,7 @@ import {
   LogOut,
   Menu,
   Package,
+  Shield,
   ShieldCheck,
   Star,
   Users,
@@ -134,6 +135,14 @@ const NAV_GROUPS: Array<{
         label: "Գործարքներ",
         description: "Բոլոր վճարումները",
         icon: CreditCard,
+      },
+      {
+        href: ROUTES.admin.escrows,
+        label: "Escrow",
+        description: "Պաշտպանված գործարքներ",
+        icon: Shield,
+        badgeKey: "escrows",
+        badgeTone: "emerald",
       },
       {
         href: ROUTES.admin.subscriptions,

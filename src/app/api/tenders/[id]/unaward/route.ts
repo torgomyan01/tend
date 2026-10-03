@@ -6,6 +6,10 @@ import { notifyUserById } from "@/lib/notifications/notify-user";
 import { NOTIFICATION_KINDS } from "@/lib/notifications/in-app";
 import { prisma } from "@/lib/prisma";
 import { archiveTenderConversationsByTenderId } from "@/lib/tender-conversation";
+import {
+  cancelEscrowsForTender,
+  findBlockingEscrowForTender,
+} from "@/lib/escrow-service";
 import { ROUTES } from "@/lib/routes";
 import { escapeTelegramHtml } from "@/lib/telegram";
 
@@ -95,6 +99,7 @@ export async function POST(
   // Previous partial unaward may have already cleared award fields
   if (tender.status === "ACTIVE" && !tender.awardedBidId) {
     await cancelOpenContracts(tenderId, userId);
+    await cancelEscrowsForTender(tenderId).catch(() => undefined);
     await archiveTenderConversationsByTenderId(tenderId).catch(() => undefined);
     await prisma.bid.updateMany({
       where: { tenderId, status: "ACCEPTED" },
@@ -105,6 +110,17 @@ export async function POST(
 
   if (tender.status !== "AWARDED" || !tender.awardedBidId || !tender.awardedBid) {
     return NextResponse.json({ error: "NOT_AWARDED" }, { status: 409 });
+  }
+
+  const blockingEscrow = await findBlockingEscrowForTender(tenderId);
+  if (blockingEscrow) {
+    return NextResponse.json(
+      {
+        error: "ESCROW_ACTIVE",
+        escrowStatus: blockingEscrow.status,
+      },
+      { status: 409 },
+    );
   }
 
   const winnerBidId = tender.awardedBid.id;
@@ -137,6 +153,7 @@ export async function POST(
   });
 
   await cancelOpenContracts(tenderId, userId);
+  await cancelEscrowsForTender(tenderId).catch(() => undefined);
   await archiveTenderConversationsByTenderId(tenderId).catch(() => undefined);
 
   try {

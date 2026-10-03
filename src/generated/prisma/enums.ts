@@ -174,10 +174,26 @@ export type TenderConversationStatus = (typeof TenderConversationStatus)[keyof t
 
 export const TenderMessageKind = {
   TEXT: 'TEXT',
-  SYSTEM_CONTRACT: 'SYSTEM_CONTRACT'
+  SYSTEM_CONTRACT: 'SYSTEM_CONTRACT',
+  SYSTEM_ESCROW: 'SYSTEM_ESCROW'
 } as const
 
 export type TenderMessageKind = (typeof TenderMessageKind)[keyof typeof TenderMessageKind]
+
+
+export const TenderEscrowStatus = {
+  AWAITING_CONTRACT: 'AWAITING_CONTRACT',
+  PENDING_FUNDING: 'PENDING_FUNDING',
+  PAYMENT_SUBMITTED: 'PAYMENT_SUBMITTED',
+  FUNDED: 'FUNDED',
+  DISPUTED: 'DISPUTED',
+  RELEASE_PENDING: 'RELEASE_PENDING',
+  RELEASED: 'RELEASED',
+  REFUNDED: 'REFUNDED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type TenderEscrowStatus = (typeof TenderEscrowStatus)[keyof typeof TenderEscrowStatus]
 
 
 export const UserCredentialKind = {

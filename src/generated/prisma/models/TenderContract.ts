@@ -241,6 +241,7 @@ export type TenderContractWhereInput = {
   tender?: Prisma.XOR<Prisma.TenderScalarRelationFilter, Prisma.TenderWhereInput>
   bid?: Prisma.XOR<Prisma.BidScalarRelationFilter, Prisma.BidWhereInput>
   conversation?: Prisma.XOR<Prisma.TenderConversationNullableScalarRelationFilter, Prisma.TenderConversationWhereInput> | null
+  escrow?: Prisma.XOR<Prisma.TenderEscrowNullableScalarRelationFilter, Prisma.TenderEscrowWhereInput> | null
 }
 
 export type TenderContractOrderByWithRelationInput = {
@@ -259,6 +260,7 @@ export type TenderContractOrderByWithRelationInput = {
   tender?: Prisma.TenderOrderByWithRelationInput
   bid?: Prisma.BidOrderByWithRelationInput
   conversation?: Prisma.TenderConversationOrderByWithRelationInput
+  escrow?: Prisma.TenderEscrowOrderByWithRelationInput
   _relevance?: Prisma.TenderContractOrderByRelevanceInput
 }
 
@@ -281,6 +283,7 @@ export type TenderContractWhereUniqueInput = Prisma.AtLeast<{
   tender?: Prisma.XOR<Prisma.TenderScalarRelationFilter, Prisma.TenderWhereInput>
   bid?: Prisma.XOR<Prisma.BidScalarRelationFilter, Prisma.BidWhereInput>
   conversation?: Prisma.XOR<Prisma.TenderConversationNullableScalarRelationFilter, Prisma.TenderConversationWhereInput> | null
+  escrow?: Prisma.XOR<Prisma.TenderEscrowNullableScalarRelationFilter, Prisma.TenderEscrowWhereInput> | null
 }, "id">
 
 export type TenderContractOrderByWithAggregationInput = {
@@ -333,6 +336,7 @@ export type TenderContractCreateInput = {
   tender: Prisma.TenderCreateNestedOneWithoutContractsInput
   bid: Prisma.BidCreateNestedOneWithoutContractsInput
   conversation?: Prisma.TenderConversationCreateNestedOneWithoutContractInput
+  escrow?: Prisma.TenderEscrowCreateNestedOneWithoutContractInput
 }
 
 export type TenderContractUncheckedCreateInput = {
@@ -349,6 +353,7 @@ export type TenderContractUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   conversation?: Prisma.TenderConversationUncheckedCreateNestedOneWithoutContractInput
+  escrow?: Prisma.TenderEscrowUncheckedCreateNestedOneWithoutContractInput
 }
 
 export type TenderContractUpdateInput = {
@@ -365,6 +370,7 @@ export type TenderContractUpdateInput = {
   tender?: Prisma.TenderUpdateOneRequiredWithoutContractsNestedInput
   bid?: Prisma.BidUpdateOneRequiredWithoutContractsNestedInput
   conversation?: Prisma.TenderConversationUpdateOneWithoutContractNestedInput
+  escrow?: Prisma.TenderEscrowUpdateOneWithoutContractNestedInput
 }
 
 export type TenderContractUncheckedUpdateInput = {
@@ -381,6 +387,7 @@ export type TenderContractUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conversation?: Prisma.TenderConversationUncheckedUpdateOneWithoutContractNestedInput
+  escrow?: Prisma.TenderEscrowUncheckedUpdateOneWithoutContractNestedInput
 }
 
 export type TenderContractCreateManyInput = {
@@ -538,6 +545,20 @@ export type EnumTenderContractStatusFieldUpdateOperationsInput = {
   set?: $Enums.TenderContractStatus
 }
 
+export type TenderContractCreateNestedOneWithoutEscrowInput = {
+  create?: Prisma.XOR<Prisma.TenderContractCreateWithoutEscrowInput, Prisma.TenderContractUncheckedCreateWithoutEscrowInput>
+  connectOrCreate?: Prisma.TenderContractCreateOrConnectWithoutEscrowInput
+  connect?: Prisma.TenderContractWhereUniqueInput
+}
+
+export type TenderContractUpdateOneRequiredWithoutEscrowNestedInput = {
+  create?: Prisma.XOR<Prisma.TenderContractCreateWithoutEscrowInput, Prisma.TenderContractUncheckedCreateWithoutEscrowInput>
+  connectOrCreate?: Prisma.TenderContractCreateOrConnectWithoutEscrowInput
+  upsert?: Prisma.TenderContractUpsertWithoutEscrowInput
+  connect?: Prisma.TenderContractWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenderContractUpdateToOneWithWhereWithoutEscrowInput, Prisma.TenderContractUpdateWithoutEscrowInput>, Prisma.TenderContractUncheckedUpdateWithoutEscrowInput>
+}
+
 export type TenderContractCreateNestedManyWithoutBidInput = {
   create?: Prisma.XOR<Prisma.TenderContractCreateWithoutBidInput, Prisma.TenderContractUncheckedCreateWithoutBidInput> | Prisma.TenderContractCreateWithoutBidInput[] | Prisma.TenderContractUncheckedCreateWithoutBidInput[]
   connectOrCreate?: Prisma.TenderContractCreateOrConnectWithoutBidInput | Prisma.TenderContractCreateOrConnectWithoutBidInput[]
@@ -607,6 +628,7 @@ export type TenderContractCreateWithoutTenderInput = {
   updatedAt?: Date | string
   bid: Prisma.BidCreateNestedOneWithoutContractsInput
   conversation?: Prisma.TenderConversationCreateNestedOneWithoutContractInput
+  escrow?: Prisma.TenderEscrowCreateNestedOneWithoutContractInput
 }
 
 export type TenderContractUncheckedCreateWithoutTenderInput = {
@@ -622,6 +644,7 @@ export type TenderContractUncheckedCreateWithoutTenderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   conversation?: Prisma.TenderConversationUncheckedCreateNestedOneWithoutContractInput
+  escrow?: Prisma.TenderEscrowUncheckedCreateNestedOneWithoutContractInput
 }
 
 export type TenderContractCreateOrConnectWithoutTenderInput = {
@@ -668,6 +691,86 @@ export type TenderContractScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"TenderContract"> | Date | string
 }
 
+export type TenderContractCreateWithoutEscrowInput = {
+  id?: string
+  status?: $Enums.TenderContractStatus
+  bodyText: string
+  templateVersion?: string
+  clientAcceptedAt?: Date | string | null
+  providerAcceptedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  cancelledById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tender: Prisma.TenderCreateNestedOneWithoutContractsInput
+  bid: Prisma.BidCreateNestedOneWithoutContractsInput
+  conversation?: Prisma.TenderConversationCreateNestedOneWithoutContractInput
+}
+
+export type TenderContractUncheckedCreateWithoutEscrowInput = {
+  id?: string
+  tenderId: string
+  bidId: string
+  status?: $Enums.TenderContractStatus
+  bodyText: string
+  templateVersion?: string
+  clientAcceptedAt?: Date | string | null
+  providerAcceptedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  cancelledById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  conversation?: Prisma.TenderConversationUncheckedCreateNestedOneWithoutContractInput
+}
+
+export type TenderContractCreateOrConnectWithoutEscrowInput = {
+  where: Prisma.TenderContractWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenderContractCreateWithoutEscrowInput, Prisma.TenderContractUncheckedCreateWithoutEscrowInput>
+}
+
+export type TenderContractUpsertWithoutEscrowInput = {
+  update: Prisma.XOR<Prisma.TenderContractUpdateWithoutEscrowInput, Prisma.TenderContractUncheckedUpdateWithoutEscrowInput>
+  create: Prisma.XOR<Prisma.TenderContractCreateWithoutEscrowInput, Prisma.TenderContractUncheckedCreateWithoutEscrowInput>
+  where?: Prisma.TenderContractWhereInput
+}
+
+export type TenderContractUpdateToOneWithWhereWithoutEscrowInput = {
+  where?: Prisma.TenderContractWhereInput
+  data: Prisma.XOR<Prisma.TenderContractUpdateWithoutEscrowInput, Prisma.TenderContractUncheckedUpdateWithoutEscrowInput>
+}
+
+export type TenderContractUpdateWithoutEscrowInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTenderContractStatusFieldUpdateOperationsInput | $Enums.TenderContractStatus
+  bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  templateVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  clientAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tender?: Prisma.TenderUpdateOneRequiredWithoutContractsNestedInput
+  bid?: Prisma.BidUpdateOneRequiredWithoutContractsNestedInput
+  conversation?: Prisma.TenderConversationUpdateOneWithoutContractNestedInput
+}
+
+export type TenderContractUncheckedUpdateWithoutEscrowInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenderId?: Prisma.StringFieldUpdateOperationsInput | string
+  bidId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTenderContractStatusFieldUpdateOperationsInput | $Enums.TenderContractStatus
+  bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  templateVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  clientAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  conversation?: Prisma.TenderConversationUncheckedUpdateOneWithoutContractNestedInput
+}
+
 export type TenderContractCreateWithoutBidInput = {
   id?: string
   status?: $Enums.TenderContractStatus
@@ -681,6 +784,7 @@ export type TenderContractCreateWithoutBidInput = {
   updatedAt?: Date | string
   tender: Prisma.TenderCreateNestedOneWithoutContractsInput
   conversation?: Prisma.TenderConversationCreateNestedOneWithoutContractInput
+  escrow?: Prisma.TenderEscrowCreateNestedOneWithoutContractInput
 }
 
 export type TenderContractUncheckedCreateWithoutBidInput = {
@@ -696,6 +800,7 @@ export type TenderContractUncheckedCreateWithoutBidInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   conversation?: Prisma.TenderConversationUncheckedCreateNestedOneWithoutContractInput
+  escrow?: Prisma.TenderEscrowUncheckedCreateNestedOneWithoutContractInput
 }
 
 export type TenderContractCreateOrConnectWithoutBidInput = {
@@ -737,6 +842,7 @@ export type TenderContractCreateWithoutConversationInput = {
   updatedAt?: Date | string
   tender: Prisma.TenderCreateNestedOneWithoutContractsInput
   bid: Prisma.BidCreateNestedOneWithoutContractsInput
+  escrow?: Prisma.TenderEscrowCreateNestedOneWithoutContractInput
 }
 
 export type TenderContractUncheckedCreateWithoutConversationInput = {
@@ -752,6 +858,7 @@ export type TenderContractUncheckedCreateWithoutConversationInput = {
   cancelledById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  escrow?: Prisma.TenderEscrowUncheckedCreateNestedOneWithoutContractInput
 }
 
 export type TenderContractCreateOrConnectWithoutConversationInput = {
@@ -783,6 +890,7 @@ export type TenderContractUpdateWithoutConversationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tender?: Prisma.TenderUpdateOneRequiredWithoutContractsNestedInput
   bid?: Prisma.BidUpdateOneRequiredWithoutContractsNestedInput
+  escrow?: Prisma.TenderEscrowUpdateOneWithoutContractNestedInput
 }
 
 export type TenderContractUncheckedUpdateWithoutConversationInput = {
@@ -798,6 +906,7 @@ export type TenderContractUncheckedUpdateWithoutConversationInput = {
   cancelledById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  escrow?: Prisma.TenderEscrowUncheckedUpdateOneWithoutContractNestedInput
 }
 
 export type TenderContractCreateManyTenderInput = {
@@ -827,6 +936,7 @@ export type TenderContractUpdateWithoutTenderInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bid?: Prisma.BidUpdateOneRequiredWithoutContractsNestedInput
   conversation?: Prisma.TenderConversationUpdateOneWithoutContractNestedInput
+  escrow?: Prisma.TenderEscrowUpdateOneWithoutContractNestedInput
 }
 
 export type TenderContractUncheckedUpdateWithoutTenderInput = {
@@ -842,6 +952,7 @@ export type TenderContractUncheckedUpdateWithoutTenderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conversation?: Prisma.TenderConversationUncheckedUpdateOneWithoutContractNestedInput
+  escrow?: Prisma.TenderEscrowUncheckedUpdateOneWithoutContractNestedInput
 }
 
 export type TenderContractUncheckedUpdateManyWithoutTenderInput = {
@@ -885,6 +996,7 @@ export type TenderContractUpdateWithoutBidInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tender?: Prisma.TenderUpdateOneRequiredWithoutContractsNestedInput
   conversation?: Prisma.TenderConversationUpdateOneWithoutContractNestedInput
+  escrow?: Prisma.TenderEscrowUpdateOneWithoutContractNestedInput
 }
 
 export type TenderContractUncheckedUpdateWithoutBidInput = {
@@ -900,6 +1012,7 @@ export type TenderContractUncheckedUpdateWithoutBidInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conversation?: Prisma.TenderConversationUncheckedUpdateOneWithoutContractNestedInput
+  escrow?: Prisma.TenderEscrowUncheckedUpdateOneWithoutContractNestedInput
 }
 
 export type TenderContractUncheckedUpdateManyWithoutBidInput = {
@@ -934,6 +1047,7 @@ export type TenderContractSelect<ExtArgs extends runtime.Types.Extensions.Intern
   tender?: boolean | Prisma.TenderDefaultArgs<ExtArgs>
   bid?: boolean | Prisma.BidDefaultArgs<ExtArgs>
   conversation?: boolean | Prisma.TenderContract$conversationArgs<ExtArgs>
+  escrow?: boolean | Prisma.TenderContract$escrowArgs<ExtArgs>
 }, ExtArgs["result"]["tenderContract"]>
 
 
@@ -958,6 +1072,7 @@ export type TenderContractInclude<ExtArgs extends runtime.Types.Extensions.Inter
   tender?: boolean | Prisma.TenderDefaultArgs<ExtArgs>
   bid?: boolean | Prisma.BidDefaultArgs<ExtArgs>
   conversation?: boolean | Prisma.TenderContract$conversationArgs<ExtArgs>
+  escrow?: boolean | Prisma.TenderContract$escrowArgs<ExtArgs>
 }
 
 export type $TenderContractPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -966,6 +1081,7 @@ export type $TenderContractPayload<ExtArgs extends runtime.Types.Extensions.Inte
     tender: Prisma.$TenderPayload<ExtArgs>
     bid: Prisma.$BidPayload<ExtArgs>
     conversation: Prisma.$TenderConversationPayload<ExtArgs> | null
+    escrow: Prisma.$TenderEscrowPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1326,6 +1442,7 @@ export interface Prisma__TenderContractClient<T, Null = never, ExtArgs extends r
   tender<T extends Prisma.TenderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenderDefaultArgs<ExtArgs>>): Prisma.Prisma__TenderClient<runtime.Types.Result.GetResult<Prisma.$TenderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   bid<T extends Prisma.BidDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BidDefaultArgs<ExtArgs>>): Prisma.Prisma__BidClient<runtime.Types.Result.GetResult<Prisma.$BidPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   conversation<T extends Prisma.TenderContract$conversationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenderContract$conversationArgs<ExtArgs>>): Prisma.Prisma__TenderConversationClient<runtime.Types.Result.GetResult<Prisma.$TenderConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  escrow<T extends Prisma.TenderContract$escrowArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenderContract$escrowArgs<ExtArgs>>): Prisma.Prisma__TenderEscrowClient<runtime.Types.Result.GetResult<Prisma.$TenderEscrowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1731,6 +1848,25 @@ export type TenderContract$conversationArgs<ExtArgs extends runtime.Types.Extens
    */
   include?: Prisma.TenderConversationInclude<ExtArgs> | null
   where?: Prisma.TenderConversationWhereInput
+}
+
+/**
+ * TenderContract.escrow
+ */
+export type TenderContract$escrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TenderEscrow
+   */
+  select?: Prisma.TenderEscrowSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TenderEscrow
+   */
+  omit?: Prisma.TenderEscrowOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TenderEscrowInclude<ExtArgs> | null
+  where?: Prisma.TenderEscrowWhereInput
 }
 
 /**

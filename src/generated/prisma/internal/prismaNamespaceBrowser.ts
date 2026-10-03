@@ -66,6 +66,7 @@ export const ModelName = {
   Location: 'Location',
   Tender: 'Tender',
   TenderContract: 'TenderContract',
+  TenderEscrow: 'TenderEscrow',
   TenderLike: 'TenderLike',
   TenderImage: 'TenderImage',
   TenderDocument: 'TenderDocument',
@@ -336,6 +337,38 @@ export const TenderContractScalarFieldEnum = {
 } as const
 
 export type TenderContractScalarFieldEnum = (typeof TenderContractScalarFieldEnum)[keyof typeof TenderContractScalarFieldEnum]
+
+
+export const TenderEscrowScalarFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  contractId: 'contractId',
+  clientId: 'clientId',
+  providerId: 'providerId',
+  status: 'status',
+  paymentCode: 'paymentCode',
+  contractAmount: 'contractAmount',
+  platformFeePercent: 'platformFeePercent',
+  platformFeeAmount: 'platformFeeAmount',
+  providerReceives: 'providerReceives',
+  currency: 'currency',
+  clientReceiptUrl: 'clientReceiptUrl',
+  clientNote: 'clientNote',
+  fundedAt: 'fundedAt',
+  fundedByAdminId: 'fundedByAdminId',
+  releaseRequestedAt: 'releaseRequestedAt',
+  releasedAt: 'releasedAt',
+  releasedByAdminId: 'releasedByAdminId',
+  disputedAt: 'disputedAt',
+  disputeReason: 'disputeReason',
+  refundedAt: 'refundedAt',
+  cancelledAt: 'cancelledAt',
+  adminNote: 'adminNote',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TenderEscrowScalarFieldEnum = (typeof TenderEscrowScalarFieldEnum)[keyof typeof TenderEscrowScalarFieldEnum]
 
 
 export const TenderLikeScalarFieldEnum = {
@@ -776,6 +809,25 @@ export const TenderContractOrderByRelevanceFieldEnum = {
 } as const
 
 export type TenderContractOrderByRelevanceFieldEnum = (typeof TenderContractOrderByRelevanceFieldEnum)[keyof typeof TenderContractOrderByRelevanceFieldEnum]
+
+
+export const TenderEscrowOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  contractId: 'contractId',
+  clientId: 'clientId',
+  providerId: 'providerId',
+  paymentCode: 'paymentCode',
+  currency: 'currency',
+  clientReceiptUrl: 'clientReceiptUrl',
+  clientNote: 'clientNote',
+  fundedByAdminId: 'fundedByAdminId',
+  releasedByAdminId: 'releasedByAdminId',
+  disputeReason: 'disputeReason',
+  adminNote: 'adminNote'
+} as const
+
+export type TenderEscrowOrderByRelevanceFieldEnum = (typeof TenderEscrowOrderByRelevanceFieldEnum)[keyof typeof TenderEscrowOrderByRelevanceFieldEnum]
 
 
 export const TenderLikeOrderByRelevanceFieldEnum = {

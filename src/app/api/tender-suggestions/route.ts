@@ -227,40 +227,18 @@ async function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-/** Primary + one fallback if the preferred model id is unknown (404). */
-const FALLBACK_MODEL_ID = "gemini-2.0-flash";
-const DEFAULT_MODEL_ID = "gemini-2.5-flash-lite";
+const DEFAULT_MODEL_ID = "deepseek-flash";
+const DEFAULT_API_BASE = "https://api.deepseek.com";
 
-function normalizeModelNames(): string[] {
-  const preferred = process.env.GEMINI_MODEL?.trim() || DEFAULT_MODEL_ID;
-  const candidates = [preferred, FALLBACK_MODEL_ID];
-  const seen = new Set<string>();
-  const unique: string[] = [];
-  for (const name of candidates) {
-    const trimmed = name.trim();
-    if (!trimmed || seen.has(trimmed)) continue;
-    seen.add(trimmed);
-    unique.push(trimmed);
-  }
-  return unique;
+function resolveModelName(): string {
+  return process.env.DEEPSEEK_MODEL?.trim() || DEFAULT_MODEL_ID;
 }
 
-function normalizeBases(): string[] {
-  const preferred = process.env.GEMINI_API_BASE?.trim();
-  const bases = [
-    preferred,
-    "https://generativelanguage.googleapis.com/v1beta",
-  ].filter((x): x is string => Boolean(x && x.trim()));
-
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const b of bases) {
-    const trimmed = b.trim().replace(/\/+$/, "");
-    if (seen.has(trimmed)) continue;
-    seen.add(trimmed);
-    out.push(trimmed);
-  }
-  return out;
+function resolveApiBase(): string {
+  const preferred = process.env.DEEPSEEK_API_BASE?.trim();
+  const base = (preferred || DEFAULT_API_BASE).replace(/\/+$/, "");
+  // OpenAI SDK often appends /v1; accept either form.
+  return base.endsWith("/v1") ? base : `${base}/v1`;
 }
 
 function safeJsonStringify(value: unknown) {
@@ -271,81 +249,76 @@ function safeJsonStringify(value: unknown) {
   }
 }
 
-type GeminiGenerateResponse = {
-  candidates?: Array<{
-    content?: {
-      parts?: Array<{ text?: string; thought?: boolean }>;
+type DeepSeekChatResponse = {
+  choices?: Array<{
+    message?: {
+      content?: string | null;
+      reasoning_content?: string | null;
     };
   }>;
-  promptFeedback?: unknown;
-  error?: { message?: string; status?: string };
+  error?: { message?: string; type?: string; code?: string | number };
 };
 
 type GenerateKind = "title" | "description";
 
 function isBillingExhausted(status: number, bodyText: string): boolean {
-  if (status !== 429 && status !== 403) return false;
-  return /prepayment credits are depleted|credits are depleted|manage your project and billing|billing#prepay/i.test(
+  if (status !== 402 && status !== 429 && status !== 403) return false;
+  return /insufficient|balance|quota|credit|billing|payment|exhausted|depleted/i.test(
     bodyText,
   );
 }
 
-function generationConfigFor(
-  kind: GenerateKind,
-  modelName: string,
-  opts?: { disableThinking?: boolean },
-) {
-  const maxOutputTokens = kind === "title" ? 128 : 1400;
-  const config: Record<string, unknown> = {
+function generationParamsFor(kind: GenerateKind) {
+  return {
     temperature: kind === "title" ? 0.55 : 0.65,
-    maxOutputTokens,
+    max_tokens: kind === "title" ? 128 : 1400,
   };
-  // Gemini 2.5 thinking adds multi-second latency — disable unless unsupported.
-  if (!opts?.disableThinking && /2\.5/i.test(modelName)) {
-    config.thinkingConfig = { thinkingBudget: 0 };
-  }
-  return config;
 }
 
-async function callGeminiREST(params: {
+async function callDeepSeekChat(params: {
   base: string;
   apiKey: string;
   modelName: string;
   prompt: string;
   kind: GenerateKind;
-  disableThinking?: boolean;
+  /** When true, omit thinking field (for APIs that reject it). */
+  omitThinking?: boolean;
 }): Promise<{ ok: true; text: string } | { ok: false; status: number; bodyText: string }> {
-  const { base, apiKey, modelName, prompt, kind, disableThinking } = params;
-  const modelPath = modelName.startsWith("models/") ? modelName : `models/${modelName}`;
-  const url = `${base}/${modelPath}:generateContent?key=${encodeURIComponent(apiKey)}`;
+  const { base, apiKey, modelName, prompt, kind, omitThinking } = params;
+  const url = `${base}/chat/completions`;
+  const { temperature, max_tokens } = generationParamsFor(kind);
 
-  const payload = {
-    contents: [{ role: "user", parts: [{ text: prompt }] }],
-    generationConfig: generationConfigFor(kind, modelName, { disableThinking }),
+  const payload: Record<string, unknown> = {
+    model: modelName,
+    messages: [{ role: "user", content: prompt }],
+    temperature,
+    max_tokens,
   };
+  // Cheap/fast path — disable thinking when the API supports it.
+  if (!omitThinking) {
+    payload.thinking = { type: "disabled" };
+  }
 
   const res = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
     body: JSON.stringify(payload),
   });
 
   const bodyText = await res.text().catch(() => "");
   if (!res.ok) return { ok: false, status: res.status, bodyText };
 
-  let data: GeminiGenerateResponse | null = null;
+  let data: DeepSeekChatResponse | null = null;
   try {
-    data = JSON.parse(bodyText) as GeminiGenerateResponse;
+    data = JSON.parse(bodyText) as DeepSeekChatResponse;
   } catch {
     data = null;
   }
 
-  const text =
-    data?.candidates?.[0]?.content?.parts
-      ?.filter((p) => !p.thought)
-      .map((p) => p.text ?? "")
-      .join("")
-      ?.trim() ?? "";
+  const text = data?.choices?.[0]?.message?.content?.trim() ?? "";
 
   if (!text) {
     return {
@@ -359,22 +332,21 @@ async function callGeminiREST(params: {
 }
 
 /**
- * Fast path: one primary model, one fallback.
- * No model-list round-trip. Billing exhaustion fails immediately.
+ * Single-model DeepSeek chat/completions with one short retry on transient errors.
+ * Billing exhaustion fails immediately.
  */
 async function generateWithRetry(
   prompt: string,
   kind: GenerateKind,
 ): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY?.trim();
-  if (!apiKey) throw new Error("GEMINI_API_KEY_NOT_SET");
+  const apiKey = process.env.DEEPSEEK_API_KEY?.trim();
+  if (!apiKey) throw new Error("DEEPSEEK_API_KEY_NOT_SET");
 
-  const modelNames = normalizeModelNames();
-  if (modelNames.length === 0) throw new Error("GEMINI_MODEL_NOT_SET");
-
-  const bases = normalizeBases();
+  const modelName = resolveModelName();
+  const base = resolveApiBase();
   let lastStatus: number | null = null;
   let lastBody = "";
+  let omitThinking = false;
 
   const fail = (code: string): never => {
     const err = new Error(code);
@@ -384,65 +356,54 @@ async function generateWithRetry(
     throw err;
   };
 
-  for (const base of bases) {
-    for (const modelName of modelNames) {
-      let disableThinking = false;
-
-      for (let attempt = 1; attempt <= 2; attempt += 1) {
-        if (process.env.NODE_ENV !== "production") {
-          console.debug("[tender-suggestions] Gemini REST attempt:", {
-            base,
-            modelName,
-            kind,
-            attempt,
-            disableThinking,
-          });
-        }
-
-        const result = await callGeminiREST({
-          base,
-          apiKey,
-          modelName,
-          prompt,
-          kind,
-          disableThinking,
-        });
-        if (result.ok) return result.text;
-
-        lastStatus = result.status;
-        lastBody = result.bodyText;
-
-        if (isBillingExhausted(result.status, result.bodyText)) {
-          fail("GEMINI_QUOTA_EXHAUSTED");
-        }
-
-        // thinkingConfig unsupported → same model once without it
-        if (
-          result.status === 400 &&
-          !disableThinking &&
-          /thinking|Thinking|unknown name/i.test(result.bodyText)
-        ) {
-          disableThinking = true;
-          continue;
-        }
-
-        if (result.status === 404) break;
-
-        // Transient rate limit (not billing) — one short retry, then next model
-        if (result.status === 429 || result.status === 500 || result.status === 503) {
-          if (attempt === 2) break;
-          await sleep(400 + Math.floor(Math.random() * 200));
-          continue;
-        }
-
-        if (result.status === 400) break;
-
-        break;
-      }
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    if (process.env.NODE_ENV !== "production") {
+      console.debug("[tender-suggestions] DeepSeek REST attempt:", {
+        base,
+        modelName,
+        kind,
+        attempt,
+        omitThinking,
+      });
     }
+
+    const result = await callDeepSeekChat({
+      base,
+      apiKey,
+      modelName,
+      prompt,
+      kind,
+      omitThinking,
+    });
+    if (result.ok) return result.text;
+
+    lastStatus = result.status;
+    lastBody = result.bodyText;
+
+    if (isBillingExhausted(result.status, result.bodyText)) {
+      fail("DEEPSEEK_QUOTA_EXHAUSTED");
+    }
+
+    // thinking param unsupported → same request once without it
+    if (
+      result.status === 400 &&
+      !omitThinking &&
+      /thinking/i.test(result.bodyText)
+    ) {
+      omitThinking = true;
+      continue;
+    }
+
+    if (result.status === 429 || result.status === 500 || result.status === 503) {
+      if (attempt === 2) break;
+      await sleep(400 + Math.floor(Math.random() * 200));
+      continue;
+    }
+
+    break;
   }
 
-  return fail(lastStatus ? `GEMINI_REST_FAILED_${lastStatus}` : "GEMINI_REST_FAILED");
+  return fail(lastStatus ? `DEEPSEEK_REST_FAILED_${lastStatus}` : "DEEPSEEK_REST_FAILED");
 }
 
 export async function POST(req: Request) {
@@ -451,7 +412,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "UNAUTHENTICATED" }, { status: 401 });
   }
 
-  if (!process.env.GEMINI_API_KEY?.trim()) {
+  if (!process.env.DEEPSEEK_API_KEY?.trim()) {
     return NextResponse.json({ error: "AI_NOT_CONFIGURED" }, { status: 503 });
   }
 
@@ -539,9 +500,9 @@ export async function POST(req: Request) {
         e && typeof e === "object"
           ? (e as { status?: unknown; body?: unknown }).status || (e as { body?: unknown }).body
           : null;
-      console.warn("[tender-suggestions] Gemini failed:", msg, extra, e);
+      console.warn("[tender-suggestions] DeepSeek failed:", msg, extra, e);
     }
-    if (msg === "GEMINI_QUOTA_EXHAUSTED") {
+    if (msg === "DEEPSEEK_QUOTA_EXHAUSTED") {
       return NextResponse.json({ error: "AI_QUOTA_EXCEEDED" }, { status: 402 });
     }
     return NextResponse.json({ error: "AI_UNAVAILABLE" }, { status: 503 });

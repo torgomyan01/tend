@@ -129,6 +129,29 @@ enum TenderConversationStatus {
 enum TenderMessageKind {
   TEXT
   SYSTEM_CONTRACT
+  SYSTEM_ESCROW
+}
+
+/** Ընտրովի պաշտպանված գործարք (բանկային escrow) */
+enum TenderEscrowStatus {
+  /** Ստեղծված է, սպասում է պայմանագրի երկկողմանի հաստատմանը */
+  AWAITING_CONTRACT
+  /** Պայմանագիրը կնքված է · սպասում ենք բանկային փոխանցմանը */
+  PENDING_FUNDING
+  /** Պատվիրատուն նշել է, որ փոխանցել է · ադմինը ստուգում է */
+  PAYMENT_SUBMITTED
+  /** Գումարը հաստատված է և պահված է */
+  FUNDED
+  /** Վեճ */
+  DISPUTED
+  /** Պատվիրատուն հաստատել է ազատումը · սպասում է payout-ին */
+  RELEASE_PENDING
+  /** Փոխանցված է կատարողին */
+  RELEASED
+  /** Վերադարձված է պատվիրատուին */
+  REFUNDED
+  /** Չեղարկված */
+  CANCELLED
 }
 
 model User {
@@ -185,6 +208,8 @@ model User {
   tenderConversationsAsClient   TenderConversation[] @relation("TenderConversationClient")
   tenderConversationsAsProvider TenderConversation[] @relation("TenderConversationProvider")
   tenderMessagesSent            TenderMessage[]      @relation("TenderMessagesSent")
+  escrowsAsClient               TenderEscrow[]       @relation("EscrowClient")
+  escrowsAsProvider             TenderEscrow[]       @relation("EscrowProvider")
 
   @@index([email])
   @@index([phone])
@@ -412,6 +437,7 @@ model Tender {
   likes            TenderLike[]
   contracts        TenderContract[]
   conversations    TenderConversation[]
+  escrows          TenderEscrow[]
 
   @@index([clientId])
   @@index([status, endsAt])
@@ -439,10 +465,55 @@ model TenderContract {
   tender             Tender               @relation(fields: [tenderId], references: [id], onDelete: Cascade)
   bid                Bid                  @relation(fields: [bidId], references: [id], onDelete: Cascade)
   conversation       TenderConversation?
+  escrow             TenderEscrow?
 
   @@index([tenderId, status])
   @@index([bidId])
   @@map("tendercontract")
+}
+
+/**
+ * Պաշտպանված գործարք՝ բանկային փոխանցումով escrow։
+ * Գումարը պահվում է Tend.am հաշվին մինչև ավարտ/վեճի որոշում։
+ */
+model TenderEscrow {
+  id                 String            @id @default(cuid())
+  tenderId           String
+  contractId         String            @unique
+  clientId           String
+  providerId         String
+  status             TenderEscrowStatus @default(AWAITING_CONTRACT)
+  /** Եզակի վճարման կոդ՝ բանկային նշման դաշտում */
+  paymentCode        String            @unique @db.VarChar(32)
+  contractAmount     Decimal           @db.Decimal(12, 2)
+  platformFeePercent Decimal           @db.Decimal(5, 2)
+  platformFeeAmount  Decimal           @db.Decimal(12, 2)
+  providerReceives   Decimal           @db.Decimal(12, 2)
+  currency           String            @default("AMD") @db.VarChar(8)
+  clientReceiptUrl   String?           @db.VarChar(500)
+  clientNote         String?           @db.VarChar(500)
+  fundedAt           DateTime?
+  fundedByAdminId    String?
+  releaseRequestedAt DateTime?
+  releasedAt         DateTime?
+  releasedByAdminId  String?
+  disputedAt         DateTime?
+  disputeReason      String?           @db.Text
+  refundedAt         DateTime?
+  cancelledAt        DateTime?
+  adminNote          String?           @db.Text
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  tender             Tender            @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+  contract           TenderContract    @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  client             User              @relation("EscrowClient", fields: [clientId], references: [id], onDelete: Cascade)
+  provider           User              @relation("EscrowProvider", fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@index([clientId])
+  @@index([providerId])
+  @@index([tenderId])
+  @@map("tenderescrow")
 }
 
 model TenderLike {

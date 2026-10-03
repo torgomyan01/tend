@@ -5,6 +5,7 @@ import {
   Loader2,
   Mail,
   Phone,
+  ShieldCheck,
   Trophy,
   UserCircle2,
   UserMinus,
@@ -14,6 +15,11 @@ import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { AccountTypeBadge } from "@/components/account-type-badge";
 import type { AccountTypeValue } from "@/lib/account-type";
+import {
+  canOfferProtectedDeal,
+  DEFAULT_ESCROW_FEE_PERCENT,
+  ESCROW_MIN_AMOUNT_AMD,
+} from "@/lib/escrow";
 import { formatAmd, formatDateTime } from "@/lib/format";
 import { ROUTES } from "@/lib/routes";
 import { BID_STATUS_BADGE, BID_STATUS_LABEL } from "@/lib/tender-status";
@@ -81,6 +87,10 @@ export function TenderOwnerApplicantsModal({
   const [awardConfirmForId, setAwardConfirmForId] = useState<string | null>(
     null,
   );
+  /** null = not chosen yet when protected deal is available */
+  const [awardDealMode, setAwardDealMode] = useState<
+    "regular" | "protected" | null
+  >(null);
   const [awardingId, setAwardingId] = useState<string | null>(null);
   const [removingId, setRemovingId] = useState<string | null>(null);
   const [removeConfirmForId, setRemoveConfirmForId] = useState<string | null>(
@@ -126,6 +136,7 @@ export function TenderOwnerApplicantsModal({
     setShareError(null);
     setAwardError(null);
     setAwardConfirmForId(null);
+    setAwardDealMode(null);
     setRemoveConfirmForId(null);
     void loadBids();
   };
@@ -151,6 +162,11 @@ export function TenderOwnerApplicantsModal({
             "Չի հաջողվել",
             "Կատարողը այլևս ընտրված չէ։ Թարմացրեք էջը։",
           );
+        } else if (data?.error === "ESCROW_ACTIVE") {
+          toastError(
+            "Պաշտպանված գործարք",
+            "Գումարը արդեն շրջանառության մեջ է։ Նախ լուծեք escrow-ը։",
+          );
         } else {
           toastError("Սխալ", "Չհաջողվեց հանել կատարողին։");
         }
@@ -173,18 +189,19 @@ export function TenderOwnerApplicantsModal({
     }
   };
 
-  const awardBid = async (bidId: string) => {
+  const awardBid = async (bidId: string, protectedDeal: boolean) => {
     setAwardingId(bidId);
     setAwardError(null);
     try {
       const res = await fetch(`/api/tenders/${tenderId}/award`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bidId }),
+        body: JSON.stringify({ bidId, protectedDeal }),
       });
       const data = (await res.json().catch(() => null)) as {
         error?: string;
         conversationId?: string | null;
+        protectedDeal?: boolean;
       } | null;
 
       if (!res.ok) {
@@ -201,6 +218,10 @@ export function TenderOwnerApplicantsModal({
           const msg = "Մրցույթը այլևս ակտիվ չէ։";
           setAwardError(msg);
           toastError("Չի կարող ընտրել", msg);
+        } else if (data?.error === "ESCROW_AMOUNT_TOO_LOW") {
+          const msg = `Պաշտպանված գործարքը հասանելի է ${formatAmd(ESCROW_MIN_AMOUNT_AMD)}-ից սկսած։`;
+          setAwardError(msg);
+          toastError("Գումարը քիչ է", msg);
         } else {
           const msg = "Չհաջողվեց սկսել պայմանագիրը։";
           setAwardError(msg);
@@ -210,10 +231,13 @@ export function TenderOwnerApplicantsModal({
       }
 
       setAwardConfirmForId(null);
+      setAwardDealMode(null);
       setOpen(false);
       toastSuccess(
         "Պայմանագիրը պատրաստ է",
-        "Զրույցում կգտնեք պայմանագրի հղումը։ Հաստատեք՝ ապա կատարողը կստանա հրավեր։",
+        protectedDeal
+          ? "Պաշտպանված գործարք ընտրված է։ Հաստատեք պայմանագիրը զրույցում։"
+          : "Զրույցում կգտնեք պայմանագրի հղումը։ Հաստատեք՝ ապա կատարողը կստանա հրավեր։",
       );
       if (data?.conversationId) {
         router.push(ROUTES.messageThread(data.conversationId));
@@ -567,21 +591,88 @@ export function TenderOwnerApplicantsModal({
                           !isWinningBid &&
                           !isPendingProposal ? (
                             awardConfirmForId === bid.id ? (
-                              <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
-                                <p className="w-full text-xs font-bold text-slate-700 sm:flex-1">
-                                  Կգեներացվի էլեկտրոնային պայմանագիր։ Դուք կհաստատեք
-                                  նախ, ապա կատարողը։ Միայն երկու հաստատումից հետո
-                                  կհամարվի ընտրված։
+                              <div className="flex w-full flex-col gap-3">
+                                <p className="text-xs font-bold text-slate-700">
+                                  Կգեներացվի էլեկտրոնային պայմանագիր։ Դուք
+                                  կհաստատեք նախ, ապա կատարողը։
                                 </p>
-                                <div className="flex shrink-0 gap-2">
+                                {canOfferProtectedDeal(bid.price) ? (
+                                  <div className="grid gap-2 sm:grid-cols-2">
+                                    <button
+                                      type="button"
+                                      disabled={awardingId !== null}
+                                      onClick={() => setAwardDealMode("regular")}
+                                      className={`rounded-2xl px-3 py-3 text-left text-xs font-bold ring-1 transition ${
+                                        awardDealMode === "regular"
+                                          ? "bg-slate-950 text-white ring-slate-950"
+                                          : "bg-white text-slate-800 ring-slate-200 hover:bg-slate-50"
+                                      }`}
+                                    >
+                                      Սովորական գործարք
+                                      <span
+                                        className={`mt-1 block text-[10px] font-semibold ${
+                                          awardDealMode === "regular"
+                                            ? "text-white/70"
+                                            : "text-slate-500"
+                                        }`}
+                                      >
+                                        Վճարումը կողմերի միջև
+                                      </span>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      disabled={awardingId !== null}
+                                      onClick={() =>
+                                        setAwardDealMode("protected")
+                                      }
+                                      className={`rounded-2xl px-3 py-3 text-left text-xs font-bold ring-1 transition ${
+                                        awardDealMode === "protected"
+                                          ? "bg-emerald-800 text-white ring-emerald-800"
+                                          : "bg-emerald-50 text-emerald-950 ring-emerald-200 hover:bg-emerald-100"
+                                      }`}
+                                    >
+                                      <span className="inline-flex items-center gap-1">
+                                        <ShieldCheck className="size-3.5" />
+                                        Պաշտպանված գործարք
+                                      </span>
+                                      <span
+                                        className={`mt-1 block text-[10px] font-semibold ${
+                                          awardDealMode === "protected"
+                                            ? "text-white/70"
+                                            : "text-emerald-800/80"
+                                        }`}
+                                      >
+                                        Բանկային escrow · միջնորդավճար ~
+                                        {DEFAULT_ESCROW_FEE_PERCENT}% կատարողից
+                                      </span>
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <p className="text-[11px] font-semibold text-slate-500">
+                                    Պաշտպանված գործարքը հասանելի է{" "}
+                                    {formatAmd(ESCROW_MIN_AMOUNT_AMD)}-ից սկսած։
+                                  </p>
+                                )}
+                                <div className="flex flex-wrap gap-2">
                                   <button
                                     type="button"
-                                    disabled={awardingId !== null}
-                                    onClick={() => void awardBid(bid.id)}
+                                    disabled={
+                                      awardingId !== null ||
+                                      (canOfferProtectedDeal(bid.price) &&
+                                        awardDealMode === null)
+                                    }
+                                    onClick={() =>
+                                      void awardBid(
+                                        bid.id,
+                                        awardDealMode === "protected",
+                                      )
+                                    }
                                     className="inline-flex items-center gap-2 rounded-2xl bg-indigo-700 px-4 py-2.5 text-xs font-black text-white transition hover:bg-indigo-600 disabled:opacity-50"
                                   >
                                     {awardingId === bid.id ? (
                                       <Loader2 className="size-4 animate-spin" />
+                                    ) : awardDealMode === "protected" ? (
+                                      <ShieldCheck className="size-4" />
                                     ) : (
                                       <Trophy className="size-4" />
                                     )}
@@ -590,7 +681,10 @@ export function TenderOwnerApplicantsModal({
                                   <button
                                     type="button"
                                     disabled={awardingId !== null}
-                                    onClick={() => setAwardConfirmForId(null)}
+                                    onClick={() => {
+                                      setAwardConfirmForId(null);
+                                      setAwardDealMode(null);
+                                    }}
                                     className="rounded-2xl bg-slate-200 px-4 py-2.5 text-xs font-black text-slate-800 hover:bg-slate-300 disabled:opacity-50"
                                   >
                                     Չեղարկել
@@ -601,7 +695,14 @@ export function TenderOwnerApplicantsModal({
                               <button
                                 type="button"
                                 disabled={awardingId !== null}
-                                onClick={() => setAwardConfirmForId(bid.id)}
+                                onClick={() => {
+                                  setAwardConfirmForId(bid.id);
+                                  setAwardDealMode(
+                                    canOfferProtectedDeal(bid.price)
+                                      ? null
+                                      : "regular",
+                                  );
+                                }}
                                 className="inline-flex items-center gap-2 rounded-2xl bg-indigo-600 px-4 py-2.5 text-xs font-black text-white transition hover:bg-indigo-500 disabled:opacity-50"
                               >
                                 <Trophy className="size-4" />

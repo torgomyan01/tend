@@ -3,9 +3,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { notFound, redirect } from "next/navigation";
+import { ContractEscrowPanel } from "@/components/contract-escrow-panel";
 import { ContractSignClient } from "@/components/contract-sign-client";
 import { SiteHeader } from "@/components/site-header";
 import { authOptions } from "@/lib/auth";
+import { getEscrowBankDetails } from "@/lib/escrow";
+import { serializeEscrow } from "@/lib/escrow-service";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
 
@@ -63,6 +66,7 @@ export default async function ContractPage({ params }: Props) {
         },
       },
       conversation: { select: { id: true } },
+      escrow: true,
     },
   });
 
@@ -97,6 +101,19 @@ export default async function ContractPage({ params }: Props) {
             Հետ
           </Link>
         </div>
+        {contract.escrow &&
+        contract.escrow.status !== "CANCELLED" ? (
+          <div className="mx-auto mb-5 w-full max-w-3xl">
+            <ContractEscrowPanel
+              contractId={contract.id}
+              escrow={serializeEscrow(contract.escrow)}
+              bank={getEscrowBankDetails()}
+              isOwner={isOwner}
+              isProvider={isProposedProvider}
+              contractAccepted={contract.status === "ACCEPTED"}
+            />
+          </div>
+        ) : null}
         <ContractSignClient
           tenderId={contract.tenderId}
           contractId={contract.id}
@@ -111,6 +128,9 @@ export default async function ContractPage({ params }: Props) {
           conversationId={contract.conversation?.id ?? null}
           isOwner={isOwner}
           isProposedProvider={isProposedProvider}
+          hasEscrow={Boolean(
+            contract.escrow && contract.escrow.status !== "CANCELLED",
+          )}
         />
       </main>
     </div>

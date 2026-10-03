@@ -45,6 +45,7 @@ export const ROUTES = {
     services: "/admin/services",
     support: "/admin/support",
     expiredUnawarded: "/admin/expired-unawarded",
+    escrows: "/admin/escrows",
   },
   sections: {
     howItWorks: "/how-it-works",

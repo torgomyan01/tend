@@ -409,6 +409,23 @@ export type EnumTenderContractStatusWithAggregatesFilter<$PrismaModel = never> =
   _max?: Prisma.NestedEnumTenderContractStatusFilter<$PrismaModel>
 }
 
+export type EnumTenderEscrowStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderEscrowStatus | Prisma.EnumTenderEscrowStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderEscrowStatus[]
+  notIn?: $Enums.TenderEscrowStatus[]
+  not?: Prisma.NestedEnumTenderEscrowStatusFilter<$PrismaModel> | $Enums.TenderEscrowStatus
+}
+
+export type EnumTenderEscrowStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderEscrowStatus | Prisma.EnumTenderEscrowStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderEscrowStatus[]
+  notIn?: $Enums.TenderEscrowStatus[]
+  not?: Prisma.NestedEnumTenderEscrowStatusWithAggregatesFilter<$PrismaModel> | $Enums.TenderEscrowStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTenderEscrowStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTenderEscrowStatusFilter<$PrismaModel>
+}
+
 export type EnumTenderComplaintStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.TenderComplaintStatus | Prisma.EnumTenderComplaintStatusFieldRefInput<$PrismaModel>
   in?: $Enums.TenderComplaintStatus[]
@@ -989,6 +1006,23 @@ export type NestedEnumTenderContractStatusWithAggregatesFilter<$PrismaModel = ne
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumTenderContractStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumTenderContractStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumTenderEscrowStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderEscrowStatus | Prisma.EnumTenderEscrowStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderEscrowStatus[]
+  notIn?: $Enums.TenderEscrowStatus[]
+  not?: Prisma.NestedEnumTenderEscrowStatusFilter<$PrismaModel> | $Enums.TenderEscrowStatus
+}
+
+export type NestedEnumTenderEscrowStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TenderEscrowStatus | Prisma.EnumTenderEscrowStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TenderEscrowStatus[]
+  notIn?: $Enums.TenderEscrowStatus[]
+  not?: Prisma.NestedEnumTenderEscrowStatusWithAggregatesFilter<$PrismaModel> | $Enums.TenderEscrowStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTenderEscrowStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTenderEscrowStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumTenderComplaintStatusFilter<$PrismaModel = never> = {

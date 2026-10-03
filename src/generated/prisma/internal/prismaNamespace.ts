@@ -399,6 +399,7 @@ export const ModelName = {
   Location: 'Location',
   Tender: 'Tender',
   TenderContract: 'TenderContract',
+  TenderEscrow: 'TenderEscrow',
   TenderLike: 'TenderLike',
   TenderImage: 'TenderImage',
   TenderDocument: 'TenderDocument',
@@ -432,7 +433,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userCredential" | "profileContactUnlock" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderContract" | "tenderLike" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "bidAttachment" | "transaction" | "vposOrderSequence" | "subscription" | "review" | "userNotification" | "supportConversation" | "supportMessage" | "supportAttachment" | "tenderConversation" | "tenderMessage" | "tenderMessageAttachment"
+    modelProps: "user" | "userCredential" | "profileContactUnlock" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderContract" | "tenderEscrow" | "tenderLike" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "bidAttachment" | "transaction" | "vposOrderSequence" | "subscription" | "review" | "userNotification" | "supportConversation" | "supportMessage" | "supportAttachment" | "tenderConversation" | "tenderMessage" | "tenderMessageAttachment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1423,6 +1424,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TenderContractCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TenderContractCountAggregateOutputType> | number
+        }
+      }
+    }
+    TenderEscrow: {
+      payload: Prisma.$TenderEscrowPayload<ExtArgs>
+      fields: Prisma.TenderEscrowFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TenderEscrowFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderEscrowPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TenderEscrowFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderEscrowPayload>
+        }
+        findFirst: {
+          args: Prisma.TenderEscrowFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderEscrowPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TenderEscrowFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderEscrowPayload>
+        }
+        findMany: {
+          args: Prisma.TenderEscrowFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderEscrowPayload>[]
+        }
+        create: {
+          args: Prisma.TenderEscrowCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderEscrowPayload>
+        }
+        createMany: {
+          args: Prisma.TenderEscrowCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TenderEscrowDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderEscrowPayload>
+        }
+        update: {
+          args: Prisma.TenderEscrowUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderEscrowPayload>
+        }
+        deleteMany: {
+          args: Prisma.TenderEscrowDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TenderEscrowUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TenderEscrowUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TenderEscrowPayload>
+        }
+        aggregate: {
+          args: Prisma.TenderEscrowAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTenderEscrow>
+        }
+        groupBy: {
+          args: Prisma.TenderEscrowGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderEscrowGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TenderEscrowCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TenderEscrowCountAggregateOutputType> | number
         }
       }
     }
@@ -2889,6 +2956,38 @@ export const TenderContractScalarFieldEnum = {
 export type TenderContractScalarFieldEnum = (typeof TenderContractScalarFieldEnum)[keyof typeof TenderContractScalarFieldEnum]
 
 
+export const TenderEscrowScalarFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  contractId: 'contractId',
+  clientId: 'clientId',
+  providerId: 'providerId',
+  status: 'status',
+  paymentCode: 'paymentCode',
+  contractAmount: 'contractAmount',
+  platformFeePercent: 'platformFeePercent',
+  platformFeeAmount: 'platformFeeAmount',
+  providerReceives: 'providerReceives',
+  currency: 'currency',
+  clientReceiptUrl: 'clientReceiptUrl',
+  clientNote: 'clientNote',
+  fundedAt: 'fundedAt',
+  fundedByAdminId: 'fundedByAdminId',
+  releaseRequestedAt: 'releaseRequestedAt',
+  releasedAt: 'releasedAt',
+  releasedByAdminId: 'releasedByAdminId',
+  disputedAt: 'disputedAt',
+  disputeReason: 'disputeReason',
+  refundedAt: 'refundedAt',
+  cancelledAt: 'cancelledAt',
+  adminNote: 'adminNote',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TenderEscrowScalarFieldEnum = (typeof TenderEscrowScalarFieldEnum)[keyof typeof TenderEscrowScalarFieldEnum]
+
+
 export const TenderLikeScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -3329,6 +3428,25 @@ export const TenderContractOrderByRelevanceFieldEnum = {
 export type TenderContractOrderByRelevanceFieldEnum = (typeof TenderContractOrderByRelevanceFieldEnum)[keyof typeof TenderContractOrderByRelevanceFieldEnum]
 
 
+export const TenderEscrowOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenderId: 'tenderId',
+  contractId: 'contractId',
+  clientId: 'clientId',
+  providerId: 'providerId',
+  paymentCode: 'paymentCode',
+  currency: 'currency',
+  clientReceiptUrl: 'clientReceiptUrl',
+  clientNote: 'clientNote',
+  fundedByAdminId: 'fundedByAdminId',
+  releasedByAdminId: 'releasedByAdminId',
+  disputeReason: 'disputeReason',
+  adminNote: 'adminNote'
+} as const
+
+export type TenderEscrowOrderByRelevanceFieldEnum = (typeof TenderEscrowOrderByRelevanceFieldEnum)[keyof typeof TenderEscrowOrderByRelevanceFieldEnum]
+
+
 export const TenderLikeOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -3617,6 +3735,13 @@ export type EnumTenderContractStatusFieldRefInput<$PrismaModel> = FieldRefInputT
 
 
 /**
+ * Reference to a field of type 'TenderEscrowStatus'
+ */
+export type EnumTenderEscrowStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TenderEscrowStatus'>
+    
+
+
+/**
  * Reference to a field of type 'TenderComplaintStatus'
  */
 export type EnumTenderComplaintStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TenderComplaintStatus'>
@@ -3817,6 +3942,7 @@ export type GlobalOmitConfig = {
   location?: Prisma.LocationOmit
   tender?: Prisma.TenderOmit
   tenderContract?: Prisma.TenderContractOmit
+  tenderEscrow?: Prisma.TenderEscrowOmit
   tenderLike?: Prisma.TenderLikeOmit
   tenderImage?: Prisma.TenderImageOmit
   tenderDocument?: Prisma.TenderDocumentOmit

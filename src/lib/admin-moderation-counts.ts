@@ -18,6 +18,8 @@ export type AdminModerationCounts = {
   newUsers7d: number;
   /** Support chats waiting for staff reply */
   supportChats: number;
+  /** Escrow rows needing admin action */
+  escrows: number;
 };
 
 export async function getAdminModerationCounts(): Promise<AdminModerationCounts> {
@@ -32,6 +34,7 @@ export async function getAdminModerationCounts(): Promise<AdminModerationCounts>
     blockedUsers,
     newUsers7d,
     supportChats,
+    escrows,
   ] = await Promise.all([
     prisma.verificationRequest.count({ where: { status: "PENDING" } }),
     prisma.tender.count({ where: { status: "REVIEW" } }),
@@ -41,6 +44,11 @@ export async function getAdminModerationCounts(): Promise<AdminModerationCounts>
     prisma.user.count({ where: { isBlocked: true } }),
     prisma.user.count({ where: { createdAt: { gte: last7Days } } }),
     countSupportConversationsNeedingStaff(),
+    prisma.tenderEscrow.count({
+      where: {
+        status: { in: ["PAYMENT_SUBMITTED", "RELEASE_PENDING", "DISPUTED"] },
+      },
+    }),
   ]);
 
   return {
@@ -52,5 +60,6 @@ export async function getAdminModerationCounts(): Promise<AdminModerationCounts>
     blockedUsers,
     newUsers7d,
     supportChats,
+    escrows,
   };
 }

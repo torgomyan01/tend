@@ -446,6 +446,8 @@ export type UserWhereInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationListRelationFilter
   tenderConversationsAsProvider?: Prisma.TenderConversationListRelationFilter
   tenderMessagesSent?: Prisma.TenderMessageListRelationFilter
+  escrowsAsClient?: Prisma.TenderEscrowListRelationFilter
+  escrowsAsProvider?: Prisma.TenderEscrowListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -502,6 +504,8 @@ export type UserOrderByWithRelationInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationOrderByRelationAggregateInput
   tenderConversationsAsProvider?: Prisma.TenderConversationOrderByRelationAggregateInput
   tenderMessagesSent?: Prisma.TenderMessageOrderByRelationAggregateInput
+  escrowsAsClient?: Prisma.TenderEscrowOrderByRelationAggregateInput
+  escrowsAsProvider?: Prisma.TenderEscrowOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -562,6 +566,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   tenderConversationsAsClient?: Prisma.TenderConversationListRelationFilter
   tenderConversationsAsProvider?: Prisma.TenderConversationListRelationFilter
   tenderMessagesSent?: Prisma.TenderMessageListRelationFilter
+  escrowsAsClient?: Prisma.TenderEscrowListRelationFilter
+  escrowsAsProvider?: Prisma.TenderEscrowListRelationFilter
 }, "id" | "email" | "emailVerifyToken" | "phone" | "telegramChatId" | "telegramLinkToken" | "passwordResetToken">
 
 export type UserOrderByWithAggregationInput = {
@@ -694,6 +700,8 @@ export type UserCreateInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -750,6 +758,8 @@ export type UserUncheckedCreateInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserUpdateInput = {
@@ -806,6 +816,8 @@ export type UserUpdateInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -862,6 +874,8 @@ export type UserUncheckedUpdateInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1266,6 +1280,34 @@ export type UserUpdateOneRequiredWithoutTendersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTendersInput, Prisma.UserUpdateWithoutTendersInput>, Prisma.UserUncheckedUpdateWithoutTendersInput>
 }
 
+export type UserCreateNestedOneWithoutEscrowsAsClientInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEscrowsAsClientInput, Prisma.UserUncheckedCreateWithoutEscrowsAsClientInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEscrowsAsClientInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutEscrowsAsProviderInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEscrowsAsProviderInput, Prisma.UserUncheckedCreateWithoutEscrowsAsProviderInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEscrowsAsProviderInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutEscrowsAsClientNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEscrowsAsClientInput, Prisma.UserUncheckedCreateWithoutEscrowsAsClientInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEscrowsAsClientInput
+  upsert?: Prisma.UserUpsertWithoutEscrowsAsClientInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutEscrowsAsClientInput, Prisma.UserUpdateWithoutEscrowsAsClientInput>, Prisma.UserUncheckedUpdateWithoutEscrowsAsClientInput>
+}
+
+export type UserUpdateOneRequiredWithoutEscrowsAsProviderNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEscrowsAsProviderInput, Prisma.UserUncheckedCreateWithoutEscrowsAsProviderInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEscrowsAsProviderInput
+  upsert?: Prisma.UserUpsertWithoutEscrowsAsProviderInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutEscrowsAsProviderInput, Prisma.UserUpdateWithoutEscrowsAsProviderInput>, Prisma.UserUncheckedUpdateWithoutEscrowsAsProviderInput>
+}
+
 export type UserCreateNestedOneWithoutTenderLikesInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutTenderLikesInput, Prisma.UserUncheckedCreateWithoutTenderLikesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutTenderLikesInput
@@ -1505,6 +1547,8 @@ export type UserCreateWithoutCredentialsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutCredentialsInput = {
@@ -1560,6 +1604,8 @@ export type UserUncheckedCreateWithoutCredentialsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutCredentialsInput = {
@@ -1631,6 +1677,8 @@ export type UserUpdateWithoutCredentialsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCredentialsInput = {
@@ -1686,6 +1734,8 @@ export type UserUncheckedUpdateWithoutCredentialsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutProfileContactUnlocksMadeInput = {
@@ -1741,6 +1791,8 @@ export type UserCreateWithoutProfileContactUnlocksMadeInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutProfileContactUnlocksMadeInput = {
@@ -1796,6 +1848,8 @@ export type UserUncheckedCreateWithoutProfileContactUnlocksMadeInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutProfileContactUnlocksMadeInput = {
@@ -1856,6 +1910,8 @@ export type UserCreateWithoutProfileContactUnlocksReceivedInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutProfileContactUnlocksReceivedInput = {
@@ -1911,6 +1967,8 @@ export type UserUncheckedCreateWithoutProfileContactUnlocksReceivedInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutProfileContactUnlocksReceivedInput = {
@@ -1982,6 +2040,8 @@ export type UserUpdateWithoutProfileContactUnlocksMadeInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileContactUnlocksMadeInput = {
@@ -2037,6 +2097,8 @@ export type UserUncheckedUpdateWithoutProfileContactUnlocksMadeInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUpsertWithoutProfileContactUnlocksReceivedInput = {
@@ -2103,6 +2165,8 @@ export type UserUpdateWithoutProfileContactUnlocksReceivedInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileContactUnlocksReceivedInput = {
@@ -2158,6 +2222,8 @@ export type UserUncheckedUpdateWithoutProfileContactUnlocksReceivedInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutPortfolioItemsInput = {
@@ -2213,6 +2279,8 @@ export type UserCreateWithoutPortfolioItemsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutPortfolioItemsInput = {
@@ -2268,6 +2336,8 @@ export type UserUncheckedCreateWithoutPortfolioItemsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutPortfolioItemsInput = {
@@ -2339,6 +2409,8 @@ export type UserUpdateWithoutPortfolioItemsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPortfolioItemsInput = {
@@ -2394,6 +2466,8 @@ export type UserUncheckedUpdateWithoutPortfolioItemsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutInterestsInput = {
@@ -2449,6 +2523,8 @@ export type UserCreateWithoutInterestsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutInterestsInput = {
@@ -2504,6 +2580,8 @@ export type UserUncheckedCreateWithoutInterestsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutInterestsInput = {
@@ -2575,6 +2653,8 @@ export type UserUpdateWithoutInterestsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInterestsInput = {
@@ -2630,6 +2710,8 @@ export type UserUncheckedUpdateWithoutInterestsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutVerificationRequestsInput = {
@@ -2685,6 +2767,8 @@ export type UserCreateWithoutVerificationRequestsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutVerificationRequestsInput = {
@@ -2740,6 +2824,8 @@ export type UserUncheckedCreateWithoutVerificationRequestsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutVerificationRequestsInput = {
@@ -2811,6 +2897,8 @@ export type UserUpdateWithoutVerificationRequestsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVerificationRequestsInput = {
@@ -2866,6 +2954,8 @@ export type UserUncheckedUpdateWithoutVerificationRequestsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -2921,6 +3011,8 @@ export type UserCreateWithoutAccountsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -2976,6 +3068,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -3047,6 +3141,8 @@ export type UserUpdateWithoutAccountsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -3102,6 +3198,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -3157,6 +3255,8 @@ export type UserCreateWithoutSessionsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -3212,6 +3312,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -3283,6 +3385,8 @@ export type UserUpdateWithoutSessionsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -3338,6 +3442,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutTendersInput = {
@@ -3393,6 +3499,8 @@ export type UserCreateWithoutTendersInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutTendersInput = {
@@ -3448,6 +3556,8 @@ export type UserUncheckedCreateWithoutTendersInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutTendersInput = {
@@ -3519,6 +3629,8 @@ export type UserUpdateWithoutTendersInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTendersInput = {
@@ -3574,6 +3686,496 @@ export type UserUncheckedUpdateWithoutTendersInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
+}
+
+export type UserCreateWithoutEscrowsAsClientInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
+  tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
+  tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
+  tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
+}
+
+export type UserUncheckedCreateWithoutEscrowsAsClientInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderUncheckedCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
+  tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
+  tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
+  tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
+}
+
+export type UserCreateOrConnectWithoutEscrowsAsClientInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutEscrowsAsClientInput, Prisma.UserUncheckedCreateWithoutEscrowsAsClientInput>
+}
+
+export type UserCreateWithoutEscrowsAsProviderInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
+  tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
+  tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
+  tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+}
+
+export type UserUncheckedCreateWithoutEscrowsAsProviderInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  emailVerifyToken?: string | null
+  emailVerifyTokenExpiresAt?: Date | string | null
+  verificationChannel?: $Enums.VerificationChannel | null
+  notificationChannel?: $Enums.NotificationChannel
+  phone?: string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  telegramChatId?: string | null
+  telegramVerifiedAt?: Date | string | null
+  telegramLinkToken?: string | null
+  telegramLinkTokenExpiresAt?: Date | string | null
+  passwordResetToken?: string | null
+  passwordResetTokenExpiresAt?: Date | string | null
+  walletBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: boolean
+  isBlocked?: boolean
+  bio?: string | null
+  accountType?: $Enums.AccountType
+  companyName?: string | null
+  legalForm?: $Enums.LegalForm | null
+  taxId?: string | null
+  legalAddress?: string | null
+  directorName?: string | null
+  companyPhone?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  tenders?: Prisma.TenderUncheckedCreateNestedManyWithoutClientInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutProviderInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedCreateNestedManyWithoutUserInput
+  interests?: Prisma.UserInterestUncheckedCreateNestedManyWithoutUserInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedCreateNestedManyWithoutReporterInput
+  credentials?: Prisma.UserCredentialUncheckedCreateNestedManyWithoutUserInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedCreateNestedManyWithoutUserInput
+  tenderLikes?: Prisma.TenderLikeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.UserNotificationUncheckedCreateNestedManyWithoutUserInput
+  supportConversation?: Prisma.SupportConversationUncheckedCreateNestedOneWithoutUserInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutViewerInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
+  tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
+  tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
+  tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+}
+
+export type UserCreateOrConnectWithoutEscrowsAsProviderInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutEscrowsAsProviderInput, Prisma.UserUncheckedCreateWithoutEscrowsAsProviderInput>
+}
+
+export type UserUpsertWithoutEscrowsAsClientInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutEscrowsAsClientInput, Prisma.UserUncheckedUpdateWithoutEscrowsAsClientInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutEscrowsAsClientInput, Prisma.UserUncheckedCreateWithoutEscrowsAsClientInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutEscrowsAsClientInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutEscrowsAsClientInput, Prisma.UserUncheckedUpdateWithoutEscrowsAsClientInput>
+}
+
+export type UserUpdateWithoutEscrowsAsClientInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
+  tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
+  tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
+  tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
+}
+
+export type UserUncheckedUpdateWithoutEscrowsAsClientInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUncheckedUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
+  tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
+  tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
+  tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
+}
+
+export type UserUpsertWithoutEscrowsAsProviderInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutEscrowsAsProviderInput, Prisma.UserUncheckedUpdateWithoutEscrowsAsProviderInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutEscrowsAsProviderInput, Prisma.UserUncheckedCreateWithoutEscrowsAsProviderInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutEscrowsAsProviderInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutEscrowsAsProviderInput, Prisma.UserUncheckedUpdateWithoutEscrowsAsProviderInput>
+}
+
+export type UserUpdateWithoutEscrowsAsProviderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
+  tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
+  tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
+  tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+}
+
+export type UserUncheckedUpdateWithoutEscrowsAsProviderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verificationChannel?: Prisma.NullableEnumVerificationChannelFieldUpdateOperationsInput | $Enums.VerificationChannel | null
+  notificationChannel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telegramLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramLinkTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordResetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordResetTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  walletBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalForm?: Prisma.NullableEnumLegalFormFieldUpdateOperationsInput | $Enums.LegalForm | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  tenders?: Prisma.TenderUncheckedUpdateManyWithoutClientNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutProviderNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  verificationRequests?: Prisma.VerificationRequestUncheckedUpdateManyWithoutUserNestedInput
+  interests?: Prisma.UserInterestUncheckedUpdateManyWithoutUserNestedInput
+  tenderComplaintsFiled?: Prisma.TenderComplaintUncheckedUpdateManyWithoutReporterNestedInput
+  credentials?: Prisma.UserCredentialUncheckedUpdateManyWithoutUserNestedInput
+  portfolioItems?: Prisma.UserPortfolioItemUncheckedUpdateManyWithoutUserNestedInput
+  tenderLikes?: Prisma.TenderLikeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.UserNotificationUncheckedUpdateManyWithoutUserNestedInput
+  supportConversation?: Prisma.SupportConversationUncheckedUpdateOneWithoutUserNestedInput
+  supportMessagesSent?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  profileContactUnlocksMade?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutViewerNestedInput
+  profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
+  tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
+  tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
+  tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type UserCreateWithoutTenderLikesInput = {
@@ -3629,6 +4231,8 @@ export type UserCreateWithoutTenderLikesInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutTenderLikesInput = {
@@ -3684,6 +4288,8 @@ export type UserUncheckedCreateWithoutTenderLikesInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutTenderLikesInput = {
@@ -3755,6 +4361,8 @@ export type UserUpdateWithoutTenderLikesInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTenderLikesInput = {
@@ -3810,6 +4418,8 @@ export type UserUncheckedUpdateWithoutTenderLikesInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutTenderComplaintsFiledInput = {
@@ -3865,6 +4475,8 @@ export type UserCreateWithoutTenderComplaintsFiledInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutTenderComplaintsFiledInput = {
@@ -3920,6 +4532,8 @@ export type UserUncheckedCreateWithoutTenderComplaintsFiledInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutTenderComplaintsFiledInput = {
@@ -3991,6 +4605,8 @@ export type UserUpdateWithoutTenderComplaintsFiledInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTenderComplaintsFiledInput = {
@@ -4046,6 +4662,8 @@ export type UserUncheckedUpdateWithoutTenderComplaintsFiledInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutBidsInput = {
@@ -4101,6 +4719,8 @@ export type UserCreateWithoutBidsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutBidsInput = {
@@ -4156,6 +4776,8 @@ export type UserUncheckedCreateWithoutBidsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutBidsInput = {
@@ -4227,6 +4849,8 @@ export type UserUpdateWithoutBidsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBidsInput = {
@@ -4282,6 +4906,8 @@ export type UserUncheckedUpdateWithoutBidsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutTransactionsInput = {
@@ -4337,6 +4963,8 @@ export type UserCreateWithoutTransactionsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -4392,6 +5020,8 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -4463,6 +5093,8 @@ export type UserUpdateWithoutTransactionsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -4518,6 +5150,8 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutSubscriptionsInput = {
@@ -4573,6 +5207,8 @@ export type UserCreateWithoutSubscriptionsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutSubscriptionsInput = {
@@ -4628,6 +5264,8 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutSubscriptionsInput = {
@@ -4699,6 +5337,8 @@ export type UserUpdateWithoutSubscriptionsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSubscriptionsInput = {
@@ -4754,6 +5394,8 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutReviewsGivenInput = {
@@ -4809,6 +5451,8 @@ export type UserCreateWithoutReviewsGivenInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutReviewsGivenInput = {
@@ -4864,6 +5508,8 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutReviewsGivenInput = {
@@ -4924,6 +5570,8 @@ export type UserCreateWithoutReviewsReceivedInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutReviewsReceivedInput = {
@@ -4979,6 +5627,8 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutReviewsReceivedInput = {
@@ -5050,6 +5700,8 @@ export type UserUpdateWithoutReviewsGivenInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsGivenInput = {
@@ -5105,6 +5757,8 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUpsertWithoutReviewsReceivedInput = {
@@ -5171,6 +5825,8 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
@@ -5226,6 +5882,8 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -5281,6 +5939,8 @@ export type UserCreateWithoutNotificationsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -5336,6 +5996,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -5407,6 +6069,8 @@ export type UserUpdateWithoutNotificationsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -5462,6 +6126,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutSupportConversationInput = {
@@ -5517,6 +6183,8 @@ export type UserCreateWithoutSupportConversationInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutSupportConversationInput = {
@@ -5572,6 +6240,8 @@ export type UserUncheckedCreateWithoutSupportConversationInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutSupportConversationInput = {
@@ -5643,6 +6313,8 @@ export type UserUpdateWithoutSupportConversationInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSupportConversationInput = {
@@ -5698,6 +6370,8 @@ export type UserUncheckedUpdateWithoutSupportConversationInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutSupportMessagesSentInput = {
@@ -5753,6 +6427,8 @@ export type UserCreateWithoutSupportMessagesSentInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutSupportMessagesSentInput = {
@@ -5808,6 +6484,8 @@ export type UserUncheckedCreateWithoutSupportMessagesSentInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutSupportMessagesSentInput = {
@@ -5879,6 +6557,8 @@ export type UserUpdateWithoutSupportMessagesSentInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSupportMessagesSentInput = {
@@ -5934,6 +6614,8 @@ export type UserUncheckedUpdateWithoutSupportMessagesSentInput = {
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutTenderConversationsAsClientInput = {
@@ -5989,6 +6671,8 @@ export type UserCreateWithoutTenderConversationsAsClientInput = {
   profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutTenderConversationsAsClientInput = {
@@ -6044,6 +6728,8 @@ export type UserUncheckedCreateWithoutTenderConversationsAsClientInput = {
   profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutTenderConversationsAsClientInput = {
@@ -6104,6 +6790,8 @@ export type UserCreateWithoutTenderConversationsAsProviderInput = {
   profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderMessagesSent?: Prisma.TenderMessageCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutTenderConversationsAsProviderInput = {
@@ -6159,6 +6847,8 @@ export type UserUncheckedCreateWithoutTenderConversationsAsProviderInput = {
   profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutSenderUserInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutTenderConversationsAsProviderInput = {
@@ -6230,6 +6920,8 @@ export type UserUpdateWithoutTenderConversationsAsClientInput = {
   profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTenderConversationsAsClientInput = {
@@ -6285,6 +6977,8 @@ export type UserUncheckedUpdateWithoutTenderConversationsAsClientInput = {
   profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUpsertWithoutTenderConversationsAsProviderInput = {
@@ -6351,6 +7045,8 @@ export type UserUpdateWithoutTenderConversationsAsProviderInput = {
   profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTenderConversationsAsProviderInput = {
@@ -6406,6 +7102,8 @@ export type UserUncheckedUpdateWithoutTenderConversationsAsProviderInput = {
   profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderMessagesSent?: Prisma.TenderMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type UserCreateWithoutTenderMessagesSentInput = {
@@ -6461,6 +7159,8 @@ export type UserCreateWithoutTenderMessagesSentInput = {
   profileContactUnlocksReceived?: Prisma.ProfileContactUnlockCreateNestedManyWithoutProfileUserInput
   tenderConversationsAsClient?: Prisma.TenderConversationCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationCreateNestedManyWithoutProviderInput
+  escrowsAsClient?: Prisma.TenderEscrowCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowCreateNestedManyWithoutProviderInput
 }
 
 export type UserUncheckedCreateWithoutTenderMessagesSentInput = {
@@ -6516,6 +7216,8 @@ export type UserUncheckedCreateWithoutTenderMessagesSentInput = {
   profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedCreateNestedManyWithoutProfileUserInput
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutClientInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedCreateNestedManyWithoutProviderInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutClientInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type UserCreateOrConnectWithoutTenderMessagesSentInput = {
@@ -6587,6 +7289,8 @@ export type UserUpdateWithoutTenderMessagesSentInput = {
   profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUpdateManyWithoutProfileUserNestedInput
   tenderConversationsAsClient?: Prisma.TenderConversationUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUpdateManyWithoutProviderNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUpdateManyWithoutProviderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTenderMessagesSentInput = {
@@ -6642,6 +7346,8 @@ export type UserUncheckedUpdateWithoutTenderMessagesSentInput = {
   profileContactUnlocksReceived?: Prisma.ProfileContactUnlockUncheckedUpdateManyWithoutProfileUserNestedInput
   tenderConversationsAsClient?: Prisma.TenderConversationUncheckedUpdateManyWithoutClientNestedInput
   tenderConversationsAsProvider?: Prisma.TenderConversationUncheckedUpdateManyWithoutProviderNestedInput
+  escrowsAsClient?: Prisma.TenderEscrowUncheckedUpdateManyWithoutClientNestedInput
+  escrowsAsProvider?: Prisma.TenderEscrowUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 
@@ -6671,6 +7377,8 @@ export type UserCountOutputType = {
   tenderConversationsAsClient: number
   tenderConversationsAsProvider: number
   tenderMessagesSent: number
+  escrowsAsClient: number
+  escrowsAsProvider: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -6695,6 +7403,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   tenderConversationsAsClient?: boolean | UserCountOutputTypeCountTenderConversationsAsClientArgs
   tenderConversationsAsProvider?: boolean | UserCountOutputTypeCountTenderConversationsAsProviderArgs
   tenderMessagesSent?: boolean | UserCountOutputTypeCountTenderMessagesSentArgs
+  escrowsAsClient?: boolean | UserCountOutputTypeCountEscrowsAsClientArgs
+  escrowsAsProvider?: boolean | UserCountOutputTypeCountEscrowsAsProviderArgs
 }
 
 /**
@@ -6854,6 +7564,20 @@ export type UserCountOutputTypeCountTenderMessagesSentArgs<ExtArgs extends runti
   where?: Prisma.TenderMessageWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountEscrowsAsClientArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TenderEscrowWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountEscrowsAsProviderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TenderEscrowWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -6909,6 +7633,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   tenderConversationsAsClient?: boolean | Prisma.User$tenderConversationsAsClientArgs<ExtArgs>
   tenderConversationsAsProvider?: boolean | Prisma.User$tenderConversationsAsProviderArgs<ExtArgs>
   tenderMessagesSent?: boolean | Prisma.User$tenderMessagesSentArgs<ExtArgs>
+  escrowsAsClient?: boolean | Prisma.User$escrowsAsClientArgs<ExtArgs>
+  escrowsAsProvider?: boolean | Prisma.User$escrowsAsProviderArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -6972,6 +7698,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   tenderConversationsAsClient?: boolean | Prisma.User$tenderConversationsAsClientArgs<ExtArgs>
   tenderConversationsAsProvider?: boolean | Prisma.User$tenderConversationsAsProviderArgs<ExtArgs>
   tenderMessagesSent?: boolean | Prisma.User$tenderMessagesSentArgs<ExtArgs>
+  escrowsAsClient?: boolean | Prisma.User$escrowsAsClientArgs<ExtArgs>
+  escrowsAsProvider?: boolean | Prisma.User$escrowsAsProviderArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -7000,6 +7728,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     tenderConversationsAsClient: Prisma.$TenderConversationPayload<ExtArgs>[]
     tenderConversationsAsProvider: Prisma.$TenderConversationPayload<ExtArgs>[]
     tenderMessagesSent: Prisma.$TenderMessagePayload<ExtArgs>[]
+    escrowsAsClient: Prisma.$TenderEscrowPayload<ExtArgs>[]
+    escrowsAsProvider: Prisma.$TenderEscrowPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -7395,6 +8125,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   tenderConversationsAsClient<T extends Prisma.User$tenderConversationsAsClientArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tenderConversationsAsClientArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tenderConversationsAsProvider<T extends Prisma.User$tenderConversationsAsProviderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tenderConversationsAsProviderArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tenderMessagesSent<T extends Prisma.User$tenderMessagesSentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tenderMessagesSentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  escrowsAsClient<T extends Prisma.User$escrowsAsClientArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$escrowsAsClientArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderEscrowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  escrowsAsProvider<T extends Prisma.User$escrowsAsProviderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$escrowsAsProviderArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderEscrowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8323,6 +9055,54 @@ export type User$tenderMessagesSentArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.TenderMessageScalarFieldEnum | Prisma.TenderMessageScalarFieldEnum[]
+}
+
+/**
+ * User.escrowsAsClient
+ */
+export type User$escrowsAsClientArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TenderEscrow
+   */
+  select?: Prisma.TenderEscrowSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TenderEscrow
+   */
+  omit?: Prisma.TenderEscrowOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TenderEscrowInclude<ExtArgs> | null
+  where?: Prisma.TenderEscrowWhereInput
+  orderBy?: Prisma.TenderEscrowOrderByWithRelationInput | Prisma.TenderEscrowOrderByWithRelationInput[]
+  cursor?: Prisma.TenderEscrowWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TenderEscrowScalarFieldEnum | Prisma.TenderEscrowScalarFieldEnum[]
+}
+
+/**
+ * User.escrowsAsProvider
+ */
+export type User$escrowsAsProviderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TenderEscrow
+   */
+  select?: Prisma.TenderEscrowSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TenderEscrow
+   */
+  omit?: Prisma.TenderEscrowOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TenderEscrowInclude<ExtArgs> | null
+  where?: Prisma.TenderEscrowWhereInput
+  orderBy?: Prisma.TenderEscrowOrderByWithRelationInput | Prisma.TenderEscrowOrderByWithRelationInput[]
+  cursor?: Prisma.TenderEscrowWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TenderEscrowScalarFieldEnum | Prisma.TenderEscrowScalarFieldEnum[]
 }
 
 /**

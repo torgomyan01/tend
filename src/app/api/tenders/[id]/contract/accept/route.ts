@@ -7,6 +7,10 @@ import {
   notifyContractAwaitingProvider,
   notifyContractFullyAcceptedToPatron,
 } from "@/lib/tender-contract-notify";
+import {
+  escrowAwaitingPaymentMessage,
+  postEscrowSystemMessage,
+} from "@/lib/escrow-messages";
 import { ROUTES } from "@/lib/routes";
 
 export const dynamic = "force-dynamic";
@@ -14,6 +18,7 @@ export const dynamic = "force-dynamic";
 /**
  * Պայմանագրի հաստատում՝ նախ պատվիրատու, ապա կատարող։
  * Երկրորդ հաստատումից հետո մրցույթը դառնում է AWARDED։
+ * Եթե կա escrow՝ կարգավիճակը դառնում է PENDING_FUNDING։
  */
 export async function POST(
   _request: Request,
@@ -58,6 +63,14 @@ export async function POST(
           id: true,
           providerId: true,
           provider: { select: { name: true, email: true } },
+        },
+      },
+      escrow: {
+        select: {
+          id: true,
+          status: true,
+          paymentCode: true,
+          contractAmount: true,
         },
       },
     },
@@ -141,6 +154,26 @@ export async function POST(
     data: { status: "REJECTED" },
   });
 
+  if (contract.escrow && contract.escrow.status === "AWAITING_CONTRACT") {
+    await prisma.tenderEscrow.update({
+      where: { id: contract.escrow.id },
+      data: { status: "PENDING_FUNDING" },
+    });
+
+    try {
+      await postEscrowSystemMessage({
+        contractId: contract.id,
+        body: escrowAwaitingPaymentMessage({
+          amount: Number(contract.escrow.contractAmount),
+          paymentCode: contract.escrow.paymentCode,
+          contractId: contract.id,
+        }),
+      });
+    } catch {
+      /* non-blocking */
+    }
+  }
+
   try {
     await notifyProviderAwarded({
       userId: contract.bid.providerId,
@@ -161,5 +194,9 @@ export async function POST(
     /* non-blocking */
   }
 
-  return NextResponse.json({ ok: true, status: "ACCEPTED" });
+  return NextResponse.json({
+    ok: true,
+    status: "ACCEPTED",
+    hasEscrow: Boolean(contract.escrow),
+  });
 }

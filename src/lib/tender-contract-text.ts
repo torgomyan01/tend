@@ -31,6 +31,14 @@ export type GenerateTenderContractTextInput = {
   };
   client: ContractPartyInput;
   provider: ContractPartyInput;
+  /** Պաշտպանված գործարք (escrow)՝ վճարումը Tend.am հաշվին */
+  protectedDeal?: boolean;
+  escrow?: {
+    paymentCode: string;
+    platformFeePercent: number;
+    platformFeeAmount: number;
+    providerReceives: number;
+  } | null;
 };
 
 function partyBlock(label: string, p: ContractPartyInput): string {
@@ -109,7 +117,13 @@ export function generateTenderContractText(
     `3. ԳԻՆ ԵՎ ԺԱՄԿԵՏ`,
     `3.1. Պայմանավորված գին՝ ${formatAmd(input.bid.price)} (ներառյալ Հարթակում գրանցված առաջարկի գումարը)։`,
     `3.2. Կատարման ժամկետ՝ ${timeline}՝ հաշված այն պահից, երբ սույն պայմանագիրը համարվում է կնքված (երկու հաստատում)։`,
-    `3.3. Վճարման կարգը Կողմերը համաձայնեցնում են միմյանց միջև։ Հարթակը չի հանդիսանում վճարային երաշխավոր, եթե այլ բան հատուկ նախատեսված չէ Tend.am-ի պայմաններով։`,
+    input.protectedDeal && input.escrow
+      ? [
+          `3.3. Կողմերը ընտրել են Պաշտպանված գործարք (escrow)։ Պատվիրատուն վճարում է պայմանավորված գինը Tend.am-ի բանկային հաշվին՝ պարտադիր նշելով վճարման կոդը ${input.escrow.paymentCode}։`,
+          `3.4. Գումարը պահվում է Հարթակի մոտ մինչև աշխատանքի ավարտի հաստատումը կամ վեճի որոշումը։ Կատարողին փոխանցվող գումար՝ ${formatAmd(input.escrow.providerReceives)} (հանած հարթակի միջնորդավճար ${input.escrow.platformFeePercent}% = ${formatAmd(input.escrow.platformFeeAmount)})։`,
+          `3.5. Կատարողը սկսում է աշխատանքը միայն այն բանից հետո, երբ Հարթակը հաստատում է գումարի մուտքը։`,
+        ].join("\n")
+      : `3.3. Վճարման կարգը Կողմերը համաձայնեցնում են միմյանց միջև։ Հարթակը չի հանդիսանում վճարային երաշխավոր, եթե այլ բան հատուկ նախատեսված չէ Tend.am-ի պայմաններով։`,
     ``,
     `4. ԿՈՂՄԵՐԻ ՊԱՐՏԱՎՈՐՈՒԹՅՈՒՆՆԵՐ`,
     `4.1. Կատարողը պարտավորվում է աշխատանքը կատարել որակով, ժամկետում և համաձայն նկարագրության ու առաջարկի։`,

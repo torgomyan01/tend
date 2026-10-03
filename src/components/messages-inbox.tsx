@@ -25,7 +25,7 @@ type Attachment = {
 
 type Message = {
   id: string;
-  kind: "TEXT" | "SYSTEM_CONTRACT";
+  kind: "TEXT" | "SYSTEM_CONTRACT" | "SYSTEM_ESCROW";
   body: string;
   contractId: string | null;
   contractHref: string | null;
@@ -406,25 +406,42 @@ export function MessagesInbox() {
               className="flex-1 space-y-3 overflow-y-auto bg-[#f7f4ee]/40 px-4 py-4"
             >
               {messages.map((m) => {
-                if (m.kind === "SYSTEM_CONTRACT") {
+                if (m.kind === "SYSTEM_CONTRACT" || m.kind === "SYSTEM_ESCROW") {
+                  const escrow = m.kind === "SYSTEM_ESCROW";
                   return (
                     <div
                       key={m.id}
-                      className="mx-auto max-w-md rounded-2xl bg-amber-50 px-4 py-3 text-center ring-1 ring-amber-200"
+                      className={`mx-auto max-w-md rounded-2xl px-4 py-3 text-center ring-1 ${
+                        escrow
+                          ? "bg-emerald-50 ring-emerald-200"
+                          : "bg-amber-50 ring-amber-200"
+                      }`}
                     >
-                      <p className="whitespace-pre-wrap text-xs font-semibold leading-relaxed text-amber-950">
+                      <p
+                        className={`whitespace-pre-wrap text-xs font-semibold leading-relaxed ${
+                          escrow ? "text-emerald-950" : "text-amber-950"
+                        }`}
+                      >
                         {m.body}
                       </p>
                       {m.contractHref ? (
                         <Link
                           href={m.contractHref}
-                          className="mt-3 inline-flex items-center justify-center gap-1.5 rounded-xl bg-amber-800 px-3 py-2 text-xs font-black text-white"
+                          className={`mt-3 inline-flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs font-black text-white ${
+                            escrow ? "bg-emerald-800" : "bg-amber-800"
+                          }`}
                         >
                           <FileText className="size-3.5" />
-                          Բացել պայմանագիրը
+                          {escrow ? "Բացել մանրամասները" : "Բացել պայմանագիրը"}
                         </Link>
                       ) : null}
-                      <p className="mt-2 text-[10px] font-semibold text-amber-700/70">
+                      <p
+                        className={`mt-2 text-[10px] font-semibold ${
+                          escrow
+                            ? "text-emerald-700/70"
+                            : "text-amber-700/70"
+                        }`}
+                      >
                         {formatTime(m.createdAt)}
                       </p>
                     </div>
