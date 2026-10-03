@@ -179,6 +179,7 @@ export async function POST(
       userId: contract.bid.providerId,
       tenderTitle: tender.title,
       tenderId,
+      contractId: contract.id,
     });
     await notifyContractFullyAcceptedToPatron({
       clientUserId: tender.clientId,

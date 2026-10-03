@@ -23,6 +23,7 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { EscrowStepsGuide } from "@/components/escrow-steps-guide";
 import { LocationPicker } from "@/components/location-picker";
 import {
   selectionKey,
@@ -2131,6 +2132,8 @@ function StepTen({
         </p>
       </div>
 
+      <EscrowStepsGuide role="client" />
+
       <section className="rounded-3xl border border-amber-200 bg-amber-50 p-5 sm:rounded-4xl sm:p-6">
         <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-800 sm:text-[0.78rem]">
           Ինչու՞ սա կարևոր է
@@ -2144,6 +2147,9 @@ function StepTen({
           </li>
           <li>
             Բարեխղճությունը պահում է հարթակի որակը՝ բոլորը ստանում են արդար մրցակցություն։
+          </li>
+          <li>
+            Բոլոր գործարքները պաշտպանված են՝ գումարը պահվում է մինչև աշխատանքի հաստատումը։
           </li>
         </ul>
       </section>

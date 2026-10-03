@@ -18,6 +18,7 @@ import {
 } from "@/lib/bid-teaser";
 import type { AccountTypeValue } from "@/lib/account-type";
 import { AccountTypeBadge } from "@/components/account-type-badge";
+import { EscrowStepsGuide } from "@/components/escrow-steps-guide";
 import { ROUTES } from "@/lib/routes";
 import { toastError, toastSuccess } from "@/lib/toast";
 
@@ -301,6 +302,10 @@ export function TenderApplyForm({
             ? `Այս ամիս դեռ ունեք ${freeRemaining} անվճար դիմում։`
             : `Մուտքի վճար՝ ${formatAmd(fee)} դրամապանակից։`}
         </p>
+
+        <div className="mt-4">
+          <EscrowStepsGuide role="provider" compact />
+        </div>
 
         {submitError ? (
           <p className="mt-4 rounded-2xl bg-rose-50 px-4 py-3 text-xs font-bold text-rose-900 ring-1 ring-rose-200">

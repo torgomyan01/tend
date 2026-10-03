@@ -52,11 +52,13 @@ export function escrowAwaitingPaymentMessage(params: {
   contractId: string;
 }): string {
   return [
-    "Պաշտպանված գործարք · սպասում ենք փոխանցմանը",
+    "Ընտրվել եք որպես կատարող",
     ``,
-    `Պայմանագիրը կնքված է։ Պատվիրատուն պետք է բանկային փոխանցումով վճարի ${formatAmd(params.amount)}։`,
-    `Պարտադիր նշում՝ ${params.paymentCode}`,
+    `Պայմանագիրը կնքված է։ Խնդրում ենք սպասել՝ մինչև պատվիրատուն վճարի ${formatAmd(params.amount)} և Tend.am-ը հաստատի մուտքը (գումարը կպահվի պաշտպանված գործարքով)։`,
     ``,
+    `Միայն դրանից հետո կարող եք սկսել աշխատանքը։`,
+    ``,
+    `Պարտադիր վճարման կոդ (պատվիրատուի համար)՝ ${params.paymentCode}`,
     `Մանրամասներ՝ ${ROUTES.contract(params.contractId)}`,
   ].join("\n");
 }

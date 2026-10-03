@@ -8,31 +8,39 @@ export async function notifyProviderAwarded(params: {
   userId: string;
   tenderTitle: string;
   tenderId: string;
+  /** Contract page for escrow details */
+  contractId?: string | null;
 }) {
   const title = escapeTelegramHtml(params.tenderTitle);
+  const hrefPath = params.contractId
+    ? ROUTES.contract(params.contractId)
+    : ROUTES.tenderDetail(params.tenderId);
+  const url = absoluteAppUrl(hrefPath);
 
   let text = `<b>Tend.am</b>\n<b>Շնորհավորում ենք՝ ընտրվել եք որպես կատարող։</b>\n\n`;
   text += `<b>${title}</b>\n\n`;
-  text += `Երկու կողմն էլ հաստատել են էլեկտրոնային պայմանագիրը։ Կարող եք բացել մրցույթը և շարունակել աշխատանքը։`;
+  text += `Երկու կողմն էլ հաստատել են էլեկտրոնային պայմանագիրը։\n\n`;
+  text += `<b>Խնդրում ենք սպասել</b>՝ մինչև պատվիրատուն վճարի գումարը, և Tend.am-ը հաստատի մուտքը (գումարը կպահվի պաշտպանված գործարքով)։\n`;
+  text += `Միայն դրանից հետո կարող եք սկսել աշխատանքը։`;
 
-  const tenderPath = ROUTES.tenderDetail(params.tenderId);
-  const url = absoluteAppUrl(tenderPath);
   if (url) {
-    text += `\n\n<a href="${escapeTelegramHtml(url)}">Բացել մրցույթը</a>`;
+    text += `\n\n<a href="${escapeTelegramHtml(url)}">Բացել պայմանագիրը / մանրամասները</a>`;
   }
 
   await notifyUserById(params.userId, {
     telegramText: text,
     emailSubject: `Ընտրվել եք որպես կատարող՝ ${params.tenderTitle}`,
-    emailTitle: "Շնորհավորում ենք",
-    ctaLabel: "Բացել մրցույթը",
+    emailTitle: "Ընտրվել եք որպես կատարող",
+    ctaLabel: params.contractId
+      ? "Բացել պայմանագիրը"
+      : "Բացել մրցույթը",
     ctaUrl: url || undefined,
     inApp: {
       category: "APPROVED",
       kind: NOTIFICATION_KINDS.PROVIDER_AWARDED,
       title: "Ընտրվել եք որպես կատարող",
-      body: `Պայմանագիրը հաստատված է «${params.tenderTitle}» մրցույթի համար։ Դուք ընտրված կատարող եք։`,
-      href: tenderPath,
+      body: `«${params.tenderTitle}» · սպասեք մինչև պատվիրատուն վճարի և գումարը պահվի։ Դրանից հետո կարող եք սկսել աշխատանքը։`,
+      href: hrefPath,
       tenderId: params.tenderId,
     },
   });

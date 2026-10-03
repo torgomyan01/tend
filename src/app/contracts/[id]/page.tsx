@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { notFound, redirect } from "next/navigation";
 import { ContractEscrowPanel } from "@/components/contract-escrow-panel";
 import { ContractSignClient } from "@/components/contract-sign-client";
+import { EscrowStepsGuide } from "@/components/escrow-steps-guide";
 import { SiteHeader } from "@/components/site-header";
 import { authOptions } from "@/lib/auth";
 import { getEscrowBankDetails } from "@/lib/escrow";
@@ -101,9 +102,12 @@ export default async function ContractPage({ params }: Props) {
             Հետ
           </Link>
         </div>
-        {contract.escrow &&
-        contract.escrow.status !== "CANCELLED" ? (
-          <div className="mx-auto mb-5 w-full max-w-3xl">
+        <div className="mx-auto mb-5 w-full max-w-3xl space-y-4">
+          <EscrowStepsGuide
+            role={isOwner ? "client" : "provider"}
+            compact
+          />
+          {contract.escrow && contract.escrow.status !== "CANCELLED" ? (
             <ContractEscrowPanel
               contractId={contract.id}
               escrow={serializeEscrow(contract.escrow)}
@@ -112,8 +116,8 @@ export default async function ContractPage({ params }: Props) {
               isProvider={isProposedProvider}
               contractAccepted={contract.status === "ACCEPTED"}
             />
-          </div>
-        ) : null}
+          ) : null}
+        </div>
         <ContractSignClient
           tenderId={contract.tenderId}
           contractId={contract.id}

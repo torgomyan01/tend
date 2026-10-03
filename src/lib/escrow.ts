@@ -1,8 +1,5 @@
-/** Լռելյայն հարթակի միջնորդավճար (%)՝ հանվում է կատարողից */
-export const DEFAULT_ESCROW_FEE_PERCENT = 7;
-
-/** Այս գումարից ցածր չենք առաջարկում պաշտպանված գործարք */
-export const ESCROW_MIN_AMOUNT_AMD = 50_000;
+/** Լռելյայն հարթակի միջնորդավճար (%)՝ հանվում է կատարողից բարեհաջող ավարտից հետո */
+export const DEFAULT_ESCROW_FEE_PERCENT = 1;
 
 export type EscrowPricing = {
   contractAmount: number;
@@ -32,10 +29,6 @@ export function calcEscrowPricing(contractAmount: number): EscrowPricing {
     providerReceives,
     clientPays: amount,
   };
-}
-
-export function canOfferProtectedDeal(contractAmount: number): boolean {
-  return Math.round(contractAmount) >= ESCROW_MIN_AMOUNT_AMD;
 }
 
 export type EscrowBankDetails = {

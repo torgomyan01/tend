@@ -10,9 +10,10 @@ import {
 import { createTenderConversationWithContractMessage } from "@/lib/tender-conversation";
 import { CONTRACT_PARTY_SELECT, toContractParty } from "@/lib/tender-contract-party";
 import { generateTenderContractText } from "@/lib/tender-contract-text";
-import { canOfferProtectedDeal, calcEscrowPricing } from "@/lib/escrow";
+import { calcEscrowPricing } from "@/lib/escrow";
 import { createTenderEscrow } from "@/lib/escrow-service";
 import { postEscrowSystemMessage } from "@/lib/escrow-messages";
+import { formatEscrowStepsMessage } from "@/lib/escrow-steps";
 import { formatAmd } from "@/lib/format";
 import { ROUTES } from "@/lib/routes";
 
@@ -20,12 +21,10 @@ export const dynamic = "force-dynamic";
 
 const bodySchema = z.object({
   bidId: z.string().min(1),
-  protectedDeal: z.boolean().optional().default(false),
 });
 
 /**
- * Պատվիրատուն առաջարկում է կատարող · ստեղծվում է պայմանագիր (դեռ AWARDED չէ)։
- * Եթե protectedDeal=true՝ ստեղծվում է նաև escrow (AWAITING_CONTRACT)։
+ * Պատվիրատուն առաջարկում է կատարող · ստեղծվում է պայմանագիր + պաշտպանված escrow։
  */
 export async function POST(
   request: Request,
@@ -109,16 +108,7 @@ export async function POST(
   }
 
   const bidPrice = Number(bid.price);
-  const wantProtected = parsed.data.protectedDeal === true;
-
-  if (wantProtected && !canOfferProtectedDeal(bidPrice)) {
-    return NextResponse.json(
-      { error: "ESCROW_AMOUNT_TOO_LOW" },
-      { status: 400 },
-    );
-  }
-
-  const pricing = wantProtected ? calcEscrowPricing(bidPrice) : null;
+  const pricing = calcEscrowPricing(bidPrice);
   const generatedAt = new Date();
   const contractRef = `${tenderId.slice(0, 8).toUpperCase()}-${bid.id.slice(0, 6).toUpperCase()}`;
 
@@ -146,65 +136,59 @@ export async function POST(
         },
         client: toContractParty(tender.client, "Պատվիրատու"),
         provider: toContractParty(bid.provider, "Կատարող"),
-        protectedDeal: wantProtected,
-        escrow: pricing
-          ? {
-              paymentCode: "TEND-ESC-PENDING",
-              platformFeePercent: pricing.platformFeePercent,
-              platformFeeAmount: pricing.platformFeeAmount,
-              providerReceives: pricing.providerReceives,
-            }
-          : null,
+        protectedDeal: true,
+        escrow: {
+          paymentCode: "TEND-ESC-PENDING",
+          platformFeePercent: pricing.platformFeePercent,
+          platformFeeAmount: pricing.platformFeeAmount,
+          providerReceives: pricing.providerReceives,
+        },
       }),
-      templateVersion: wantProtected ? "1-escrow" : "1",
+      templateVersion: "1-escrow",
     },
     select: { id: true, status: true },
   });
 
-  let escrowId: string | null = null;
-  if (wantProtected && pricing) {
-    const escrow = await createTenderEscrow({
-      tenderId,
-      contractId: contract.id,
-      clientId: session.user.id,
-      providerId: bid.providerId,
-      contractAmount: bidPrice,
-    });
-    escrowId = escrow.id;
+  const escrow = await createTenderEscrow({
+    tenderId,
+    contractId: contract.id,
+    clientId: session.user.id,
+    providerId: bid.providerId,
+    contractAmount: bidPrice,
+  });
 
-    await prisma.tenderContract.update({
-      where: { id: contract.id },
-      data: {
-        bodyText: generateTenderContractText({
-          contractRef,
-          generatedAt,
-          tender: {
-            id: tender.id,
-            title: tender.title,
-            description: tender.description,
-            category: tender.category,
-            service: tender.service,
-            city: tender.city,
-            address: tender.address,
-          },
-          bid: {
-            price: bidPrice,
-            timelineDays: bid.timelineDays,
-            coverLetter: bid.coverLetter,
-          },
-          client: toContractParty(tender.client, "Պատվիրատու"),
-          provider: toContractParty(bid.provider, "Կատարող"),
-          protectedDeal: true,
-          escrow: {
-            paymentCode: escrow.paymentCode,
-            platformFeePercent: Number(escrow.platformFeePercent),
-            platformFeeAmount: Number(escrow.platformFeeAmount),
-            providerReceives: Number(escrow.providerReceives),
-          },
-        }),
-      },
-    });
-  }
+  await prisma.tenderContract.update({
+    where: { id: contract.id },
+    data: {
+      bodyText: generateTenderContractText({
+        contractRef,
+        generatedAt,
+        tender: {
+          id: tender.id,
+          title: tender.title,
+          description: tender.description,
+          category: tender.category,
+          service: tender.service,
+          city: tender.city,
+          address: tender.address,
+        },
+        bid: {
+          price: bidPrice,
+          timelineDays: bid.timelineDays,
+          coverLetter: bid.coverLetter,
+        },
+        client: toContractParty(tender.client, "Պատվիրատու"),
+        provider: toContractParty(bid.provider, "Կատարող"),
+        protectedDeal: true,
+        escrow: {
+          paymentCode: escrow.paymentCode,
+          platformFeePercent: Number(escrow.platformFeePercent),
+          platformFeeAmount: Number(escrow.platformFeeAmount),
+          providerReceives: Number(escrow.providerReceives),
+        },
+      }),
+    },
+  });
 
   let conversationId: string | null = null;
   try {
@@ -217,19 +201,21 @@ export async function POST(
     });
     conversationId = conversation.id;
 
-    if (wantProtected && pricing) {
-      await postEscrowSystemMessage({
-        contractId: contract.id,
-        body: [
-          "Պաշտպանված գործարք ընտրված է",
-          ``,
-          `Գումար՝ ${formatAmd(pricing.clientPays)}`,
-          `Կատարողը կստանա՝ ${formatAmd(pricing.providerReceives)} (միջնորդավճար ${pricing.platformFeePercent}%)`,
-          ``,
-          `Երկու կողմի հաստատումից հետո պատվիրատուն կտեսնի բանկային փոխանցման մանրամասները։`,
-        ].join("\n"),
-      });
-    }
+    await postEscrowSystemMessage({
+      contractId: contract.id,
+      body: [
+        "Պաշտպանված գործարք",
+        ``,
+        `Գումար՝ ${formatAmd(pricing.clientPays)}`,
+        `Կատարողը կստանա՝ ${formatAmd(pricing.providerReceives)} (միջնորդավճար ${pricing.platformFeePercent}%)`,
+        ``,
+        formatEscrowStepsMessage("client", pricing.platformFeePercent),
+        ``,
+        "—",
+        ``,
+        formatEscrowStepsMessage("provider", pricing.platformFeePercent),
+      ].join("\n"),
+    });
   } catch {
     /* conversation failure should not block contract */
   }
@@ -258,7 +244,7 @@ export async function POST(
     ok: true,
     contract,
     conversationId,
-    escrowId,
-    protectedDeal: wantProtected,
+    escrowId: escrow.id,
+    protectedDeal: true,
   });
 }
