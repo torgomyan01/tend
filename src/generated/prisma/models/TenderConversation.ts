@@ -243,6 +243,7 @@ export type TenderConversationWhereInput = {
   provider?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   contract?: Prisma.XOR<Prisma.TenderContractScalarRelationFilter, Prisma.TenderContractWhereInput>
   messages?: Prisma.TenderMessageListRelationFilter
+  calls?: Prisma.CallSessionListRelationFilter
 }
 
 export type TenderConversationOrderByWithRelationInput = {
@@ -263,6 +264,7 @@ export type TenderConversationOrderByWithRelationInput = {
   provider?: Prisma.UserOrderByWithRelationInput
   contract?: Prisma.TenderContractOrderByWithRelationInput
   messages?: Prisma.TenderMessageOrderByRelationAggregateInput
+  calls?: Prisma.CallSessionOrderByRelationAggregateInput
   _relevance?: Prisma.TenderConversationOrderByRelevanceInput
 }
 
@@ -287,6 +289,7 @@ export type TenderConversationWhereUniqueInput = Prisma.AtLeast<{
   provider?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   contract?: Prisma.XOR<Prisma.TenderContractScalarRelationFilter, Prisma.TenderContractWhereInput>
   messages?: Prisma.TenderMessageListRelationFilter
+  calls?: Prisma.CallSessionListRelationFilter
 }, "id" | "contractId">
 
 export type TenderConversationOrderByWithAggregationInput = {
@@ -339,6 +342,7 @@ export type TenderConversationCreateInput = {
   provider: Prisma.UserCreateNestedOneWithoutTenderConversationsAsProviderInput
   contract: Prisma.TenderContractCreateNestedOneWithoutConversationInput
   messages?: Prisma.TenderMessageCreateNestedManyWithoutConversationInput
+  calls?: Prisma.CallSessionCreateNestedManyWithoutConversationInput
 }
 
 export type TenderConversationUncheckedCreateInput = {
@@ -355,6 +359,7 @@ export type TenderConversationUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutConversationInput
+  calls?: Prisma.CallSessionUncheckedCreateNestedManyWithoutConversationInput
 }
 
 export type TenderConversationUpdateInput = {
@@ -371,6 +376,7 @@ export type TenderConversationUpdateInput = {
   provider?: Prisma.UserUpdateOneRequiredWithoutTenderConversationsAsProviderNestedInput
   contract?: Prisma.TenderContractUpdateOneRequiredWithoutConversationNestedInput
   messages?: Prisma.TenderMessageUpdateManyWithoutConversationNestedInput
+  calls?: Prisma.CallSessionUpdateManyWithoutConversationNestedInput
 }
 
 export type TenderConversationUncheckedUpdateInput = {
@@ -387,6 +393,7 @@ export type TenderConversationUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.TenderMessageUncheckedUpdateManyWithoutConversationNestedInput
+  calls?: Prisma.CallSessionUncheckedUpdateManyWithoutConversationNestedInput
 }
 
 export type TenderConversationCreateManyInput = {
@@ -663,6 +670,20 @@ export type EnumTenderConversationStatusFieldUpdateOperationsInput = {
   set?: $Enums.TenderConversationStatus
 }
 
+export type TenderConversationCreateNestedOneWithoutCallsInput = {
+  create?: Prisma.XOR<Prisma.TenderConversationCreateWithoutCallsInput, Prisma.TenderConversationUncheckedCreateWithoutCallsInput>
+  connectOrCreate?: Prisma.TenderConversationCreateOrConnectWithoutCallsInput
+  connect?: Prisma.TenderConversationWhereUniqueInput
+}
+
+export type TenderConversationUpdateOneRequiredWithoutCallsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenderConversationCreateWithoutCallsInput, Prisma.TenderConversationUncheckedCreateWithoutCallsInput>
+  connectOrCreate?: Prisma.TenderConversationCreateOrConnectWithoutCallsInput
+  upsert?: Prisma.TenderConversationUpsertWithoutCallsInput
+  connect?: Prisma.TenderConversationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenderConversationUpdateToOneWithWhereWithoutCallsInput, Prisma.TenderConversationUpdateWithoutCallsInput>, Prisma.TenderConversationUncheckedUpdateWithoutCallsInput>
+}
+
 export type TenderConversationCreateNestedOneWithoutMessagesInput = {
   create?: Prisma.XOR<Prisma.TenderConversationCreateWithoutMessagesInput, Prisma.TenderConversationUncheckedCreateWithoutMessagesInput>
   connectOrCreate?: Prisma.TenderConversationCreateOrConnectWithoutMessagesInput
@@ -690,6 +711,7 @@ export type TenderConversationCreateWithoutClientInput = {
   provider: Prisma.UserCreateNestedOneWithoutTenderConversationsAsProviderInput
   contract: Prisma.TenderContractCreateNestedOneWithoutConversationInput
   messages?: Prisma.TenderMessageCreateNestedManyWithoutConversationInput
+  calls?: Prisma.CallSessionCreateNestedManyWithoutConversationInput
 }
 
 export type TenderConversationUncheckedCreateWithoutClientInput = {
@@ -705,6 +727,7 @@ export type TenderConversationUncheckedCreateWithoutClientInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutConversationInput
+  calls?: Prisma.CallSessionUncheckedCreateNestedManyWithoutConversationInput
 }
 
 export type TenderConversationCreateOrConnectWithoutClientInput = {
@@ -730,6 +753,7 @@ export type TenderConversationCreateWithoutProviderInput = {
   client: Prisma.UserCreateNestedOneWithoutTenderConversationsAsClientInput
   contract: Prisma.TenderContractCreateNestedOneWithoutConversationInput
   messages?: Prisma.TenderMessageCreateNestedManyWithoutConversationInput
+  calls?: Prisma.CallSessionCreateNestedManyWithoutConversationInput
 }
 
 export type TenderConversationUncheckedCreateWithoutProviderInput = {
@@ -745,6 +769,7 @@ export type TenderConversationUncheckedCreateWithoutProviderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutConversationInput
+  calls?: Prisma.CallSessionUncheckedCreateNestedManyWithoutConversationInput
 }
 
 export type TenderConversationCreateOrConnectWithoutProviderInput = {
@@ -820,6 +845,7 @@ export type TenderConversationCreateWithoutTenderInput = {
   provider: Prisma.UserCreateNestedOneWithoutTenderConversationsAsProviderInput
   contract: Prisma.TenderContractCreateNestedOneWithoutConversationInput
   messages?: Prisma.TenderMessageCreateNestedManyWithoutConversationInput
+  calls?: Prisma.CallSessionCreateNestedManyWithoutConversationInput
 }
 
 export type TenderConversationUncheckedCreateWithoutTenderInput = {
@@ -835,6 +861,7 @@ export type TenderConversationUncheckedCreateWithoutTenderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutConversationInput
+  calls?: Prisma.CallSessionUncheckedCreateNestedManyWithoutConversationInput
 }
 
 export type TenderConversationCreateOrConnectWithoutTenderInput = {
@@ -876,6 +903,7 @@ export type TenderConversationCreateWithoutContractInput = {
   client: Prisma.UserCreateNestedOneWithoutTenderConversationsAsClientInput
   provider: Prisma.UserCreateNestedOneWithoutTenderConversationsAsProviderInput
   messages?: Prisma.TenderMessageCreateNestedManyWithoutConversationInput
+  calls?: Prisma.CallSessionCreateNestedManyWithoutConversationInput
 }
 
 export type TenderConversationUncheckedCreateWithoutContractInput = {
@@ -891,6 +919,7 @@ export type TenderConversationUncheckedCreateWithoutContractInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutConversationInput
+  calls?: Prisma.CallSessionUncheckedCreateNestedManyWithoutConversationInput
 }
 
 export type TenderConversationCreateOrConnectWithoutContractInput = {
@@ -922,6 +951,7 @@ export type TenderConversationUpdateWithoutContractInput = {
   client?: Prisma.UserUpdateOneRequiredWithoutTenderConversationsAsClientNestedInput
   provider?: Prisma.UserUpdateOneRequiredWithoutTenderConversationsAsProviderNestedInput
   messages?: Prisma.TenderMessageUpdateManyWithoutConversationNestedInput
+  calls?: Prisma.CallSessionUpdateManyWithoutConversationNestedInput
 }
 
 export type TenderConversationUncheckedUpdateWithoutContractInput = {
@@ -929,6 +959,87 @@ export type TenderConversationUncheckedUpdateWithoutContractInput = {
   tenderId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   providerId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTenderConversationStatusFieldUpdateOperationsInput | $Enums.TenderConversationStatus
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  clientLastReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerLastReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.TenderMessageUncheckedUpdateManyWithoutConversationNestedInput
+  calls?: Prisma.CallSessionUncheckedUpdateManyWithoutConversationNestedInput
+}
+
+export type TenderConversationCreateWithoutCallsInput = {
+  id?: string
+  status?: $Enums.TenderConversationStatus
+  archivedAt?: Date | string | null
+  lastMessageAt?: Date | string
+  clientLastReadAt?: Date | string | null
+  providerLastReadAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tender: Prisma.TenderCreateNestedOneWithoutConversationsInput
+  client: Prisma.UserCreateNestedOneWithoutTenderConversationsAsClientInput
+  provider: Prisma.UserCreateNestedOneWithoutTenderConversationsAsProviderInput
+  contract: Prisma.TenderContractCreateNestedOneWithoutConversationInput
+  messages?: Prisma.TenderMessageCreateNestedManyWithoutConversationInput
+}
+
+export type TenderConversationUncheckedCreateWithoutCallsInput = {
+  id?: string
+  tenderId: string
+  clientId: string
+  providerId: string
+  contractId: string
+  status?: $Enums.TenderConversationStatus
+  archivedAt?: Date | string | null
+  lastMessageAt?: Date | string
+  clientLastReadAt?: Date | string | null
+  providerLastReadAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  messages?: Prisma.TenderMessageUncheckedCreateNestedManyWithoutConversationInput
+}
+
+export type TenderConversationCreateOrConnectWithoutCallsInput = {
+  where: Prisma.TenderConversationWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenderConversationCreateWithoutCallsInput, Prisma.TenderConversationUncheckedCreateWithoutCallsInput>
+}
+
+export type TenderConversationUpsertWithoutCallsInput = {
+  update: Prisma.XOR<Prisma.TenderConversationUpdateWithoutCallsInput, Prisma.TenderConversationUncheckedUpdateWithoutCallsInput>
+  create: Prisma.XOR<Prisma.TenderConversationCreateWithoutCallsInput, Prisma.TenderConversationUncheckedCreateWithoutCallsInput>
+  where?: Prisma.TenderConversationWhereInput
+}
+
+export type TenderConversationUpdateToOneWithWhereWithoutCallsInput = {
+  where?: Prisma.TenderConversationWhereInput
+  data: Prisma.XOR<Prisma.TenderConversationUpdateWithoutCallsInput, Prisma.TenderConversationUncheckedUpdateWithoutCallsInput>
+}
+
+export type TenderConversationUpdateWithoutCallsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTenderConversationStatusFieldUpdateOperationsInput | $Enums.TenderConversationStatus
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  clientLastReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerLastReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tender?: Prisma.TenderUpdateOneRequiredWithoutConversationsNestedInput
+  client?: Prisma.UserUpdateOneRequiredWithoutTenderConversationsAsClientNestedInput
+  provider?: Prisma.UserUpdateOneRequiredWithoutTenderConversationsAsProviderNestedInput
+  contract?: Prisma.TenderContractUpdateOneRequiredWithoutConversationNestedInput
+  messages?: Prisma.TenderMessageUpdateManyWithoutConversationNestedInput
+}
+
+export type TenderConversationUncheckedUpdateWithoutCallsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenderId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  providerId?: Prisma.StringFieldUpdateOperationsInput | string
+  contractId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumTenderConversationStatusFieldUpdateOperationsInput | $Enums.TenderConversationStatus
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -952,6 +1063,7 @@ export type TenderConversationCreateWithoutMessagesInput = {
   client: Prisma.UserCreateNestedOneWithoutTenderConversationsAsClientInput
   provider: Prisma.UserCreateNestedOneWithoutTenderConversationsAsProviderInput
   contract: Prisma.TenderContractCreateNestedOneWithoutConversationInput
+  calls?: Prisma.CallSessionCreateNestedManyWithoutConversationInput
 }
 
 export type TenderConversationUncheckedCreateWithoutMessagesInput = {
@@ -967,6 +1079,7 @@ export type TenderConversationUncheckedCreateWithoutMessagesInput = {
   providerLastReadAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  calls?: Prisma.CallSessionUncheckedCreateNestedManyWithoutConversationInput
 }
 
 export type TenderConversationCreateOrConnectWithoutMessagesInput = {
@@ -998,6 +1111,7 @@ export type TenderConversationUpdateWithoutMessagesInput = {
   client?: Prisma.UserUpdateOneRequiredWithoutTenderConversationsAsClientNestedInput
   provider?: Prisma.UserUpdateOneRequiredWithoutTenderConversationsAsProviderNestedInput
   contract?: Prisma.TenderContractUpdateOneRequiredWithoutConversationNestedInput
+  calls?: Prisma.CallSessionUpdateManyWithoutConversationNestedInput
 }
 
 export type TenderConversationUncheckedUpdateWithoutMessagesInput = {
@@ -1013,6 +1127,7 @@ export type TenderConversationUncheckedUpdateWithoutMessagesInput = {
   providerLastReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  calls?: Prisma.CallSessionUncheckedUpdateManyWithoutConversationNestedInput
 }
 
 export type TenderConversationCreateManyClientInput = {
@@ -1056,6 +1171,7 @@ export type TenderConversationUpdateWithoutClientInput = {
   provider?: Prisma.UserUpdateOneRequiredWithoutTenderConversationsAsProviderNestedInput
   contract?: Prisma.TenderContractUpdateOneRequiredWithoutConversationNestedInput
   messages?: Prisma.TenderMessageUpdateManyWithoutConversationNestedInput
+  calls?: Prisma.CallSessionUpdateManyWithoutConversationNestedInput
 }
 
 export type TenderConversationUncheckedUpdateWithoutClientInput = {
@@ -1071,6 +1187,7 @@ export type TenderConversationUncheckedUpdateWithoutClientInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.TenderMessageUncheckedUpdateManyWithoutConversationNestedInput
+  calls?: Prisma.CallSessionUncheckedUpdateManyWithoutConversationNestedInput
 }
 
 export type TenderConversationUncheckedUpdateManyWithoutClientInput = {
@@ -1100,6 +1217,7 @@ export type TenderConversationUpdateWithoutProviderInput = {
   client?: Prisma.UserUpdateOneRequiredWithoutTenderConversationsAsClientNestedInput
   contract?: Prisma.TenderContractUpdateOneRequiredWithoutConversationNestedInput
   messages?: Prisma.TenderMessageUpdateManyWithoutConversationNestedInput
+  calls?: Prisma.CallSessionUpdateManyWithoutConversationNestedInput
 }
 
 export type TenderConversationUncheckedUpdateWithoutProviderInput = {
@@ -1115,6 +1233,7 @@ export type TenderConversationUncheckedUpdateWithoutProviderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.TenderMessageUncheckedUpdateManyWithoutConversationNestedInput
+  calls?: Prisma.CallSessionUncheckedUpdateManyWithoutConversationNestedInput
 }
 
 export type TenderConversationUncheckedUpdateManyWithoutProviderInput = {
@@ -1158,6 +1277,7 @@ export type TenderConversationUpdateWithoutTenderInput = {
   provider?: Prisma.UserUpdateOneRequiredWithoutTenderConversationsAsProviderNestedInput
   contract?: Prisma.TenderContractUpdateOneRequiredWithoutConversationNestedInput
   messages?: Prisma.TenderMessageUpdateManyWithoutConversationNestedInput
+  calls?: Prisma.CallSessionUpdateManyWithoutConversationNestedInput
 }
 
 export type TenderConversationUncheckedUpdateWithoutTenderInput = {
@@ -1173,6 +1293,7 @@ export type TenderConversationUncheckedUpdateWithoutTenderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.TenderMessageUncheckedUpdateManyWithoutConversationNestedInput
+  calls?: Prisma.CallSessionUncheckedUpdateManyWithoutConversationNestedInput
 }
 
 export type TenderConversationUncheckedUpdateManyWithoutTenderInput = {
@@ -1196,10 +1317,12 @@ export type TenderConversationUncheckedUpdateManyWithoutTenderInput = {
 
 export type TenderConversationCountOutputType = {
   messages: number
+  calls: number
 }
 
 export type TenderConversationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   messages?: boolean | TenderConversationCountOutputTypeCountMessagesArgs
+  calls?: boolean | TenderConversationCountOutputTypeCountCallsArgs
 }
 
 /**
@@ -1217,6 +1340,13 @@ export type TenderConversationCountOutputTypeDefaultArgs<ExtArgs extends runtime
  */
 export type TenderConversationCountOutputTypeCountMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TenderMessageWhereInput
+}
+
+/**
+ * TenderConversationCountOutputType without action
+ */
+export type TenderConversationCountOutputTypeCountCallsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CallSessionWhereInput
 }
 
 
@@ -1238,6 +1368,7 @@ export type TenderConversationSelect<ExtArgs extends runtime.Types.Extensions.In
   provider?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   contract?: boolean | Prisma.TenderContractDefaultArgs<ExtArgs>
   messages?: boolean | Prisma.TenderConversation$messagesArgs<ExtArgs>
+  calls?: boolean | Prisma.TenderConversation$callsArgs<ExtArgs>
   _count?: boolean | Prisma.TenderConversationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tenderConversation"]>
 
@@ -1265,6 +1396,7 @@ export type TenderConversationInclude<ExtArgs extends runtime.Types.Extensions.I
   provider?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   contract?: boolean | Prisma.TenderContractDefaultArgs<ExtArgs>
   messages?: boolean | Prisma.TenderConversation$messagesArgs<ExtArgs>
+  calls?: boolean | Prisma.TenderConversation$callsArgs<ExtArgs>
   _count?: boolean | Prisma.TenderConversationCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1276,6 +1408,7 @@ export type $TenderConversationPayload<ExtArgs extends runtime.Types.Extensions.
     provider: Prisma.$UserPayload<ExtArgs>
     contract: Prisma.$TenderContractPayload<ExtArgs>
     messages: Prisma.$TenderMessagePayload<ExtArgs>[]
+    calls: Prisma.$CallSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1635,6 +1768,7 @@ export interface Prisma__TenderConversationClient<T, Null = never, ExtArgs exten
   provider<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   contract<T extends Prisma.TenderContractDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenderContractDefaultArgs<ExtArgs>>): Prisma.Prisma__TenderContractClient<runtime.Types.Result.GetResult<Prisma.$TenderContractPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   messages<T extends Prisma.TenderConversation$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenderConversation$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TenderMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  calls<T extends Prisma.TenderConversation$callsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenderConversation$callsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CallSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2045,6 +2179,30 @@ export type TenderConversation$messagesArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.TenderMessageScalarFieldEnum | Prisma.TenderMessageScalarFieldEnum[]
+}
+
+/**
+ * TenderConversation.calls
+ */
+export type TenderConversation$callsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CallSession
+   */
+  select?: Prisma.CallSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CallSession
+   */
+  omit?: Prisma.CallSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CallSessionInclude<ExtArgs> | null
+  where?: Prisma.CallSessionWhereInput
+  orderBy?: Prisma.CallSessionOrderByWithRelationInput | Prisma.CallSessionOrderByWithRelationInput[]
+  cursor?: Prisma.CallSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CallSessionScalarFieldEnum | Prisma.CallSessionScalarFieldEnum[]
 }
 
 /**

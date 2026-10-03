@@ -24,6 +24,8 @@ import {
   parseDraftWizardStep,
   tenderNumericFieldsSchema,
 } from "@/lib/tender-form-fields";
+import { notifyAdminsTenderAwaitingReview } from "@/lib/tender-review-notify-admins";
+import { displayName } from "@/lib/tender-messages";
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
@@ -36,6 +38,8 @@ export async function POST(request: Request) {
     where: { id: session.user.id },
     select: {
       id: true,
+      name: true,
+      email: true,
       telegramVerifiedAt: true,
       emailVerified: true,
       isBlocked: true,
@@ -277,6 +281,26 @@ export async function POST(request: Request) {
         },
       },
     });
+
+    if (data.publish) {
+      const clientName =
+        user.accountType === "LEGAL_ENTITY" && user.companyName?.trim()
+          ? user.companyName.trim()
+          : displayName({ name: user.name, email: user.email });
+      try {
+        await notifyAdminsTenderAwaitingReview({
+          tenderId,
+          tenderTitle: normalized.title,
+          category: primary.category,
+          service: primary.service,
+          city: resolvedCity,
+          clientName,
+          clientEmail: user.email,
+        });
+      } catch {
+        /* non-blocking */
+      }
+    }
 
     return NextResponse.json({ tender });
   } catch (error) {

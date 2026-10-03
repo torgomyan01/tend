@@ -4,16 +4,24 @@ import {
   Archive,
   FileText,
   Loader2,
+  Mic,
   Paperclip,
+  Phone,
   Send,
+  Video,
   X,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { CallRoom, type CallDto } from "@/components/call-room";
+import { VoiceMessagePlayer } from "@/components/voice-message-player";
 import { ROUTES } from "@/lib/routes";
 import { toastError } from "@/lib/toast";
+
+const VOICE_BODY_LABEL = "Ձայնային հաղորդագրություն";
 
 type Attachment = {
   id: string;
@@ -25,7 +33,7 @@ type Attachment = {
 
 type Message = {
   id: string;
-  kind: "TEXT" | "SYSTEM_CONTRACT" | "SYSTEM_ESCROW";
+  kind: "TEXT" | "SYSTEM_CONTRACT" | "SYSTEM_ESCROW" | "SYSTEM_CALL";
   body: string;
   contractId: string | null;
   contractHref: string | null;
@@ -35,6 +43,10 @@ type Message = {
   sender: { id: string; name: string; image: string | null } | null;
   attachments: Attachment[];
 };
+
+function isVideoMime(mime: string) {
+  return mime.startsWith("video/");
+}
 
 type ConversationListItem = {
   id: string;
@@ -73,6 +85,28 @@ function isImageMime(mime: string) {
   return mime.startsWith("image/");
 }
 
+function isAudioMime(mime: string) {
+  return mime.startsWith("audio/");
+}
+
+function pickRecorderMime(): string | undefined {
+  if (typeof MediaRecorder === "undefined") return undefined;
+  const candidates = [
+    "audio/webm;codecs=opus",
+    "audio/webm",
+    "audio/mp4",
+    "audio/ogg;codecs=opus",
+    "audio/ogg",
+  ];
+  return candidates.find((type) => MediaRecorder.isTypeSupported(type));
+}
+
+function formatRecordingDuration(totalSeconds: number) {
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
 function formatTime(iso: string) {
   try {
     return new Date(iso).toLocaleString("hy-AM", {
@@ -88,12 +122,15 @@ function formatTime(iso: string) {
 
 function previewText(body: string) {
   const one = body.replace(/\s+/g, " ").trim();
+  if (!one) return "Կցված ֆայլ";
   return one.length > 80 ? `${one.slice(0, 80)}…` : one;
 }
 
 export function MessagesInbox() {
   const params = useParams<{ id?: string }>();
   const router = useRouter();
+  const { data: session } = useSession();
+  const currentUserId = session?.user?.id ?? null;
   const activeId = typeof params?.id === "string" ? params.id : null;
 
   const [list, setList] = useState<ConversationListItem[]>([]);
@@ -104,11 +141,20 @@ export function MessagesInbox() {
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [sending, setSending] = useState(false);
+  const [recording, setRecording] = useState(false);
+  const [recordingSeconds, setRecordingSeconds] = useState(0);
+  const [activeCall, setActiveCall] = useState<CallDto | null>(null);
+  const [startingCall, setStartingCall] = useState(false);
 
   const listRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const lastMessageAtRef = useRef<string | null>(null);
   const activeIdRef = useRef<string | null>(activeId);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
+  const recordChunksRef = useRef<Blob[]>([]);
+  const recordTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const recordStartedAtRef = useRef<number>(0);
 
   useEffect(() => {
     activeIdRef.current = activeId;
@@ -211,18 +257,56 @@ export function MessagesInbox() {
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
-  async function send() {
+  const stopMediaTracks = useCallback(() => {
+    mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
+    mediaStreamRef.current = null;
+  }, []);
+
+  const clearRecordTimer = useCallback(() => {
+    if (recordTimerRef.current) {
+      clearInterval(recordTimerRef.current);
+      recordTimerRef.current = null;
+    }
+  }, []);
+
+  const cancelRecording = useCallback(() => {
+    const recorder = mediaRecorderRef.current;
+    mediaRecorderRef.current = null;
+    recordChunksRef.current = [];
+    clearRecordTimer();
+    setRecording(false);
+    setRecordingSeconds(0);
+    if (recorder && recorder.state !== "inactive") {
+      recorder.onstop = null;
+      recorder.stop();
+    }
+    stopMediaTracks();
+  }, [clearRecordTimer, stopMediaTracks]);
+
+  useEffect(() => {
+    return () => {
+      cancelRecording();
+    };
+  }, [cancelRecording]);
+
+  useEffect(() => {
+    if (!activeId) return;
+    cancelRecording();
+  }, [activeId, cancelRecording]);
+
+  async function send(overrideFiles?: File[], overrideBody?: string) {
     if (!activeId || !thread) return;
     const staffCanWrite = thread.role === "admin";
     if (thread.status === "ARCHIVED" && !staffCanWrite) return;
-    const body = text.trim();
-    if (!body && files.length === 0) return;
+    const attach = overrideFiles ?? files;
+    const body = (overrideBody ?? text).trim();
+    if (!body && attach.length === 0) return;
 
     setSending(true);
     try {
       const form = new FormData();
       form.set("body", body);
-      for (const f of files) form.append("files", f);
+      for (const f of attach) form.append("files", f);
       const res = await fetch(`/api/messages/${activeId}`, {
         method: "POST",
         body: form,
@@ -251,8 +335,10 @@ export function MessagesInbox() {
             : [...prev, data.message!],
         );
       }
-      setText("");
-      setFiles([]);
+      if (!overrideFiles) {
+        setText("");
+        setFiles([]);
+      }
       void loadList();
     } catch {
       toastError("Ցանցի խնդիր", "Փորձեք նորից։");
@@ -261,9 +347,194 @@ export function MessagesInbox() {
     }
   }
 
+  async function startRecording() {
+    if (!activeId || !thread || sending || recording) return;
+    const staffCanWrite = thread.role === "admin";
+    if (thread.status === "ARCHIVED" && !staffCanWrite) return;
+    if (typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) {
+      toastError("Ձայնագրում անհասանելի է", "Զննարկիչը չի աջակցում միկրոֆոն։");
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaStreamRef.current = stream;
+      const mimeType = pickRecorderMime();
+      const recorder = mimeType
+        ? new MediaRecorder(stream, { mimeType })
+        : new MediaRecorder(stream);
+      mediaRecorderRef.current = recorder;
+      recordChunksRef.current = [];
+      recordStartedAtRef.current = Date.now();
+      setRecordingSeconds(0);
+      setRecording(true);
+
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          recordChunksRef.current.push(event.data);
+        }
+      };
+
+      clearRecordTimer();
+      recordTimerRef.current = setInterval(() => {
+        setRecordingSeconds(
+          Math.floor((Date.now() - recordStartedAtRef.current) / 1000),
+        );
+      }, 250);
+
+      recorder.start(250);
+    } catch {
+      stopMediaTracks();
+      setRecording(false);
+      toastError(
+        "Միկրոֆոնի թույլտվություն",
+        "Թույլատրեք միկրոֆոնը՝ ձայնային ուղարկելու համար։",
+      );
+    }
+  }
+
+  function finishRecording(sendAfter: boolean) {
+    const recorder = mediaRecorderRef.current;
+    if (!recorder || recorder.state === "inactive") {
+      cancelRecording();
+      return;
+    }
+
+    clearRecordTimer();
+    setRecording(false);
+
+    recorder.onstop = () => {
+      const chunks = recordChunksRef.current;
+      recordChunksRef.current = [];
+      mediaRecorderRef.current = null;
+      stopMediaTracks();
+      const elapsed = Math.floor(
+        (Date.now() - recordStartedAtRef.current) / 1000,
+      );
+      setRecordingSeconds(0);
+
+      if (!sendAfter || chunks.length === 0 || elapsed < 1) {
+        if (sendAfter && elapsed < 1) {
+          toastError("Շատ կարճ է", "Ձայնագրեք առնվազն 1 վայրկյան։");
+        }
+        return;
+      }
+
+      const blobType =
+        recorder.mimeType || chunks[0]?.type || "audio/webm";
+      const ext = blobType.includes("mp4")
+        ? "m4a"
+        : blobType.includes("ogg")
+          ? "ogg"
+          : "webm";
+      const file = new File(
+        [new Blob(chunks, { type: blobType })],
+        `voice-${Date.now()}.${ext}`,
+        { type: blobType.split(";")[0] || "audio/webm" },
+      );
+      void send([file], VOICE_BODY_LABEL);
+    };
+
+    recorder.stop();
+  }
+
+
   const archived = thread?.status === "ARCHIVED";
 
+  async function startCall(mediaType: "AUDIO" | "VIDEO") {
+    if (!activeId || !thread || startingCall || activeCall) return;
+    if (thread.role === "admin" || archived) return;
+    setStartingCall(true);
+    try {
+      const res = await fetch(`/api/messages/${activeId}/calls`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mediaType }),
+      });
+      const data = (await res.json().catch(() => null)) as {
+        error?: string;
+        call?: CallDto;
+      } | null;
+      if (!res.ok || !data?.call) {
+        const map: Record<string, string> = {
+          CALL_IN_PROGRESS: "Արդեն կա ակտիվ զանգ։",
+          ARCHIVED: "Զրույցը արխիվացված է։",
+        };
+        toastError(
+          "Չհաջողվեց զանգել",
+          map[data?.error ?? ""] ?? "Փորձեք նորից։",
+        );
+        return;
+      }
+      setActiveCall(data.call);
+      void loadThread(activeId, false);
+      void loadList();
+    } catch {
+      toastError("Ցանցի խնդիր", "Փորձեք նորից։");
+    } finally {
+      setStartingCall(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!currentUserId) return;
+    let stopped = false;
+
+    async function pollIncoming() {
+      if (stopped) return;
+      try {
+        const res = await fetch("/api/calls/incoming");
+        if (!res.ok) return;
+        const data = (await res.json()) as {
+          incoming?: Array<CallDto & { tenderTitle?: string }>;
+          active?: CallDto | null;
+        };
+        if (activeCall) {
+          if (data.active && data.active.id === activeCall.id) {
+            setActiveCall((prev) =>
+              prev ? { ...prev, ...data.active! } : data.active!,
+            );
+          }
+          return;
+        }
+        const first = data.incoming?.[0];
+        if (first) {
+          setActiveCall(first);
+          if (first.conversationId !== activeId) {
+            router.push(ROUTES.messageThread(first.conversationId));
+          }
+        } else if (data.active) {
+          setActiveCall(data.active);
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+
+    void pollIncoming();
+    const id = window.setInterval(() => void pollIncoming(), 2500);
+    return () => {
+      stopped = true;
+      window.clearInterval(id);
+    };
+  }, [currentUserId, activeCall, activeId, router]);
+
   return (
+    <>
+    {activeCall && currentUserId ? (
+      <CallRoom
+        call={activeCall}
+        currentUserId={currentUserId}
+        peerName={thread?.peer.name ?? "Օգտատեր"}
+        onClose={({ refreshChat } = {}) => {
+          setActiveCall(null);
+          if (refreshChat && activeId) {
+            void loadThread(activeId, false);
+            void loadList();
+          }
+        }}
+      />
+    ) : null}
     <div className="mx-auto flex h-[min(78vh,820px)] w-full max-w-6xl overflow-hidden rounded-[1.75rem] bg-white shadow-sm ring-1 ring-slate-200">
       <aside
         className={`flex w-full flex-col border-r border-slate-200 md:w-[340px] md:shrink-0 ${
@@ -411,6 +682,30 @@ export function MessagesInbox() {
                   Վեճեր
                 </Link>
               ) : null}
+              {!archived && thread.role !== "admin" ? (
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    disabled={startingCall || Boolean(activeCall)}
+                    onClick={() => void startCall("AUDIO")}
+                    className="grid size-9 place-items-center rounded-xl bg-slate-100 text-slate-800 transition hover:bg-emerald-50 hover:text-emerald-800 disabled:opacity-50"
+                    aria-label="Ձայնային զանգ"
+                    title="Ձայնային զանգ"
+                  >
+                    <Phone className="size-4" />
+                  </button>
+                  <button
+                    type="button"
+                    disabled={startingCall || Boolean(activeCall)}
+                    onClick={() => void startCall("VIDEO")}
+                    className="grid size-9 place-items-center rounded-xl bg-slate-100 text-slate-800 transition hover:bg-amber-50 hover:text-amber-900 disabled:opacity-50"
+                    aria-label="Տեսազանգ"
+                    title="Տեսազանգ"
+                  >
+                    <Video className="size-4" />
+                  </button>
+                </div>
+              ) : null}
               {archived && thread.role !== "admin" ? (
                 <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2 py-1 text-[10px] font-black uppercase tracking-wide text-slate-500">
                   <Archive className="size-3" />
@@ -432,6 +727,56 @@ export function MessagesInbox() {
               className="flex-1 space-y-3 overflow-y-auto bg-[#f7f4ee]/40 px-4 py-4"
             >
               {messages.map((m) => {
+                if (m.kind === "SYSTEM_CALL") {
+                  return (
+                    <div key={m.id} className="flex justify-center">
+                      <div className="max-w-[min(100%,420px)] rounded-2xl bg-slate-900 px-3.5 py-2.5 text-center text-white shadow-sm ring-1 ring-slate-800">
+                        <p className="text-[10px] font-black uppercase tracking-[0.16em] text-amber-300">
+                          Զանգ
+                        </p>
+                        <p className="mt-1 text-sm font-bold">{m.body}</p>
+                        {m.attachments.length > 0 ? (
+                          <ul className="mt-2 space-y-2 text-left">
+                            {m.attachments.map((a) =>
+                              isVideoMime(a.mimeType) ? (
+                                <li key={a.id}>
+                                  <video
+                                    controls
+                                    preload="metadata"
+                                    src={a.url}
+                                    className="max-h-64 w-full rounded-xl bg-black"
+                                  />
+                                </li>
+                              ) : isAudioMime(a.mimeType) ? (
+                                <li key={a.id}>
+                                  <VoiceMessagePlayer
+                                    src={a.url}
+                                    tone="outgoing"
+                                  />
+                                </li>
+                              ) : (
+                                <li key={a.id}>
+                                  <a
+                                    href={a.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-xs font-bold text-amber-200 underline"
+                                  >
+                                    {a.originalFileName}
+                                  </a>
+                                </li>
+                              ),
+                            )}
+                          </ul>
+                        ) : null}
+                        <p className="mt-1 text-[10px] font-semibold text-white/45">
+                          {formatTime(m.createdAt)}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                }
+
                 if (m.kind === "SYSTEM_CONTRACT" || m.kind === "SYSTEM_ESCROW") {
                   const escrow = m.kind === "SYSTEM_ESCROW";
                   return (
@@ -493,19 +838,28 @@ export function MessagesInbox() {
                         ) : null}
                         {m.attachments.length > 0 ? (
                           <ul className="mt-2 space-y-2">
-                            {m.attachments.map((a) => (
-                              <li key={a.id}>
-                                <a
-                                  href={a.url}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-800 underline-offset-2 hover:underline"
-                                >
-                                  <Paperclip className="size-3.5" />
-                                  {a.originalFileName}
-                                </a>
-                              </li>
-                            ))}
+                            {m.attachments.map((a) =>
+                              isAudioMime(a.mimeType) ? (
+                                <li key={a.id}>
+                                  <VoiceMessagePlayer
+                                    src={a.url}
+                                    tone="staff"
+                                  />
+                                </li>
+                              ) : (
+                                <li key={a.id}>
+                                  <a
+                                    href={a.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-800 underline-offset-2 hover:underline"
+                                  >
+                                    <Paperclip className="size-3.5" />
+                                    {a.originalFileName}
+                                  </a>
+                                </li>
+                              ),
+                            )}
                           </ul>
                         ) : null}
                         <p className="mt-1 text-[10px] font-semibold text-indigo-700/70">
@@ -533,11 +887,20 @@ export function MessagesInbox() {
                           {m.sender.name}
                         </p>
                       ) : null}
-                      {m.body.trim() ? (
-                        <p className="whitespace-pre-wrap text-sm font-semibold leading-relaxed">
-                          {m.body}
-                        </p>
-                      ) : null}
+                      {(() => {
+                        const hasAudio = m.attachments.some((a) =>
+                          isAudioMime(a.mimeType),
+                        );
+                        const body = m.body.trim();
+                        const hideVoiceLabel =
+                          hasAudio && body === VOICE_BODY_LABEL;
+                        if (!body || hideVoiceLabel) return null;
+                        return (
+                          <p className="whitespace-pre-wrap text-sm font-semibold leading-relaxed">
+                            {m.body}
+                          </p>
+                        );
+                      })()}
                       {m.attachments.length > 0 ? (
                         <ul className="mt-2 space-y-2">
                           {m.attachments.map((a) =>
@@ -556,6 +919,13 @@ export function MessagesInbox() {
                                     className="max-h-48 w-full object-cover"
                                   />
                                 </a>
+                              </li>
+                            ) : isAudioMime(a.mimeType) ? (
+                              <li key={a.id}>
+                                <VoiceMessagePlayer
+                                  src={a.url}
+                                  tone={alignEnd ? "outgoing" : "incoming"}
+                                />
                               </li>
                             ) : (
                               <li key={a.id}>
@@ -604,7 +974,11 @@ export function MessagesInbox() {
                           key={`${f.name}-${i}`}
                           className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2 py-1 text-[11px] font-bold text-slate-700"
                         >
-                          <Paperclip className="size-3" />
+                          {isAudioMime(f.type) ? (
+                            <Mic className="size-3" />
+                          ) : (
+                            <Paperclip className="size-3" />
+                          )}
                           <span className="max-w-[120px] truncate">
                             {f.name}
                           </span>
@@ -623,58 +997,101 @@ export function MessagesInbox() {
                       ))}
                     </ul>
                   ) : null}
-                  <div className="flex items-end gap-2">
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      multiple
-                      className="hidden"
-                      accept="image/jpeg,image/png,image/webp,application/pdf,.doc,.docx,.txt"
-                      onChange={(e) => {
-                        const next = Array.from(e.target.files ?? []);
-                        setFiles((prev) => [...prev, ...next].slice(0, 5));
-                        e.target.value = "";
-                      }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="grid size-10 shrink-0 place-items-center rounded-xl bg-slate-100 text-slate-700"
-                      aria-label="Կցել ֆայլ"
-                    >
-                      <Paperclip className="size-4" />
-                    </button>
-                    <textarea
-                      value={text}
-                      onChange={(e) => setText(e.target.value)}
-                      rows={1}
-                      placeholder={
-                        thread.role === "admin"
-                          ? "Ադմինի հաղորդագրություն կողմերին…"
-                          : "Գրեք հաղորդագրություն…"
-                      }
-                      className="max-h-28 min-h-10 flex-1 resize-none rounded-xl bg-slate-50 px-3 py-2.5 text-sm font-semibold text-slate-900 outline-none ring-1 ring-slate-200 focus:ring-amber-300"
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && !e.shiftKey) {
-                          e.preventDefault();
-                          void send();
+                  {recording ? (
+                    <div className="flex items-center gap-2 rounded-xl bg-rose-50 px-3 py-2 ring-1 ring-rose-100">
+                      <span className="relative flex size-2.5">
+                        <span className="absolute inline-flex size-full animate-ping rounded-full bg-rose-400 opacity-75" />
+                        <span className="relative inline-flex size-2.5 rounded-full bg-rose-500" />
+                      </span>
+                      <p className="flex-1 text-sm font-bold text-rose-700">
+                        Ձայնագրում · {formatRecordingDuration(recordingSeconds)}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => cancelRecording()}
+                        className="grid size-9 place-items-center rounded-lg bg-white text-slate-600 ring-1 ring-slate-200"
+                        aria-label="Չեղարկել ձայնագրումը"
+                      >
+                        <X className="size-4" />
+                      </button>
+                      <button
+                        type="button"
+                        disabled={sending}
+                        onClick={() => finishRecording(true)}
+                        className="grid size-9 place-items-center rounded-lg bg-slate-950 text-white disabled:opacity-50"
+                        aria-label="Ուղարկել ձայնայինը"
+                      >
+                        {sending ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <Send className="size-4" />
+                        )}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-end gap-2">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        multiple
+                        className="hidden"
+                        accept="image/jpeg,image/png,image/webp,application/pdf,.doc,.docx,.txt,audio/*,.webm,.ogg,.mp3,.m4a,.wav"
+                        onChange={(e) => {
+                          const next = Array.from(e.target.files ?? []);
+                          setFiles((prev) => [...prev, ...next].slice(0, 5));
+                          e.target.value = "";
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="grid size-10 shrink-0 place-items-center rounded-xl bg-slate-100 text-slate-700"
+                        aria-label="Կցել ֆայլ"
+                        disabled={sending}
+                      >
+                        <Paperclip className="size-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => void startRecording()}
+                        className="grid size-10 shrink-0 place-items-center rounded-xl bg-slate-100 text-slate-700 disabled:opacity-50"
+                        aria-label="Ձայնագրել"
+                        disabled={sending}
+                      >
+                        <Mic className="size-4" />
+                      </button>
+                      <textarea
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        rows={1}
+                        placeholder={
+                          thread.role === "admin"
+                            ? "Ադմինի հաղորդագրություն կողմերին…"
+                            : "Գրեք հաղորդագրություն…"
                         }
-                      }}
-                    />
-                    <button
-                      type="button"
-                      disabled={sending}
-                      onClick={() => void send()}
-                      className="grid size-10 shrink-0 place-items-center rounded-xl bg-slate-950 text-white disabled:opacity-50"
-                      aria-label="Ուղարկել"
-                    >
-                      {sending ? (
-                        <Loader2 className="size-4 animate-spin" />
-                      ) : (
-                        <Send className="size-4" />
-                      )}
-                    </button>
-                  </div>
+                        className="max-h-28 min-h-10 flex-1 resize-none rounded-xl bg-slate-50 px-3 py-2.5 text-sm font-semibold text-slate-900 outline-none ring-1 ring-slate-200 focus:ring-amber-300"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
+                            void send();
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        disabled={sending}
+                        onClick={() => void send()}
+                        className="grid size-10 shrink-0 place-items-center rounded-xl bg-slate-950 text-white disabled:opacity-50"
+                        aria-label="Ուղարկել"
+                      >
+                        {sending ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <Send className="size-4" />
+                        )}
+                      </button>
+                    </div>
+                  )}
                 </>
               )}
             </footer>
@@ -686,5 +1103,6 @@ export function MessagesInbox() {
         )}
       </section>
     </div>
+    </>
   );
 }

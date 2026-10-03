@@ -11,8 +11,10 @@ import {
   tenderMessageInclude,
 } from "@/lib/tender-messages";
 import {
+  isAudioMessageMime,
   MESSAGE_MAX_FILE_BYTES,
   MESSAGE_MAX_FILES,
+  MESSAGE_MAX_VOICE_BYTES,
   saveMessageUpload,
   type SavedMessageFile,
 } from "@/lib/tender-message-upload";
@@ -186,8 +188,11 @@ export async function POST(request: Request, context: Ctx) {
     try {
       savedFiles.push(await saveMessageUpload(id, file));
     } catch {
+      const maxBytes = isAudioMessageMime(file.type)
+        ? MESSAGE_MAX_VOICE_BYTES
+        : MESSAGE_MAX_FILE_BYTES;
       return NextResponse.json(
-        { error: "INVALID_FILE", maxBytes: MESSAGE_MAX_FILE_BYTES },
+        { error: "INVALID_FILE", maxBytes },
         { status: 400 },
       );
     }
@@ -231,11 +236,14 @@ export async function POST(request: Request, context: Ctx) {
     return created;
   });
 
+  const hasVoice = savedFiles.some((f) => isAudioMessageMime(f.mimeType));
   const preview =
     body ||
-    (savedFiles.length
-      ? `Կցված ֆայլեր (${savedFiles.length})`
-      : "Նոր հաղորդագրություն");
+    (hasVoice
+      ? "Ձայնային հաղորդագրություն"
+      : savedFiles.length
+        ? `Կցված ֆայլեր (${savedFiles.length})`
+        : "Նոր հաղորդագրություն");
 
   const senderLabel = isStaff
     ? `Tend.am ադմին · ${displayName(me)}`

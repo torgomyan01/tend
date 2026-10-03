@@ -130,6 +130,28 @@ enum TenderMessageKind {
   TEXT
   SYSTEM_CONTRACT
   SYSTEM_ESCROW
+  SYSTEM_CALL
+}
+
+enum CallMediaType {
+  AUDIO
+  VIDEO
+}
+
+enum CallStatus {
+  RINGING
+  ACTIVE
+  ENDED
+  REJECTED
+  MISSED
+  CANCELLED
+  FAILED
+}
+
+enum CallSignalType {
+  OFFER
+  ANSWER
+  ICE
 }
 
 /** Ընտրովի պաշտպանված գործարք (բանկային escrow) */
@@ -210,6 +232,8 @@ model User {
   tenderMessagesSent            TenderMessage[]      @relation("TenderMessagesSent")
   escrowsAsClient               TenderEscrow[]       @relation("EscrowClient")
   escrowsAsProvider             TenderEscrow[]       @relation("EscrowProvider")
+  callsStarted                  CallSession[]        @relation("CallCaller")
+  callsReceived                 CallSession[]        @relation("CallCallee")
 
   @@index([email])
   @@index([phone])
@@ -796,11 +820,50 @@ model TenderConversation {
   provider          User                     @relation("TenderConversationProvider", fields: [providerId], references: [id], onDelete: Cascade)
   contract          TenderContract           @relation(fields: [contractId], references: [id], onDelete: Cascade)
   messages          TenderMessage[]
+  calls             CallSession[]
 
   @@index([clientId, lastMessageAt])
   @@index([providerId, lastMessageAt])
   @@index([tenderId, status])
   @@map("tenderconversation")
+}
+
+/** 1:1 WebRTC զանգ (ձայնային / տեսազանգ) */
+model CallSession {
+  id                 String         @id @default(cuid())
+  conversationId     String
+  callerId           String
+  calleeId           String
+  mediaType          CallMediaType
+  status             CallStatus     @default(RINGING)
+  startedAt          DateTime?
+  endedAt            DateTime?
+  endReason          String?        @db.VarChar(80)
+  recordingMessageId String?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  conversation       TenderConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  caller             User           @relation("CallCaller", fields: [callerId], references: [id], onDelete: Cascade)
+  callee             User           @relation("CallCallee", fields: [calleeId], references: [id], onDelete: Cascade)
+  signals            CallSignal[]
+
+  @@index([conversationId, createdAt])
+  @@index([calleeId, status])
+  @@index([callerId, status])
+  @@map("callsession")
+}
+
+model CallSignal {
+  id           String         @id @default(cuid())
+  callId       String
+  senderUserId String
+  type         CallSignalType
+  payload      String         @db.LongText
+  createdAt    DateTime       @default(now())
+  call         CallSession    @relation(fields: [callId], references: [id], onDelete: Cascade)
+
+  @@index([callId, createdAt])
+  @@map("callsignal")
 }
 
 model TenderMessage {

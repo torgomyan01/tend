@@ -204,6 +204,16 @@ export type SupportAttachment = Prisma.SupportAttachmentModel
  */
 export type TenderConversation = Prisma.TenderConversationModel
 /**
+ * Model CallSession
+ * * 1:1 WebRTC զանգ (ձայնային / տեսազանգ)
+ */
+export type CallSession = Prisma.CallSessionModel
+/**
+ * Model CallSignal
+ * 
+ */
+export type CallSignal = Prisma.CallSignalModel
+/**
  * Model TenderMessage
  * 
  */

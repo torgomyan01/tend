@@ -175,10 +175,41 @@ export type TenderConversationStatus = (typeof TenderConversationStatus)[keyof t
 export const TenderMessageKind = {
   TEXT: 'TEXT',
   SYSTEM_CONTRACT: 'SYSTEM_CONTRACT',
-  SYSTEM_ESCROW: 'SYSTEM_ESCROW'
+  SYSTEM_ESCROW: 'SYSTEM_ESCROW',
+  SYSTEM_CALL: 'SYSTEM_CALL'
 } as const
 
 export type TenderMessageKind = (typeof TenderMessageKind)[keyof typeof TenderMessageKind]
+
+
+export const CallMediaType = {
+  AUDIO: 'AUDIO',
+  VIDEO: 'VIDEO'
+} as const
+
+export type CallMediaType = (typeof CallMediaType)[keyof typeof CallMediaType]
+
+
+export const CallStatus = {
+  RINGING: 'RINGING',
+  ACTIVE: 'ACTIVE',
+  ENDED: 'ENDED',
+  REJECTED: 'REJECTED',
+  MISSED: 'MISSED',
+  CANCELLED: 'CANCELLED',
+  FAILED: 'FAILED'
+} as const
+
+export type CallStatus = (typeof CallStatus)[keyof typeof CallStatus]
+
+
+export const CallSignalType = {
+  OFFER: 'OFFER',
+  ANSWER: 'ANSWER',
+  ICE: 'ICE'
+} as const
+
+export type CallSignalType = (typeof CallSignalType)[keyof typeof CallSignalType]
 
 
 export const TenderEscrowStatus = {

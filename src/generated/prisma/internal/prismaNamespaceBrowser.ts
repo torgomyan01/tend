@@ -83,6 +83,8 @@ export const ModelName = {
   SupportMessage: 'SupportMessage',
   SupportAttachment: 'SupportAttachment',
   TenderConversation: 'TenderConversation',
+  CallSession: 'CallSession',
+  CallSignal: 'CallSignal',
   TenderMessage: 'TenderMessage',
   TenderMessageAttachment: 'TenderMessageAttachment'
 } as const
@@ -599,6 +601,36 @@ export const TenderConversationScalarFieldEnum = {
 export type TenderConversationScalarFieldEnum = (typeof TenderConversationScalarFieldEnum)[keyof typeof TenderConversationScalarFieldEnum]
 
 
+export const CallSessionScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  callerId: 'callerId',
+  calleeId: 'calleeId',
+  mediaType: 'mediaType',
+  status: 'status',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  endReason: 'endReason',
+  recordingMessageId: 'recordingMessageId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CallSessionScalarFieldEnum = (typeof CallSessionScalarFieldEnum)[keyof typeof CallSessionScalarFieldEnum]
+
+
+export const CallSignalScalarFieldEnum = {
+  id: 'id',
+  callId: 'callId',
+  senderUserId: 'senderUserId',
+  type: 'type',
+  payload: 'payload',
+  createdAt: 'createdAt'
+} as const
+
+export type CallSignalScalarFieldEnum = (typeof CallSignalScalarFieldEnum)[keyof typeof CallSignalScalarFieldEnum]
+
+
 export const TenderMessageScalarFieldEnum = {
   id: 'id',
   conversationId: 'conversationId',
@@ -989,6 +1021,28 @@ export const TenderConversationOrderByRelevanceFieldEnum = {
 } as const
 
 export type TenderConversationOrderByRelevanceFieldEnum = (typeof TenderConversationOrderByRelevanceFieldEnum)[keyof typeof TenderConversationOrderByRelevanceFieldEnum]
+
+
+export const CallSessionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  callerId: 'callerId',
+  calleeId: 'calleeId',
+  endReason: 'endReason',
+  recordingMessageId: 'recordingMessageId'
+} as const
+
+export type CallSessionOrderByRelevanceFieldEnum = (typeof CallSessionOrderByRelevanceFieldEnum)[keyof typeof CallSessionOrderByRelevanceFieldEnum]
+
+
+export const CallSignalOrderByRelevanceFieldEnum = {
+  id: 'id',
+  callId: 'callId',
+  senderUserId: 'senderUserId',
+  payload: 'payload'
+} as const
+
+export type CallSignalOrderByRelevanceFieldEnum = (typeof CallSignalOrderByRelevanceFieldEnum)[keyof typeof CallSignalOrderByRelevanceFieldEnum]
 
 
 export const TenderMessageOrderByRelevanceFieldEnum = {

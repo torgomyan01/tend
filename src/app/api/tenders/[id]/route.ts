@@ -25,6 +25,8 @@ import {
   saveTenderDocument,
   saveTenderImage,
 } from "@/lib/tender-form-upload";
+import { notifyAdminsTenderAwaitingReview } from "@/lib/tender-review-notify-admins";
+import { displayName } from "@/lib/tender-messages";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +45,8 @@ export async function PATCH(request: Request, { params }: Params) {
     where: { id: session.user.id },
     select: {
       id: true,
+      name: true,
+      email: true,
       telegramVerifiedAt: true,
       emailVerified: true,
       isBlocked: true,
@@ -415,6 +419,28 @@ export async function PATCH(request: Request, { params }: Params) {
         },
       },
     });
+
+    const enteredReview =
+      existing.status !== "REVIEW" && tender?.status === "REVIEW";
+    if (enteredReview) {
+      const clientName =
+        user.accountType === "LEGAL_ENTITY" && user.companyName?.trim()
+          ? user.companyName.trim()
+          : displayName({ name: user.name, email: user.email });
+      try {
+        await notifyAdminsTenderAwaitingReview({
+          tenderId,
+          tenderTitle: normalized.title,
+          category: primary.category,
+          service: primary.service,
+          city: resolvedCity,
+          clientName,
+          clientEmail: user.email,
+        });
+      } catch {
+        /* non-blocking */
+      }
+    }
 
     return NextResponse.json({ tender });
   } catch (error) {

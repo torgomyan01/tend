@@ -19,6 +19,14 @@ function contentTypeFor(filePath: string): string {
   if (ext === ".xlsx")
     return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
   if (ext === ".txt") return "text/plain; charset=utf-8";
+  if (ext === ".webm") return "audio/webm";
+  if (ext === ".vwebm") return "video/webm";
+  if (ext === ".mp4") return "video/mp4";
+  if (ext === ".ogg") return "audio/ogg";
+  if (ext === ".mp3") return "audio/mpeg";
+  if (ext === ".m4a") return "audio/mp4";
+  if (ext === ".aac") return "audio/aac";
+  if (ext === ".wav") return "audio/wav";
   return "application/octet-stream";
 }
 

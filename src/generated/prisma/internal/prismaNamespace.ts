@@ -416,6 +416,8 @@ export const ModelName = {
   SupportMessage: 'SupportMessage',
   SupportAttachment: 'SupportAttachment',
   TenderConversation: 'TenderConversation',
+  CallSession: 'CallSession',
+  CallSignal: 'CallSignal',
   TenderMessage: 'TenderMessage',
   TenderMessageAttachment: 'TenderMessageAttachment'
 } as const
@@ -433,7 +435,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userCredential" | "profileContactUnlock" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderContract" | "tenderEscrow" | "tenderLike" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "bidAttachment" | "transaction" | "vposOrderSequence" | "subscription" | "review" | "userNotification" | "supportConversation" | "supportMessage" | "supportAttachment" | "tenderConversation" | "tenderMessage" | "tenderMessageAttachment"
+    modelProps: "user" | "userCredential" | "profileContactUnlock" | "userPortfolioItem" | "userPortfolioImage" | "userInterest" | "serviceCategory" | "service" | "verificationRequest" | "account" | "session" | "verificationToken" | "location" | "tender" | "tenderContract" | "tenderEscrow" | "tenderLike" | "tenderImage" | "tenderDocument" | "tenderSelectedService" | "tenderComplaint" | "bid" | "bidAttachment" | "transaction" | "vposOrderSequence" | "subscription" | "review" | "userNotification" | "supportConversation" | "supportMessage" | "supportAttachment" | "tenderConversation" | "callSession" | "callSignal" | "tenderMessage" | "tenderMessageAttachment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2549,6 +2551,138 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CallSession: {
+      payload: Prisma.$CallSessionPayload<ExtArgs>
+      fields: Prisma.CallSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CallSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CallSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.CallSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CallSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSessionPayload>
+        }
+        findMany: {
+          args: Prisma.CallSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSessionPayload>[]
+        }
+        create: {
+          args: Prisma.CallSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSessionPayload>
+        }
+        createMany: {
+          args: Prisma.CallSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.CallSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSessionPayload>
+        }
+        update: {
+          args: Prisma.CallSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.CallSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CallSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.CallSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.CallSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCallSession>
+        }
+        groupBy: {
+          args: Prisma.CallSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CallSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CallSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CallSessionCountAggregateOutputType> | number
+        }
+      }
+    }
+    CallSignal: {
+      payload: Prisma.$CallSignalPayload<ExtArgs>
+      fields: Prisma.CallSignalFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CallSignalFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSignalPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CallSignalFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSignalPayload>
+        }
+        findFirst: {
+          args: Prisma.CallSignalFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSignalPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CallSignalFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSignalPayload>
+        }
+        findMany: {
+          args: Prisma.CallSignalFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSignalPayload>[]
+        }
+        create: {
+          args: Prisma.CallSignalCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSignalPayload>
+        }
+        createMany: {
+          args: Prisma.CallSignalCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.CallSignalDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSignalPayload>
+        }
+        update: {
+          args: Prisma.CallSignalUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSignalPayload>
+        }
+        deleteMany: {
+          args: Prisma.CallSignalDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CallSignalUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.CallSignalUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CallSignalPayload>
+        }
+        aggregate: {
+          args: Prisma.CallSignalAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCallSignal>
+        }
+        groupBy: {
+          args: Prisma.CallSignalGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CallSignalGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CallSignalCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CallSignalCountAggregateOutputType> | number
+        }
+      }
+    }
     TenderMessage: {
       payload: Prisma.$TenderMessagePayload<ExtArgs>
       fields: Prisma.TenderMessageFieldRefs
@@ -3216,6 +3350,36 @@ export const TenderConversationScalarFieldEnum = {
 export type TenderConversationScalarFieldEnum = (typeof TenderConversationScalarFieldEnum)[keyof typeof TenderConversationScalarFieldEnum]
 
 
+export const CallSessionScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  callerId: 'callerId',
+  calleeId: 'calleeId',
+  mediaType: 'mediaType',
+  status: 'status',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  endReason: 'endReason',
+  recordingMessageId: 'recordingMessageId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CallSessionScalarFieldEnum = (typeof CallSessionScalarFieldEnum)[keyof typeof CallSessionScalarFieldEnum]
+
+
+export const CallSignalScalarFieldEnum = {
+  id: 'id',
+  callId: 'callId',
+  senderUserId: 'senderUserId',
+  type: 'type',
+  payload: 'payload',
+  createdAt: 'createdAt'
+} as const
+
+export type CallSignalScalarFieldEnum = (typeof CallSignalScalarFieldEnum)[keyof typeof CallSignalScalarFieldEnum]
+
+
 export const TenderMessageScalarFieldEnum = {
   id: 'id',
   conversationId: 'conversationId',
@@ -3608,6 +3772,28 @@ export const TenderConversationOrderByRelevanceFieldEnum = {
 export type TenderConversationOrderByRelevanceFieldEnum = (typeof TenderConversationOrderByRelevanceFieldEnum)[keyof typeof TenderConversationOrderByRelevanceFieldEnum]
 
 
+export const CallSessionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  callerId: 'callerId',
+  calleeId: 'calleeId',
+  endReason: 'endReason',
+  recordingMessageId: 'recordingMessageId'
+} as const
+
+export type CallSessionOrderByRelevanceFieldEnum = (typeof CallSessionOrderByRelevanceFieldEnum)[keyof typeof CallSessionOrderByRelevanceFieldEnum]
+
+
+export const CallSignalOrderByRelevanceFieldEnum = {
+  id: 'id',
+  callId: 'callId',
+  senderUserId: 'senderUserId',
+  payload: 'payload'
+} as const
+
+export type CallSignalOrderByRelevanceFieldEnum = (typeof CallSignalOrderByRelevanceFieldEnum)[keyof typeof CallSignalOrderByRelevanceFieldEnum]
+
+
 export const TenderMessageOrderByRelevanceFieldEnum = {
   id: 'id',
   conversationId: 'conversationId',
@@ -3805,6 +3991,27 @@ export type EnumTenderConversationStatusFieldRefInput<$PrismaModel> = FieldRefIn
 
 
 /**
+ * Reference to a field of type 'CallMediaType'
+ */
+export type EnumCallMediaTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CallMediaType'>
+    
+
+
+/**
+ * Reference to a field of type 'CallStatus'
+ */
+export type EnumCallStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CallStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'CallSignalType'
+ */
+export type EnumCallSignalTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CallSignalType'>
+    
+
+
+/**
  * Reference to a field of type 'TenderMessageKind'
  */
 export type EnumTenderMessageKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TenderMessageKind'>
@@ -3959,6 +4166,8 @@ export type GlobalOmitConfig = {
   supportMessage?: Prisma.SupportMessageOmit
   supportAttachment?: Prisma.SupportAttachmentOmit
   tenderConversation?: Prisma.TenderConversationOmit
+  callSession?: Prisma.CallSessionOmit
+  callSignal?: Prisma.CallSignalOmit
   tenderMessage?: Prisma.TenderMessageOmit
   tenderMessageAttachment?: Prisma.TenderMessageAttachmentOmit
 }
