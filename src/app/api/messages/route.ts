@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { isAdminRole } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
 import {
+  conversationAccessRole,
   displayName,
   lastReadAtFor,
-  participantRole,
 } from "@/lib/tender-messages";
 
 export const dynamic = "force-dynamic";
@@ -17,10 +18,23 @@ export async function GET() {
   }
 
   const userId = session.user.id;
+  const staff = isAdminRole(session.user.role);
 
   const conversations = await prisma.tenderConversation.findMany({
     where: {
-      OR: [{ clientId: userId }, { providerId: userId }],
+      OR: [
+        { clientId: userId },
+        { providerId: userId },
+        ...(staff
+          ? [
+              {
+                contract: {
+                  escrow: { status: "DISPUTED" as const },
+                },
+              },
+            ]
+          : []),
+      ],
     },
     orderBy: [{ status: "asc" }, { lastMessageAt: "desc" }],
     take: 100,
@@ -53,20 +67,33 @@ export async function GET() {
 
   const items = await Promise.all(
     conversations.map(async (c) => {
-      const role = participantRole(userId, c);
+      const role = conversationAccessRole(userId, c, session.user.role);
       if (!role) return null;
 
-      const peer = role === "client" ? c.provider : c.client;
-      const lastRead = lastReadAtFor(role, c);
+      const peer =
+        role === "client"
+          ? c.provider
+          : role === "provider"
+            ? c.client
+            : c.provider;
+      const lastRead = role === "admin" ? null : lastReadAtFor(role, c);
       const last = c.messages[0] ?? null;
 
-      const unreadCount = await prisma.tenderMessage.count({
-        where: {
-          conversationId: c.id,
-          NOT: { senderUserId: userId },
-          ...(lastRead ? { createdAt: { gt: lastRead } } : {}),
-        },
-      });
+      const unreadCount =
+        role === "admin"
+          ? 0
+          : await prisma.tenderMessage.count({
+              where: {
+                conversationId: c.id,
+                NOT: { senderUserId: userId },
+                ...(lastRead ? { createdAt: { gt: lastRead } } : {}),
+              },
+            });
+
+      const peerName =
+        role === "admin"
+          ? `${displayName(c.client)} · ${displayName(c.provider)}`
+          : displayName(peer);
 
       return {
         id: c.id,
@@ -77,8 +104,8 @@ export async function GET() {
         contractId: c.contractId,
         peer: {
           id: peer.id,
-          name: displayName(peer),
-          image: peer.image,
+          name: peerName,
+          image: role === "admin" ? null : peer.image,
         },
         lastMessage: last
           ? {
@@ -90,6 +117,7 @@ export async function GET() {
             }
           : null,
         unreadCount,
+        isStaffView: role === "admin",
       };
     }),
   );

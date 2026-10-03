@@ -9,6 +9,7 @@ import {
   escrowStatusChangeMessage,
   postEscrowSystemMessage,
 } from "@/lib/escrow-messages";
+import { notifyEscrowFunded } from "@/lib/escrow-funded-notify";
 import { formatAmd } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -40,9 +41,13 @@ export async function POST(
       id: true,
       status: true,
       contractId: true,
+      tenderId: true,
+      clientId: true,
+      providerId: true,
       paymentCode: true,
       contractAmount: true,
       providerReceives: true,
+      tender: { select: { title: true } },
     },
   });
 
@@ -74,6 +79,19 @@ export async function POST(
           amount: Number(escrow.contractAmount),
           paymentCode: escrow.paymentCode,
         }),
+      });
+    } catch {
+      /* non-blocking */
+    }
+    try {
+      await notifyEscrowFunded({
+        clientId: escrow.clientId,
+        providerId: escrow.providerId,
+        tenderId: escrow.tenderId,
+        tenderTitle: escrow.tender.title,
+        contractId: escrow.contractId,
+        amount: Number(escrow.contractAmount),
+        paymentCode: escrow.paymentCode,
       });
     } catch {
       /* non-blocking */

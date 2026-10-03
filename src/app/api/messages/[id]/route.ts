@@ -4,9 +4,9 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { notifyTenderPeerMessage } from "@/lib/tender-contract-notify";
 import {
+  conversationAccessRole,
   displayName,
   lastReadAtFor,
-  participantRole,
   serializeTenderMessage,
   tenderMessageInclude,
 } from "@/lib/tender-messages";
@@ -54,7 +54,11 @@ export async function GET(request: Request, context: Ctx) {
     return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
   }
 
-  const role = participantRole(userId, conversation);
+  const role = conversationAccessRole(
+    userId,
+    conversation,
+    session.user.role,
+  );
   if (!role) {
     return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
   }
@@ -70,8 +74,13 @@ export async function GET(request: Request, context: Ctx) {
   });
 
   const peer =
-    role === "client" ? conversation.provider : conversation.client;
-  const lastRead = lastReadAtFor(role, conversation);
+    role === "client"
+      ? conversation.provider
+      : role === "provider"
+        ? conversation.client
+        : conversation.provider;
+  const lastRead =
+    role === "admin" ? null : lastReadAtFor(role, conversation);
 
   return NextResponse.json({
     conversation: {
@@ -85,6 +94,16 @@ export async function GET(request: Request, context: Ctx) {
         id: peer.id,
         name: displayName(peer),
         image: peer.image,
+      },
+      client: {
+        id: conversation.client.id,
+        name: displayName(conversation.client),
+        image: conversation.client.image,
+      },
+      provider: {
+        id: conversation.provider.id,
+        name: displayName(conversation.provider),
+        image: conversation.provider.image,
       },
       lastReadAt: lastRead?.toISOString() ?? null,
       role,
@@ -104,7 +123,13 @@ export async function POST(request: Request, context: Ctx) {
 
   const me = await prisma.user.findUnique({
     where: { id: userId },
-    select: { id: true, name: true, email: true, isBlocked: true },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      isBlocked: true,
+      role: true,
+    },
   });
   if (!me || me.isBlocked) {
     return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
@@ -126,12 +151,13 @@ export async function POST(request: Request, context: Ctx) {
     return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
   }
 
-  const role = participantRole(userId, conversation);
+  const role = conversationAccessRole(userId, conversation, me.role);
   if (!role) {
     return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
   }
 
-  if (conversation.status === "ARCHIVED") {
+  const isStaff = role === "admin";
+  if (conversation.status === "ARCHIVED" && !isStaff) {
     return NextResponse.json({ error: "ARCHIVED" }, { status: 409 });
   }
 
@@ -191,35 +217,50 @@ export async function POST(request: Request, context: Ctx) {
       where: { id },
       data: {
         lastMessageAt: now,
+        ...(isStaff && conversation.status === "ARCHIVED"
+          ? { status: "ACTIVE" as const }
+          : {}),
         ...(role === "client"
           ? { clientLastReadAt: now }
-          : { providerLastReadAt: now }),
+          : role === "provider"
+            ? { providerLastReadAt: now }
+            : {}),
       },
     });
 
     return created;
   });
 
-  const recipientId =
-    role === "client" ? conversation.providerId : conversation.clientId;
   const preview =
     body ||
     (savedFiles.length
       ? `Կցված ֆայլեր (${savedFiles.length})`
       : "Նոր հաղորդագրություն");
 
-  try {
-    await notifyTenderPeerMessage({
-      recipientUserId: recipientId,
-      senderName: displayName(me),
-      tenderTitle: conversation.tender.title,
-      tenderId: conversation.tenderId,
-      conversationId: id,
-      preview,
-    });
-  } catch {
-    /* non-blocking */
-  }
+  const senderLabel = isStaff
+    ? `Tend.am ադմին · ${displayName(me)}`
+    : displayName(me);
+
+  const recipientIds = isStaff
+    ? [conversation.clientId, conversation.providerId]
+    : [
+        role === "client"
+          ? conversation.providerId
+          : conversation.clientId,
+      ];
+
+  await Promise.allSettled(
+    recipientIds.map((recipientUserId) =>
+      notifyTenderPeerMessage({
+        recipientUserId,
+        senderName: senderLabel,
+        tenderTitle: conversation.tender.title,
+        tenderId: conversation.tenderId,
+        conversationId: id,
+        preview,
+      }),
+    ),
+  );
 
   return NextResponse.json({ message: serializeTenderMessage(message) });
 }

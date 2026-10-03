@@ -7,6 +7,7 @@ import {
   escrowStatusChangeMessage,
   postEscrowSystemMessage,
 } from "@/lib/escrow-messages";
+import { notifyAdminsEscrowDispute } from "@/lib/escrow-dispute-notify-admins";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +15,7 @@ const bodySchema = z.object({
   reason: z.string().trim().min(10).max(2000),
 });
 
-/** Պատվիրատու կամ կատարող · վեճ բացել (միայն FUNDED) */
+/** Պատվիրատու կամ կատարող · վեճ բացել (միայն FUNDED / RELEASE_PENDING) */
 export async function POST(
   request: Request,
   context: { params: Promise<{ id: string }> },
@@ -39,6 +40,12 @@ export async function POST(
       clientId: true,
       providerId: true,
       contractId: true,
+      tenderId: true,
+      paymentCode: true,
+      contractAmount: true,
+      tender: { select: { title: true } },
+      client: { select: { name: true, email: true } },
+      provider: { select: { name: true, email: true } },
     },
   });
 
@@ -53,6 +60,11 @@ export async function POST(
   if (escrow.status !== "FUNDED" && escrow.status !== "RELEASE_PENDING") {
     return NextResponse.json({ error: "INVALID_STATUS" }, { status: 409 });
   }
+
+  const openedByRole = userId === escrow.clientId ? "client" : "provider";
+  const opener =
+    openedByRole === "client" ? escrow.client : escrow.provider;
+  const openedByName = opener.name?.trim() || opener.email;
 
   await prisma.tenderEscrow.update({
     where: { id: escrow.id },
@@ -70,6 +82,23 @@ export async function POST(
         "DISPUTED",
         `Պատճառ՝ ${parsed.data.reason}`,
       ),
+    });
+  } catch {
+    /* non-blocking */
+  }
+
+  try {
+    await notifyAdminsEscrowDispute({
+      escrowId: escrow.id,
+      contractId: escrow.contractId,
+      tenderId: escrow.tenderId,
+      tenderTitle: escrow.tender.title,
+      paymentCode: escrow.paymentCode,
+      amount: Number(escrow.contractAmount),
+      reason: parsed.data.reason,
+      openedByUserId: userId,
+      openedByRole,
+      openedByName,
     });
   } catch {
     /* non-blocking */

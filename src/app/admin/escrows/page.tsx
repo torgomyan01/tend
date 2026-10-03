@@ -15,7 +15,6 @@ const FILTERS: Array<{ value: string; label: string }> = [
   { value: "ALL", label: "Բոլորը" },
   { value: "PAYMENT_SUBMITTED", label: "Ստուգել մուտքը" },
   { value: "RELEASE_PENDING", label: "Payout" },
-  { value: "DISPUTED", label: "Վեջեր" },
   { value: "FUNDED", label: "Պահված" },
   { value: "PENDING_FUNDING", label: "Սպասում փոխանցմանը" },
 ];
@@ -23,7 +22,6 @@ const FILTERS: Array<{ value: string; label: string }> = [
 const ACTION_STATUSES: TenderEscrowStatus[] = [
   "PAYMENT_SUBMITTED",
   "RELEASE_PENDING",
-  "DISPUTED",
 ];
 
 export default async function AdminEscrowsPage({
@@ -46,7 +44,7 @@ export default async function AdminEscrowsPage({
 
   const escrows = await prisma.tenderEscrow.findMany({
     where,
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
     take: 80,
     include: {
       tender: { select: { id: true, title: true } },
@@ -64,6 +62,7 @@ export default async function AdminEscrowsPage({
     providerReceives: Number(e.providerReceives),
     clientNote: e.clientNote,
     disputeReason: e.disputeReason,
+    disputedAt: e.disputedAt?.toISOString() ?? null,
     createdAt: e.createdAt.toISOString(),
     tender: e.tender,
     contractId: e.contractId,
@@ -76,7 +75,7 @@ export default async function AdminEscrowsPage({
       <AdminPageHeader
         eyebrow="Ֆինանսներ"
         title="Պաշտպանված գործարքներ"
-        description="Բանկային escrow · մուտքի հաստատում, payout և վեճեր։"
+        description="Բանկային escrow · մուտքի հաստատում և payout։ Վեճերի համար՝ /admin/disputes։"
       />
 
       <div className="mb-5 flex flex-wrap gap-2">

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  BriefcaseBusiness,
   History,
   Heart,
   LayoutDashboard,
@@ -83,6 +84,15 @@ export function AuthDropdown({ isLoggedIn, label, isAdmin }: Props) {
               >
                 <LayoutDashboard className="size-4 text-amber-700" />
                 Իմ մրցույթները
+              </Link>
+              <Link
+                role="menuitem"
+                href={ROUTES.accountMyWork}
+                className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50 hover:text-slate-950"
+                onClick={() => setIsOpen(false)}
+              >
+                <BriefcaseBusiness className="size-4 text-amber-700" />
+                Իմ աշխատանքները
               </Link>
               <Link
                 role="menuitem"

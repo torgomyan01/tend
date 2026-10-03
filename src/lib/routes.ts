@@ -17,6 +17,8 @@ export const ROUTES = {
   accountWallet: "/account/wallet",
   accountWalletReturn: (orderNumber: string | number) =>
     `/account/wallet/return/${orderNumber}`,
+  /** Կատարողի ընթացիկ պաշտպանված աշխատանքներ */
+  accountMyWork: "/account/my-work",
   verifyEmail: "/verify-email",
   myTenders: "/tenders?scope=my",
   bidHistory: "/tenders?scope=bids",
@@ -46,6 +48,7 @@ export const ROUTES = {
     support: "/admin/support",
     expiredUnawarded: "/admin/expired-unawarded",
     escrows: "/admin/escrows",
+    disputes: "/admin/disputes",
   },
   sections: {
     howItWorks: "/how-it-works",

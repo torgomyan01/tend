@@ -13,6 +13,7 @@ import {
   LogOut,
   Menu,
   Package,
+  Scale,
   Shield,
   ShieldCheck,
   Star,
@@ -143,6 +144,14 @@ const NAV_GROUPS: Array<{
         icon: Shield,
         badgeKey: "escrows",
         badgeTone: "emerald",
+      },
+      {
+        href: ROUTES.admin.disputes,
+        label: "Վեճեր",
+        description: "Escrow վեճերի լուծում",
+        icon: Scale,
+        badgeKey: "disputes",
+        badgeTone: "rose",
       },
       {
         href: ROUTES.admin.subscriptions,

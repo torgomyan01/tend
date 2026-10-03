@@ -56,7 +56,7 @@ export default function PrivacyPage() {
       />
       <SiteHeader />
 
-      <main className="mx-auto w-full max-w-3xl px-4 pb-16 pt-8 sm:px-6 sm:pb-24 sm:pt-12 lg:px-8">
+      <main className="mx-auto w-full max-w-5xl px-4 pb-16 pt-8 sm:px-6 sm:pb-24 sm:pt-12 lg:px-8">
         <div className="rounded-[2rem] bg-white p-7 shadow-sm ring-1 ring-slate-200 sm:p-10">
           <p className="text-sm font-black uppercase tracking-[0.2em] text-amber-700">
             Կարգավորումներ և իրավունքներ

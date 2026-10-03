@@ -9,7 +9,10 @@ import {
 } from "@/lib/tender-contract-notify";
 import { createTenderConversationWithContractMessage } from "@/lib/tender-conversation";
 import { CONTRACT_PARTY_SELECT, toContractParty } from "@/lib/tender-contract-party";
-import { generateTenderContractText } from "@/lib/tender-contract-text";
+import {
+  CONTRACT_TEMPLATE_VERSION,
+  generateTenderContractText,
+} from "@/lib/tender-contract-text";
 import { calcEscrowPricing } from "@/lib/escrow";
 import { createTenderEscrow } from "@/lib/escrow-service";
 import { postEscrowSystemMessage } from "@/lib/escrow-messages";
@@ -144,7 +147,7 @@ export async function POST(
           providerReceives: pricing.providerReceives,
         },
       }),
-      templateVersion: "1-escrow",
+      templateVersion: CONTRACT_TEMPLATE_VERSION,
     },
     select: { id: true, status: true },
   });

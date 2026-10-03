@@ -167,7 +167,7 @@ export default async function TenderApplyPage({ params }: Props) {
             <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">
               {tender.title}
             </h1>
-            <p className="mt-2 max-w-2xl text-sm font-semibold text-slate-600">
+            <p className="mt-2 max-w-4xl text-base font-semibold leading-relaxed text-slate-600 sm:text-lg">
               {tender.isBlindBidding
                 ? "Փակ մրցույթ է՝ մյուսների առաջարկները չեն երևում։ Գրեք ձեր գինը, ժամկետը և նամակը, կցեք ֆայլեր և հաստատեք։"
                 : "Կարդացեք մյուս մասնակիցների հաղորդագրությունները, գրեք ձերը, կցեք ֆայլեր և հաստատեք։"}

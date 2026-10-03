@@ -25,13 +25,15 @@ export type BidFeeRefundReason =
   | "TENDER_CANCELLED"
   | "TENDER_DELETED"
   | "TENDER_REJECTED"
-  | "BID_REJECTED_BY_MODERATOR";
+  | "BID_REJECTED_BY_MODERATOR"
+  | "BID_DELETED_BY_ADMIN";
 
 const REASON_DESCRIPTION: Record<BidFeeRefundReason, string> = {
   TENDER_CANCELLED: "Մրցույթը չեղարկվել է",
   TENDER_DELETED: "Մրցույթը հեռացվել է",
   TENDER_REJECTED: "Մրցույթը մերժվել է մոդերացիայի կողմից",
   BID_REJECTED_BY_MODERATOR: "Առաջարկը մերժվել է մոդերացիայի կողմից",
+  BID_DELETED_BY_ADMIN: "Առաջարկը ջնջվել է ադմինի կողմից",
 };
 
 type RefundedBidInfo = {

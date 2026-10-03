@@ -89,23 +89,22 @@ export default async function ContractPage({ params }: Props) {
     <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
       <SiteHeader />
       <main className="px-4 pb-16 pt-4 sm:px-6 lg:px-8">
-        <div className="mx-auto mb-6 w-full max-w-3xl">
+        <div className="mx-auto mb-6 w-full max-w-5xl">
           <Link
             href={
               contract.conversation
                 ? ROUTES.messageThread(contract.conversation.id)
                 : ROUTES.tenderDetail(contract.tenderId)
             }
-            className="inline-flex items-center gap-2 text-sm font-black text-slate-600 transition hover:text-slate-950"
+            className="inline-flex items-center gap-2 text-base font-black text-slate-600 transition hover:text-slate-950"
           >
-            <ArrowLeft className="size-4" />
+            <ArrowLeft className="size-5" />
             Հետ
           </Link>
         </div>
-        <div className="mx-auto mb-5 w-full max-w-3xl space-y-4">
+        <div className="mx-auto mb-6 w-full max-w-5xl space-y-5">
           <EscrowStepsGuide
             role={isOwner ? "client" : "provider"}
-            compact
           />
           {contract.escrow && contract.escrow.status !== "CANCELLED" ? (
             <ContractEscrowPanel

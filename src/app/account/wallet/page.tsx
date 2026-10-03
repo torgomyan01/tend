@@ -74,7 +74,7 @@ export default async function AccountWalletPage() {
   return (
     <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_#fff7ed_0%,_#f8fafc_45%,_#f1f5f9_100%)] text-slate-950">
       <SiteHeader />
-      <main className="mx-auto w-full max-w-3xl px-4 pb-16 pt-4 sm:px-6 sm:pt-6 lg:px-8">
+      <main className="mx-auto w-full max-w-5xl px-4 pb-16 pt-4 sm:px-6 sm:pt-6 lg:px-8">
         <Link
           href={ROUTES.account}
           className="inline-flex items-center gap-2 text-sm font-black text-slate-600 transition hover:text-slate-950"

@@ -11,6 +11,7 @@ import {
   notifyProviderBidFeeRefunded,
   REFUND_REASON_LABELS,
 } from "@/lib/bid-fee-refund-notify";
+import { ESCROW_BLOCK_UNAWARD_STATUSES } from "@/lib/escrow-service";
 
 export const dynamic = "force-dynamic";
 
@@ -119,4 +120,133 @@ export async function PATCH(
   }
 
   return NextResponse.json({ ok: true });
+}
+
+/**
+ * Ադմինը ջնջում է առաջարկը։
+ * Եթե գումարը արդեն escrow շրջանառության մեջ է՝ արգելվում է։
+ * Մուտքի վճարը (եթե կա և դեռ չի վերադարձվել) վերադարձվում է կրեդիտով։
+ */
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.id || !isAdminRole(session.user.role)) {
+    return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
+  }
+
+  const { id } = await params;
+
+  const bid = await prisma.bid.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      status: true,
+      tenderId: true,
+      tender: {
+        select: {
+          id: true,
+          status: true,
+          awardedBidId: true,
+        },
+      },
+      contracts: {
+        select: {
+          id: true,
+          status: true,
+          escrow: { select: { id: true, status: true } },
+        },
+      },
+    },
+  });
+
+  if (!bid) {
+    return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
+  }
+
+  const blockingEscrow = bid.contracts.find(
+    (c) =>
+      c.escrow &&
+      ESCROW_BLOCK_UNAWARD_STATUSES.includes(c.escrow.status),
+  );
+  if (blockingEscrow?.escrow) {
+    return NextResponse.json(
+      {
+        error: "ESCROW_ACTIVE",
+        status: blockingEscrow.escrow.status,
+      },
+      { status: 409 },
+    );
+  }
+
+  const refunded = await prisma.$transaction(async (tx) => {
+    const credit = await refundSingleBidAsCredit(
+      tx,
+      bid.id,
+      "BID_DELETED_BY_ADMIN",
+    );
+
+    if (bid.tender.awardedBidId === bid.id) {
+      await tx.tender.update({
+        where: { id: bid.tenderId },
+        data: {
+          awardedBidId: null,
+          awardedAt: null,
+          ...(bid.tender.status === "AWARDED"
+            ? { status: "ACTIVE" as const }
+            : {}),
+        },
+      });
+    }
+
+    const openContractIds = bid.contracts
+      .filter((c) => c.status !== "CANCELLED")
+      .map((c) => c.id);
+
+    if (openContractIds.length > 0) {
+      await tx.tenderEscrow.updateMany({
+        where: {
+          contractId: { in: openContractIds },
+          status: { in: ["AWAITING_CONTRACT", "PENDING_FUNDING"] },
+        },
+        data: {
+          status: "CANCELLED",
+          cancelledAt: new Date(),
+        },
+      });
+
+      await tx.tenderContract.updateMany({
+        where: { id: { in: openContractIds } },
+        data: {
+          status: "CANCELLED",
+          cancelledAt: new Date(),
+          cancelledById: session.user.id,
+        },
+      });
+    }
+
+    await tx.transaction.updateMany({
+      where: { bidId: bid.id },
+      data: { bidId: null },
+    });
+
+    await tx.bid.delete({ where: { id: bid.id } });
+
+    return credit;
+  });
+
+  if (refunded) {
+    try {
+      await notifyProviderBidFeeRefunded(
+        refunded,
+        REFUND_REASON_LABELS.BID_DELETED_BY_ADMIN,
+      );
+    } catch {
+      /* notify must not undo delete */
+    }
+  }
+
+  return NextResponse.json({ ok: true, refunded: Boolean(refunded) });
 }

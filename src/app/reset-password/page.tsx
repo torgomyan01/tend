@@ -13,7 +13,7 @@ export default async function ResetPasswordPage({ searchParams }: Props) {
 
   return (
     <main className="min-h-screen bg-[#f7f4ee] px-4 py-4 text-slate-950 sm:px-6 sm:py-8 lg:px-8">
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 sm:gap-8">
+      <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 sm:gap-8">
         <div className="flex items-center justify-between gap-3">
           <Link
             href={ROUTES.login}

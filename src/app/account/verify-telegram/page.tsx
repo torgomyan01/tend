@@ -51,7 +51,7 @@ export default async function VerifyTelegramPage({ searchParams }: Props) {
       <SiteHeader />
 
       <main className="px-4 pb-10 sm:px-6 lg:px-8">
-        <div className="mx-auto w-full max-w-lg pt-6 sm:pt-10">
+        <div className="mx-auto w-full max-w-2xl pt-6 sm:pt-10">
           <Link
             href={ROUTES.login}
             className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:text-slate-950"

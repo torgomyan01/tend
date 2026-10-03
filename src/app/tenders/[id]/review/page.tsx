@@ -79,7 +79,7 @@ export default async function TenderReviewPage({ params }: Props) {
     return (
       <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
         <SiteHeader />
-        <main className="mx-auto max-w-lg px-4 py-16 text-center">
+        <main className="mx-auto max-w-2xl px-4 py-16 text-center">
           <p className="font-bold text-slate-700">Մրցույթը չի գտնվել։</p>
           <Link
             href={ROUTES.tenders}
@@ -157,7 +157,7 @@ export default async function TenderReviewPage({ params }: Props) {
       <SiteHeader />
 
       <main className="px-4 pb-16 pt-8 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-xl">
+        <div className="mx-auto max-w-3xl">
           <Link
             href={ROUTES.tenderDetail(tenderId)}
             className="mb-6 inline-flex items-center gap-2 text-sm font-black text-slate-600 transition hover:text-slate-950"

@@ -18,6 +18,7 @@ export type AdminEscrowRow = {
   providerReceives: number;
   clientNote: string | null;
   disputeReason: string | null;
+  disputedAt: string | null;
   createdAt: string;
   tender: { id: string; title: string };
   contractId: string;
@@ -70,21 +71,30 @@ export function AdminEscrowPanel({ rows }: Props) {
         const busy = busyId === row.id;
         const clientLabel = row.client.name?.trim() || row.client.email;
         const providerLabel = row.provider.name?.trim() || row.provider.email;
+        const isDispute = row.status === "DISPUTED";
         return (
           <li
             key={row.id}
-            className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200"
+            className={`rounded-3xl bg-white p-5 shadow-sm ring-1 ${
+              isDispute
+                ? "ring-2 ring-rose-300 bg-rose-50/40"
+                : "ring-slate-200"
+            }`}
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-700">
+                <p
+                  className={`text-[10px] font-black uppercase tracking-[0.18em] ${
+                    isDispute ? "text-rose-700" : "text-emerald-700"
+                  }`}
+                >
                   {ESCROW_STATUS_LABEL[row.status] ?? row.status}
                 </p>
                 <h3 className="mt-1 text-base font-black text-slate-950">
                   {row.tender.title}
                 </h3>
                 <p className="mt-1 text-xs font-semibold text-slate-500">
-                  {formatDateTime(row.createdAt)} · կոդ՝{" "}
+                  {formatDateTime(row.disputedAt ?? row.createdAt)} · կոդ՝{" "}
                   <span className="font-mono text-emerald-800">
                     {row.paymentCode}
                   </span>
@@ -116,9 +126,19 @@ export function AdminEscrowPanel({ rows }: Props) {
               </p>
             ) : null}
             {row.disputeReason ? (
-              <p className="mt-2 text-xs font-bold text-rose-800">
-                Վեճ՝ {row.disputeReason}
-              </p>
+              <div className="mt-3 rounded-2xl bg-rose-100/80 px-4 py-3 ring-1 ring-rose-200">
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-rose-700">
+                  Վեճի պատճառ
+                </p>
+                <p className="mt-1 text-sm font-bold text-rose-950">
+                  {row.disputeReason}
+                </p>
+                {row.disputedAt ? (
+                  <p className="mt-1 text-xs font-semibold text-rose-800/80">
+                    Բացված է՝ {formatDateTime(row.disputedAt)}
+                  </p>
+                ) : null}
+              </div>
             ) : null}
 
             <div className="mt-4 flex flex-wrap gap-2">

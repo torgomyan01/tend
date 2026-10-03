@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ExternalLink, Gavel } from "lucide-react";
+import { AdminBidDeleteButton } from "@/components/admin/admin-bid-delete-button";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { ModerationDecisionButtons } from "@/components/admin/moderation-decision-buttons";
 import { prisma } from "@/lib/prisma";
@@ -176,16 +177,17 @@ export default async function AdminBidsPage({
                 </p>
               </div>
 
-              {bid.status === "PENDING" ? (
-                <div className="flex justify-end">
+              <div className="flex flex-wrap items-center justify-end gap-2">
+                {bid.status === "PENDING" ? (
                   <ModerationDecisionButtons
                     endpoint={`/api/admin/bids/${bid.id}`}
                     approveLabel="Թույլատրել պատվիրատուին"
                     rejectLabel="Մերժել"
                     size="sm"
                   />
-                </div>
-              ) : null}
+                ) : null}
+                <AdminBidDeleteButton bidId={bid.id} size="sm" />
+              </div>
             </article>
           ))
         )}

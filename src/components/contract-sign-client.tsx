@@ -126,24 +126,26 @@ export function ContractSignClient({
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-5">
-      <header className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-7">
-        <p className="text-[10px] font-black uppercase tracking-[0.18em] text-amber-700">
+    <div className="mx-auto w-full max-w-5xl space-y-6">
+      <header className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
+        <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-700">
           Պայմանագիր · {contractId.slice(0, 8)}
         </p>
-        <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-950">
+        <h1 className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
           {tenderTitle}
         </h1>
-        <p className="mt-2 text-sm font-bold text-slate-700">{statusLabel}</p>
-        <p className="mt-1 text-xs font-semibold text-slate-500">
+        <p className="mt-3 text-base font-bold text-slate-700 sm:text-lg">
+          {statusLabel}
+        </p>
+        <p className="mt-1 text-sm font-semibold text-slate-500 sm:text-base">
           Առաջարկված կատարող՝ {providerName}
         </p>
-        <div className="mt-3 flex flex-wrap gap-2 text-[10px] font-black uppercase tracking-wide">
+        <div className="mt-4 flex flex-wrap gap-2 text-xs font-black uppercase tracking-wide">
           <span
             className={
               clientAcceptedAt
-                ? "rounded-lg bg-emerald-100 px-2 py-1 text-emerald-800"
-                : "rounded-lg bg-slate-100 px-2 py-1 text-slate-500"
+                ? "rounded-lg bg-emerald-100 px-3 py-1.5 text-emerald-800"
+                : "rounded-lg bg-slate-100 px-3 py-1.5 text-slate-500"
             }
           >
             Պատվիրատու
@@ -151,8 +153,8 @@ export function ContractSignClient({
           <span
             className={
               providerAcceptedAt
-                ? "rounded-lg bg-emerald-100 px-2 py-1 text-emerald-800"
-                : "rounded-lg bg-slate-100 px-2 py-1 text-slate-500"
+                ? "rounded-lg bg-emerald-100 px-3 py-1.5 text-emerald-800"
+                : "rounded-lg bg-slate-100 px-3 py-1.5 text-slate-500"
             }
           >
             Կատարող
@@ -160,35 +162,35 @@ export function ContractSignClient({
         </div>
       </header>
 
-      <section className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-7">
-        <h2 className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-slate-500">
-          <FileText className="size-3.5" />
+      <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
+        <h2 className="flex items-center gap-2 text-sm font-black uppercase tracking-[0.18em] text-slate-500">
+          <FileText className="size-4" />
           Պայմանագրի տեքստ
         </h2>
-        <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-xs font-semibold leading-relaxed text-amber-950 ring-1 ring-amber-200">
+        <p className="mt-4 rounded-2xl bg-amber-50 px-5 py-4 text-sm font-semibold leading-relaxed text-amber-950 ring-1 ring-amber-200 sm:text-base">
           Հաստատելով՝ դուք ընդունում եք ստորև բերված տեքստը՝ իրավական ուժով։
           Պայմանագիրը միշտ պահպանվում է համակարգում։
         </p>
-        <div className="mt-4 max-h-[min(60vh,520px)] overflow-y-auto rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
-          <pre className="whitespace-pre-wrap font-sans text-xs font-semibold leading-relaxed text-slate-800">
+        <div className="mt-5 max-h-[min(70vh,720px)] overflow-y-auto rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-200 sm:p-6">
+          <pre className="whitespace-pre-wrap font-sans text-sm font-semibold leading-7 text-slate-800 sm:text-base sm:leading-8">
             {bodyText}
           </pre>
         </div>
       </section>
 
       {pending ? (
-        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           {canAccept ? (
             <button
               type="button"
               disabled={busy !== null}
               onClick={() => void accept()}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-700 px-5 py-3.5 text-sm font-black text-white transition hover:bg-emerald-600 disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-700 px-6 py-4 text-base font-black text-white transition hover:bg-emerald-600 disabled:opacity-50"
             >
               {busy === "accept" ? (
-                <Loader2 className="size-4 animate-spin" />
+                <Loader2 className="size-5 animate-spin" />
               ) : (
-                <CheckCircle2 className="size-4" />
+                <CheckCircle2 className="size-5" />
               )}
               Համաձայն եմ · Հաստատել
             </button>
@@ -198,32 +200,32 @@ export function ContractSignClient({
               type="button"
               disabled={busy !== null}
               onClick={() => void cancel()}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3.5 text-sm font-black text-rose-800 ring-1 ring-rose-200 transition hover:bg-rose-50 disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-4 text-base font-black text-rose-800 ring-1 ring-rose-200 transition hover:bg-rose-50 disabled:opacity-50"
             >
               {busy === "cancel" ? (
-                <Loader2 className="size-4 animate-spin" />
+                <Loader2 className="size-5 animate-spin" />
               ) : (
-                <XCircle className="size-4" />
+                <XCircle className="size-5" />
               )}
               Չեղարկել առաջարկը
             </button>
           ) : null}
           {!canAccept && isOwner && status === "PENDING_PROVIDER" ? (
-            <p className="self-center text-xs font-semibold text-slate-500">
+            <p className="self-center text-sm font-semibold text-slate-500 sm:text-base">
               Սպասում ենք կատարողի հաստատմանը…
             </p>
           ) : null}
           {!canAccept &&
           isProposedProvider &&
           status === "PENDING_CLIENT" ? (
-            <p className="self-center text-xs font-semibold text-slate-500">
+            <p className="self-center text-sm font-semibold text-slate-500 sm:text-base">
               Սպասում ենք պատվիրատուի հաստատմանը…
             </p>
           ) : null}
         </div>
       ) : null}
 
-      <div className="flex flex-wrap gap-3 text-sm font-bold">
+      <div className="flex flex-wrap gap-4 text-base font-bold">
         {conversationId ? (
           <a
             href={ROUTES.messageThread(conversationId)}

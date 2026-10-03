@@ -117,7 +117,7 @@ export default async function CreateTenderPage({
       <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
         <SiteHeader />
         <main className="px-4 pb-10 sm:px-6 lg:px-8">
-          <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 rounded-4xl bg-white p-7 shadow-sm ring-1 ring-slate-200">
+          <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 rounded-4xl bg-white p-7 shadow-sm ring-1 ring-slate-200">
             <span className="grid size-12 place-items-center rounded-2xl bg-red-100 text-red-700">
               <AlertTriangle className="size-6" />
             </span>
@@ -138,7 +138,7 @@ export default async function CreateTenderPage({
       <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
         <SiteHeader />
         <main className="px-4 pb-10 sm:px-6 lg:px-8">
-          <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 rounded-4xl bg-white p-7 shadow-sm ring-1 ring-slate-200">
+          <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 rounded-4xl bg-white p-7 shadow-sm ring-1 ring-slate-200">
             <span className="grid size-12 place-items-center rounded-2xl bg-amber-100 text-amber-800">
               <AlertTriangle className="size-6" />
             </span>
@@ -181,7 +181,7 @@ export default async function CreateTenderPage({
             />
 
             <div className="relative flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
-              <div className="max-w-2xl space-y-4">
+              <div className="max-w-4xl space-y-4">
                 <p className="inline-flex items-center gap-2 rounded-full border border-amber-300/60 bg-amber-100/70 px-3.5 py-1.5 text-xs font-black uppercase tracking-[0.16em] text-amber-900 shadow-sm sm:px-4 sm:py-2 sm:text-[0.78rem]">
                   <Briefcase className="size-3.5 text-amber-800" aria-hidden />
                   Նոր մրցույթ

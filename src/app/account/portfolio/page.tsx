@@ -58,7 +58,7 @@ export default async function AccountPortfolioPage() {
       <SiteHeader />
 
       <main className="px-4 pb-12 pt-6 sm:px-6 lg:px-8">
-        <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+        <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
           <Link
             href={ROUTES.account}
             className="inline-flex w-fit items-center gap-2 text-sm font-black text-slate-600 transition hover:text-slate-950"

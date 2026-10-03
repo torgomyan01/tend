@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  BriefcaseBusiness,
   History,
   Heart,
   LayoutDashboard,
@@ -78,6 +79,15 @@ export function MobileProfileDropdown({ isAdmin }: Props) {
           >
             <LayoutDashboard className="size-4 text-amber-700" />
             Իմ մրցույթներ
+          </Link>
+          <Link
+            role="menuitem"
+            href={ROUTES.accountMyWork}
+            onClick={close}
+            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black text-slate-800 transition hover:bg-slate-50"
+          >
+            <BriefcaseBusiness className="size-4 text-amber-700" />
+            Իմ աշխատանքները
           </Link>
           <Link
             role="menuitem"

@@ -31,6 +31,7 @@ type Message = {
   contractHref: string | null;
   createdAt: string;
   senderUserId: string | null;
+  senderIsStaff?: boolean;
   sender: { id: string; name: string; image: string | null } | null;
   attachments: Attachment[];
 };
@@ -51,6 +52,7 @@ type ConversationListItem = {
     senderUserId: string | null;
   } | null;
   unreadCount: number;
+  isStaffView?: boolean;
 };
 
 type ThreadMeta = {
@@ -60,7 +62,9 @@ type ThreadMeta = {
   contractId: string;
   tender: { id: string; title: string };
   peer: { id: string; name: string; image: string | null };
-  role: "client" | "provider";
+  client?: { id: string; name: string; image: string | null };
+  provider?: { id: string; name: string; image: string | null };
+  role: "client" | "provider" | "admin";
 };
 
 const POLL_MS = 9_000;
@@ -208,7 +212,9 @@ export function MessagesInbox() {
   }, [messages, scrollToBottom]);
 
   async function send() {
-    if (!activeId || !thread || thread.status === "ARCHIVED") return;
+    if (!activeId || !thread) return;
+    const staffCanWrite = thread.role === "admin";
+    if (thread.status === "ARCHIVED" && !staffCanWrite) return;
     const body = text.trim();
     if (!body && files.length === 0) return;
 
@@ -330,6 +336,11 @@ export function MessagesInbox() {
                             ? previewText(c.lastMessage.body)
                             : "—"}
                         </p>
+                        {c.isStaffView ? (
+                          <span className="mt-1 inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide text-rose-600">
+                            Վեճ · մոդերացիա
+                          </span>
+                        ) : null}
                         {c.status === "ARCHIVED" ? (
                           <span className="mt-1 inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide text-slate-400">
                             <Archive className="size-3" />
@@ -376,7 +387,9 @@ export function MessagesInbox() {
               </button>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-black text-slate-950">
-                  {thread.peer.name}
+                  {thread.role === "admin" && thread.client && thread.provider
+                    ? `${thread.client.name} · ${thread.provider.name}`
+                    : thread.peer.name}
                 </p>
                 <Link
                   href={ROUTES.tenderDetail(thread.tender.id)}
@@ -384,8 +397,21 @@ export function MessagesInbox() {
                 >
                   {thread.tender.title}
                 </Link>
+                {thread.role === "admin" ? (
+                  <p className="mt-0.5 text-[10px] font-black uppercase tracking-wide text-rose-700">
+                    Ադմին մոդերացիա · վեճի զրույց
+                  </p>
+                ) : null}
               </div>
-              {archived ? (
+              {thread.role === "admin" ? (
+                <Link
+                  href={ROUTES.admin.disputes}
+                  className="inline-flex items-center gap-1 rounded-xl bg-rose-50 px-2.5 py-1.5 text-[11px] font-black text-rose-900 ring-1 ring-rose-200"
+                >
+                  Վեճեր
+                </Link>
+              ) : null}
+              {archived && thread.role !== "admin" ? (
                 <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2 py-1 text-[10px] font-black uppercase tracking-wide text-slate-500">
                   <Archive className="size-3" />
                   Արխիվ
@@ -448,8 +474,47 @@ export function MessagesInbox() {
                   );
                 }
 
-                const fromPeer = m.senderUserId === thread.peer.id;
-                const alignEnd = !fromPeer;
+                const isStaffMsg = Boolean(m.senderIsStaff);
+                const fromPeer =
+                  !isStaffMsg && m.senderUserId === thread.peer.id;
+                const alignEnd = !isStaffMsg && !fromPeer;
+
+                if (isStaffMsg) {
+                  return (
+                    <div key={m.id} className="flex justify-center">
+                      <div className="max-w-[min(100%,480px)] rounded-2xl bg-indigo-50 px-3.5 py-2.5 ring-1 ring-indigo-200">
+                        <p className="mb-1 text-[10px] font-black uppercase tracking-wide text-indigo-700">
+                          {m.sender?.name ?? "Tend.am ադմին"}
+                        </p>
+                        {m.body.trim() ? (
+                          <p className="whitespace-pre-wrap text-sm font-semibold leading-relaxed text-indigo-950">
+                            {m.body}
+                          </p>
+                        ) : null}
+                        {m.attachments.length > 0 ? (
+                          <ul className="mt-2 space-y-2">
+                            {m.attachments.map((a) => (
+                              <li key={a.id}>
+                                <a
+                                  href={a.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-800 underline-offset-2 hover:underline"
+                                >
+                                  <Paperclip className="size-3.5" />
+                                  {a.originalFileName}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : null}
+                        <p className="mt-1 text-[10px] font-semibold text-indigo-700/70">
+                          {formatTime(m.createdAt)}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                }
 
                 return (
                   <div
@@ -526,7 +591,7 @@ export function MessagesInbox() {
             </div>
 
             <footer className="border-t border-slate-100 px-3 py-3">
-              {archived ? (
+              {archived && thread.role !== "admin" ? (
                 <p className="rounded-xl bg-slate-100 px-3 py-2.5 text-center text-xs font-semibold text-slate-500">
                   Զրույցը արխիվացված է · միայն դիտում
                 </p>
@@ -583,7 +648,11 @@ export function MessagesInbox() {
                       value={text}
                       onChange={(e) => setText(e.target.value)}
                       rows={1}
-                      placeholder="Գրեք հաղորդագրություն…"
+                      placeholder={
+                        thread.role === "admin"
+                          ? "Ադմինի հաղորդագրություն կողմերին…"
+                          : "Գրեք հաղորդագրություն…"
+                      }
                       className="max-h-28 min-h-10 flex-1 resize-none rounded-xl bg-slate-50 px-3 py-2.5 text-sm font-semibold text-slate-900 outline-none ring-1 ring-slate-200 focus:ring-amber-300"
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey) {

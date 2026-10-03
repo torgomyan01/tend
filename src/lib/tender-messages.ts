@@ -1,5 +1,8 @@
-import type { Prisma } from "@/generated/prisma/client";
+import type { Prisma, UserRole } from "@/generated/prisma/client";
+import { isAdminRole } from "@/lib/admin";
 import { ROUTES } from "@/lib/routes";
+
+export type ConversationParticipantRole = "client" | "provider" | "admin";
 
 export const tenderMessageInclude = {
   attachments: {
@@ -12,7 +15,7 @@ export const tenderMessageInclude = {
     },
   },
   senderUser: {
-    select: { id: true, name: true, email: true, image: true },
+    select: { id: true, name: true, email: true, image: true, role: true },
   },
 } satisfies Prisma.TenderMessageInclude;
 
@@ -21,6 +24,9 @@ export type TenderMessageWithRelations = Prisma.TenderMessageGetPayload<{
 }>;
 
 export function serializeTenderMessage(message: TenderMessageWithRelations) {
+  const senderIsStaff = Boolean(
+    message.senderUser?.role && isAdminRole(message.senderUser.role),
+  );
   return {
     id: message.id,
     kind: message.kind,
@@ -31,13 +37,19 @@ export function serializeTenderMessage(message: TenderMessageWithRelations) {
       : null,
     createdAt: message.createdAt.toISOString(),
     senderUserId: message.senderUserId,
+    senderIsStaff,
     sender: message.senderUser
       ? {
           id: message.senderUser.id,
-          name:
-            message.senderUser.name?.trim() ||
-            message.senderUser.email ||
-            "Օգտատեր",
+          name: senderIsStaff
+            ? `Tend.am · ${
+                message.senderUser.name?.trim() ||
+                message.senderUser.email ||
+                "Ադմին"
+              }`
+            : message.senderUser.name?.trim() ||
+              message.senderUser.email ||
+              "Օգտատեր",
           image: message.senderUser.image,
         }
       : null,
@@ -57,6 +69,18 @@ export function participantRole(
 ): "client" | "provider" | null {
   if (userId === conversation.clientId) return "client";
   if (userId === conversation.providerId) return "provider";
+  return null;
+}
+
+/** Client/provider, կամ ADMIN/MODERATOR որպես մոդերատոր */
+export function conversationAccessRole(
+  userId: string,
+  conversation: { clientId: string; providerId: string },
+  userRole?: UserRole | null,
+): ConversationParticipantRole | null {
+  const party = participantRole(userId, conversation);
+  if (party) return party;
+  if (isAdminRole(userRole)) return "admin";
   return null;
 }
 
