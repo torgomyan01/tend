@@ -1,37 +1,41 @@
 "use client";
 
+import { useEffect, useId, useRef, useState } from "react";
 import {
-  BriefcaseBusiness,
-  History,
-  Heart,
-  LayoutDashboard,
-  LogOut,
-  Settings2,
-  ShieldCheck,
-  UserCircle2,
-} from "lucide-react";
-import Link from "next/link";
-import { signOut } from "next-auth/react";
-import { useEffect, useRef, useState } from "react";
-import { ROUTES } from "@/lib/routes";
+  AccountMenuPanel,
+  initialsFromLabel,
+} from "@/components/account-menu-panel";
 
 type Props = {
+  label: string;
   isAdmin: boolean;
 };
 
-export function MobileProfileDropdown({ isAdmin }: Props) {
+export function MobileProfileDropdown({ label, isAdmin }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+  const menuId = useId();
 
   useEffect(() => {
+    if (!open) return;
+
     function handlePointerDown(event: PointerEvent) {
       if (!rootRef.current?.contains(event.target as Node)) {
         setOpen(false);
       }
     }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+
     document.addEventListener("pointerdown", handlePointerDown);
-    return () => document.removeEventListener("pointerdown", handlePointerDown);
-  }, []);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
 
   const close = () => setOpen(false);
 
@@ -41,96 +45,37 @@ export function MobileProfileDropdown({ isAdmin }: Props) {
         type="button"
         aria-expanded={open}
         aria-haspopup="menu"
+        aria-controls={menuId}
         aria-label="Իմ հաշիվ"
         onClick={() => setOpen((v) => !v)}
-        className="grid size-11 place-items-center rounded-2xl bg-white text-slate-950 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg"
+        className="grid size-11 place-items-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 transition active:scale-[0.98]"
       >
-        <UserCircle2 className="size-5" />
+        <span className="grid size-8 place-items-center rounded-full bg-linear-to-br from-amber-200 to-amber-400 text-[11px] font-black text-slate-950">
+          {initialsFromLabel(label)}
+        </span>
       </button>
 
       {open ? (
-        <div
-          role="menu"
-          className="absolute right-0 top-full z-40 mt-3 min-w-[min(100vw-2rem,280px)] overflow-hidden rounded-3xl bg-white p-2 shadow-2xl shadow-slate-950/15 ring-1 ring-slate-200"
-        >
-          <Link
-            role="menuitem"
-            href={ROUTES.account}
-            onClick={close}
-            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black text-slate-800 transition hover:bg-slate-50"
-          >
-            <UserCircle2 className="size-4 text-amber-700" />
-            Իմ հաշիվ
-          </Link>
-          <Link
-            role="menuitem"
-            href={ROUTES.accountSettings}
-            onClick={close}
-            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black text-slate-800 transition hover:bg-slate-50"
-          >
-            <Settings2 className="size-4 text-amber-700" />
-            Կարգավորումներ
-          </Link>
-          <Link
-            role="menuitem"
-            href={ROUTES.myTenders}
-            onClick={close}
-            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black text-slate-800 transition hover:bg-slate-50"
-          >
-            <LayoutDashboard className="size-4 text-amber-700" />
-            Իմ մրցույթներ
-          </Link>
-          <Link
-            role="menuitem"
-            href={ROUTES.accountMyWork}
-            onClick={close}
-            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black text-slate-800 transition hover:bg-slate-50"
-          >
-            <BriefcaseBusiness className="size-4 text-amber-700" />
-            Իմ աշխատանքները
-          </Link>
-          <Link
-            role="menuitem"
-            href={ROUTES.bidHistory}
-            onClick={close}
-            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black text-slate-800 transition hover:bg-slate-50"
-          >
-            <History className="size-4 text-amber-700" />
-            Իմ առաջարկներ
-          </Link>
-          <Link
-            role="menuitem"
-            href={ROUTES.likedTenders}
-            onClick={close}
-            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black text-slate-800 transition hover:bg-slate-50"
-          >
-            <Heart className="size-4 text-amber-700" />
-            Իմ հավանածները
-          </Link>
-          {isAdmin ? (
-            <Link
-              role="menuitem"
-              href={ROUTES.admin.dashboard}
-              onClick={close}
-              className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black text-slate-800 transition hover:bg-slate-50"
-            >
-              <ShieldCheck className="size-4 text-amber-700" />
-              Կառավարման վահանակ
-            </Link>
-          ) : null}
+        <>
           <button
             type="button"
-            role="menuitem"
-            className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black text-slate-800 transition hover:bg-slate-50"
-            onClick={async () => {
-              close();
-              await signOut({ callbackUrl: ROUTES.home });
-            }}
+            aria-label="Փակել մենյուն"
+            className="fixed inset-0 z-40 bg-slate-950/25 backdrop-blur-[1px]"
+            onClick={close}
+          />
+          <div
+            id={menuId}
+            role="menu"
+            className="fixed inset-x-3 top-[4.25rem] z-50 max-h-[min(32rem,calc(100dvh-5.5rem))] overflow-y-auto overscroll-contain rounded-[1.75rem] bg-white shadow-[0_24px_60px_-16px_rgba(15,23,42,0.35)] ring-1 ring-slate-200/90 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-3 sm:w-[min(18.5rem,calc(100vw-2rem))] sm:max-h-[min(28rem,70dvh)]"
+            style={{ animation: "tend-dropdown-in 160ms ease-out" }}
           >
-            <LogOut className="size-4 text-amber-700" />
-            Դուրս գալ
-          </button>
-        </div>
+            <AccountMenuPanel
+              label={label}
+              isAdmin={isAdmin}
+              onNavigate={close}
+            />
+          </div>
+        </>
       ) : null}
     </div>
   );

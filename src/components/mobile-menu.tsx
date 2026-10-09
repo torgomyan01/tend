@@ -49,9 +49,10 @@ const navItems = [
 type Props = {
   isLoggedIn: boolean;
   isAdmin: boolean;
+  label?: string;
 };
 
-export function MobileMenu({ isLoggedIn, isAdmin }: Props) {
+export function MobileMenu({ isLoggedIn, isAdmin, label = "Հաշիվ" }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -75,7 +76,9 @@ export function MobileMenu({ isLoggedIn, isAdmin }: Props) {
           <NotificationsDropdown isLoggedIn={isLoggedIn} />
         </>
       ) : null}
-      {isLoggedIn ? <MobileProfileDropdown isAdmin={isAdmin} /> : null}
+      {isLoggedIn ? (
+        <MobileProfileDropdown label={label} isAdmin={isAdmin} />
+      ) : null}
       <button
         type="button"
         aria-expanded={isOpen}
@@ -130,15 +133,18 @@ export function MobileMenu({ isLoggedIn, isAdmin }: Props) {
             </nav>
 
             {!isLoggedIn ? (
-              <div className="mt-6 overflow-hidden rounded-[1.35rem] bg-gradient-to-br from-amber-50 via-white to-white p-5 ring-1 ring-amber-200/70">
-                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-amber-800">
-                  Միացեք հարթակին
+              <div className="mt-6 overflow-hidden rounded-[1.35rem] bg-linear-to-br from-slate-950 to-slate-800 p-5 text-white shadow-lg shadow-slate-950/20">
+                <p className="text-base font-black tracking-tight">
+                  Միացեք Tend.am-ին
+                </p>
+                <p className="mt-1.5 text-sm font-semibold leading-relaxed text-slate-300">
+                  Մրցույթներ, առաջարկներ և մասնագետներ՝ մեկ հաշվում։
                 </p>
                 <div className="mt-5 grid gap-3">
                   <Link
                     href={ROUTES.login}
                     onClick={close}
-                    className="flex items-center justify-center gap-2.5 rounded-2xl bg-slate-950 px-5 py-4 text-base font-black text-white shadow-lg shadow-slate-950/20 transition active:scale-[0.99] hover:bg-slate-800"
+                    className="flex items-center justify-center gap-2.5 rounded-2xl bg-white/10 px-5 py-3.5 text-base font-black text-white ring-1 ring-white/15 transition active:scale-[0.99] hover:bg-white/15"
                   >
                     <LogIn className="size-5" />
                     Մուտք
@@ -146,9 +152,9 @@ export function MobileMenu({ isLoggedIn, isAdmin }: Props) {
                   <Link
                     href={ROUTES.register}
                     onClick={close}
-                    className="flex items-center justify-center gap-2.5 rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 ring-1 ring-slate-200 transition active:scale-[0.99] hover:bg-slate-50"
+                    className="flex items-center justify-center gap-2.5 rounded-2xl bg-amber-400 px-5 py-3.5 text-base font-black text-slate-950 shadow-sm transition active:scale-[0.99] hover:bg-amber-300"
                   >
-                    <UserPlus className="size-5 text-amber-700" />
+                    <UserPlus className="size-5" />
                     Գրանցում
                   </Link>
                 </div>

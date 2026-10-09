@@ -76,7 +76,11 @@ export async function SiteHeader() {
             </Link>
           </div>
         )}
-        <MobileMenu isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
+        <MobileMenu
+          isLoggedIn={isLoggedIn}
+          isAdmin={isAdmin}
+          label={authLabel}
+        />
       </div>
     </header>
     </>

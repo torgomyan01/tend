@@ -22,7 +22,7 @@ export function SiteNav() {
   const pathname = usePathname() ?? "/";
 
   return (
-    <nav className="hidden items-center gap-8 text-sm font-semibold md:flex">
+    <nav className="hidden items-center gap-8 text-sm font-semibold lg:flex">
       <Link
         className={navLinkClass(isActivePath(pathname, ROUTES.tenders))}
         href={ROUTES.tenders}
