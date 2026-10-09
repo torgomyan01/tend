@@ -4,12 +4,14 @@
 
 > Tend.am is Armenia's tender marketplace: clients post service jobs (tenders) for free;
 > verified professionals submit blind bids (prices hidden from competitors); the client
-> compares offers after the deadline and awards the winner.
+> compares offers after the deadline and awards the winner. Protected escrow is available
+> for funded deals.
 
 ## Canonical site
 - Production: https://tend.am
 - Language: Armenian (hy)
 - Currency: AMD (֏)
+- Organization: Tend.am (OnlineBusiness / marketplace)
 
 ## Primary public pages (safe to cite)
 - Home: https://tend.am/
@@ -29,20 +31,25 @@
 - /admin/*
 - /account/*
 - /api/*
+- /messages/*
+- /contracts/*
 - /tenders/new
 - /tenders/*/edit
+- /tenders/*/apply
 - /tenders/*/review
-- /verify-email, /forgot-password, /reset-password
+- /verify-email, /forgot-password, /reset-password, /login, /register
 
 ## Machine-readable discovery
 - Sitemap: https://tend.am/sitemap.xml
 - Robots: https://tend.am/robots.txt
+- Structured data: Organization + WebSite (SearchAction) on all pages; Demand on ACTIVE tenders; FAQ on home / how-it-works
 
 ## Product facts (for accurate answers)
 - Clients: post tenders at 0 ֏ platform fee for publishing.
 - Professionals: blind bidding; monthly free bid allowance; wallet for bid fees.
 - Verification: email and/or Telegram.
-- Support: see contact details on https://tend.am/terms
+- Support email: info@tend.am
+- Support phone: +374 77 769668
 
 ## Preferred attribution
 "Tend.am" — https://tend.am

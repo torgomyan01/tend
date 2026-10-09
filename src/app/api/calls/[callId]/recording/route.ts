@@ -1,23 +1,10 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { requireCallParticipant } from "@/lib/call-access";
-import {
-  callMediaLabel,
-  postCallSystemMessage,
-} from "@/lib/call-session";
-import {
-  isAudioMessageMime,
-  isVideoMessageMime,
-  MESSAGE_MAX_VIDEO_BYTES,
-  MESSAGE_MAX_VOICE_BYTES,
-  saveMessageUpload,
-} from "@/lib/tender-message-upload";
-import {
-  serializeTenderMessage,
-  tenderMessageInclude,
-} from "@/lib/tender-messages";
+import { appendCallRecordingChunk } from "@/lib/call-recording-storage";
+import { finalizeCallRecording } from "@/lib/finalize-call-recording";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 300;
 
 type Ctx = { params: Promise<{ callId: string }> };
 
@@ -25,18 +12,19 @@ export async function POST(request: Request, context: Ctx) {
   const { callId } = await context.params;
   const access = await requireCallParticipant(callId);
   if ("error" in access && access.error) return access.error;
-  const { call } = access;
+  const { call, userId } = access;
 
-  if (call.recordingMessageId) {
-    return NextResponse.json({ error: "ALREADY_SAVED" }, { status: 409 });
-  }
-
-  if (
-    call.status !== "ENDED" &&
-    call.status !== "ACTIVE" &&
-    call.status !== "REJECTED"
-  ) {
-    // Allow upload right as hangup happens (ACTIVE) or after ENDED
+  // Accept chunks during/after the call so late flushes are not rejected.
+  const allowed = new Set([
+    "RINGING",
+    "ACTIVE",
+    "ENDED",
+    "REJECTED",
+    "CANCELLED",
+    "MISSED",
+  ]);
+  if (!allowed.has(call.status)) {
+    return NextResponse.json({ error: "CALL_CLOSED" }, { status: 409 });
   }
 
   let formData: FormData;
@@ -46,83 +34,56 @@ export async function POST(request: Request, context: Ctx) {
     return NextResponse.json({ error: "INVALID_BODY" }, { status: 400 });
   }
 
-  const file = formData.get("file");
-  if (!(file instanceof File) || file.size <= 0) {
-    return NextResponse.json({ error: "EMPTY_FILE" }, { status: 400 });
-  }
+  const action = String(formData.get("action") ?? "finalize");
 
-  const isVideo = isVideoMessageMime(file.type);
-  const isAudio = isAudioMessageMime(file.type);
-  if (!isVideo && !isAudio) {
-    return NextResponse.json({ error: "INVALID_FILE" }, { status: 400 });
-  }
+  if (action === "chunk") {
+    // Single recorder policy: only the caller may upload (mixed both sides).
+    if (userId !== call.callerId) {
+      return NextResponse.json({ ok: true, skipped: true });
+    }
 
-  const maxBytes = isVideo ? MESSAGE_MAX_VIDEO_BYTES : MESSAGE_MAX_VOICE_BYTES;
-  if (file.size > maxBytes) {
-    return NextResponse.json(
-      { error: "FILE_TOO_LARGE", maxBytes },
-      { status: 400 },
-    );
-  }
+    const file = formData.get("chunk");
+    if (!(file instanceof File) || file.size <= 0) {
+      return NextResponse.json({ error: "EMPTY_CHUNK" }, { status: 400 });
+    }
+    if (file.size > 20 * 1024 * 1024) {
+      return NextResponse.json({ error: "CHUNK_TOO_LARGE" }, { status: 400 });
+    }
 
-  let saved;
-  try {
-    saved = await saveMessageUpload(call.conversationId, file);
-  } catch {
-    return NextResponse.json({ error: "INVALID_FILE" }, { status: 400 });
-  }
+    const mimeType =
+      String(formData.get("mimeType") ?? file.type ?? "").trim() ||
+      (call.mediaType === "VIDEO" ? "video/webm" : "audio/webm");
 
-  const label = callMediaLabel(call.mediaType);
-  const body = isVideo
-    ? `${label} · տեսագրություն`
-    : `${label} · ձայնագրություն`;
-
-  const now = new Date();
-  const message = await prisma.$transaction(async (tx) => {
-    const created = await tx.tenderMessage.create({
-      data: {
-        conversationId: call.conversationId,
-        senderUserId: null,
-        kind: "SYSTEM_CALL",
-        body,
-        attachments: {
-          create: {
-            url: saved.url,
-            originalFileName: saved.originalFileName,
-            mimeType: saved.mimeType,
-            sizeBytes: saved.sizeBytes,
-          },
-        },
-      },
-      include: tenderMessageInclude,
-    });
-
-    await tx.tenderConversation.update({
-      where: { id: call.conversationId },
-      data: { lastMessageAt: now },
-    });
-
-    await tx.callSession.update({
-      where: { id: callId },
-      data: { recordingMessageId: created.id },
-    });
-
-    return created;
-  });
-
-  // Ensure a summary line exists even if hangup raced
-  if (call.status === "ACTIVE") {
     try {
-      await postCallSystemMessage({
-        conversationId: call.conversationId,
-        body: `${label} · ավարտված`,
+      const meta = await appendCallRecordingChunk({
+        callId,
+        userId,
+        mimeType,
+        isVideo: call.mediaType === "VIDEO",
+        chunk: Buffer.from(await file.arrayBuffer()),
       });
-    } catch {
-      /* ignore */
+      return NextResponse.json({ ok: true, meta });
+    } catch (error) {
+      console.error("call recording chunk failed", callId, error);
+      return NextResponse.json({ error: "CHUNK_WRITE_FAILED" }, { status: 500 });
     }
   }
 
-  return NextResponse.json({
-    message: serializeTenderMessage(message),
-  });
+  if (action === "finalize") {
+    try {
+      const result = await finalizeCallRecording(callId);
+      if (!result.ok) {
+        return NextResponse.json(
+          { error: result.reason ?? "FINALIZE_FAILED" },
+          { status: result.reason === "NO_RECORDING" ? 404 : 500 },
+        );
+      }
+      return NextResponse.json({ ok: true, message: result.message });
+    } catch (error) {
+      console.error("call recording finalize failed", callId, error);
+      return NextResponse.json({ error: "FINALIZE_FAILED" }, { status: 500 });
+    }
+  }
+
+  return NextResponse.json({ error: "UNKNOWN_ACTION" }, { status: 400 });
 }

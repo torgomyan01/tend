@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
 import { useId, useRef, useState } from "react";
 import { formatAmd } from "@/lib/format";
 import {
-  coverLetterSnippet,
   initialsFromMasked,
   maskApplicantDisplayName,
 } from "@/lib/bid-teaser";
@@ -35,7 +34,6 @@ export type ApplyPeerMessage = {
   coverLetter: string;
   provider: {
     name: string | null;
-    image: string | null;
     accountType: AccountTypeValue;
   };
 };
@@ -252,19 +250,12 @@ export function TenderApplyForm({
                   className="rounded-3xl bg-slate-50/80 p-4 ring-1 ring-slate-200"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="relative size-12 shrink-0 overflow-hidden rounded-2xl bg-slate-200">
-                      {bid.provider.image ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={bid.provider.image}
-                          alt=""
-                          className="size-full scale-125 object-cover opacity-90 blur-[5px]"
-                        />
-                      ) : (
-                        <span className="flex size-full items-center justify-center text-sm font-black text-slate-600">
-                          {letter}
-                        </span>
-                      )}
+                    <div
+                      className="relative grid size-12 shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br from-slate-200 via-slate-300 to-slate-400 text-sm font-black text-slate-700"
+                      aria-hidden
+                    >
+                      <span className="select-none">{letter}</span>
+                      <span className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_55%)]" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
@@ -275,9 +266,8 @@ export function TenderApplyForm({
                           accountType={bid.provider.accountType}
                         />
                       </div>
-                      <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-relaxed text-slate-700">
-                        {bid.coverLetter.trim() ||
-                          coverLetterSnippet(bid.coverLetter, 40)}
+                      <p className="mt-2 text-sm font-semibold leading-relaxed text-slate-700">
+                        «{bid.coverLetter.trim() || "…"}»
                       </p>
                     </div>
                   </div>

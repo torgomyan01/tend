@@ -1,7 +1,17 @@
 import { ArrowLeft, LockKeyhole } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ResetPasswordForm } from "@/components/reset-password-form";
 import { ROUTES } from "@/lib/routes";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import { NOINDEX_NOFOLLOW } from "@/lib/seo/site";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "Նոր գաղտնաբառ",
+  description: "Սահմանեք նոր գաղտնաբառ Tend.am հաշվի համար։",
+  path: "/reset-password",
+  robots: NOINDEX_NOFOLLOW,
+});
 
 type Props = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -57,4 +67,3 @@ export default async function ResetPasswordPage({ searchParams }: Props) {
     </main>
   );
 }
-

@@ -1,4 +1,3 @@
-import Home from "@/app/page";
 import {
   Briefcase,
   Building2,

@@ -53,6 +53,8 @@ export function SupportChatWidget() {
 
   const isLoggedIn = status === "authenticated" && Boolean(session?.user?.id);
   const hideOnAdmin = pathname.startsWith("/admin");
+  const hideOnMessages = pathname === "/messages" || pathname.startsWith("/messages/");
+  const hideWidget = hideOnAdmin || hideOnMessages;
   const showDebug = process.env.NODE_ENV === "development";
 
   useEffect(() => {
@@ -161,15 +163,15 @@ export function SupportChatWidget() {
   }, [isLoggedIn, open]);
 
   useEffect(() => {
-    if (!isLoggedIn || hideOnAdmin) return;
+    if (!isLoggedIn || hideWidget) return;
     void fetchUnreadStatus();
-  }, [isLoggedIn, hideOnAdmin, fetchUnreadStatus]);
+  }, [isLoggedIn, hideWidget, fetchUnreadStatus]);
 
   useEffect(() => {
-    if (!isLoggedIn || hideOnAdmin || open) return;
+    if (!isLoggedIn || hideWidget || open) return;
     const id = window.setInterval(() => void fetchUnreadStatus(), POLL_MS);
     return () => window.clearInterval(id);
-  }, [isLoggedIn, hideOnAdmin, open, fetchUnreadStatus]);
+  }, [isLoggedIn, hideWidget, open, fetchUnreadStatus]);
 
   useEffect(() => {
     if (!open || !isLoggedIn) return;
@@ -227,7 +229,7 @@ export function SupportChatWidget() {
     }
   }
 
-  if (!isLoggedIn || hideOnAdmin) {
+  if (!isLoggedIn || hideWidget) {
     return null;
   }
 

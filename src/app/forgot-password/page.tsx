@@ -1,7 +1,7 @@
 import { ArrowLeft, KeyRound, ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { TelegramForgotPasswordForm } from "@/components/telegram-forgot-password-form";
+import { ForgotPasswordForm } from "@/components/forgot-password-form";
 import { ROUTES } from "@/lib/routes";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { NOINDEX_FOLLOW } from "@/lib/seo/site";
@@ -14,8 +14,8 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 const recoverySteps = [
-  "Մուտքագրեք գրանցված էլ․ փոստը",
-  "Ստացեք վերականգնման հղումը",
+  "Մուտքագրեք գրանցված հեռախոսահամարը",
+  "Ստացեք հղումը Telegram-ով, էլ․ փոստով կամ SMS-ով",
   "Սահմանեք նոր անվտանգ գաղտնաբառ",
 ];
 
@@ -60,8 +60,8 @@ export default function ForgotPasswordPage() {
                 Վերականգնեք մուտքը ձեր հաշվին անվտանգ ձևով։
               </h1>
               <p className="mt-5 max-w-lg text-base leading-8 text-slate-300 sm:text-lg">
-                Մենք կուղարկենք հղում, որով կարող եք ստեղծել նոր գաղտնաբառ և
-                շարունակել օգտագործել Tend.am-ը։
+                Նախ մուտքագրեք հեռախոսահամարը։ Հղումը կուղարկենք նախ Telegram,
+                ապա էլ․ փոստ, եթե դրանք չկան՝ SMS։
               </p>
 
               <div className="mt-8 space-y-3 sm:mt-10 sm:space-y-4">
@@ -90,11 +90,12 @@ export default function ForgotPasswordPage() {
                 Մոռացե՞լ եք գաղտնաբառը
               </h2>
               <p className="mt-2 leading-7 text-slate-600">
-                Մուտքագրեք ձեր էլ․ փոստը, և վերականգնման հղումը կստանաք Telegram-ում։
+                Մուտքագրեք հեռախոսահամարը։ Կուղարկենք վերականգնման հղումը
+                Telegram-ով, էլ․ փոստով կամ SMS-ով։
               </p>
             </div>
 
-            <TelegramForgotPasswordForm />
+            <ForgotPasswordForm />
           </div>
         </section>
       </div>

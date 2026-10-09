@@ -1,7 +1,6 @@
 import {
   ArrowLeft,
   CheckCircle2,
-  LogIn,
 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";

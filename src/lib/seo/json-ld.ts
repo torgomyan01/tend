@@ -1,28 +1,97 @@
 import { absoluteAppUrl } from "@/lib/absolute-app-url";
 import { ROUTES } from "@/lib/routes";
-import { SITE_DEFAULT_DESCRIPTION, SITE_NAME, SITE_ORIGIN } from "@/lib/seo/site";
+import {
+  PAGE_SEO,
+  SITE_DEFAULT_DESCRIPTION,
+  SITE_NAME,
+  SITE_ORIGIN,
+  SITE_SLOGAN,
+  SITE_SUPPORT_EMAIL,
+  siteSameAsProfiles,
+  siteSupportTelephone,
+} from "@/lib/seo/site";
 
 export type JsonLd = Record<string, unknown>;
 
 export function organizationGraph(): JsonLd {
-  const logo = absoluteAppUrl("/icons/logo.svg");
-  return {
-    "@type": "Organization",
+  const logoUrl = absoluteAppUrl("/icons/logo.svg");
+  const telephone = siteSupportTelephone();
+  const sameAs = siteSameAsProfiles();
+
+  const org: JsonLd = {
+    "@type": ["Organization", "OnlineBusiness"],
     "@id": `${SITE_ORIGIN}/#organization`,
     name: SITE_NAME,
+    legalName: SITE_NAME,
+    alternateName: ["Tend", "Tend AM", "tend.am"],
     url: SITE_ORIGIN,
     logo: {
       "@type": "ImageObject",
-      url: logo,
+      "@id": `${SITE_ORIGIN}/#logo`,
+      url: logoUrl,
+      contentUrl: logoUrl,
+      caption: SITE_NAME,
     },
-    image: logo,
+    image: { "@id": `${SITE_ORIGIN}/#logo` },
     description: SITE_DEFAULT_DESCRIPTION,
+    slogan: SITE_SLOGAN,
+    email: SITE_SUPPORT_EMAIL,
     areaServed: {
       "@type": "Country",
       name: "Armenia",
+      identifier: "AM",
     },
-    sameAs: [] as string[],
+    knowsLanguage: ["hy", "ru", "en"],
+    availableLanguage: ["hy-AM", "ru", "en"],
+    brand: {
+      "@type": "Brand",
+      name: SITE_NAME,
+      logo: { "@id": `${SITE_ORIGIN}/#logo` },
+    },
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "customer support",
+        email: SITE_SUPPORT_EMAIL,
+        ...(telephone ? { telephone } : {}),
+        areaServed: "AM",
+        availableLanguage: ["Armenian", "Russian", "English"],
+        url: absoluteAppUrl(ROUTES.howItWorks),
+      },
+    ],
+    termsOfService: absoluteAppUrl(ROUTES.terms),
+    publishingPrinciples: absoluteAppUrl(ROUTES.privacy),
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Ոլորտներ և ծառայություններ",
+      url: absoluteAppUrl(ROUTES.categories),
+      itemListElement: [
+        {
+          "@type": "OfferCatalog",
+          name: "Ակտիվ մրցույթներ",
+          url: absoluteAppUrl(ROUTES.tenders),
+        },
+      ],
+    },
+    makesOffer: {
+      "@type": "Offer",
+      name: "Մրցույթ տեղադրել",
+      url: absoluteAppUrl(ROUTES.createTender),
+      price: 0,
+      priceCurrency: "AMD",
+      description: "Մրցույթ հայտարարելը Tend.am-ում անվճար է։",
+      availability: "https://schema.org/InStock",
+    },
   };
+
+  if (telephone) {
+    org.telephone = telephone;
+  }
+  if (sameAs.length > 0) {
+    org.sameAs = sameAs;
+  }
+
+  return org;
 }
 
 export function websiteWithSearchAction(): JsonLd {
@@ -34,6 +103,7 @@ export function websiteWithSearchAction(): JsonLd {
     inLanguage: "hy-AM",
     description: SITE_DEFAULT_DESCRIPTION,
     publisher: { "@id": `${SITE_ORIGIN}/#organization` },
+    copyrightHolder: { "@id": `${SITE_ORIGIN}/#organization` },
     potentialAction: {
       "@type": "SearchAction",
       target: {
@@ -94,6 +164,7 @@ export function collectionPage(params: {
     description: params.description,
     url: absoluteAppUrl(params.path),
     isPartOf: { "@id": `${SITE_ORIGIN}/#website` },
+    about: { "@id": `${SITE_ORIGIN}/#organization` },
     inLanguage: "hy-AM",
   };
 }
@@ -110,10 +181,16 @@ export function webPage(params: {
     description: params.description,
     url: absoluteAppUrl(params.path),
     isPartOf: { "@id": `${SITE_ORIGIN}/#website` },
+    about: { "@id": `${SITE_ORIGIN}/#organization` },
     inLanguage: "hy-AM",
+    publisher: { "@id": `${SITE_ORIGIN}/#organization` },
   };
 }
 
+/**
+ * Ակտիվ մրցույթ = Demand (պահանջ ծառայության համար) + Service itemOffered.
+ * JobPosting չենք օգտագործում՝ աշխատանքի հայտարարություն չէ։
+ */
 export function tenderService(params: {
   id: string;
   title: string;
@@ -128,60 +205,78 @@ export function tenderService(params: {
   datePublished?: string | Date | null;
 }): JsonLd {
   const url = absoluteAppUrl(params.path);
-  const offer: JsonLd = {
-    "@type": "Offer",
-    url,
-    priceCurrency: "AMD",
-    availability: "https://schema.org/InStock",
+  const areaServed = params.city
+    ? { "@type": "Place", name: params.city }
+    : { "@type": "Country", name: "Armenia", identifier: "AM" };
+
+  const service: JsonLd = {
+    "@type": "Service",
+    "@id": `${url}#service`,
+    name: params.title,
+    description: params.description,
+    areaServed,
   };
 
+  if (params.categoryName) {
+    service.category = params.categoryName;
+    service.serviceType = params.categoryName;
+  }
+
+  const priceSpec: JsonLd = {
+    "@type": "PriceSpecification",
+    priceCurrency: "AMD",
+  };
   if (
     params.budgetMin != null &&
     Number.isFinite(params.budgetMin) &&
     params.budgetMin > 0
   ) {
-    offer.price = params.budgetMin;
-  } else if (
+    priceSpec.minPrice = params.budgetMin;
+  }
+  if (
     params.budgetMax != null &&
     Number.isFinite(params.budgetMax) &&
     params.budgetMax > 0
   ) {
-    offer.price = params.budgetMax;
+    priceSpec.maxPrice = params.budgetMax;
+  } else if (
+    params.budgetMin != null &&
+    Number.isFinite(params.budgetMin) &&
+    params.budgetMin > 0
+  ) {
+    priceSpec.price = params.budgetMin;
   }
 
-  if (params.endsAt) {
-    offer.validThrough = new Date(params.endsAt).toISOString();
-  }
-
-  const service: JsonLd = {
+  const demand: JsonLd = {
     "@context": "https://schema.org",
-    "@type": "Service",
-    "@id": `${url}#service`,
+    "@type": "Demand",
+    "@id": `${url}#demand`,
     name: params.title,
     description: params.description,
     url,
-    provider: { "@id": `${SITE_ORIGIN}/#organization` },
-    areaServed: params.city
-      ? { "@type": "Place", name: params.city }
-      : { "@type": "Country", name: "Armenia" },
-    offers: offer,
+    itemOffered: service,
+    areaServed,
+    businessFunction: "https://schema.org/ProvideService",
+    priceSpecification: priceSpec,
   };
 
   if (params.imageUrl) {
-    service.image = params.imageUrl.startsWith("http")
+    const image = params.imageUrl.startsWith("http")
       ? params.imageUrl
       : absoluteAppUrl(params.imageUrl);
+    demand.image = image;
+    service.image = image;
   }
 
-  if (params.categoryName) {
-    service.category = params.categoryName;
+  if (params.endsAt) {
+    demand.validThrough = new Date(params.endsAt).toISOString();
   }
 
   if (params.datePublished) {
-    service.datePublished = new Date(params.datePublished).toISOString();
+    demand.datePublished = new Date(params.datePublished).toISOString();
   }
 
-  return service;
+  return demand;
 }
 
 export function profilePerson(params: {
@@ -226,4 +321,13 @@ export function profilePerson(params: {
     isPartOf: { "@id": `${SITE_ORIGIN}/#website` },
     inLanguage: "hy-AM",
   };
+}
+
+/** Գլխավոր էջի WebPage (FAQ-ից բացի) */
+export function homeWebPage(): JsonLd {
+  return webPage({
+    name: PAGE_SEO.home.title,
+    description: PAGE_SEO.home.description,
+    path: ROUTES.home,
+  });
 }

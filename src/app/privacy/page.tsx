@@ -6,13 +6,14 @@ import { SiteHeader } from "@/components/site-header";
 import { SupportContactLinks } from "@/components/support-contact-links";
 import { SITE_PUBLIC_ORIGIN } from "@/lib/absolute-app-url";
 import { ROUTES } from "@/lib/routes";
+import { SeoBreadcrumbs } from "@/components/seo-breadcrumbs";
 import { breadcrumbList, webPage } from "@/lib/seo/json-ld";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { PAGE_SEO } from "@/lib/seo/site";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Գաղտնիության քաղաքականություն",
-  description:
-    "Tend.am հարթակում անձնական տվյալների մշակման սկզբունքները, իրավունքները և օգտագործման շրջանակը։",
+  title: PAGE_SEO.privacy.title,
+  description: PAGE_SEO.privacy.description,
   path: ROUTES.privacy,
 });
 
@@ -43,9 +44,8 @@ export default function PrivacyPage() {
       <JsonLd
         data={[
           webPage({
-            name: "Գաղտնիության քաղաքականություն",
-            description:
-              "Tend.am հարթակում անձնական տվյալների մշակման սկզբունքները։",
+            name: PAGE_SEO.privacy.title,
+            description: PAGE_SEO.privacy.description,
             path: ROUTES.privacy,
           }),
           breadcrumbList([
@@ -57,6 +57,13 @@ export default function PrivacyPage() {
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-5xl px-4 pb-16 pt-8 sm:px-6 sm:pb-24 sm:pt-12 lg:px-8">
+        <SeoBreadcrumbs
+          className="mb-5"
+          items={[
+            { name: "Գլխավոր", path: ROUTES.home },
+            { name: "Գաղտնիություն", path: ROUTES.privacy },
+          ]}
+        />
         <div className="rounded-[2rem] bg-white p-7 shadow-sm ring-1 ring-slate-200 sm:p-10">
           <p className="text-sm font-black uppercase tracking-[0.2em] text-amber-700">
             Կարգավորումներ և իրավունքներ

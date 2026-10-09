@@ -24,6 +24,7 @@ import {
   PublicProfileReviews,
   type PublicProfileReview,
 } from "@/components/public-profile-reviews";
+import { SeoBreadcrumbs } from "@/components/seo-breadcrumbs";
 import { SiteHeader } from "@/components/site-header";
 import { JsonLd } from "@/components/json-ld";
 import {
@@ -312,6 +313,14 @@ export default async function PublicUserProfilePage({ params }: Props) {
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-6xl px-4 pb-16 pt-4 sm:px-6 sm:pb-24 sm:pt-6 lg:px-8">
+        <SeoBreadcrumbs
+          className="mb-4"
+          items={[
+            { name: "Գլխավոր", path: ROUTES.home },
+            { name: "Մրցույթներ", path: ROUTES.tenders },
+            { name: publicHeading, path: ROUTES.userProfile(user.id) },
+          ]}
+        />
         <Link
           href={ROUTES.tenders}
           className="group inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-black text-slate-600 shadow-sm ring-1 ring-slate-200/80 backdrop-blur-sm transition hover:bg-white hover:text-slate-950"

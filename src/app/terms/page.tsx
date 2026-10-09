@@ -7,13 +7,14 @@ import { SupportContactLinks } from "@/components/support-contact-links";
 import { SITE_PUBLIC_ORIGIN } from "@/lib/absolute-app-url";
 import { EXPIRED_UNAWARDED_MIN_BIDS } from "@/lib/expired-unawarded";
 import { ROUTES } from "@/lib/routes";
+import { SeoBreadcrumbs } from "@/components/seo-breadcrumbs";
 import { breadcrumbList, webPage } from "@/lib/seo/json-ld";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { PAGE_SEO } from "@/lib/seo/site";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Օգտագործման պայմաններ",
-  description:
-    "Tend.am հարթակի բիզնես մոդելը, մրցույթների կանոնները, վճարները, մոդերացիան և պատասխանատվությունը։",
+  title: PAGE_SEO.terms.title,
+  description: PAGE_SEO.terms.description,
   path: ROUTES.terms,
 });
 
@@ -44,9 +45,8 @@ export default function TermsPage() {
       <JsonLd
         data={[
           webPage({
-            name: "Օգտագործման պայմաններ",
-            description:
-              "Tend.am հարթակի կանոնները, վճարները և պատասխանատվությունը։",
+            name: PAGE_SEO.terms.title,
+            description: PAGE_SEO.terms.description,
             path: ROUTES.terms,
           }),
           breadcrumbList([
@@ -58,6 +58,13 @@ export default function TermsPage() {
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-5xl px-4 pb-16 pt-8 sm:px-6 sm:pb-24 sm:pt-12 lg:px-8">
+        <SeoBreadcrumbs
+          className="mb-5"
+          items={[
+            { name: "Գլխավոր", path: ROUTES.home },
+            { name: "Պայմաններ", path: ROUTES.terms },
+          ]}
+        />
         <div className="rounded-[2rem] bg-white p-7 shadow-sm ring-1 ring-slate-200 sm:p-10">
           <p className="text-sm font-black uppercase tracking-[0.2em] text-amber-700">
             Կանոնակարգ

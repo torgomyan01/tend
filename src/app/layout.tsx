@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Roboto } from "next/font/google";
+import { Geist_Mono, Noto_Sans, Noto_Sans_Armenian } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { GoogleAnalytics } from "@/components/google-analytics";
 import { JsonLd } from "@/components/json-ld";
@@ -8,15 +8,26 @@ import { siteGraph } from "@/lib/seo/json-ld";
 import { rootDefaultMetadata } from "@/lib/seo/metadata";
 import "./globals.css";
 
-const roboto = Roboto({
-  variable: "--font-roboto",
+/** Լատին / կիրիլիցա UI նիշեր */
+const notoSans = Noto_Sans({
+  variable: "--font-noto-sans",
   subsets: ["latin", "cyrillic"],
-  weight: ["300", "400", "500", "700", "900"],
+  weight: ["400", "500", "700", "900"],
+  display: "swap",
+});
+
+/** Հայերեն հիմնական տեքստ (lang=hy) */
+const notoArmenian = Noto_Sans_Armenian({
+  variable: "--font-noto-armenian",
+  subsets: ["armenian"],
+  weight: ["400", "500", "700"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = rootDefaultMetadata();
@@ -29,7 +40,7 @@ export default function RootLayout({
   return (
     <html
       lang="hy"
-      className={`${roboto.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${notoSans.variable} ${notoArmenian.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
         <GoogleAnalytics />

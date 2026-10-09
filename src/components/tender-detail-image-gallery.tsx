@@ -11,9 +11,14 @@ export type TenderGalleryImage = {
 
 type Props = {
   images: TenderGalleryImage[];
+  /** Երբ DB alt դատարկ է՝ օգտագործվում է մրցույթի վերնագիրը */
+  fallbackAlt?: string;
 };
 
-export function TenderDetailImageGallery({ images }: Props) {
+export function TenderDetailImageGallery({
+  images,
+  fallbackAlt = "Մրցույթի նկար",
+}: Props) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const close = useCallback(() => setOpenIndex(null), []);
@@ -77,7 +82,7 @@ export function TenderDetailImageGallery({ images }: Props) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={img.url}
-              alt={img.alt ?? ""}
+              alt={img.alt?.trim() || fallbackAlt}
               className="aspect-4/3 w-full object-cover transition group-hover:scale-[1.02]"
             />
           </button>
@@ -113,7 +118,7 @@ export function TenderDetailImageGallery({ images }: Props) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={current.url}
-              alt={current.alt ?? ""}
+              alt={current.alt?.trim() || fallbackAlt}
               className="max-h-[min(85vh,calc(100dvh-7rem))] max-w-[min(96vw,1200px)] object-contain shadow-2xl"
             />
 

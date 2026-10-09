@@ -72,13 +72,18 @@ export function AdminEscrowPanel({ rows }: Props) {
         const clientLabel = row.client.name?.trim() || row.client.email;
         const providerLabel = row.provider.name?.trim() || row.provider.email;
         const isDispute = row.status === "DISPUTED";
+        const awaitingConfirm =
+          row.status === "PAYMENT_SUBMITTED" ||
+          row.status === "PENDING_FUNDING";
         return (
           <li
             key={row.id}
             className={`rounded-3xl bg-white p-5 shadow-sm ring-1 ${
               isDispute
                 ? "ring-2 ring-rose-300 bg-rose-50/40"
-                : "ring-slate-200"
+                : awaitingConfirm
+                  ? "ring-2 ring-emerald-300 bg-emerald-50/30"
+                  : "ring-slate-200"
             }`}
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
@@ -141,6 +146,19 @@ export function AdminEscrowPanel({ rows }: Props) {
               </div>
             ) : null}
 
+            {(row.status === "PAYMENT_SUBMITTED" ||
+              row.status === "PENDING_FUNDING") && (
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => void run(row.id, "CONFIRM_FUNDING")}
+                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-700 px-5 py-4 text-base font-black text-white hover:bg-emerald-600 disabled:opacity-50"
+              >
+                {busy ? <Loader2 className="size-5 animate-spin" /> : null}
+                Հաստատել· գումարը ստացվել է
+              </button>
+            )}
+
             <div className="mt-4 flex flex-wrap gap-2">
               <a
                 href={ROUTES.contract(row.contractId)}
@@ -154,19 +172,6 @@ export function AdminEscrowPanel({ rows }: Props) {
               >
                 Մրցույթ
               </a>
-
-              {(row.status === "PAYMENT_SUBMITTED" ||
-                row.status === "PENDING_FUNDING") && (
-                <button
-                  type="button"
-                  disabled={busy}
-                  onClick={() => void run(row.id, "CONFIRM_FUNDING")}
-                  className="inline-flex items-center gap-1 rounded-xl bg-emerald-700 px-3 py-2 text-xs font-black text-white disabled:opacity-50"
-                >
-                  {busy ? <Loader2 className="size-3.5 animate-spin" /> : null}
-                  Հաստատել մուտքը
-                </button>
-              )}
 
               {(row.status === "RELEASE_PENDING" ||
                 row.status === "FUNDED" ||

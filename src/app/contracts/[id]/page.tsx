@@ -5,7 +5,6 @@ import { getServerSession } from "next-auth";
 import { notFound, redirect } from "next/navigation";
 import { ContractEscrowPanel } from "@/components/contract-escrow-panel";
 import { ContractSignClient } from "@/components/contract-sign-client";
-import { EscrowStepsGuide } from "@/components/escrow-steps-guide";
 import { SiteHeader } from "@/components/site-header";
 import { authOptions } from "@/lib/auth";
 import { getEscrowBankDetails } from "@/lib/escrow";
@@ -103,9 +102,6 @@ export default async function ContractPage({ params }: Props) {
           </Link>
         </div>
         <div className="mx-auto mb-6 w-full max-w-5xl space-y-5">
-          <EscrowStepsGuide
-            role={isOwner ? "client" : "provider"}
-          />
           {contract.escrow && contract.escrow.status !== "CANCELLED" ? (
             <ContractEscrowPanel
               contractId={contract.id}

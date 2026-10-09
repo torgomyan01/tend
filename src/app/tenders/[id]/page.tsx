@@ -17,6 +17,7 @@ import { notFound } from "next/navigation";
 import { TenderApplicantTeasers } from "@/components/tender-applicant-teasers";
 import { TenderAwardLifecyclePanel } from "@/components/tender-award-lifecycle-panel";
 import { TenderComplaintModal } from "@/components/tender-complaint-modal";
+import { SeoBreadcrumbs } from "@/components/seo-breadcrumbs";
 import { TenderDetailImageGallery } from "@/components/tender-detail-image-gallery";
 import { TenderOwnerApplicantsModal } from "@/components/tender-owner-applicants-modal";
 import { TenderEndsCountdown } from "@/components/tender-ends-countdown";
@@ -39,6 +40,7 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 import { NOINDEX_FOLLOW } from "@/lib/seo/site";
 import { plainTextSnippet } from "@/lib/seo/truncate";
 import { TENDER_STATUS_BADGE, TENDER_STATUS_LABEL } from "@/lib/tender-status";
+import { isTenderOpenForBids } from "@/lib/tender-open-for-bids";
 
 export const dynamic = "force-dynamic";
 
@@ -74,15 +76,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const isPublic = tender.status === "ACTIVE";
   const cityBit = tender.city ? ` · ${tender.city}` : "";
   const description = plainTextSnippet(
-    `${tender.category}${cityBit}. ${tender.description}`,
+    `Մրցույթ՝ ${tender.title}. ${tender.category}${cityBit}. ${tender.description}`,
   );
   const imageUrl = tender.images[0]?.url;
+  const titleExtra = [tender.category, tender.city].filter(Boolean).join(" · ");
+  const seoTitle = titleExtra
+    ? `${tender.title} · ${titleExtra}`
+    : tender.title;
 
   return buildPageMetadata({
-    title: tender.title,
+    title: seoTitle,
     description,
     path: ROUTES.tenderDetail(id),
     robots: isPublic ? undefined : NOINDEX_FOLLOW,
+    ogType: "article",
     images: imageUrl
       ? [{ url: imageUrl, alt: tender.title }]
       : undefined,
@@ -235,7 +242,6 @@ export default async function TenderDetailPage({ params }: Props) {
     coverLetter: string;
     provider: {
       name: string | null;
-      image: string | null;
       accountType: AccountTypeValue;
     };
   }[] = [];
@@ -254,7 +260,8 @@ export default async function TenderDetailPage({ params }: Props) {
           id: true,
           coverLetter: true,
           provider: {
-            select: { name: true, image: true, accountType: true },
+            // No image URL — public teasers use initials only (blur is bypassable).
+            select: { name: true, accountType: true },
           },
         },
       }),
@@ -352,7 +359,14 @@ export default async function TenderDetailPage({ params }: Props) {
   const revealPatronIdentity = isOwner || contactSharedWithMe;
 
   const showParticipateCta =
-    tender.status === "ACTIVE" && !isOwner;
+    !isOwner &&
+    isTenderOpenForBids({
+      status: tender.status,
+      awardedBidId: tender.awardedBidId,
+      startsAt: tender.startsAt,
+      endsAt: tender.endsAt,
+      hasBlockingContract: Boolean(pendingContract),
+    });
 
   const tenderEndsAtMs = tender.endsAt?.getTime() ?? null;
   const initialCountdownRemainingMs =
@@ -439,6 +453,19 @@ export default async function TenderDetailPage({ params }: Props) {
 
       <main className="px-4 pb-12 sm:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-4xl">
+          {tender.status === "ACTIVE" ? (
+            <SeoBreadcrumbs
+              className="mb-4"
+              items={[
+                { name: "Գլխավոր", path: ROUTES.home },
+                { name: "Մրցույթներ", path: ROUTES.tenders },
+                {
+                  name: tender.title,
+                  path: ROUTES.tenderDetail(tender.id),
+                },
+              ]}
+            />
+          ) : null}
           <div className="mb-6 flex items-center justify-between gap-3">
             <Link
               href={isOwner ? ROUTES.myTenders : ROUTES.tenders}
@@ -664,6 +691,7 @@ export default async function TenderDetailPage({ params }: Props) {
 
               {tender.images.length > 0 ? (
                 <TenderDetailImageGallery
+                  fallbackAlt={tender.title}
                   images={tender.images.map((img) => ({
                     id: img.id,
                     url: img.url,

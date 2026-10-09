@@ -12,7 +12,8 @@ export type TenderApplicantTeaserBid = {
   coverLetter: string;
   provider: {
     name: string | null;
-    image: string | null;
+    /** Never send real photo URLs here — CSS blur is bypassable via "Open image". */
+    image?: string | null;
     accountType: AccountTypeValue;
   };
 };
@@ -62,8 +63,8 @@ export function TenderApplicantTeasers({
 
       <p className="text-[11px] font-semibold leading-relaxed text-slate-500">
         {isBlindBidding
-          ? "Փակ առաջարկներ՝ անունները և նամակները ցուցադրվում են խիստ ընդհատված։"
-          : "Անունները, լուսանկարները և նամակները ցուցադրվում են ընդհատված՝ գաղտնիության համար։"}
+          ? "Փակ առաջարկներ՝ անունները և նամակները ցուցադրվում են խիստ ընդհատված։ Լուսանկարները չեն ցուցադրվում։"
+          : "Անունները և նամակները ցուցադրվում են ընդհատված՝ գաղտնիության համար։ Լուսանկարների փոխարեն՝ initials ավատար։"}
       </p>
 
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -79,19 +80,12 @@ export function TenderApplicantTeasers({
               key={bid.id}
               className="flex gap-3 rounded-3xl bg-linear-to-br from-white to-slate-50 p-4 shadow-sm ring-1 ring-slate-200"
             >
-              <div className="relative size-14 shrink-0 overflow-hidden rounded-2xl bg-slate-200 ring-2 ring-white shadow-inner">
-                {bid.provider.image ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
-                    src={bid.provider.image}
-                    alt=""
-                    className="size-full scale-125 object-cover opacity-90 blur-[5px]"
-                  />
-                ) : (
-                  <span className="flex size-full items-center justify-center text-lg font-black text-slate-500 blur-[0.5px]">
-                    {letter}
-                  </span>
-                )}
+              <div
+                className="relative grid size-14 shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br from-slate-200 via-slate-300 to-slate-400 text-lg font-black text-slate-700 ring-2 ring-white shadow-inner"
+                aria-hidden
+              >
+                <span className="select-none">{letter}</span>
+                <span className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_55%)]" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-1.5">

@@ -1,9 +1,14 @@
 "use client";
 
-import { Loader2, ShieldCheck } from "lucide-react";
+import { Check, Loader2, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ESCROW_STATUS_LABEL, type EscrowBankDetails } from "@/lib/escrow";
+import type { EscrowBankDetails } from "@/lib/escrow";
+import {
+  ESCROW_PROGRESS_LABELS,
+  getEscrowCurrentStepTitle,
+  getEscrowProgressIndex,
+} from "@/lib/escrow-progress";
 import { ESCROW_UI } from "@/lib/escrow-ui-copy";
 import { formatAmd } from "@/lib/format";
 import { toastError, toastSuccess } from "@/lib/toast";
@@ -30,6 +35,40 @@ type Props = {
   contractAccepted: boolean;
 };
 
+function ProgressDots({ activeIndex }: { activeIndex: number | null }) {
+  if (activeIndex === null) return null;
+  return (
+    <ol className="mt-5 flex items-start justify-between gap-1">
+      {ESCROW_PROGRESS_LABELS.map((label, i) => {
+        const done = i < activeIndex;
+        const current = i === activeIndex;
+        return (
+          <li key={label} className="flex min-w-0 flex-1 flex-col items-center gap-1.5">
+            <span
+              className={`grid size-8 place-items-center rounded-full text-xs font-black ring-2 ${
+                done
+                  ? "bg-emerald-600 text-white ring-emerald-600"
+                  : current
+                    ? "bg-white text-emerald-800 ring-emerald-500"
+                    : "bg-slate-100 text-slate-400 ring-slate-200"
+              }`}
+            >
+              {done ? <Check className="size-4" strokeWidth={3} /> : i + 1}
+            </span>
+            <span
+              className={`max-w-full truncate text-center text-[10px] font-bold leading-tight ${
+                current ? "text-emerald-900" : done ? "text-slate-700" : "text-slate-400"
+              }`}
+            >
+              {label}
+            </span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
 export function ContractEscrowPanel({
   contractId,
   escrow,
@@ -44,7 +83,13 @@ export function ContractEscrowPanel({
   const [disputeReason, setDisputeReason] = useState("");
   const [showDispute, setShowDispute] = useState(false);
 
-  const statusLabel = ESCROW_STATUS_LABEL[escrow.status] ?? escrow.status;
+  const role = isOwner ? "client" : "provider";
+  const progressIndex = getEscrowProgressIndex(escrow.status, contractAccepted);
+  const stepTitle = getEscrowCurrentStepTitle(
+    escrow.status,
+    role,
+    contractAccepted,
+  );
 
   async function submitPayment() {
     setBusy("pay");
@@ -116,6 +161,11 @@ export function ContractEscrowPanel({
     }
   }
 
+  const showBank =
+    contractAccepted &&
+    (escrow.status === "PENDING_FUNDING" ||
+      escrow.status === "PAYMENT_SUBMITTED");
+
   return (
     <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-emerald-200 sm:p-8">
       <div className="flex items-start gap-4">
@@ -126,10 +176,10 @@ export function ContractEscrowPanel({
           <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">
             {ESCROW_UI.badge}
           </p>
-          <h2 className="mt-2 text-xl font-black text-slate-950 sm:text-2xl">
-            {statusLabel}
+          <h2 className="mt-2 text-xl font-black tracking-tight text-slate-950 sm:text-2xl">
+            {stepTitle}
           </h2>
-          <p className="mt-2 text-sm font-semibold leading-relaxed text-slate-600 sm:text-base">
+          <p className="mt-2 text-sm font-semibold leading-relaxed text-slate-600">
             {ESCROW_UI.amountLine(
               formatAmd(escrow.contractAmount),
               formatAmd(escrow.providerReceives),
@@ -140,14 +190,14 @@ export function ContractEscrowPanel({
         </div>
       </div>
 
-      {contractAccepted &&
-      (escrow.status === "PENDING_FUNDING" ||
-        escrow.status === "PAYMENT_SUBMITTED") ? (
+      <ProgressDots activeIndex={progressIndex} />
+
+      {showBank && isOwner ? (
         <div className="mt-6 space-y-4 rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-200 sm:p-6">
           <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">
             {ESCROW_UI.bankTitle}
           </p>
-          <dl className="space-y-3 text-base font-semibold text-slate-800 sm:text-lg">
+          <dl className="space-y-3 text-base font-semibold text-slate-800">
             <div className="flex flex-wrap justify-between gap-2">
               <dt className="text-slate-500">{ESCROW_UI.receiver}</dt>
               <dd>{bank.receiverName}</dd>
@@ -172,13 +222,14 @@ export function ContractEscrowPanel({
             </div>
           </dl>
           {bank.hint ? (
-            <p className="text-sm font-semibold leading-relaxed text-slate-600 sm:text-base">
+            <p className="text-sm font-semibold leading-relaxed text-slate-600">
               {bank.hint}
             </p>
           ) : null}
-          {isOwner && escrow.status === "PENDING_FUNDING" ? (
+
+          {escrow.status === "PENDING_FUNDING" ? (
             <div className="space-y-3 pt-2">
-              <label className="block text-sm font-bold text-slate-600 sm:text-base">
+              <label className="block text-sm font-bold text-slate-600">
                 {ESCROW_UI.noteOptional}
                 <input
                   value={note}
@@ -200,24 +251,26 @@ export function ContractEscrowPanel({
                 {ESCROW_UI.submitPayment}
               </button>
             </div>
-          ) : null}
-          {escrow.status === "PAYMENT_SUBMITTED" ? (
-            <p className="text-sm font-bold leading-relaxed text-amber-800 sm:text-base">
+          ) : (
+            <p className="rounded-xl bg-amber-50 px-4 py-3 text-sm font-bold leading-relaxed text-amber-900 ring-1 ring-amber-200">
               {ESCROW_UI.paymentReview}
             </p>
-          ) : null}
-          {isProvider && escrow.status === "PENDING_FUNDING" ? (
-            <p className="text-sm font-bold leading-relaxed text-slate-600 sm:text-base">
-              {ESCROW_UI.waitTransfer}
-            </p>
-          ) : null}
+          )}
         </div>
+      ) : null}
+
+      {showBank && isProvider ? (
+        <p className="mt-6 rounded-2xl bg-slate-50 px-5 py-4 text-sm font-bold leading-relaxed text-slate-700 ring-1 ring-slate-200">
+          {escrow.status === "PAYMENT_SUBMITTED"
+            ? ESCROW_UI.paymentReview
+            : ESCROW_UI.waitTransfer}
+        </p>
       ) : null}
 
       {escrow.status === "FUNDED" ? (
         <div className="mt-6 space-y-4">
           <p className="rounded-2xl bg-emerald-50 px-5 py-4 text-sm font-bold leading-relaxed text-emerald-900 ring-1 ring-emerald-200 sm:text-base">
-            {ESCROW_UI.funded}
+            {isProvider ? ESCROW_UI.fundedProvider : ESCROW_UI.fundedClient}
           </p>
           {isOwner ? (
             <button
@@ -236,13 +289,13 @@ export function ContractEscrowPanel({
       ) : null}
 
       {escrow.status === "RELEASE_PENDING" ? (
-        <p className="mt-6 rounded-2xl bg-amber-50 px-5 py-4 text-sm font-bold leading-relaxed text-amber-950 ring-1 ring-amber-200 sm:text-base">
+        <p className="mt-6 rounded-2xl bg-amber-50 px-5 py-4 text-sm font-bold leading-relaxed text-amber-950 ring-1 ring-amber-200">
           {ESCROW_UI.releasePending}
         </p>
       ) : null}
 
       {escrow.status === "DISPUTED" ? (
-        <div className="mt-6 rounded-2xl bg-rose-50 px-5 py-4 text-sm font-bold leading-relaxed text-rose-900 ring-1 ring-rose-200 sm:text-base">
+        <div className="mt-6 rounded-2xl bg-rose-50 px-5 py-4 text-sm font-bold leading-relaxed text-rose-900 ring-1 ring-rose-200">
           <p>{ESCROW_UI.disputed}</p>
           {escrow.disputeReason ? (
             <p className="mt-2 font-semibold">{escrow.disputeReason}</p>
@@ -257,7 +310,7 @@ export function ContractEscrowPanel({
             <button
               type="button"
               onClick={() => setShowDispute(true)}
-              className="text-sm font-bold text-rose-700 underline-offset-2 hover:underline sm:text-base"
+              className="text-sm font-bold text-rose-700 underline-offset-2 hover:underline"
             >
               {ESCROW_UI.openDispute}
             </button>
@@ -298,7 +351,7 @@ export function ContractEscrowPanel({
       ) : null}
 
       {!contractAccepted && escrow.status === "AWAITING_CONTRACT" ? (
-        <p className="mt-5 text-sm font-semibold leading-relaxed text-slate-600 sm:text-base">
+        <p className="mt-5 text-sm font-semibold leading-relaxed text-slate-600">
           {ESCROW_UI.awaitingContract}
         </p>
       ) : null}

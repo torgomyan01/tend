@@ -1,6 +1,7 @@
 import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { NextResponse } from "next/server";
+import { authorizeUploadRead } from "@/lib/upload-access";
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +42,18 @@ export async function GET(
     .filter((p) => p && p !== "." && p !== "..")
     .map((p) => p.replace(/\\/g, "/"));
 
+  if (safeParts.length === 0) {
+    return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
+  }
+
+  const access = await authorizeUploadRead(safeParts);
+  if (!access.ok) {
+    return NextResponse.json(
+      { error: access.status === 401 ? "UNAUTHENTICATED" : "FORBIDDEN" },
+      { status: access.status },
+    );
+  }
+
   const resolved = path.resolve(UPLOADS_ROOT, ...safeParts);
   if (!resolved.startsWith(path.resolve(UPLOADS_ROOT) + path.sep)) {
     return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
@@ -52,15 +65,22 @@ export async function GET(
       return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
     }
     const buffer = await readFile(resolved);
+    const root = safeParts[0];
+    const isPublic =
+      root === "avatars" ||
+      root === "tenders" ||
+      root === "portfolio" ||
+      root === "tender-documents";
     return new NextResponse(buffer, {
       status: 200,
       headers: {
         "Content-Type": contentTypeFor(resolved),
-        "Cache-Control": "public, max-age=31536000, immutable",
+        "Cache-Control": isPublic
+          ? "public, max-age=31536000, immutable"
+          : "private, no-store",
       },
     });
   } catch {
     return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
   }
 }
-

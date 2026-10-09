@@ -17,6 +17,7 @@ import {
   ALLOWED_IMAGE_TYPES,
   isAllowedDocument,
 } from "@/lib/tender-form-upload";
+import { isTenderOpenForBids } from "@/lib/tender-open-for-bids";
 
 export const dynamic = "force-dynamic";
 
@@ -128,6 +129,7 @@ export async function POST(
           endsAt: true,
           budgetMin: true,
           budgetMax: true,
+          awardedBidId: true,
         },
       });
 
@@ -137,19 +139,26 @@ export async function POST(
         });
       }
 
-      if (tender.status !== "ACTIVE") {
-        throw Object.assign(new Error("TENDER_CLOSED"), {
-          code: "TENDER_CLOSED" as const,
-        });
-      }
-
       const now = new Date();
-      if (tender.endsAt && tender.endsAt <= now) {
-        throw Object.assign(new Error("TENDER_CLOSED"), {
-          code: "TENDER_CLOSED" as const,
-        });
-      }
-      if (tender.startsAt && tender.startsAt > now) {
+      const blockingContract = await tx.tenderContract.findFirst({
+        where: {
+          tenderId,
+          status: {
+            in: ["PENDING_CLIENT", "PENDING_PROVIDER", "ACCEPTED"],
+          },
+        },
+        select: { id: true },
+      });
+      if (
+        !isTenderOpenForBids({
+          status: tender.status,
+          awardedBidId: tender.awardedBidId,
+          startsAt: tender.startsAt,
+          endsAt: tender.endsAt,
+          hasBlockingContract: Boolean(blockingContract),
+          now,
+        })
+      ) {
         throw Object.assign(new Error("TENDER_CLOSED"), {
           code: "TENDER_CLOSED" as const,
         });

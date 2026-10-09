@@ -13,13 +13,14 @@ import { ProvidersRegisterCta } from "@/components/providers-register-cta";
 import { SiteHeader } from "@/components/site-header";
 import { authOptions } from "@/lib/auth";
 import { ROUTES } from "@/lib/routes";
+import { SeoBreadcrumbs } from "@/components/seo-breadcrumbs";
 import { breadcrumbList, webPage } from "@/lib/seo/json-ld";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { PAGE_SEO } from "@/lib/seo/site";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Մասնագետների համար",
-  description:
-    "Գտեք նոր պատվերներ Tend.am-ում՝ փակ առաջարկներով, պրոֆիլով, պորտֆոլիոյով և վարկանիշով։ Սկսեք մասնակցել մրցույթներին։",
+  title: PAGE_SEO.providers.title,
+  description: PAGE_SEO.providers.description,
   path: ROUTES.sections.providers,
 });
 
@@ -88,9 +89,8 @@ export default async function ProvidersPage() {
       <JsonLd
         data={[
           webPage({
-            name: "Մասնագետների համար",
-            description:
-              "Գտեք նոր պատվերներ Tend.am-ում՝ փակ առաջարկներով և վարկանիշով։",
+            name: PAGE_SEO.providers.title,
+            description: PAGE_SEO.providers.description,
             path: ROUTES.sections.providers,
           }),
           breadcrumbList([
@@ -102,6 +102,13 @@ export default async function ProvidersPage() {
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-7xl px-4 pb-14 pt-8 sm:px-6 sm:pb-20 sm:pt-12 lg:px-8">
+        <SeoBreadcrumbs
+          className="mb-5"
+          items={[
+            { name: "Գլխավոր", path: ROUTES.home },
+            { name: "Մասնագետների համար", path: ROUTES.sections.providers },
+          ]}
+        />
         <section className="relative overflow-hidden rounded-[2.5rem] bg-slate-950 px-6 py-10 text-white shadow-2xl shadow-slate-950/15 sm:px-10 sm:py-14">
           <div className="absolute -right-24 -top-24 size-96 rounded-full bg-amber-300/20 blur-3xl" />
           <div className="relative max-w-3xl">

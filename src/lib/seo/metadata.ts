@@ -7,6 +7,7 @@ import {
   SITE_LOCALE,
   SITE_NAME,
   SITE_OG_DESCRIPTION,
+  SITE_SLOGAN,
 } from "@/lib/seo/site";
 import { truncateMetaDescription } from "@/lib/seo/truncate";
 
@@ -89,6 +90,25 @@ export function rootDefaultMetadata(): Metadata {
     },
     description: SITE_DEFAULT_DESCRIPTION,
     applicationName: SITE_NAME,
+    category: "business",
+    keywords: [
+      "մրցույթ",
+      "մասնագետ",
+      "Հայաստան",
+      "tender",
+      "Tend.am",
+      "վերանորոգում",
+      "շինարարություն",
+      "փակ առաջարկ",
+      "կատարող",
+    ],
+    creator: SITE_NAME,
+    publisher: SITE_NAME,
+    other: {
+      "og:site_name": SITE_NAME,
+      "application-name": SITE_NAME,
+      slogan: SITE_SLOGAN,
+    },
     alternates: {
       canonical: "/",
     },

@@ -15,9 +15,10 @@ import {
 } from "@/lib/tender-contract-text";
 import { calcEscrowPricing } from "@/lib/escrow";
 import { createTenderEscrow } from "@/lib/escrow-service";
-import { postEscrowSystemMessage } from "@/lib/escrow-messages";
-import { formatEscrowStepsMessage } from "@/lib/escrow-steps";
-import { formatAmd } from "@/lib/format";
+import {
+  escrowProtectedDealStartedMessage,
+  postEscrowSystemMessage,
+} from "@/lib/escrow-messages";
 import { ROUTES } from "@/lib/routes";
 
 export const dynamic = "force-dynamic";
@@ -206,18 +207,12 @@ export async function POST(
 
     await postEscrowSystemMessage({
       contractId: contract.id,
-      body: [
-        "Պաշտպանված գործարք",
-        ``,
-        `Գումար՝ ${formatAmd(pricing.clientPays)}`,
-        `Կատարողը կստանա՝ ${formatAmd(pricing.providerReceives)} (միջնորդավճար ${pricing.platformFeePercent}%)`,
-        ``,
-        formatEscrowStepsMessage("client", pricing.platformFeePercent),
-        ``,
-        "—",
-        ``,
-        formatEscrowStepsMessage("provider", pricing.platformFeePercent),
-      ].join("\n"),
+      body: escrowProtectedDealStartedMessage({
+        amount: pricing.clientPays,
+        feePercent: pricing.platformFeePercent,
+        providerReceives: pricing.providerReceives,
+        contractId: contract.id,
+      }),
     });
   } catch {
     /* conversation failure should not block contract */

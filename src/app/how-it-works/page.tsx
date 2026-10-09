@@ -13,13 +13,14 @@ import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
 import { SiteHeader } from "@/components/site-header";
 import { ROUTES } from "@/lib/routes";
+import { SeoBreadcrumbs } from "@/components/seo-breadcrumbs";
 import { breadcrumbList, faqPage, webPage } from "@/lib/seo/json-ld";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { PAGE_SEO } from "@/lib/seo/site";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Ինչպես է աշխատում",
-  description:
-    "Tend.am-ը կապում է պատվիրատուներին և մասնագետներին փակ առաջարկների միջոցով։ Տեսեք քայլ առ քայլ ընթացքը և կարևոր կանոնները։",
+  title: PAGE_SEO.howItWorks.title,
+  description: PAGE_SEO.howItWorks.description,
   path: ROUTES.howItWorks,
 });
 
@@ -92,9 +93,8 @@ export default function HowItWorksPage() {
       <JsonLd
         data={[
           webPage({
-            name: "Ինչպես է աշխատում",
-            description:
-              "Tend.am-ը կապում է պատվիրատուներին և մասնագետներին փակ առաջարկների միջոցով։",
+            name: PAGE_SEO.howItWorks.title,
+            description: PAGE_SEO.howItWorks.description,
             path: ROUTES.howItWorks,
           }),
           breadcrumbList([
@@ -107,6 +107,13 @@ export default function HowItWorksPage() {
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-7xl px-4 pb-14 pt-8 sm:px-6 sm:pb-20 sm:pt-12 lg:px-8">
+        <SeoBreadcrumbs
+          className="mb-5"
+          items={[
+            { name: "Գլխավոր", path: ROUTES.home },
+            { name: "Ինչպես է աշխատում", path: ROUTES.howItWorks },
+          ]}
+        />
         <section className="relative overflow-hidden rounded-[2.5rem] bg-slate-950 px-6 py-10 text-white shadow-2xl shadow-slate-950/15 sm:px-10 sm:py-14">
           <div className="absolute -right-24 -top-24 size-96 rounded-full bg-amber-300/20 blur-3xl" />
           <div className="relative max-w-3xl">

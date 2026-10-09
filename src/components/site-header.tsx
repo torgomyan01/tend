@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { AuthDropdown } from "@/components/auth-dropdown";
 import { TelegramConnectBanner } from "@/components/telegram-connect-banner";
 import { TelegramNavbarNudge } from "@/components/telegram-navbar-nudge";
-import { LanguageDropdown } from "@/components/language-dropdown";
 import { MobileMenu } from "@/components/mobile-menu";
 import { SiteNav } from "@/components/site-nav";
 import { NotificationsDropdown } from "@/components/notifications-dropdown";

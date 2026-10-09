@@ -14,6 +14,11 @@ import { computeBidFee } from "@/lib/bid-fee";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
 import { NOINDEX_NOFOLLOW } from "@/lib/seo/site";
+import {
+  isTenderOpenForBids,
+  TENDER_BLOCKING_CONTRACT_STATUSES,
+} from "@/lib/tender-open-for-bids";
+import { coverLetterSnippet } from "@/lib/bid-teaser";
 
 export const dynamic = "force-dynamic";
 
@@ -60,6 +65,7 @@ export default async function TenderApplyPage({ params }: Props) {
       budgetMax: true,
       startsAt: true,
       endsAt: true,
+      awardedBidId: true,
     },
   });
 
@@ -69,14 +75,23 @@ export default async function TenderApplyPage({ params }: Props) {
     redirect(ROUTES.tenderDetail(tender.id));
   }
 
-  if (tender.status !== "ACTIVE") {
-    redirect(ROUTES.tenderDetail(tender.id));
-  }
-
   const now = new Date();
+  const blockingContract = await prisma.tenderContract.findFirst({
+    where: {
+      tenderId: tender.id,
+      status: { in: [...TENDER_BLOCKING_CONTRACT_STATUSES] },
+    },
+    select: { id: true },
+  });
   if (
-    (tender.endsAt && tender.endsAt <= now) ||
-    (tender.startsAt && tender.startsAt > now)
+    !isTenderOpenForBids({
+      status: tender.status,
+      awardedBidId: tender.awardedBidId,
+      startsAt: tender.startsAt,
+      endsAt: tender.endsAt,
+      hasBlockingContract: Boolean(blockingContract),
+      now,
+    })
   ) {
     redirect(ROUTES.tenderDetail(tender.id));
   }
@@ -114,7 +129,8 @@ export default async function TenderApplyPage({ params }: Props) {
             id: true,
             coverLetter: true,
             provider: {
-              select: { name: true, image: true, accountType: true },
+              // No image URL — public peer list uses initials only.
+              select: { name: true, accountType: true },
             },
           },
         }),
@@ -139,10 +155,10 @@ export default async function TenderApplyPage({ params }: Props) {
 
   const peerMessages: ApplyPeerMessage[] = peerRows.map((row) => ({
     id: row.id,
-    coverLetter: row.coverLetter,
+    // Snippet only — full peer letters must not leak on apply page.
+    coverLetter: coverLetterSnippet(row.coverLetter, 8),
     provider: {
       name: row.provider.name,
-      image: row.provider.image,
       accountType: row.provider.accountType as AccountTypeValue,
     },
   }));

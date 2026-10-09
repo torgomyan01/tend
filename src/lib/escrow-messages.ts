@@ -80,3 +80,21 @@ export function escrowReleaseRequestedMessage(): string {
     "Պատվիրատուն հաստատել է աշխատանքը։ Ադմինը կփոխանցի գումարը կատարողին։",
   );
 }
+
+/** Short award-time chat message (no full journey dump). */
+export function escrowProtectedDealStartedMessage(params: {
+  amount: number;
+  feePercent: number;
+  providerReceives: number;
+  contractId: string;
+}): string {
+  return [
+    "Պաշտպանված գործարք սկսված է",
+    ``,
+    `Գումար՝ ${formatAmd(params.amount)}`,
+    `Կատարողը կստանա՝ ${formatAmd(params.providerReceives)} (միջնորդավճար ${params.feePercent}%)`,
+    ``,
+    `Հաջորդ քայլը՝ երկկողմանի պայմանագիր, ապա վճարում Tend.am հաշվին։`,
+    `Մանրամասներ՝ ${ROUTES.contract(params.contractId)}`,
+  ].join("\n");
+}

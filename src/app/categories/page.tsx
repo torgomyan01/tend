@@ -6,16 +6,17 @@ import { ServiceSearch } from "@/components/service-search";
 import { SiteHeader } from "@/components/site-header";
 import { getCategoryVisual } from "@/lib/category-visuals";
 import { ROUTES } from "@/lib/routes";
+import { SeoBreadcrumbs } from "@/components/seo-breadcrumbs";
 import { breadcrumbList, collectionPage } from "@/lib/seo/json-ld";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { PAGE_SEO } from "@/lib/seo/site";
 import { getServiceCategories } from "@/lib/services-data";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Ոլորտներ և ծառայություններ",
-  description:
-    "Ընտրեք ոլորտ և ծառայություն Tend.am-ում՝ շինարարությունից մինչև IT։ Գտեք համապատասխան մրցույթներ կամ հայտարարեք ձեր աշխատանքը։",
+  title: PAGE_SEO.categories.title,
+  description: PAGE_SEO.categories.description,
   path: ROUTES.categories,
 });
 
@@ -31,9 +32,8 @@ export default async function CategoriesPage() {
       <JsonLd
         data={[
           collectionPage({
-            name: "Ոլորտներ և ծառայություններ",
-            description:
-              "Ընտրեք ոլորտ և ծառայություն Tend.am-ում և գտեք համապատասխան մրցույթներ։",
+            name: PAGE_SEO.categories.title,
+            description: PAGE_SEO.categories.description,
             path: ROUTES.categories,
           }),
           breadcrumbList([
@@ -46,6 +46,12 @@ export default async function CategoriesPage() {
 
       <main className="px-4 pb-8 sm:px-6 lg:px-8">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
+          <SeoBreadcrumbs
+            items={[
+              { name: "Գլխավոր", path: ROUTES.home },
+              { name: "Ոլորտներ", path: ROUTES.categories },
+            ]}
+          />
           <div className="flex justify-end">
           <Link
             href={ROUTES.createTender}

@@ -11,9 +11,9 @@ import type { Prisma, TenderEscrowStatus } from "@/generated/prisma/client";
 export const dynamic = "force-dynamic";
 
 const FILTERS: Array<{ value: string; label: string }> = [
+  { value: "PAYMENT_SUBMITTED", label: "Սպասում է հաստատման" },
   { value: "ACTION", label: "Գործողություն պահանջող" },
   { value: "ALL", label: "Բոլորը" },
-  { value: "PAYMENT_SUBMITTED", label: "Ստուգել մուտքը" },
   { value: "RELEASE_PENDING", label: "Payout" },
   { value: "FUNDED", label: "Պահված" },
   { value: "PENDING_FUNDING", label: "Սպասում փոխանցմանը" },
@@ -33,7 +33,7 @@ export default async function AdminEscrowsPage({
   const statusFilter =
     FILTERS.some((f) => f.value === params.status) && params.status
       ? params.status
-      : "ACTION";
+      : "PAYMENT_SUBMITTED";
 
   const where: Prisma.TenderEscrowWhereInput =
     statusFilter === "ALL"
@@ -85,7 +85,7 @@ export default async function AdminEscrowsPage({
             <Link
               key={filter.value}
               href={
-                filter.value === "ACTION"
+                filter.value === "PAYMENT_SUBMITTED"
                   ? ROUTES.admin.escrows
                   : `${ROUTES.admin.escrows}?status=${filter.value}`
               }

@@ -26,9 +26,11 @@ export default async function MessageThreadPage({ params }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f4ee] text-slate-950">
-      <SiteHeader />
-      <main className="px-4 pb-12 pt-2 sm:px-6 lg:px-8">
+    <div className="flex h-[100dvh] flex-col overflow-hidden bg-[#f4f0e8] text-slate-950">
+      <div className={`shrink-0 ${id ? "max-md:hidden" : ""}`}>
+        <SiteHeader />
+      </div>
+      <main className="flex min-h-0 flex-1 flex-col overflow-hidden px-0 pb-0 pt-0 md:px-6 md:pb-8 md:pt-2 lg:px-8">
         <MessagesInbox />
       </main>
     </div>

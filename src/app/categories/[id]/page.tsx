@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/json-ld";
+import { SeoBreadcrumbs } from "@/components/seo-breadcrumbs";
 import { SiteHeader } from "@/components/site-header";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
@@ -37,10 +38,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     });
   }
   return buildPageMetadata({
-    title: category.title,
+    title: `${category.title} · մրցույթներ և ծառայություններ`,
     description: plainTextSnippet(
       category.description ||
-        `${category.title}՝ մրցույթներ և ծառայություններ Tend.am հարթակում։`,
+        `${category.title}՝ մրցույթներ և ծառայություններ Հայաստանում Tend.am հարթակում։ Գտեք կատարող կամ հայտարարեք աշխատանք։`,
     ),
     path: ROUTES.categoryDetail(id),
   });
@@ -92,6 +93,14 @@ export default async function CategoryDetailPage({ params }: Props) {
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-5xl px-4 pb-12 pt-4 sm:px-6 sm:pb-16 sm:pt-6 lg:px-8">
+        <SeoBreadcrumbs
+          className="mb-4"
+          items={[
+            { name: "Գլխավոր", path: ROUTES.home },
+            { name: "Ոլորտներ", path: ROUTES.categories },
+            { name: category.title, path },
+          ]}
+        />
         <Link
           href={ROUTES.categories}
           className="inline-flex items-center gap-2 text-sm font-black text-slate-600 transition hover:text-slate-950"

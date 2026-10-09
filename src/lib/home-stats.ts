@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { tenderOpenForBidsWhere } from "@/lib/tender-open-for-bids";
 
 export type HomeStats = {
   activeTenders: number;
@@ -16,7 +17,7 @@ export async function getHomeStats(): Promise<HomeStats> {
   try {
     const [activeTenders, completedTenders, totalBids, providers] =
       await Promise.all([
-        prisma.tender.count({ where: { status: "ACTIVE" } }),
+        prisma.tender.count({ where: tenderOpenForBidsWhere() }),
         prisma.tender.count({
           where: { status: { in: ["COMPLETED", "AWARDED"] } },
         }),

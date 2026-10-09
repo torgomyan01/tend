@@ -28,7 +28,6 @@ import {
   type AnalyticsSlice,
   type MonthlyActivity,
 } from "@/components/account-analytics";
-import { AccountSignOut } from "@/components/account-sign-out";
 import { AccountTypeBadge } from "@/components/account-type-badge";
 import { SiteHeader } from "@/components/site-header";
 import {

@@ -31,16 +31,20 @@ import { SiteHeader } from "@/components/site-header";
 import { getFeaturedHomeTenders } from "@/lib/home-featured-tenders";
 import { getHomeStats } from "@/lib/home-stats";
 import { ROUTES } from "@/lib/routes";
-import { faqPage } from "@/lib/seo/json-ld";
+import {
+  breadcrumbList,
+  faqPage,
+  homeWebPage,
+} from "@/lib/seo/json-ld";
 import { buildPageMetadata } from "@/lib/seo/metadata";
-import { SITE_DEFAULT_DESCRIPTION, SITE_DEFAULT_TITLE } from "@/lib/seo/site";
+import { PAGE_SEO } from "@/lib/seo/site";
 import { getServiceCategories } from "@/lib/services-data";
 import type { Metadata } from "next";
 import Image from "next/image";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: SITE_DEFAULT_TITLE,
-  description: SITE_DEFAULT_DESCRIPTION,
+  title: PAGE_SEO.home.title,
+  description: PAGE_SEO.home.description,
   path: ROUTES.home,
 });
 
@@ -154,7 +158,13 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen overflow-hidden bg-[#f7f4ee] text-slate-950">
-      <JsonLd data={faqPage([...HOME_FAQ_ITEMS])} />
+      <JsonLd
+        data={[
+          homeWebPage(),
+          breadcrumbList([{ name: "Գլխավոր", path: ROUTES.home }]),
+          faqPage([...HOME_FAQ_ITEMS]),
+        ]}
+      />
       <SiteHeader />
 
       <main>
@@ -848,6 +858,10 @@ export default async function Home() {
                 { label: "Մրցույթներ", href: ROUTES.tenders },
                 { label: "Ոլորտներ", href: ROUTES.categories },
                 {
+                  label: "Մասնագետների համար",
+                  href: ROUTES.sections.providers,
+                },
+                {
                   label: "Ինչպես է աշխատում",
                   href: ROUTES.sections.howItWorks,
                 },
@@ -860,7 +874,6 @@ export default async function Home() {
               links={[
                 { label: "Մուտք", href: ROUTES.login },
                 { label: "Գրանցում", href: ROUTES.register },
-                { label: "Գաղտնաբառի վերականգնում", href: ROUTES.forgotPassword },
               ]}
             />
 

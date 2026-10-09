@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { tenderOpenForBidsWhere } from "@/lib/tender-open-for-bids";
 
 export type FeaturedHomeTender = {
   id: string;
@@ -25,12 +26,8 @@ function initialLetter(name: string | null | undefined): string {
 export async function getFeaturedHomeTenders(
   limit = 5,
 ): Promise<FeaturedHomeTender[]> {
-  const now = new Date();
   const rows = await prisma.tender.findMany({
-    where: {
-      status: "ACTIVE",
-      OR: [{ endsAt: null }, { endsAt: { gt: now } }],
-    },
+    where: tenderOpenForBidsWhere(),
     orderBy: { createdAt: "desc" },
     take: limit,
     select: {

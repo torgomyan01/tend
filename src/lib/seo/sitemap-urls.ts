@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { resolvePublicAppOrigin } from "@/lib/absolute-app-url";
 import { ROUTES } from "@/lib/routes";
 import { prisma } from "@/lib/prisma";
+import { tenderOpenForBidsWhere } from "@/lib/tender-open-for-bids";
 
 const SITEMAP_MAX_TENDERS = 10_000;
 const SITEMAP_MAX_USERS = 10_000;
@@ -73,7 +74,7 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
       orderBy: { sortOrder: "asc" },
     }),
     prisma.tender.findMany({
-      where: { status: "ACTIVE" },
+      where: tenderOpenForBidsWhere(),
       select: { id: true, updatedAt: true },
       orderBy: { updatedAt: "desc" },
       take: SITEMAP_MAX_TENDERS,

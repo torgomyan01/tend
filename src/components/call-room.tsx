@@ -37,6 +37,56 @@ function pickRecorderMime(kinds: string[]): string | undefined {
   return kinds.find((t) => MediaRecorder.isTypeSupported(t));
 }
 
+/** Draw video into a box without stretching (letterbox / pillarbox). */
+function drawVideoContain(
+  ctx: CanvasRenderingContext2D,
+  video: HTMLVideoElement,
+  boxX: number,
+  boxY: number,
+  boxW: number,
+  boxH: number,
+) {
+  const srcW = video.videoWidth;
+  const srcH = video.videoHeight;
+  if (!srcW || !srcH || boxW <= 0 || boxH <= 0) return;
+  const scale = Math.min(boxW / srcW, boxH / srcH);
+  const drawW = srcW * scale;
+  const drawH = srcH * scale;
+  const x = boxX + (boxW - drawW) / 2;
+  const y = boxY + (boxH - drawH) / 2;
+  ctx.drawImage(video, x, y, drawW, drawH);
+}
+
+/** Size recording canvas from the primary video track (portrait phone → 9:16). */
+function sizeCanvasForVideo(
+  canvas: HTMLCanvasElement,
+  video: HTMLVideoElement | null,
+) {
+  const srcW = video?.videoWidth ?? 0;
+  const srcH = video?.videoHeight ?? 0;
+  const longEdge = 1280;
+  if (srcW > 0 && srcH > 0) {
+    if (srcW >= srcH) {
+      canvas.width = longEdge;
+      canvas.height = Math.max(2, Math.round(longEdge * (srcH / srcW)));
+    } else {
+      canvas.height = longEdge;
+      canvas.width = Math.max(2, Math.round(longEdge * (srcW / srcH)));
+    }
+    return;
+  }
+  // Fallback before metadata: prefer portrait on narrow viewports.
+  const preferPortrait =
+    typeof window !== "undefined" && window.innerHeight > window.innerWidth;
+  if (preferPortrait) {
+    canvas.width = 720;
+    canvas.height = 1280;
+  } else {
+    canvas.width = 1280;
+    canvas.height = 720;
+  }
+}
+
 export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
   const isCaller = currentUserId === call.callerId;
   const isVideo = call.mediaType === "VIDEO";
@@ -51,11 +101,13 @@ export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
   const makingOfferRef = useRef(false);
   const ignoreOfferRef = useRef(false);
   const recorderRef = useRef<MediaRecorder | null>(null);
-  const recordChunksRef = useRef<Blob[]>([]);
   const recordCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const recordRafRef = useRef<number | null>(null);
   const recordAudioCtxRef = useRef<AudioContext | null>(null);
   const closedRef = useRef(false);
+  const uploadChainRef = useRef<Promise<void>>(Promise.resolve());
+  const recordMimeRef = useRef<string>("");
+  const uploadedBytesRef = useRef(0);
 
   const [status, setStatus] = useState(call.status);
   const [connecting, setConnecting] = useState(true);
@@ -93,46 +145,93 @@ export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
     remoteStreamRef.current = null;
   }, []);
 
-  const uploadRecording = useCallback(
-    async (blob: Blob) => {
-      if (blob.size < 1000) return;
-      const ext = blob.type.includes("mp4") ? "mp4" : "vwebm";
-      const file = new File([blob], `call-${call.id}.${ext}`, {
-        type: blob.type.split(";")[0] || (isVideo ? "video/webm" : "audio/webm"),
-      });
+  const enqueueChunkUpload = useCallback(
+    (blob: Blob, mimeType: string) => {
+      if (blob.size <= 0) return;
+      uploadChainRef.current = uploadChainRef.current
+        .then(async () => {
+          for (let attempt = 0; attempt < 3; attempt += 1) {
+            try {
+              const form = new FormData();
+              form.set("action", "chunk");
+              form.set("mimeType", mimeType);
+              form.set(
+                "chunk",
+                new File([blob], "chunk.bin", {
+                  type: mimeType.split(";")[0] || mimeType,
+                }),
+              );
+              const res = await fetch(`/api/calls/${call.id}/recording`, {
+                method: "POST",
+                body: form,
+              });
+              if (res.ok) {
+                uploadedBytesRef.current += blob.size;
+                return;
+              }
+            } catch {
+              /* retry */
+            }
+            await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
+          }
+        })
+        .catch(() => {
+          /* keep chain alive */
+        });
+    },
+    [call.id],
+  );
+
+  const finalizeRecordingOnServer = useCallback(async () => {
+    await uploadChainRef.current;
+    // Always try finalize — server decides if files exist.
+    for (let attempt = 0; attempt < 4; attempt += 1) {
       const form = new FormData();
-      form.set("file", file);
+      form.set("action", "finalize");
       try {
-        await fetch(`/api/calls/${call.id}/recording`, {
+        const res = await fetch(`/api/calls/${call.id}/recording`, {
           method: "POST",
           body: form,
         });
+        if (res.ok) return true;
+        if (res.status === 404 && attempt < 3) {
+          await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
+          continue;
+        }
       } catch {
-        /* non-blocking */
+        await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
       }
-    },
-    [call.id, isVideo],
-  );
+    }
+    return false;
+  }, [call.id]);
 
   const stopRecordingAndUpload = useCallback(async () => {
     const recorder = recorderRef.current;
-    if (!recorder || recorder.state === "inactive") return;
-    await new Promise<void>((resolve) => {
-      recorder.onstop = () => {
-        const type =
-          recorder.mimeType ||
-          (isVideo ? "video/webm" : "audio/webm");
-        const blob = new Blob(recordChunksRef.current, { type });
-        recordChunksRef.current = [];
-        void uploadRecording(blob).finally(() => resolve());
-      };
-      try {
-        recorder.stop();
-      } catch {
-        resolve();
-      }
-    });
-  }, [isVideo, uploadRecording]);
+    if (recorder && recorder.state !== "inactive") {
+      await new Promise<void>((resolve) => {
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          resolve();
+        };
+        recorder.onstop = () => finish();
+        try {
+          if (typeof recorder.requestData === "function") {
+            recorder.requestData();
+          }
+          recorder.stop();
+        } catch {
+          finish();
+        }
+        window.setTimeout(finish, 1500);
+      });
+      recorderRef.current = null;
+    }
+    // Let last ondataavailable enqueue + upload.
+    await new Promise((r) => setTimeout(r, 400));
+    await finalizeRecordingOnServer();
+  }, [finalizeRecordingOnServer]);
 
   const hangup = useCallback(
     async (rejectOrCancel = false) => {
@@ -147,70 +246,149 @@ export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
       } catch {
         /* ignore */
       }
+      // Extra finalize after hangup in case late chunks landed.
+      await finalizeRecordingOnServer();
       cleanupMedia();
       onClose({ refreshChat: true });
     },
-    [call.id, cleanupMedia, onClose, stopRecordingAndUpload],
+    [
+      call.id,
+      cleanupMedia,
+      finalizeRecordingOnServer,
+      onClose,
+      stopRecordingAndUpload,
+    ],
   );
 
+  const wireRemoteAudioToRecorder = useCallback(() => {
+    const audioCtx = recordAudioCtxRef.current;
+    const remote = remoteStreamRef.current;
+    if (!audioCtx || !remote) return;
+    try {
+      for (const track of remote.getAudioTracks()) {
+        const key = `wired:${track.id}`;
+        if ((track as unknown as { __tendWired?: string }).__tendWired) continue;
+        (track as unknown as { __tendWired?: string }).__tendWired = key;
+        const src = audioCtx.createMediaStreamSource(new MediaStream([track]));
+        // Reconnect into destination via a gain node kept on ctx.
+        const dest = (audioCtx as unknown as { __tendDest?: MediaStreamAudioDestinationNode }).__tendDest;
+        if (dest) src.connect(dest);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
   const startRecording = useCallback(() => {
+    // Only the caller records — stream already mixes both sides (audio + PiP video).
+    // Saves ~50% server storage vs both peers uploading nearly identical files.
     if (!isCaller) return;
     if (recorderRef.current) return;
     const local = localStreamRef.current;
-    const remote = remoteStreamRef.current;
     if (!local) return;
 
     try {
       const audioCtx = new AudioContext();
       recordAudioCtxRef.current = audioCtx;
       const dest = audioCtx.createMediaStreamDestination();
-      for (const stream of [local, remote].filter(Boolean) as MediaStream[]) {
+      (audioCtx as unknown as { __tendDest?: MediaStreamAudioDestinationNode }).__tendDest = dest;
+      if (audioCtx.state === "suspended") {
+        void audioCtx.resume().catch(() => undefined);
+      }
+
+      for (const stream of [local, remoteStreamRef.current].filter(Boolean) as MediaStream[]) {
         for (const track of stream.getAudioTracks()) {
-          const src = audioCtx.createMediaStreamSource(
-            new MediaStream([track]),
-          );
-          src.connect(dest);
+          try {
+            const src = audioCtx.createMediaStreamSource(new MediaStream([track]));
+            src.connect(dest);
+            (track as unknown as { __tendWired?: string }).__tendWired = track.id;
+          } catch {
+            /* ignore track */
+          }
         }
       }
 
-      let mixed: MediaStream;
+      let mixed: MediaStream | null = null;
       if (isVideo) {
-        const canvas = document.createElement("canvas");
-        canvas.width = 1280;
-        canvas.height = 720;
-        recordCanvasRef.current = canvas;
-        const ctx = canvas.getContext("2d");
-        const draw = () => {
-          if (!ctx) return;
-          ctx.fillStyle = "#0f172a";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          const remoteEl = remoteVideoRef.current;
-          const localEl = localVideoRef.current;
-          if (remoteEl && remoteEl.readyState >= 2) {
-            ctx.drawImage(remoteEl, 0, 0, canvas.width, canvas.height);
-          }
-          if (localEl && localEl.readyState >= 2) {
-            const w = 320;
-            const h = 180;
-            ctx.drawImage(
-              localEl,
-              canvas.width - w - 24,
-              canvas.height - h - 24,
-              w,
-              h,
-            );
-          }
-          recordRafRef.current = requestAnimationFrame(draw);
-        };
-        draw();
-        const canvasStream = canvas.captureStream(15);
+        try {
+          const canvas = document.createElement("canvas");
+          recordCanvasRef.current = canvas;
+          const ctx = canvas.getContext("2d");
+          let lastCanvasKey = "";
+          const draw = () => {
+            if (!ctx) return;
+            const remoteEl = remoteVideoRef.current;
+            const localEl = localVideoRef.current;
+            const primary =
+              remoteEl && remoteEl.videoWidth > 0
+                ? remoteEl
+                : localEl && localEl.videoWidth > 0
+                  ? localEl
+                  : null;
+            const key = primary
+              ? `${primary.videoWidth}x${primary.videoHeight}`
+              : "fallback";
+            if (key !== lastCanvasKey) {
+              sizeCanvasForVideo(canvas, primary);
+              lastCanvasKey = key;
+            }
+
+            ctx.fillStyle = "#0f172a";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            if (remoteEl && remoteEl.readyState >= 2 && remoteEl.videoWidth > 0) {
+              drawVideoContain(ctx, remoteEl, 0, 0, canvas.width, canvas.height);
+            } else if (
+              localEl &&
+              localEl.readyState >= 2 &&
+              localEl.videoWidth > 0
+            ) {
+              drawVideoContain(ctx, localEl, 0, 0, canvas.width, canvas.height);
+            }
+
+            if (localEl && localEl.readyState >= 2 && localEl.videoWidth > 0) {
+              const pipMaxW = Math.round(canvas.width * 0.28);
+              const pipMaxH = Math.round(canvas.height * 0.28);
+              const srcRatio = localEl.videoWidth / localEl.videoHeight;
+              let pipW = pipMaxW;
+              let pipH = Math.round(pipW / srcRatio);
+              if (pipH > pipMaxH) {
+                pipH = pipMaxH;
+                pipW = Math.round(pipH * srcRatio);
+              }
+              const pad = Math.max(16, Math.round(canvas.width * 0.03));
+              const pipX = canvas.width - pipW - pad;
+              const pipY = canvas.height - pipH - pad;
+              ctx.fillStyle = "rgba(15, 23, 42, 0.65)";
+              ctx.fillRect(pipX - 4, pipY - 4, pipW + 8, pipH + 8);
+              drawVideoContain(ctx, localEl, pipX, pipY, pipW, pipH);
+            }
+            recordRafRef.current = requestAnimationFrame(draw);
+          };
+          sizeCanvasForVideo(canvas, remoteVideoRef.current);
+          draw();
+          const canvasStream = canvas.captureStream(15);
+          mixed = new MediaStream([
+            ...canvasStream.getVideoTracks(),
+            ...dest.stream.getAudioTracks(),
+          ]);
+        } catch {
+          mixed = null;
+        }
+      }
+
+      if (!mixed) {
+        // Audio-only fallback (also used if canvas capture is unsupported).
+        const remote = remoteStreamRef.current;
+        const videoTrack =
+          remote?.getVideoTracks()[0] ?? local.getVideoTracks()[0] ?? null;
         mixed = new MediaStream([
-          ...canvasStream.getVideoTracks(),
+          ...(videoTrack && isVideo ? [videoTrack] : []),
           ...dest.stream.getAudioTracks(),
         ]);
-      } else {
-        mixed = dest.stream;
       }
+
+      if (mixed.getTracks().length === 0) return;
 
       const mime = isVideo
         ? pickRecorderMime([
@@ -218,6 +396,9 @@ export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
             "video/webm;codecs=vp8,opus",
             "video/webm",
             "video/mp4",
+            "audio/webm;codecs=opus",
+            "audio/webm",
+            "audio/mp4",
           ])
         : pickRecorderMime([
             "audio/webm;codecs=opus",
@@ -225,19 +406,45 @@ export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
             "audio/mp4",
           ]);
 
+      const wantsVideo = isVideo && mixed.getVideoTracks().length > 0;
       const recorder = mime
-        ? new MediaRecorder(mixed, { mimeType: mime })
+        ? new MediaRecorder(
+            mixed,
+            wantsVideo
+              ? {
+                  mimeType: mime,
+                  videoBitsPerSecond: 1_200_000,
+                  audioBitsPerSecond: 64_000,
+                }
+              : {
+                  mimeType: mime.startsWith("video/")
+                    ? pickRecorderMime(["audio/webm;codecs=opus", "audio/webm", "audio/mp4"]) || mime
+                    : mime,
+                  audioBitsPerSecond: 64_000,
+                },
+          )
         : new MediaRecorder(mixed);
-      recordChunksRef.current = [];
+
+      recordMimeRef.current =
+        recorder.mimeType ||
+        mime ||
+        (wantsVideo ? "video/webm" : "audio/webm");
+      uploadedBytesRef.current = 0;
       recorder.ondataavailable = (e) => {
-        if (e.data.size > 0) recordChunksRef.current.push(e.data);
+        if (e.data.size > 0) {
+          enqueueChunkUpload(e.data, recordMimeRef.current);
+        }
       };
-      recorder.start(1000);
+      recorder.onerror = () => {
+        /* keep call alive even if recorder errors */
+      };
+      recorder.start(2_000);
       recorderRef.current = recorder;
+      wireRemoteAudioToRecorder();
     } catch {
-      /* recording optional */
+      /* best-effort — call continues without local recording */
     }
-  }, [isCaller, isVideo]);
+  }, [enqueueChunkUpload, isCaller, isVideo, wireRemoteAudioToRecorder]);
 
   const postSignal = useCallback(
     async (type: "OFFER" | "ANSWER" | "ICE", payload: unknown) => {
@@ -342,9 +549,18 @@ export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
               track.addEventListener("ended", () => setRemoteVideoLive(false));
             }
           }
+          remoteStreamRef.current = remote;
           setRemoteReady(true);
           if (remoteVideoRef.current) remoteVideoRef.current.srcObject = remote;
           if (remoteAudioRef.current) remoteAudioRef.current.srcObject = remote;
+          wireRemoteAudioToRecorder();
+          // Ensure recording is running once media actually flows (active calls only).
+          if (
+            !recorderRef.current &&
+            (status === "ACTIVE" || call.status === "ACTIVE")
+          ) {
+            startRecording();
+          }
         };
 
         pc.onicecandidate = (event) => {
@@ -353,10 +569,19 @@ export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
           }
         };
 
+        const maybeStartRec = () => {
+          setConnecting(false);
+          // Only after answer — avoid uploading RINGING wait noise.
+          if (
+            (status === "ACTIVE" || call.status === "ACTIVE") &&
+            !recorderRef.current
+          ) {
+            startRecording();
+          }
+        };
         pc.onconnectionstatechange = () => {
           if (pc.connectionState === "connected") {
-            setConnecting(false);
-            startRecording();
+            maybeStartRec();
           }
           if (
             pc.connectionState === "failed" ||
@@ -366,6 +591,24 @@ export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
             setConnecting(false);
           }
         };
+        pc.oniceconnectionstatechange = () => {
+          if (
+            pc.iceConnectionState === "connected" ||
+            pc.iceConnectionState === "completed"
+          ) {
+            maybeStartRec();
+          }
+        };
+        // Fallback: some mobiles never fire connected promptly.
+        window.setTimeout(() => {
+          if (
+            !closedRef.current &&
+            !recorderRef.current &&
+            (status === "ACTIVE" || call.status === "ACTIVE")
+          ) {
+            startRecording();
+          }
+        }, 2500);
 
         if (isCaller && (status === "ACTIVE" || call.status === "ACTIVE")) {
           makingOfferRef.current = true;
@@ -383,8 +626,21 @@ export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
     }
 
     void setup();
+
+    const onPageHide = () => {
+      if (closedRef.current) return;
+      // Best-effort hangup if the tab is closed/navigated away.
+      void hangup(false);
+    };
+    window.addEventListener("pagehide", onPageHide);
+
     return () => {
       cancelled = true;
+      window.removeEventListener("pagehide", onPageHide);
+      if (!closedRef.current) {
+        // Finalize recording + hangup when leaving the call UI.
+        void hangup(false);
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- mount once per call
   }, [call.id]);
@@ -393,6 +649,13 @@ export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
   useEffect(() => {
     setStatus(call.status);
   }, [call.status]);
+
+  useEffect(() => {
+    if (status !== "ACTIVE" || closedRef.current) return;
+    if (!recorderRef.current) {
+      startRecording();
+    }
+  }, [status, startRecording]);
 
   useEffect(() => {
     if (status !== "ACTIVE") return;
@@ -602,7 +865,7 @@ export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-950/90 p-3 backdrop-blur-sm">
-      <div className="relative flex h-[min(92vh,720px)] w-full max-w-3xl flex-col overflow-hidden rounded-[1.75rem] bg-slate-950 shadow-2xl ring-1 ring-white/10">
+      <div className="relative flex h-[min(96vh,860px)] w-full max-w-3xl flex-col overflow-hidden rounded-[1.75rem] bg-slate-950 shadow-2xl ring-1 ring-white/10 max-sm:max-w-md">
         <div className="flex items-center justify-between px-5 py-4">
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.18em] text-amber-400">
@@ -635,7 +898,7 @@ export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
                 ref={remoteVideoRef}
                 autoPlay
                 playsInline
-                className={`h-full w-full object-cover ${
+                className={`h-full w-full object-contain bg-slate-950 ${
                   remoteVideoLive ? "opacity-100" : "opacity-0"
                 }`}
               />
@@ -646,20 +909,20 @@ export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
                   </div>
                   <p className="text-sm font-bold text-white/70">
                     {remoteReady
-                      ? "Դիմածողի տեսախցիկը անջատ է"
+                      ? "Դիմացինի տեսախցիկը անջատ է"
                       : status === "RINGING"
                         ? "Զանգի ազդանշան…"
                         : "Սպասում ենք կապին…"}
                   </p>
                 </div>
               ) : null}
-              <div className="absolute bottom-4 right-4 overflow-hidden rounded-2xl shadow-lg ring-2 ring-white/20">
+              <div className="absolute bottom-4 right-4 overflow-hidden rounded-2xl bg-slate-950 shadow-lg ring-2 ring-white/20">
                 <video
                   ref={localVideoRef}
                   autoPlay
                   playsInline
                   muted
-                  className={`h-28 w-20 object-cover sm:h-36 sm:w-28 ${
+                  className={`h-32 w-auto max-w-[40vw] object-contain sm:h-40 ${
                     cameraOff || !localHasCamera ? "hidden" : ""
                   }`}
                 />
@@ -667,7 +930,7 @@ export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
                   <div className="flex h-28 w-20 flex-col items-center justify-center gap-1 bg-slate-800 sm:h-36 sm:w-28">
                     <VideoOff className="size-5 text-white/70" />
                     <span className="px-1 text-center text-[9px] font-bold text-white/55">
-                      Ծեր տեսախցիկը անջատ է
+                      Ձեր տեսախցիկը անջատ է
                     </span>
                   </div>
                 ) : null}
@@ -769,15 +1032,9 @@ export function CallRoom({ call, currentUserId, peerName, onClose }: Props) {
           )}
         </div>
 
-        {isVideo ? (
-          <p className="pb-4 text-center text-[11px] font-semibold text-white/40">
-            Տեսախցիկը պառտադիր է։ կարող եք բացել/անջատել անկախ։
-          </p>
-        ) : isCaller ? (
-          <p className="pb-4 text-center text-[11px] font-semibold text-white/40">
-            Ցայնային զանգը կպահպանվի զրույցում
-          </p>
-        ) : null}
+        <p className="pb-4 text-center text-[11px] font-semibold text-white/40">
+          Զանգը շարունակ հոսքով մաս-մաս պահպվում է սերվերում առանց կառելի
+        </p>
       </div>
     </div>
   );

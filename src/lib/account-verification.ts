@@ -1,5 +1,3 @@
-import type { User } from "@/generated/prisma/client";
-
 type VerificationFields = {
   telegramVerifiedAt?: Date | string | null;
   emailVerified?: Date | string | null;

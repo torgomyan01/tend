@@ -23,8 +23,9 @@ import { authOptions } from "@/lib/auth";
 import { formatAmd, formatDateTime, formatNumber } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
 import { ROUTES } from "@/lib/routes";
+import { SeoBreadcrumbs } from "@/components/seo-breadcrumbs";
 import { buildPageMetadata } from "@/lib/seo/metadata";
-import { NOINDEX_FOLLOW } from "@/lib/seo/site";
+import { NOINDEX_FOLLOW, PAGE_SEO } from "@/lib/seo/site";
 import {
   mergeCatalogPicksFromLegacy,
   parseCatalogPicksParam,
@@ -38,6 +39,7 @@ import {
   TENDER_STATUS_BADGE,
   TENDER_STATUS_LABEL,
 } from "@/lib/tender-status";
+import { tenderOpenForBidsWhere } from "@/lib/tender-open-for-bids";
 import type {
   AccountType,
   Prisma,
@@ -119,9 +121,8 @@ export async function generateMetadata({
   );
 
   return buildPageMetadata({
-    title: "Մրցույթներ",
-    description:
-      "Ակտիվ մրցույթների կատալոգ Հայաստանում՝ որոնումով, ոլորտի ու բնակավայրի ֆիլտրերով։ Մասնակցեք որպես մասնագետ կամ հետևեք նոր առաջադրաններին։",
+    title: PAGE_SEO.tenders.title,
+    description: PAGE_SEO.tenders.description,
     path: ROUTES.tenders,
     robots: hasFilters ? NOINDEX_FOLLOW : undefined,
   });
@@ -214,12 +215,7 @@ function buildPublicBrowseWhere(filters: {
   deadlineDays?: number;
   blind?: "yes" | "no";
 }): Prisma.TenderWhereInput {
-  const windowActive: Prisma.TenderWhereInput = {
-    status: "ACTIVE",
-    OR: [{ endsAt: null }, { endsAt: { gt: new Date() } }],
-  };
-
-  const clauses: Prisma.TenderWhereInput[] = [windowActive];
+  const clauses: Prisma.TenderWhereInput[] = [tenderOpenForBidsWhere()];
 
   if (filters.q) {
     clauses.push({
@@ -462,8 +458,7 @@ export default async function TendersPage({
     });
     const orderBy = browseOrderBy(browseState.sort);
     const activeCityWhere: Prisma.TenderWhereInput = {
-      status: "ACTIVE",
-      OR: [{ endsAt: null }, { endsAt: { gt: new Date() } }],
+      ...tenderOpenForBidsWhere(),
       city: { not: null },
     };
 
@@ -632,9 +627,8 @@ export default async function TendersPage({
         <JsonLd
           data={[
             collectionPage({
-              name: "Մրցույթներ",
-              description:
-                "Ակտիվ մրցույթների կատալոգ Հայաստանում՝ որոնումով և ֆիլտրերով։",
+              name: PAGE_SEO.tenders.title,
+              description: PAGE_SEO.tenders.description,
               path: ROUTES.tenders,
             }),
             breadcrumbList([
@@ -667,6 +661,20 @@ export default async function TendersPage({
                 />
               </aside>
               <div className="min-w-0 space-y-4">
+                <SeoBreadcrumbs
+                  items={[
+                    { name: "Գլխավոր", path: ROUTES.home },
+                    { name: "Մրցույթներ", path: ROUTES.tenders },
+                  ]}
+                />
+                <div>
+                  <h1 className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+                    {PAGE_SEO.tenders.h1}
+                  </h1>
+                  <p className="mt-2 max-w-2xl text-sm font-semibold leading-relaxed text-slate-600 sm:text-base">
+                    Գտեք աշխատանք կամ կատարող՝ ըստ ոլորտի, քաղաքի և բյուջեի։
+                  </p>
+                </div>
                 <TendersBrowseMobileFilters
                   categories={categories}
                   cities={browseCities}
@@ -1194,7 +1202,7 @@ function TenderCard({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={thumbUrl}
-                  alt=""
+                  alt={title}
                   className="aspect-4/3 w-full object-cover transition duration-300 group-hover:scale-[1.03]"
                 />
               </>

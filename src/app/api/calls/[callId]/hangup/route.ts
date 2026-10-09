@@ -7,6 +7,7 @@ import {
   postCallSystemMessage,
   serializeCallSession,
 } from "@/lib/call-session";
+import { finalizeCallRecording } from "@/lib/finalize-call-recording";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,17 @@ export async function POST(_request: Request, context: Ctx) {
   if ("error" in access && access.error) return access.error;
   const { call } = access;
 
-  if (call.status === "ENDED" || call.status === "REJECTED" || call.status === "CANCELLED" || call.status === "MISSED") {
+  if (
+    call.status === "ENDED" ||
+    call.status === "REJECTED" ||
+    call.status === "CANCELLED" ||
+    call.status === "MISSED"
+  ) {
+    try {
+      await finalizeCallRecording(callId);
+    } catch {
+      /* ignore */
+    }
     return NextResponse.json({ call: serializeCallSession(call) });
   }
 
@@ -50,6 +61,15 @@ export async function POST(_request: Request, context: Ctx) {
       ? `${label} · չեղարկված`
       : `${label} · ${formatCallDuration(durationSec)}`,
   });
+
+  if (!wasRinging) {
+    // Immediate attempt — client will also finalize after flushing chunks.
+    try {
+      await finalizeCallRecording(callId);
+    } catch {
+      /* chunks may still be in flight */
+    }
+  }
 
   return NextResponse.json({
     call: serializeCallSession(updated),

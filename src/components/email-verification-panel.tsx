@@ -65,7 +65,6 @@ export function EmailVerificationPanel({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(registerUserId ? { userId: registerUserId } : {}),
       });
-      const data = (await res.json()) as { error?: string };
       if (!res.ok) {
         toastError("Չուղարկվեց", "Փորձեք մի փոքր ուշ։");
         return;
